@@ -1,0 +1,4 @@
+[debug] Framework implementation 'org.scalacheck.ScalaCheckFramework' not present.
+[debug] Framework implementation 'org.specs.runner.SpecsFramework' not present.
+[debug] Framework implementation 'org.scalatest.tools.Framework' not present.
+[debug] Framework implementation 'org.scalatest.tools.ScalaTestFramework' not present.
