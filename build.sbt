@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   cache,
-  ws
+  ws,
+  "com.google.inject" % "guice" % "3.0"
 )
 
-libraryDependencies += "com.google.inject" % "guice" % "3.0"
