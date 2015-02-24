@@ -1,0 +1,149 @@
+body{
+    font-family: Open Sans;
+}
+
+img, .btn, i, a {
+    outline: 0 none !important;
+    transition: all 0.3s ease-out 0s;
+}
+
+/*<editor-fold desc="header">*/
+
+.navbar-default
+{
+    background-color: #eeeeee;
+    border:none;
+}
+#logo {
+    height:37px;
+}
+.navbar-nav > li > a {
+    padding-bottom: 30px;
+    padding-top: 30px;
+    text-transform: uppercase;
+}
+
+
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a.active:hover,
+.navbar-default .navbar-nav > .active > a:hover
+{
+    background-color: #42addc;
+    color: #ffffff;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus
+{
+    background-color:inherit;
+    color:#777;
+}
+
+.navbar-brand{ padding-top:20px;}
+
+/*</editor-fold>*/
+/*<editor-fold desc="footer">*/
+#footer {
+    background-color: #254254;
+    border-color: #738f9d;
+    color: #738f9d;
+    line-height: 150%;
+    padding: 20px 0 60px;
+    position: relative;
+    z-index: 0;
+    font-size: 16px;
+}
+
+#footer h2
+{
+    color:white;
+    font-size:20px;
+    margin-bottom: 18px;
+}
+
+#footer li {
+
+    margin-bottom: 7px;
+    margin-right: 5px;
+
+}
+
+#footer .info {
+    font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 17px;
+    margin-top: 23px;
+}
+
+#footer .program-info img
+{
+    height:50px;
+}
+#full-footer {
+    background-color: #355163;
+    border-color: #738f9d;
+    color: #ffffff;
+}
+
+#full-footer p {
+    margin: 0;
+    padding: 10px;
+}
+#full-footer a,#full-footer a:hover
+{
+    color:white;
+}
+#footer ul
+{
+    list-style:none;
+    padding-left: 0;
+}
+
+#footer a{
+color: #40a6d2;
+}
+
+#footer a:hover {
+    color: #49c0f4;
+}
+.post-social ul li{
+    display:inline
+}
+.post-social i.fa-facebook {
+    background: none repeat scroll 0 0 #6767ed;
+}
+.post-social i {
+    color: #ffffff;
+}
+.post-social i {
+    border-radius: 6px;
+    display: block !important;
+    font-size: 18px;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    width: 45px;
+}
+
+ .post-social i.fa-facebook {
+    background: none repeat scroll 0 0 #6767ed;
+}
+
+ .post-social i.fa-linkedin {
+    background: none repeat scroll 0 0 #7cb6f7;
+}
+
+ .post-social i.fa-google-plus {
+    background: none repeat scroll 0 0 #ed6d46;
+}
+
+.post-social i.fa-twitter {
+    background: none repeat scroll 0 0 #4b6e98;
+}
+
+
+/*</editor-fold>*/
+
+#content
+{
+    min-height: 600px; /*todo:implement sticky footer*/
+}

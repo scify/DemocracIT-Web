@@ -5,7 +5,6 @@ import javax.inject.{Inject, Singleton}
 import interfaces.SearchManagerAbstract
 import model.ConsultationSearchRequest
 import play.api.mvc._
-import services.TextGenerator
 
 @Singleton
 class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
