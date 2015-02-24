@@ -1,6 +1,7 @@
 import com.google.inject.{Guice, AbstractModule}
+import interfaces.SearchManagerAbstract
 import play.api.GlobalSettings
-import services.{WelcomeTextGenerator, TextGenerator}
+import services.{SearchManager}
 
 /**
  * Set up the Guice injector and provide the mechanism for return objects from the dependency graph.
@@ -12,7 +13,7 @@ object Global extends GlobalSettings {
    */
   val injector = Guice.createInjector(new AbstractModule {
     protected def configure() {
-      bind(classOf[TextGenerator]).to(classOf[WelcomeTextGenerator])
+      bind(classOf[SearchManagerAbstract]).to(classOf[SearchManager])
     }
   })
 
