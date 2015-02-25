@@ -15,7 +15,7 @@ img, .btn, i, a {
     border:none;
 }
 #logo {
-    height:37px;
+    height:55px;
 }
 .navbar-nav > li > a {
     padding-bottom: 30px;
@@ -38,7 +38,8 @@ img, .btn, i, a {
     color:#777;
 }
 
-.navbar-brand{ padding-top:20px;}
+.navbar-brand{   padding-left: 30px;
+    padding-top: 12px;}
 
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
