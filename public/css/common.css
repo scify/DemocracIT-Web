@@ -77,6 +77,7 @@ img, .btn, i, a {
 #footer .program-info img
 {
     height:50px;
+    border-radius:5px;
 }
 #full-footer {
     background-color: #355163;
