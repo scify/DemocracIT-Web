@@ -81,5 +81,7 @@ server.pid
 *.eml
 /dist/
 .cache
+/worksheet.sc
+
 
 

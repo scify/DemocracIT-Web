@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   anorm,
   cache,
   ws,
-  "com.google.inject" % "guice" % "3.0"
+  "com.google.inject" % "guice" % "3.0",
+  "org.postgresql" % "postgresql" % "9.3-1100-jdbc41"
 )
 

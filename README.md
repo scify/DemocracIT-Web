@@ -4,3 +4,17 @@ Nowadays, in Greece, there is a vast amount of data which arise from the draft l
 
 http://www.scify.gr/site/en/projects/in-progress/democraciten
 
+## Setup instructions
+
+
+Set up enviroment variables
+```
+$ sudo nano /etc/environment
+```
+
+Add 3 database related properties
+```
+$ democracit_db_host="jdbc:postgresql://your-host-name-here/databaseNameHere"
+$ democracit_db_user="db-username"
+$ democracit_db_pw="db-password"
+```
