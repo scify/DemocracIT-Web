@@ -7,7 +7,7 @@ http://www.scify.gr/site/en/projects/in-progress/democraciten
 ## Setup instructions
 
 
-Set up enviroment variables
+### Set up enviroment variables
 ```
 $ sudo nano /etc/environment
 ```
@@ -18,3 +18,7 @@ $ democracit_db_host="jdbc:postgresql://your-host-name-here/databaseNameHere"
 $ democracit_db_user="db-username"
 $ democracit_db_pw="db-password"
 ```
+
+### Set up the Sass/SCSS transpiler
+
+https://www.jetbrains.com/idea/help/transpiling-sass-less-and-scss-to-css.html#d532231e166
