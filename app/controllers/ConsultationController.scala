@@ -5,22 +5,26 @@ import javax.inject.{Inject, Singleton}
 import interfaces.SearchManagerAbstract
 import model.ConsultationSearchRequest
 import play.api.mvc._
+import services.ConsultationManager
 
-@Singleton
-class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
+//@Singleton
+//class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
+
+
+class ConsultationController() extends Controller {
 
   def getConsultation(consultationid :Int, name: String) = Action {
-    //feth the consultation
+
     Ok("not implemented")
   }
 
   def search= Action {
-    //todo: open search page
+
     Ok("not implemented")
   }
 
   def postSearch= Action {
-    val results =  this.searchManager.search(new ConsultationSearchRequest(-1,"test",-1))
+    val results = new ConsultationManager().search(new ConsultationSearchRequest(-1,"test",-1))
     Ok("not implemented")
   }
 
