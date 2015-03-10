@@ -3,18 +3,18 @@
 # ~~~~
 
 # Home page
-GET         /                                  @controllers.HomeController.index
+GET         /                                            @controllers.HomeController.index
 
-GET         /account/login                     @controllers.AccountController.login()
-POST        /account/login                     @controllers.AccountController.postLogin()
-GET         /account/register                  @controllers.AccountController.register()
-GET         /account/postregister              @controllers.AccountController.postRegister()
+GET         /account/login                               @controllers.AccountController.login()
+POST        /account/login                               @controllers.AccountController.postLogin()
+GET         /account/register                            @controllers.AccountController.register()
+GET         /account/postregister                        @controllers.AccountController.postRegister()
 
-GET         /search                            @controllers.ConsultationController.search
-POST        /search                            @controllers.ConsultationController.postSearch
-GET         /consultation/:consultationid/:name            @controllers.ConsultationController.getConsultation(consultationid :Int, name: String)
+GET         /search                                      @controllers.ConsultationController.search
+POST        /search                                      @controllers.ConsultationController.postSearch
+GET         /consultation/:consultationid/:name          @controllers.ConsultationController.getConsultation(consultationid :Int, name: String)
 
-POST        /consultation/:consultationid/annotate/        @controllers.AnnotationController.annotate(consultationid :Int, tagId: Int )
+POST        /consultation/:consultationid/annotate/      @controllers.AnnotationController.annotate(consultationid :Int, tagId: Int )
 
 
 # Map static resources from the /public folder to the /assets URL path

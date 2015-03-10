@@ -1,5 +1,4 @@
 import com.google.inject.{Guice, AbstractModule}
-import interfaces.SearchManagerAbstract
 import play.api.GlobalSettings
 import services.{ConsultationManager}
 
@@ -13,7 +12,7 @@ object Global extends GlobalSettings {
    */
   val injector = Guice.createInjector(new AbstractModule {
     protected def configure() {
-      bind(classOf[SearchManagerAbstract]).to(classOf[ConsultationManager])
+      //bind(classOf[SearchManagerAbstract]).to(classOf[ConsultationManager])
     }
   })
 

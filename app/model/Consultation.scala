@@ -12,4 +12,3 @@ class Consultation(val id:Int,
                    val articlesNum:Int,
                    val articles:List[Article])
 
-

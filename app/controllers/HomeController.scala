@@ -7,8 +7,9 @@ import services.ConsultationManager
 class HomeController() extends Controller {
 
   def index = Action {
-    new ConsultationManager().search(new ConsultationSearchRequest(-1,"test",-1))
+    //new ConsultationManager().search(new ConsultationSearchRequest(-1,"test",-1))
     Ok(views.html.home.index("welcome"))
+
   }
 
 }

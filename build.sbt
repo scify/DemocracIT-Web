@@ -13,6 +13,11 @@ libraryDependencies ++= Seq(
   ws,
   "com.google.inject" % "guice" % "3.0",
   "org.postgresql" % "postgresql" % "9.3-1100-jdbc41",
-  "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
+  "org.specs2" %% "specs2-core" % "3.0.1" % "test"
 )
+
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+
+scalacOptions in Test ++= Seq("-Yrangepos")
+
 

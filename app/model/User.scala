@@ -1,6 +1,4 @@
 package model
 
 class User(val id: Int,
-           val emailAddress:String) {
-
-}
+           val emailAddress:String)

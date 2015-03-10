@@ -2,7 +2,6 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import interfaces.SearchManagerAbstract
 import model.ConsultationSearchRequest
 import play.api.mvc._
 import services.ConsultationManager

@@ -8,7 +8,8 @@ import play.api.mvc._
 class AccountController  () extends Controller {
 
   def login = Action {
-    Ok("not implemented")
+
+    Ok(views.html.account.login())
   }
 
   def postLogin = Action {

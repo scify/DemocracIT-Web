@@ -1,13 +1,27 @@
-import collection.mutable.Stack
-import org.scalatest._
 
-//http://www.scalatest.org/quick_start
-class DBRepositoriesSpec extends FlatSpec with Matchers {
-  "ConsulationRepository" should "be loaded from database for ID =10" in {
-    1 should be(1)
-  }
+import model.ConsultationSearchRequest
+import play.api.test.FakeApplication
+import services.ConsultationManager
+import play.api.test.Helpers._
+import org.specs2.mutable._
 
-  "Search manager" should "return results for query 'Νόμος'" in {
-    true should be (true)
-  }
+class DBRepositoriesSpec extends Specification  {
+
+  "Search manager" should {
+      "should return results " in {
+        running(FakeApplication()) {
+          val consultationManager = new ConsultationManager();
+          val consultations = consultationManager.search(new ConsultationSearchRequest(-1,"Νόμος",-1))
+          consultations.length > 1
+        }
+      }
+    }
+
+//
+//  "Search manager" should "return results for query 'Νόμος'" in {
+//    val consultationManager = new ConsultationManager();
+//    consultationManager.search(new ConsultationSearchRequest(-1,"Νόμος",-1))
+//    true should be (true)
+//
+//  }
 }
