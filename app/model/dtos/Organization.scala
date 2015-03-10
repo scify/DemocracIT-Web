@@ -1,3 +1,3 @@
 package democracit.dtos
 
-class Organization(val id:BigInt, val name:String);
+class Organization(val id:Int, val name:String);

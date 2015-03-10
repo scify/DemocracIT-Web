@@ -1,10 +1,12 @@
 package democracit.dtos
 
+import java.util.Date
+
 import org.joda.time.DateTime
 
 class Consultation(val id:Int,
-                   val startDate:DateTime,
-                   val endDate:DateTime,
+                   val startDate:Date,
+                   val endDate:Date,
                    val title: String,
                    val shortDescr:String,
                    val organization: Organization,

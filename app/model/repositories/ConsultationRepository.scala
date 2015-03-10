@@ -1,6 +1,8 @@
 package democracit.repositories
 
 
+import java.util.Date
+
 import anorm._
 import democracit.dtos._
 import org.joda.time.DateTime
@@ -36,11 +38,11 @@ class ConsultationRepository {
        val consultations =queryCommand().map(
           row=> new Consultation(
                   row[Int]("id"),
-                  row[DateTime]("start_date"),
-                  row[DateTime]("end_date"),
+                  row[Date]("start_date"),
+                  row[Date]("end_date"),
                   row[String]("title"),
                   row[String]("short_description"),
-                  new Organization(row[BigInt]("organization_id"),row[String]("organization_title")),
+                  new Organization(row[Int]("organization_id"),row[String]("organization_title")),
                   1,
                   row[String]("report_text"),
                   row[Int]("num_of_articles"),
