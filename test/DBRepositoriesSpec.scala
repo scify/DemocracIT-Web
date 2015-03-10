@@ -1,9 +1,8 @@
-
-import model.ConsultationSearchRequest
 import play.api.test.FakeApplication
-import services.ConsultationManager
 import play.api.test.Helpers._
 import org.specs2.mutable._
+import democracit.services._
+import democracit.dtos._
 
 class DBRepositoriesSpec extends Specification  {
 

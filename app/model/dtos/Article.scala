@@ -1,4 +1,4 @@
-package model
+package democracit.dtos
 
 class Article(val id: BigInt,
               val title:String,

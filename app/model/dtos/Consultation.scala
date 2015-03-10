@@ -1,4 +1,5 @@
-package model
+package democracit.dtos
+
 import org.joda.time.DateTime
 
 class Consultation(val id:Int,

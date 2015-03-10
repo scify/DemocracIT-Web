@@ -1,7 +1,6 @@
-package services
-
-import model._
-import model.dataaccess._
+package democracit.services
+import democracit.dtos._
+import democracit.repositories._
 
 class ConsultationManager
 {

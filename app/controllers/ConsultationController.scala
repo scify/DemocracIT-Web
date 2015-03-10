@@ -1,15 +1,11 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
-import model.ConsultationSearchRequest
+import democracit.dtos._
+import democracit.services._
 import play.api.mvc._
-import services.ConsultationManager
 
 //@Singleton
 //class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
-
-
 class ConsultationController() extends Controller {
 
   def getConsultation(consultationid :Int, name: String) = Action {

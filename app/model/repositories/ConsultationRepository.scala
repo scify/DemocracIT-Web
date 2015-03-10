@@ -1,11 +1,11 @@
-package model.dataaccess
+package democracit.repositories
 
-import anorm._;
-import model._
+
+import anorm._
+import democracit.dtos._
 import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
-import play.api.libs.iteratee.Iteratee
 
 
 class ConsultationRepository {

@@ -1,8 +1,7 @@
 package controllers
 
-import model.ConsultationSearchRequest
 import play.api.mvc._
-import services.ConsultationManager
+
 
 class HomeController() extends Controller {
 
