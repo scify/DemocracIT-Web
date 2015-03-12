@@ -1,13 +1,16 @@
 package controllers
 
+import democracit.services.ConsultationManager
 import play.api.mvc._
 
 
 class HomeController() extends Controller {
 
+  val consultationManager = new ConsultationManager
+
   def index = Action {
-    //new ConsultationManager().search(new ConsultationSearchRequest(-1,"test",-1))
-    Ok(views.html.home.index("welcome"))
+
+    Ok(views.html.home.index(consultationManager.getLatestConsultations()))
 
   }
 

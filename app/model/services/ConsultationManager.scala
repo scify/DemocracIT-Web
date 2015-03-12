@@ -4,15 +4,17 @@ import democracit.repositories._
 
 class ConsultationManager
 {
+  val repository = new ConsultationRepository()
   def search(searchRequest: ConsultationSearchRequest):List[Consultation] = {
-      val repository = new ConsultationRepository()
-      repository.search(searchRequest)
+    repository.search(searchRequest)
   }
 
   def get(consultationId: Long):Consultation = {
-     val repository = new ConsultationRepository()
      repository.get(consultationId)
   }
 
+  def getLatestConsultations():List[Consultation] ={
+        repository.latestConsultations(10)
+  }
 
 }

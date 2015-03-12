@@ -33,8 +33,17 @@ class ConsultationRepository {
                       c.title like ${"%"+searchRequest.query+"%"} or
                       c.short_description like ${"%"+searchRequest.query+"%"} or
                       c.id in (select a.consultation_id from relatedArticles a)
-                order by end_date""".as(ConsultationParser.Parse *)
+                order by end_date desc """.as(ConsultationParser.Parse *)
         }
+  }
+
+  def latestConsultations(maxConsultationsToReceive:Int) : List[Consultation] = {
+    DB.withConnection { implicit c =>
+      SQL"""
+        select c.*, o.title as OrganizationTitle from public.consultation c
+        inner join public.organization_lkp o on c.organization_id = o.id
+        order by end_date desc limit $maxConsultationsToReceive""".as(ConsultationParser.Parse *)
+    }
   }
 
   def get(consultationId: BigInt): Consultation =

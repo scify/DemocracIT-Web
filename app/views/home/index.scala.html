@@ -1,15 +1,11 @@
-@(message: String)
-
+@(consultations:List[democracit.dtos.Consultation])
 @js ={}
-
 @css = {}
 
-@layout("DemocracIT",css,js){
+@layout("Αρχική",css,js){
     <div id="intro">
         <div class="container">
-
             <h1>Επαναπροσδιορίζοντας τη δημόσια διαβούλευση</h1>
-
         </div>
     </div>
 
@@ -26,18 +22,24 @@
     </div>
     <div id="consultations">
         <div class="container">
-        <div id="status-open">
-            <h2>Ανοικτές διαβουλεύσεις:</h2>
+        <div>
+            <h2>Τελευταίες διαβουλεύσεις:</h2>
             <table>
                <thead>
                    <tr>
                         <th>#</th>
                         <th>Τίτλος</th>
-                        <th>Απομένουν</th>
+                        <th>Λήξη</th>
                    </tr>
                </thead>
                 <tbody>
-
+                    @for(cons <- consultations) {
+                        <tr>
+                            <td>#</td>
+                            <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a></td>
+                            <td>@cons.endDate</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
 
