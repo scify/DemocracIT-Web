@@ -8,21 +8,15 @@ import play.api.mvc._
 //class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
 class ConsultationController() extends Controller {
 
-  def getConsultation(consultationid :Int, name: String) = Action {
+  private val consultationManager = new ConsultationManager()
 
-    Ok("not implemented")
+  def search(query:String)= Action {
+    val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,-1))
+    Ok(views.html.consultation.search(query,results))
   }
 
-  def search= Action {
-
-    Ok("not implemented")
+  def getConsultation(consultationId :Long) = Action {
+        Ok(views.html.consultation.index(consultationManager.get(consultationId)))
   }
-
-  def postSearch= Action {
-    val results = new ConsultationManager().search(new ConsultationSearchRequest(-1,"test",-1))
-    Ok("not implemented")
-  }
-
-
 
 }

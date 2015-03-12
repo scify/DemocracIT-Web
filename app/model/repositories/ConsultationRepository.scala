@@ -4,80 +4,68 @@ package democracit.repositories
 import java.util.Date
 
 import anorm._
+import anorm.SqlParser._
 import democracit.dtos._
 import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
+import repositories.anorm.{ArticleParser, ConsultationParser}
 
 
 class ConsultationRepository {
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
-    val queryCommand = SQL(
-      """
-         with relatedArticles as
-        |(
-        |     select distinct consultation_id
-        |     from articles a
-        |     where
-        |           a.title like '%Νόμος%' or
-        |           a.body like   '%Νόμος%'
-        |)
-        |select c.*, o.title as OrganizationTitle from public.consultation c
-        |inner join public.organization_lkp o on c.organization_id = o.id
-        |where
-        |      c.title like '%Νόμος%' or
-        |      c.short_description like '%Νόμος%' or
-        |      c.id in (select a.consultation_id from relatedArticles a)
-        |order by end_date
-      """.stripMargin).on("query" -> searchRequest.query);
-
-
-    DB.withConnection { implicit c =>
-       val consultations =queryCommand().map(
-          row=> new Consultation(
-                  row[Int]("id"),
-                  row[Date]("start_date"),
-                  row[Date]("end_date"),
-                  row[String]("title"),
-                  row[String]("short_description"),
-                  new Organization(row[Int]("organization_id"),row[String]("organization_title")),
-                  1,
-                  row[String]("report_text"),
-                  row[Int]("num_of_articles"),
-                  null
-              )).toList
-
-      consultations
-    }
-
+       //Retrieving values with string interpolation https://www.playframework.com/documentation/2.3.5/ScalaAnorm
+        DB.withConnection { implicit c =>
+          SQL"""
+                with relatedArticles as
+                (
+                     select distinct consultation_id
+                     from articles a
+                     where
+                           a.title like ${"%"+searchRequest.query+"%"} or
+                           a.body like  ${"%"+searchRequest.query+"%"}
+                )
+                select c.*, o.title as OrganizationTitle from public.consultation c
+                inner join public.organization_lkp o on c.organization_id = o.id
+                where
+                      c.title like ${"%"+searchRequest.query+"%"} or
+                      c.short_description like ${"%"+searchRequest.query+"%"} or
+                      c.id in (select a.consultation_id from relatedArticles a)
+                order by end_date""".as(ConsultationParser.Parse *)
+        }
   }
 
-  def get(consultationId: Int): Consultation =
+  def get(consultationId: BigInt): Consultation =
   {
-//    val queryCommand = SQL(
-//      """
-//        |with relatedArticles as
-//        |(
-//        |     select distinct consultation_id
-//        |     from articles a
-//        |     where
-//        |           a.title like '%{query}%' or
-//        |           a.body like   '%{query}%'
-//        |)
-//        |select c.*, o.title as OrganizationTitle from public.consultation c
-//        |inner join public.organization_lkp o on c.organization_id = o.id
-//        |where
-//        |      c.title like '%{query}%' or
-//        |      c.short_description like '%{query}%' or
-//        |      c.id in (select a.consultation_id from relatedArticles a)
-//        |order by end_date
-//        |
-//      """.stripMargin).on("query" ->consultationId);
-//    DB.withConnection { implicit c =>
-//      val consultations = queryCommand().map(row=> "").toList
-//    }
-    ???
+    DB.withConnection { implicit c =>
+     val results = SQL"""
+                select c.*,
+                       o.title as OrganizationTitle,
+                       a.id as article_id,
+                       a.consultation_id,
+                       a.title as article_title,
+                       a.body as article_body,
+                       a.art_order,
+                       a.comment_num
+                        from public.consultation c
+                inner join public.organization_lkp o on c.organization_id = o.id
+                inner join public.articles a on a.consultation_id = c.id
+                where
+                      c.id =$consultationId
+                order by end_date, a.art_order
+        """.as((ConsultationParser.Parse ~ ArticleParser.Parse map(flatten)) *)
+      //due to the inner join we have tuples of the same consultations and different articles
+
+      val newResults = results.groupBy(z =>{z._1}) //group results by consultation. The results is a tuple with 2 properties. (Consultation, List[(Consultation,Article)]
+      val consultation:Consultation = newResults.head._1;  //fetch the consultation from the first property of the tuple
+      for (tuple <- newResults.head._2)
+      {
+        consultation.articles  =consultation.articles :+ tuple._2
+      }
+
+      consultation
+    }
   }
 }

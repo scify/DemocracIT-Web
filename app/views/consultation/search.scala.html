@@ -1,0 +1,39 @@
+@(query: String, consultations: List[democracit.dtos.Consultation])
+
+@js = {}
+
+@css = {}
+
+@layout("DemocracIT", css, js) {
+
+    <div id="search-box">
+        <div class="container">
+            <div class="box">
+                <span class="icon"><i class="fa fa-search"></i></span>
+                <input type="text" id="search" name="query" value="@query" placeholder="Αναζήτηση..." />
+            </div>
+        </div>
+    </div>
+
+    <div id="results">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    Βρέθηκαν @consultations.length διαβουλεύσεις
+                </div>
+            </div>
+            <table>
+            @for(cons <- consultations) {
+                <tr>
+                    <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title </a></td>
+                    <td>(@cons.articlesNum άρθρα)<td>
+                </tr>
+            }
+            </table>
+        </div>
+    </div>
+
+}
+
+
+

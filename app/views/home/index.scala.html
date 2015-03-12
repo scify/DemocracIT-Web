@@ -15,10 +15,13 @@
 
     <div id="search-box">
         <div class="container">
-            <div class="box">
-                <span class="icon"><i class="fa fa-search"></i></span>
-                <input type="search" id="search" placeholder="Αναζήτηση..." />
-            </div>
+            @helper.form(action= routes.ConsultationController.search()) {
+                <div class="box">
+                    <span class="icon"><i class="fa fa-search"></i></span>
+                    <input type="search" id="search" name="query" placeholder="Αναζήτηση..." />
+                    <button type="submit">Submit</button>
+                </div>
+            }
         </div>
     </div>
     <div id="consultations">

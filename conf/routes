@@ -10,11 +10,8 @@ POST        /account/login                               @controllers.AccountCon
 GET         /account/register                            @controllers.AccountController.register()
 GET         /account/postregister                        @controllers.AccountController.postRegister()
 
-GET         /search                                      @controllers.ConsultationController.search
-POST        /search                                      @controllers.ConsultationController.postSearch
-GET         /consultation/:consultationid/:name          @controllers.ConsultationController.getConsultation(consultationid :Int, name: String)
-
-POST        /consultation/:consultationid/annotate/      @controllers.AnnotationController.annotate(consultationid :Int, tagId: Int )
+GET         /consultation/search                         @controllers.ConsultationController.search(query:String ?="")
+GET         /consultation/:consultationId                @controllers.ConsultationController.getConsultation(consultationId :Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

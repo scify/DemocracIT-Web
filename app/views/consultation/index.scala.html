@@ -1,0 +1,31 @@
+@(consultation: democracit.dtos.Consultation)
+
+@js = {}
+
+@css = {}
+
+@layout("DemocracIT", css, js) {
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            @consultation.title
+            </div>
+        </div>
+        @for(article <- consultation.articles) {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title">
+                        @article.title
+                    </div>
+                    <div class="body">
+                        @article.body
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+

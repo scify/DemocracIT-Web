@@ -1,22 +1,22 @@
 package repositories.anorm
 
-import anorm.RowParser
-import democracit.dtos.{Organization, Consultation}
+import anorm._
+import anorm.SqlParser._
+import democracit.dtos._
 
 
-object Parsers {
-  val consultationParser: RowParser[Consultation] = {
-    import anorm.~
-    import anorm.SqlParser._
+object ConsultationParser{
 
-    int("id") ~
+  val Parse: RowParser[Consultation] = {
+
+    long("id") ~
     date("start_date") ~
     date("end_date") ~
     str("title") ~
     str("short_description") ~
     int("organization_id") ~
-    str("organization_title") ~
-    str("report_text") ~
+    str("OrganizationTitle") ~
+    get[Option[String]]("report_text") ~
     int("num_of_articles") map
       {
         case id ~ start_date ~ end_date ~ title ~ short_description ~
@@ -27,12 +27,9 @@ object Parsers {
             id, start_date,end_date, title, short_description,
             new Organization(organization_id,organization_title),
             -1,
-            report_text, num_of_articles,null
+            report_text, num_of_articles,Nil
           )
       }
-
-
-
 
   }
 }

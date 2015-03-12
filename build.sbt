@@ -20,4 +20,5 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
+//play.PlayImport.PlayKeys.routesImport += "democracit.utils.binders"
 

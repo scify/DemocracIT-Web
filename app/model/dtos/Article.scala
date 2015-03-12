@@ -1,7 +1,8 @@
 package democracit.dtos
 
-class Article(val id: BigInt,
+case class Article(val id: BigInt,
+              val consultationId:BigInt,
               val title:String,
               val body:String,
-              val order:Byte,
+              val order:Int,
               val commentsNum:Int);
