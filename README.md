@@ -14,7 +14,7 @@ $ sudo nano /etc/environment
 
 Add 3 database related properties
 ```
-$ democracit_db_host="jdbc:postgresql://your-host-name-here/databaseNameHere"
+$ democracit_db_con_string="jdbc:postgresql://your-host-name-here/databaseNameHere"
 $ democracit_db_user="db-username"
 $ democracit_db_pw="db-password"
 ```
