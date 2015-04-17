@@ -10,7 +10,7 @@ class HomeController() extends Controller {
 
   def index = Action {
 
-    Ok(views.html.home.index(consultationManager.getLatestConsultations()))
+    Ok(views.html.home.index(consultationManager.getConsultationsForHomePage()))
 
   }
 

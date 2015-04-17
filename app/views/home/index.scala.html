@@ -1,4 +1,4 @@
-@(consultations:List[democracit.dtos.Consultation])
+@(viewmodel:democracit.viewmodels.HomeViewModel)
 @js ={}
 @css = {}
 
@@ -22,21 +22,29 @@
     </div>
     <div id="consultations">
         <div class="container">
-        <div id="recent">
-            <h2>Πρόσφατες διαβουλεύσεις:</h2>
-            <table>
-                <tbody>
-                    @for(cons <- consultations) {
-                        <tr>
-                            <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a></td>
-                            <td>@cons.endDateFormatted</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div id="in-progress">
+                <h2>Σε εξέλιξη:</h2>
+                @displayConsultation(viewmodel.activeConsultations)
+            </div>
+            <div id="recent">
+            <h2>Πρόσφατες:</h2>
+                @displayConsultation(viewmodel.recentConsultations)
         </div>
         </div>
     </div>
-}
 
+
+}
+@displayConsultation(consultations:List[democracit.dtos.Consultation]) = {
+    <table>
+        <tbody>
+        @for(cons <- consultations) {
+            <tr>
+                <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a></td>
+                <td>λήξη: @cons.endDateFormatted</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
