@@ -2,18 +2,20 @@
 
 @js = {}
 
-@css = {}
+@css = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation.css")">
+}
 
 @layout("DemocracIT", css, js) {
 
     <div class="container">
-        <div class="row">
+        <div class="row consultation">
             <div class="col-md-12">
             @consultation.title
             </div>
         </div>
         @for(article <- consultation.articles) {
-            <div class="row">
+            <div class="row article ">
                 <div class="col-md-12">
                     <div class="title">
                         @article.title
