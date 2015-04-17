@@ -22,27 +22,18 @@
     </div>
     <div id="consultations">
         <div class="container">
-        <div>
-            <h2>Τελευταίες διαβουλεύσεις:</h2>
+        <div id="recent">
+            <h2>Πρόσφατες διαβουλεύσεις:</h2>
             <table>
-               <thead>
-                   <tr>
-                        <th>#</th>
-                        <th>Τίτλος</th>
-                        <th>Λήξη</th>
-                   </tr>
-               </thead>
                 <tbody>
                     @for(cons <- consultations) {
                         <tr>
-                            <td>#</td>
                             <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a></td>
-                            <td>@cons.endDate</td>
+                            <td>@cons.endDateFormatted</td>
                         </tr>
                     }
                 </tbody>
             </table>
-
         </div>
         </div>
     </div>
