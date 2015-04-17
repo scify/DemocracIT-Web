@@ -23,5 +23,6 @@ case class Consultation(val id:Long,
         t.format(endDate)
 
     }
+
 }
 

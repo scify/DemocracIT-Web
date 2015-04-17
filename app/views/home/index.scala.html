@@ -22,29 +22,32 @@
     </div>
     <div id="consultations">
         <div class="container">
-            <div id="in-progress">
-                <h2>Σε εξέλιξη:</h2>
-                @displayConsultation(viewmodel.activeConsultations)
-            </div>
+                <div id="in-progress">
+                    <h2>Σε εξέλιξη:</h2>
+                    @displayConsultation(viewmodel.activeConsultations, "λήξη")
+                </div>
+                <hr/>
             <div id="recent">
             <h2>Πρόσφατες:</h2>
-                @displayConsultation(viewmodel.recentConsultations)
+                @displayConsultation(viewmodel.recentConsultations, "έληξε")
         </div>
         </div>
     </div>
-
-
 }
-@displayConsultation(consultations:List[democracit.dtos.Consultation]) = {
-    <table>
-        <tbody>
-        @for(cons <- consultations) {
-            <tr>
-                <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a></td>
-                <td>λήξη: @cons.endDateFormatted</td>
-            </tr>
+
+@displayConsultation(consultations:List[democracit.dtos.Consultation], label:String) = {
+
+        @if(consultations.length==0){
+            <div class="empty">
+                Δεν υπάρχει ανοικτή διαβούλευση αυτή τη στιγμή
+            </div>
         }
-        </tbody>
-    </table>
+
+        @for(cons <- consultations) {
+            <div class="consultation">
+                <a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a>
+                <br> <i>@label: @cons.endDateFormatted</i>
+            </div>
+        }
 }
 

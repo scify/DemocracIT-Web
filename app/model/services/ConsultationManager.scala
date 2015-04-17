@@ -19,7 +19,7 @@ class ConsultationManager {
   }
 
   def getConsultationsForHomePage(): HomeViewModel = {
-    val consultations = repository.latestConsultations(15)
+    val consultations = repository.latestConsultations(10)
     val today = new Date();
     new HomeViewModel(
       activeConsultations = consultations.filter(p => p.endDate.after(today)),
