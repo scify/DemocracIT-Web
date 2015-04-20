@@ -1,23 +1,73 @@
-import com.google.inject.{Guice, AbstractModule}
+
+import com.google.inject.Guice
+import com.mohiva.play.silhouette.api.{ Logger, SecuredSettings }
+import controllers.routes
+import play.Logger
 import play.api.GlobalSettings
+import play.api.i18n.{ Lang, Messages }
+import play.api.mvc.Results._
+import play.api.mvc.{ RequestHeader, Result }
+import utils.SilhouetteModule
+
+import scala.concurrent.Future
 
 /**
- * Set up the Guice injector and provide the mechanism for return objects from the dependency graph.
+ * The global object.
  */
-object Global extends GlobalSettings {
+object Global extends Global
+
+/**
+ * The global configuration.
+ */
+trait Global extends GlobalSettings with SecuredSettings with com.mohiva.play.silhouette.api.Logger {
+
+//  /**
+//   * Bind types such that whenever TextGenerator is required, an instance of WelcomeTextGenerator will be used.
+//   */
+//  val injector = Guice.createInjector(new AbstractModule {
+//    protected def configure() {
+//      //bind(classOf[SearchManagerAbstract]).to(classOf[ConsultationManager])
+//    }
+//  })
 
   /**
-   * Bind types such that whenever TextGenerator is required, an instance of WelcomeTextGenerator will be used.
+   * The Guice dependencies injector.
    */
-  val injector = Guice.createInjector(new AbstractModule {
-    protected def configure() {
-      //bind(classOf[SearchManagerAbstract]).to(classOf[ConsultationManager])
-    }
-  })
+  val injector = Guice.createInjector(new SilhouetteModule)
 
   /**
-   * Controllers must be resolved through the application context. There is a special method of GlobalSettings
-   * that we can override to resolve a given controller. This resolution is required by the Play router.
+   * Loads the controller classes with the Guice injector,
+   * in order to be able to inject dependencies directly into the controller.
+   *
+   * @param controllerClass The controller class to instantiate.
+   * @return The instance of the controller class.
+   * @throws Exception if the controller couldn't be instantiated.
    */
-  override def getControllerInstance[A](controllerClass: Class[A]): A = injector.getInstance(controllerClass)
+  override def getControllerInstance[A](controllerClass: Class[A]) = injector.getInstance(controllerClass)
+
+  /**
+   * Called when a user is not authenticated.
+   *
+   * As defined by RFC 2616, the status code of the response should be 401 Unauthorized.
+   *
+   * @param request The request header.
+   * @param lang The currently selected language.
+   * @return The result to send to the client.
+   */
+  override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
+    Some(Future.successful(Redirect(routes.ApplicationController.signIn)))
+  }
+
+  /**
+   * Called when a user is authenticated but not authorized.
+   *
+   * As defined by RFC 2616, the status code of the response should be 403 Forbidden.
+   *
+   * @param request The request header.
+   * @param lang The currently selected language.
+   * @return The result to send to the client.
+   */
+  override def onNotAuthorized(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
+    Some(Future.successful(Redirect(routes.ApplicationController.signIn).flashing("error" -> Messages("access.denied"))))
+  }
 }
