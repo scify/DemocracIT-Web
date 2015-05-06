@@ -16,7 +16,7 @@ class HomeController  @Inject()  (implicit val env: Environment[model.User, Sess
   val consultationManager = new ConsultationManager
 
   def index = UserAwareAction { implicit  request =>
-    Ok(views.html.home2.index(consultationManager.getConsultationsForHomePage(request.identity)))
+    Ok(views.html.home.index(consultationManager.getConsultationsForHomePage(request.identity)))
   }
 
 }
