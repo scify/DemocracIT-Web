@@ -2,22 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-#GET         /                                    @controllers.HomeController.index
 
-# Home page
-GET         /                                    @controllers.ApplicationController.index
-GET         /signIn                              @controllers.ApplicationController.signIn
-GET         /signUp                              @controllers.ApplicationController.signUp
-GET         /signOut                             @controllers.ApplicationController.signOut
+GET         /                                    @controllers.HomeController.index
+
+GET         /signIn                              @controllers.AccountController.signIn
+GET         /signUp                              @controllers.AccountController.signUp
+GET         /signOut                             @controllers.AccountController.signOut
 GET         /authenticate/:provider              @controllers.SocialAuthController.authenticate(provider)
 POST        /authenticate/credentials            @controllers.CredentialsAuthController.authenticate
 POST        /signUp                              @controllers.SignUpController.signUp
-
-GET         /account/login                       @controllers.AccountController.login()
-POST        /account/login                       @controllers.AccountController.postLogin()
-GET         /account/register                    @controllers.AccountController.register()
-GET         /account/postregister                @controllers.AccountController.postRegister()
 
 GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="")
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)

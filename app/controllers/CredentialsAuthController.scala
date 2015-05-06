@@ -35,12 +35,12 @@ class CredentialsAuthController @Inject() (
    */
   def authenticate = Action.async { implicit request =>
     SignInForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.signIn(form))),
+      form => Future.successful(BadRequest(views.html.account.signIn(form))),
       credentials => (env.providers.get(CredentialsProvider.ID) match {
         case Some(p: CredentialsProvider) => p.authenticate(credentials)
         case _ => Future.failed(new ConfigurationException(s"Cannot find credentials provider"))
       }).flatMap { loginInfo =>
-        val result = Future.successful(Redirect(routes.ApplicationController.index()))
+        val result = Future.successful(Redirect(routes.HomeController.index()))
         userService.retrieve(loginInfo).flatMap {
           case Some(user) => env.authenticatorService.create(user.loginInfo).flatMap { authenticator =>
             env.eventBus.publish(LoginEvent(user, request, request2lang))
@@ -50,7 +50,7 @@ class CredentialsAuthController @Inject() (
         }
       }.recover {
         case e: ProviderException =>
-          Redirect(routes.ApplicationController.signIn()).flashing("error" -> Messages("invalid.credentials"))
+          Redirect(routes.AccountController.signIn()).flashing("error" -> Messages("invalid.credentials"))
       }
     )
   }

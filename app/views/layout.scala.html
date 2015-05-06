@@ -1,16 +1,28 @@
-@(title: String, css: Html, js: Html)(content: Html)
+@(title: String, css: Html, js: Html, user:Option[model.User])(content: Html)
 
 <!DOCTYPE html>
 
 <html>
     <head>
         <title>Democracit - @title</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link media="all" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:600:400:300|Bree+Serif:400:400normal&amp;subset=vietnamese,greek-ext,devanagari,cyrillic-ext,latin-ext,latin,greek,cyrillic" id="vtcore-google-fonts-css" rel="stylesheet">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/font-awesome.min.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.min.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/common.css")">
+        @*<link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.min.css")">*@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <link href="//cdnjs.cloudflare.com/ajax/libs/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
+        <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-theme.min.css"))">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/common.css")">
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+
         @css
         @common.googleAnalytics()
     </head>
@@ -30,14 +42,20 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="active"><a href="http://www.scify.gr/site/el/projects/in-progress/democracit" target="_blank">
                             Σχετικά</a></li>
-                        <li><a href="#">Σύνδεση</a></li>
+                        <li>
+                        @user.map { u =>
+                            <li><a href="@routes.HomeController.index">@u.fullName</a></li>
+                            <li><a href="@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                            }.getOrElse {
+                            <li><a href="@routes.AccountController.signIn">ΕΙΣΟΔΟΣ</a></li>
+                            <li><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
+                    }
                     </ul>
                 </div>
             </nav>
         </header>
-
         <div id="content">
-        @content
+            @content
         </div>
 
         <footer id="footer">

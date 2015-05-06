@@ -41,12 +41,12 @@ class SignUpController @Inject() (
    */
   def signUp = Action.async { implicit request =>
     SignUpForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.signUp(form))),
+      form => Future.successful(BadRequest(views.html.account.signUp(form))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
           case Some(user) =>
-            Future.successful(Redirect(routes.ApplicationController.signUp()).flashing("error" -> Messages("user.exists")))
+            Future.successful(Redirect(routes.AccountController.signUp()).flashing("error" -> Messages("user.exists")))
           case None =>
             val authInfo = passwordHasher.hash(data.password)
             val user = model.User(
@@ -65,7 +65,7 @@ class SignUpController @Inject() (
               authenticator <- env.authenticatorService.create(user.loginInfo)
               value <- env.authenticatorService.init(authenticator)
               result <- env.authenticatorService.embed(value, Future.successful(
-                Redirect(routes.ApplicationController.index())
+                Redirect(routes.HomeController.index())
               ))
             } yield {
               env.eventBus.publish(SignUpEvent(user, request, request2lang))

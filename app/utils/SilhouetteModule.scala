@@ -87,13 +87,13 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
       authenticatorService,
       ListMap(
         credentialsProvider.id -> credentialsProvider,
-        googleProvider.id -> googleProvider,
+        //googleProvider.id -> googleProvider,
         facebookProvider.id -> facebookProvider,
-        twitterProvider.id -> twitterProvider,
-        vkProvider.id -> vkProvider,
-        xingProvider.id -> xingProvider,
-        yahooProvider.id -> yahooProvider,
-        clefProvider.id -> clefProvider
+        twitterProvider.id -> twitterProvider
+        //vkProvider.id -> vkProvider,
+        //xingProvider.id -> xingProvider,
+        //yahooProvider.id -> yahooProvider,
+        //clefProvider.id -> clefProvider
       ),
       eventBus
     )
@@ -222,6 +222,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    */
   @Provides
   def provideGoogleProvider(httpLayer: HTTPLayer, stateProvider: OAuth2StateProvider): GoogleProvider = {
+
     GoogleProvider(httpLayer, stateProvider, OAuth2Settings(
       authorizationURL = Play.configuration.getString("silhouette.google.authorizationURL"),
       accessTokenURL = Play.configuration.getString("silhouette.google.accessTokenURL").get,

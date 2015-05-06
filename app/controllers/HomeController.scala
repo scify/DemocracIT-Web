@@ -1,17 +1,22 @@
 package controllers
 
+
+import javax.inject.Inject
+import com.mohiva.play.silhouette.api.{Silhouette, Environment, LogoutEvent}
+import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import democracit.services.ConsultationManager
-import play.api.mvc._
+import forms._
+import scala.concurrent.Future
 
 
-class HomeController() extends Controller {
+
+class HomeController  @Inject()  (implicit val env: Environment[model.User, SessionAuthenticator])
+                        extends Silhouette[model.User, SessionAuthenticator] {
 
   val consultationManager = new ConsultationManager
 
-  def index = Action {
-
-    Ok(views.html.home2.index2(consultationManager.getConsultationsForHomePage()))
-
+  def index = UserAwareAction { implicit  request =>
+    Ok(views.html.home2.index(consultationManager.getConsultationsForHomePage(request.identity)))
   }
 
 }
