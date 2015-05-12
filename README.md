@@ -19,6 +19,15 @@ $ democracit_db_user="db-username"
 $ democracit_db_pw="db-password"
 ```
 
+And 4 social login related fields
+
+```
+$ FACEBOOK_CLIENT_ID=id goes here
+$ FACEBOOK_CLIENT_SECRET=secret goes here
+$ TWITTER_CONSUMER_KEY=key goes here
+$ TWITTER_CONSUMER_SECRET=secret goes here
+```
+
 ### Set up the Sass/SCSS transpiler
 
 https://www.jetbrains.com/idea/help/transpiling-sass-less-and-scss-to-css.html#d532231e166
