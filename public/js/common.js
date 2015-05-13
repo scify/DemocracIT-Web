@@ -1,0 +1,1 @@
+window.scify = window.scify || {}; //define global namespace
