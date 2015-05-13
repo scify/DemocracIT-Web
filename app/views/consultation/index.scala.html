@@ -1,26 +1,29 @@
 @(consultation: democracit.dtos.Consultation)
 
-@js = {}
+@js = {
+
+
+}
 
 @css = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
 @layout("DemocracIT", css, js,None) {
 
     <div class="container">
         <div class="row consultation">
-            <div class="col-md-12">
-            @consultation.title
+            <div class="col-md-10 title" >
+                @consultation.title
             </div>
         </div>
         @for(article <- consultation.articles) {
             <div class="row article ">
-                <div class="col-md-12">
+                <div class="col-md-10">
                     <div class="title">
-                        @article.title
+                      <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#article-@article.id"><span>+</span> <span>-</span> </a>  @article.title
                     </div>
-                    <div class="body">
+                    <div  class="body collapse" id="article-@article.id" style="height:0;" >
                         @Html(article.body)
                     </div>
                 </div>

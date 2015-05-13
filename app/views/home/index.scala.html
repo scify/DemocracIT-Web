@@ -1,6 +1,8 @@
 @(viewmodel:democracit.viewmodels.HomeViewModel)
 @js ={}
-@css = {}
+@css = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/home/index.css")">
+}
 
 @layout("Αρχική",css,js, viewmodel.user){
     <div id="intro">
