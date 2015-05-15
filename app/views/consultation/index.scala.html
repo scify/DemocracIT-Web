@@ -1,7 +1,7 @@
 @(consultation: democracit.dtos.Consultation)
 
 @js = {
-    <script src="@routes.Assets.at("js/annotator-full.min.js")" ></script>
+    <script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>
     <script src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
         var controller = new scify.ConsultationIndexPageHandler();
@@ -10,13 +10,12 @@
 }
 
 @css = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/annotator.min.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
 @layout("DemocracIT", css, js,None) {
 
-    <div class="container">
+    <div id="wrapper" class="container">
         <section id="consultation-header">
         <div class="row">
             <div class="col-md-12 title" >
@@ -29,9 +28,10 @@
                 <div class="row article ">
                     <div class="col-md-8">
                         <div class="title">
-                          <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#article-@article.id"><span>+</span> <span>-</span> </a>  @article.title
+                          <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#article-@article.id"><span>-</span><span>+</span></a>
+                          <span class="article-title-text">@article.title</span>
                         </div>
-                        <div  class="body collapse" id="article-@article.id" style="height:0;" >
+                        <div  class="article-body collapse" id="article-@article.id" style="height:0;" >
                             @Html(article.body)
                         </div>
                     </div>
@@ -42,6 +42,7 @@
         </section>
     </div>
 }
+
 
 
 

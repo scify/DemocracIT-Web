@@ -6,9 +6,7 @@ import play.api.mvc._
 
 
 class AnnotationController() extends Controller {
-
-  def annotate(consultationid:Int, tagId:Int) = Action {
+  def annotate(consultationid:Int, articleid:Int,tagsId:Int) = Action {
     Ok("not implemented")
   }
-
 }

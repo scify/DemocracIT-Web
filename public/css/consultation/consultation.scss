@@ -1,5 +1,20 @@
 @import "../utilities/variables";
 
+//.article ::-moz-selection { /* Code for Firefox */
+//  color: red;
+//  background: yellow;
+//}
+//
+//.article ::selection {
+//  color: red;
+//  background: yellow;
+//}
+
+.highlight
+{
+  color:red;
+}
+
 #consultation-header .title {
   font-size: 20px;
   margin-top: 20px;
@@ -29,11 +44,11 @@
 }
 
 .article {
-  margin-bottom: 20px;
-  margin-top: 20px;
+
+  padding-top: 20px;
 }
 
-.article .body {
+.article .article-body {
   color: #333333;
   font-size: 13px;
   font-weight: normal;

@@ -1,3 +1,6 @@
+.highlight {
+  color: red; }
+
 #consultation-header .title {
   font-size: 20px;
   margin-top: 20px; }
@@ -21,10 +24,9 @@
   display: inline; }
 
 .article {
-  margin-bottom: 20px;
-  margin-top: 20px; }
+  padding-top: 20px; }
 
-.article .body {
+.article .article-body {
   color: #333333;
   font-size: 13px;
   font-weight: normal;

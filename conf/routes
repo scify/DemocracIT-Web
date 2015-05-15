@@ -12,6 +12,12 @@ GET         /authenticate/:provider              @controllers.SocialAuthControll
 POST        /authenticate/credentials            @controllers.CredentialsAuthController.authenticate
 POST        /signUp                              @controllers.SignUpController.signUp
 
+#GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
+#POST        /annotations
+#PUT         /annotations/:id
+#DELETE      /annotations/:id
+#GET         /search
+
 GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="")
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
 
