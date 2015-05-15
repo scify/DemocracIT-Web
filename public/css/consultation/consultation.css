@@ -1,0 +1,35 @@
+#consultation-header .title {
+  font-size: 20px;
+  margin-top: 20px; }
+
+.show-hide {
+  border: medium none;
+  box-shadow: none;
+  color: gray;
+  display: inline;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 0;
+  vertical-align: -1px;
+  width: 11px; }
+
+.show-hide.collapsed span:first-child,
+.show-hide span:last-child {
+  display: none; }
+
+.show-hide.collapsed span:last-child {
+  display: inline; }
+
+.article {
+  margin-bottom: 20px;
+  margin-top: 20px; }
+
+.article .body {
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.8em;
+  padding-left: 15px;
+  margin-top: 10px; }
+
+/*# sourceMappingURL=consultation.css.map */

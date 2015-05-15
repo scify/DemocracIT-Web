@@ -1,31 +1,45 @@
 @(consultation: democracit.dtos.Consultation)
 
-@js = {}
+@js = {
+    <script src="@routes.Assets.at("js/annotator-full.min.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/index.js")" ></script>
+    <script>
+        var controller = new scify.ConsultationIndexPageHandler();
+        controller.init();
+    </script>
+}
 
 @css = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/annotator.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
 @layout("DemocracIT", css, js,None) {
 
     <div class="container">
-        <div class="row consultation">
-            <div class="col-md-12">
-            @consultation.title
+        <section id="consultation-header">
+        <div class="row">
+            <div class="col-md-12 title" >
+                @consultation.title
             </div>
         </div>
-        @for(article <- consultation.articles) {
-            <div class="row article ">
-                <div class="col-md-12">
-                    <div class="title">
-                        @article.title
+            </section>
+        <section id="consultation-body">
+            @for(article <- consultation.articles) {
+                <div class="row article ">
+                    <div class="col-md-8">
+                        <div class="title">
+                          <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#article-@article.id"><span>+</span> <span>-</span> </a>  @article.title
+                        </div>
+                        <div  class="body collapse" id="article-@article.id" style="height:0;" >
+                            @Html(article.body)
+                        </div>
                     </div>
-                    <div class="body">
-                        @Html(article.body)
-                    </div>
+                    <div class="col-md-4">
+                        </div>
                 </div>
-            </div>
-        }
+            }
+        </section>
     </div>
 }
 
