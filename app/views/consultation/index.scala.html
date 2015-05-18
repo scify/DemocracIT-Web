@@ -1,10 +1,10 @@
-@(consultation: democracit.dtos.Consultation)
+@(model: democracit.model.viewmodels.ConsultationViewModel)
 
 @js = {
     <script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>
     <script src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
-        var controller = new scify.ConsultationIndexPageHandler();
+        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson());
         controller.init();
     </script>
 }
@@ -19,12 +19,12 @@
         <section id="consultation-header">
         <div class="row">
             <div class="col-md-12 title" >
-                @consultation.title
+                @model.consultation.title
             </div>
         </div>
             </section>
         <section id="consultation-body">
-            @for(article <- consultation.articles) {
+            @for(article <- model.consultation.articles) {
                 <div class="row article ">
                     <div class="col-md-8">
                         <div class="title">

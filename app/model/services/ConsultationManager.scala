@@ -1,25 +1,33 @@
 package democracit.services
 
 import java.util.Date
-
 import democracit.dtos._
 import democracit.repositories._
-import democracit.viewmodels.HomeViewModel
-import org.joda.time.DateTime
-import play.api.mvc.Request
+import democracit.model.viewmodels._
 
 class ConsultationManager {
-  val repository = new ConsultationRepository()
+
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
+    val repository = new ConsultationRepository()
     repository.search(searchRequest)
   }
 
-  def get(consultationId: Long): Consultation = {
-    repository.get(consultationId)
+  def get(consultationId: Long): ConsultationViewModel= {
+    val repository = new ConsultationRepository()
+    var annotationRepo = new AnnotationRepository()
+
+    ConsultationViewModel(repository.get(consultationId),
+                                        annotationRepo.loadAnnotationTypes(),
+                                        Nil,
+                                        None)
+
+
+
   }
 
   def getConsultationsForHomePage(user: Option[model.User]): HomeViewModel = {
+    val repository = new ConsultationRepository()
     val consultations = repository.latestConsultations(10)
     val today = new Date();
 

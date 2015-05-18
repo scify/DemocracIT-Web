@@ -1,4 +1,4 @@
-package democracit.viewmodels
+package democracit.model.viewmodels
 
 /**
  * Created by alex on 17/4/2015.
