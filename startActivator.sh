@@ -1,5 +1,5 @@
 #!/bin/bash
-workdir="/home/ubuntu/web/"
+workdir="/home/azureuser/web"
 activator_log="$workdir/activator.log"
 
 cd $workdir/DemocracIT-Web
