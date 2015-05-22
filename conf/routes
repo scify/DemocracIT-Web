@@ -13,10 +13,10 @@ POST        /authenticate/credentials            @controllers.CredentialsAuthCon
 POST        /signUp                              @controllers.SignUpController.signUp
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
-#POST        /annotations
-#PUT         /annotations/:id
-#DELETE      /annotations/:id
+POST        /annotation/save                     @controllers.AnnotationController.annotatePost
 #GET         /search
+
+
 
 GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="")
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
@@ -24,5 +24,5 @@ GET         /consultation/:consultationId        @controllers.ConsultationContro
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                        controllers.Assets.at(path="/public", file)
-GET         /webjars/*file                   controllers.WebJarAssets.at(file)
+GET         /webjars/*file                       controllers.WebJarAssets.at(file)
 

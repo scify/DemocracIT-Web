@@ -1,8 +1,8 @@
 package democracit.model.viewmodels
 
-import com.fasterxml.jackson.databind.JsonNode
+import play.api.libs.json._
 import model.dtos._
-
+import utils.ImplicitWrites._
 
 case class ConsultationViewModel(val consultation:democracit.dtos.Consultation,
                             val allowedAnnotations: Seq[AnnotationType],
@@ -11,15 +11,6 @@ case class ConsultationViewModel(val consultation:democracit.dtos.Consultation,
 {
    def annotationTypesToJson():String =
    {
-     import play.api.libs.json._
-     import play.api.libs.functional.syntax._
-
-     implicit val annotationWrites: Writes[AnnotationType] = (
-          (JsPath \ "id").write[Long] and
-          (JsPath \ "description").write[String]
-       )(unlift(AnnotationType.unapply))
-
-      Json.toJson(allowedAnnotations).toString()
-
+     Json.toJson(allowedAnnotations).toString()
    }
 }

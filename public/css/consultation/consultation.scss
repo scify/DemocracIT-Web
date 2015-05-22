@@ -43,6 +43,10 @@
   display:inline;
 }
 
+.ann:hover {
+   background-color:lightyellow;
+}
+
 .article {
 
   padding-top: 20px;
@@ -55,4 +59,29 @@
   line-height: 1.8em;
   padding-left: 15px;
   margin-top:10px;
+}
+
+
+#toolbar {
+  position:fixed;
+ top:0;
+ background-color:white;
+  padding:10px;
+  max-width:500px;
+  display:none;
+  border:1px solid gray;
+  border-radius:10px;
+}
+#toolbar blockquote {
+  font-size: 11px;
+  line-height: 1.1em;
+  max-height: 30px;
+  padding:0;
+  padding-left: 5px;
+}
+
+.ann #toolbar
+{
+  display:block;
+
 }
