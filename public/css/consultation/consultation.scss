@@ -67,7 +67,7 @@
  top:0;
  background-color:white;
   padding:10px;
-  max-width:500px;
+  max-width:600px;
   display:none;
   border:1px solid gray;
   border-radius:10px;
@@ -75,11 +75,34 @@
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
-  max-height: 30px;
   padding:0;
   padding-left: 5px;
+  margin-top:5px;
+}
+#toolbar #comment-wrap
+{
+  margin-top:10px;
 }
 
+#toolbar hr{
+  margin:15px;
+
+}
+#toolbar select
+{
+  width:100%;
+  margin-bottom: 15px;
+}
+#toolbar .mce-tinymce
+{
+  margin-top:5px;
+  margin-bottom:15px;
+}
+
+#toolbar .btn
+{
+    margin-bottom:15px;
+}
 .ann #toolbar
 {
   display:block;

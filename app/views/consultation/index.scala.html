@@ -2,6 +2,8 @@
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
+    <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+
     <script src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
         var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()));
@@ -40,38 +42,42 @@
                 </div>
             }
         </section>
-        <div id="toolbar">
+    </div>
+    <div id="toolbar">
 
-            <form action="@routes.AnnotationController.annotatePost()" method="post">
+        <form action="@routes.AnnotationController.annotatePost()" method="post">
 
-                <div><blockquote></blockquote></div>
-
-
-                <div>
+            <div>
+                Επισημείωση για το τμήμα κειμένου:
+                <blockquote></blockquote></div>
+            <div>
+                <hr>
+                <label>Υπόδειξη προβλήματος:</label><br>
                 <select name="tagId">
-                    @for(annotation <- model.allowedAnnotations){
-                        <option value="@annotation.id">@annotation.description </option>
-                    }
+                    <option>:</option>
+                @for(annotation <- model.allowedAnnotations){
+                    <option value="@annotation.id">@annotation.description </option>
+                }
                 </select>
-                </div>
+            </div>
 
-                <div>
+
+            <div id="comment-wrap">
+                Θα ηθελα να δηλωσω οτι:
                 <textarea name="comment">
 
                 </textarea>
-                </div>
+            </div>
 
-                <input type="hidden" name="consultationId" value="@model.consultation.id"/>
-                <input type="hidden" name="articleId" value=""/>
-                <input type="hidden" name="startIndex" value=""/>
-                <input type="hidden" name="endIndex" value=""/>
-                <input type="hidden" name="text" value=""/>
+            <input type="hidden" name="consultationId" value="@model.consultation.id"/>
+            <input type="hidden" name="articleId" value=""/>
+            <input type="hidden" name="startIndex" value=""/>
+            <input type="hidden" name="endIndex" value=""/>
+            <input type="hidden" name="text" value=""/>
 
-                <button type="submit">Καταχώρηση</button>
-            </form>
-        </div>
+            <button class="btn" type="submit">Καταχώρηση</button>
+        </form>
     </div>
-
 
 }
 

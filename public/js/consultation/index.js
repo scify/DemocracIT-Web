@@ -115,6 +115,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 
+        tinymce.init({selector:'textarea'})
+
     };
     return {
         init:init
