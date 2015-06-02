@@ -1,0 +1,15 @@
+<div id="search-box">
+
+    <div class="wrapper">
+    @helper.form(action= routes.ConsultationController.search(),'class->"form-inline") {
+        <div class="form-group">
+            <div class="box">
+                <span class="icon"><i class="fa fa-search"></i></span>
+                <input type="search" id="search" name="query" placeholder="Αναζήτηση..." />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" >ΑΝΑΖΗΤΗΣΗ</button>
+    }
+    </div>
+
+</div>

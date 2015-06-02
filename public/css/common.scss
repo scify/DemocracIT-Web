@@ -252,3 +252,93 @@ legend {
 }
 
 /*</editor-fold>*/
+
+/*<editor-fold desc="search box">*/
+
+#search-box {
+  background-color: $gray-background;
+  padding-bottom: 60px;
+  padding-top: 60px;
+  margin-top:-20px;
+}
+
+#search-box .wrapper
+{
+  margin: auto;
+  width: 500px;
+}
+#search-box .box {
+
+  position: relative;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+#search-box .box input#search{
+  width:100%;
+  border: 1px solid lightgray;
+  height: 50px;
+  background: white;
+  font-size: 10pt;
+  float: left;
+  color: #63717f;
+  padding-left: 45px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+
+  -webkit-transition: background .55s ease;
+  -moz-transition: background .55s ease;
+  -ms-transition: background .55s ease;
+  -o-transition: background .55s ease;
+  transition: background .55s ease;
+}
+#search-box .box input#search::-webkit-input-placeholder {
+  color: #65737e;
+}
+#search-box .box input#search:-moz-placeholder { /* Firefox 18- */
+  color: #65737e;
+}
+#search-box .box input#search::-moz-placeholder {  /* Firefox 19+ */
+  color: #65737e;
+}
+#search-box .box input#search:-ms-input-placeholder {
+  color: #65737e;
+}
+
+#search-box .form-group
+{
+  width:380px;
+}
+#search-box .box .icon{
+  position: absolute;
+  left:0;
+  top: 2px;
+  margin-left: 17px;
+  margin-top: 17px;
+  z-index: 1;
+  color: #4f5b66;
+}
+#search-box .box input#search:hover, #search-box .box input#search:focus, #search-box .box input#search:active{
+  outline:none;
+  background: #ffffff;
+}
+#search-box .box
+{
+  margin-right:5px;
+}
+/*</editor-fold>*/
+
+.btn
+{
+  background-color: #49c0f4;
+  background-image: none;
+  border: medium none;
+  border-radius: 5px;
+  box-shadow: none;
+  color: #fff;
+  padding: 14px 10px;
+  vertical-align: 0;
+}
+.btn:hover {
+  background-color: #5eceff;
+}

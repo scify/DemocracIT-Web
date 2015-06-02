@@ -6,14 +6,7 @@
 
 @layout("DemocracIT", css, js,None) {
 
-    <div id="search-box">
-        <div class="container">
-            <div class="box">
-                <span class="icon"><i class="fa fa-search"></i></span>
-                <input type="text" id="search" name="query" value="@query" placeholder="Αναζήτηση..." />
-            </div>
-        </div>
-    </div>
+    @common.searchbox()
 
     <div id="results">
         <div class="container">
