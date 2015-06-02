@@ -75,11 +75,17 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
 
     },
+        attachBallons = function(){
+            $(".ann").append("<span class='ann-icon'>+</span>");
+        },
     displayToolBar = function(e,selectedText,startIndex,lastIndex){
         //todo: Use react.js for this.
 
-       // var span = $(e.target),
-       //     article = span.closest(".article");
+       var target = $(e.target);
+
+        if (target.hasClass("ann-icon"))
+            selectedText = target.parent().text();
+
         var toolbar = $("#toolbar");
         toolbar.fadeIn("fast");
         toolbar.css({top: e.clientY, left: e.clientX});
@@ -97,7 +103,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance= this;
         createAnnotatableAreas();
 
-       $("#wrapper").mouseup(function(e){
+        attachBallons();
+
+        $("#wrapper").mouseup(function(e){
             var selection= getSelection();
            if (!selectionIsAllowed(selection)){
                clearSelection(selection);
@@ -108,9 +116,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                var range = selection.getRangeAt(0);
                displayToolBar.call(instance,e,getSelectionText(selection));
            }
-
-
        });
+
+        $(".ann-icon").click($.proxy(displayToolBar,instance));
 
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
