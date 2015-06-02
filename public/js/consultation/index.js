@@ -69,7 +69,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             counter++;
         }
 
-        $(".article-body").each(function(i,el){
+        $(".article-body,.article-title-text, #consultation-header .title").each(function(i,el){
             counter=0;
             recurseAllTextNodesAndApply(el,action );
         });
@@ -81,14 +81,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     displayToolBar = function(e,selectedText,startIndex,lastIndex){
         //todo: Use react.js for this.
 
-       var target = $(e.target);
+       var target = $(e.target),
+           toolbar = $("#toolbar"),
+           toolbarClass ="",
+           left = e.clientX,
+           top = e.clientY + 20;
 
         if (target.hasClass("ann-icon"))
+        {
             selectedText = target.parent().text();
+            left =left - toolbar.width();
+        }
 
-        var toolbar = $("#toolbar");
+        toolbar.addClass(toolbarClass);
         toolbar.fadeIn("fast");
-        toolbar.css({top: e.clientY, left: e.clientX});
+        toolbar.css({top:top, left: left});
        // toolbar.find["input[name='articleId'"].val(article.data("id"));
         toolbar.find("input[name='text']").val(selectedText);
         toolbar.find("input[name='startIndex']").val(startIndex);
