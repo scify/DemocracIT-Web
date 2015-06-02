@@ -90,6 +90,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         if (target.hasClass("ann-icon"))
         {
             selectedText = target.parent().text();
+            selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
             left =left - toolbar.width();
         }
 
