@@ -283,7 +283,7 @@ legend {
   margin-right: 5px; }
 
 /*</editor-fold>*/
-.btn {
+.btn-blue {
   background-color: #49c0f4;
   background-image: none;
   border: medium none;
@@ -293,7 +293,7 @@ legend {
   padding: 14px 10px;
   vertical-align: 0; }
 
-.btn:hover {
+.btn-blue:hover {
   background-color: #5eceff; }
 
 /*# sourceMappingURL=common.css.map */
