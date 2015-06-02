@@ -15,7 +15,7 @@
   background-color: #eeeeee;
   padding-bottom: 60px;
   padding-top: 60px;
-  display: none; }
+  margin-top: -20px; }
 
 #search-box .box {
   margin: auto;
