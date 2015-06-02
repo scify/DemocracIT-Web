@@ -8,22 +8,27 @@
 @layout("Αρχική",css,js, viewmodel.user){
 
     <div id="search-box">
-        <div class="container">
-            @helper.form(action= routes.ConsultationController.search()) {
-                <div class="box">
-                    <span class="icon"><i class="fa fa-search"></i></span>
-                    <input type="search" id="search" name="query" placeholder="Αναζήτηση..." />
+
+            <div class="wrapper">
+            @helper.form(action= routes.ConsultationController.search(),'class->"form-inline") {
+                <div class="form-group">
+                    <div class="box">
+                        <span class="icon"><i class="fa fa-search"></i></span>
+                        <input type="search" id="search" name="query" placeholder="Αναζήτηση..." />
+                    </div>
                 </div>
+                <button type="submit" class="btn btn-primary" >ΑΝΑΖΗΤΗΣΗ</button>
             }
-        </div>
+            </div>
+
     </div>
     <div id="consultations">
         <div class="container">
-                <div id="in-progress">
-                    <h2>Σε εξέλιξη:</h2>
-                    @displayConsultation(viewmodel.activeConsultations, "λήξη")
-                </div>
-                <hr/>
+            <div id="in-progress">
+                <h2>Σε εξέλιξη:</h2>
+                @displayConsultation(viewmodel.activeConsultations, "λήξη")
+            </div>
+            <hr/>
             <div id="recent">
             <h2>Πρόσφατες:</h2>
                 @displayConsultation(viewmodel.recentConsultations, "έληξε")
