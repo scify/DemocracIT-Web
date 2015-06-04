@@ -1,6 +1,5 @@
-package democracit.repositories
+package model.repositories
 
-import _root_.anorm.SqlQuery
 import anorm._
 import model.dtos.AnnotationType
 import play.api.db.DB

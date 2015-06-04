@@ -1,8 +1,8 @@
-package democracit.model.viewmodels
+package model.viewmodels
 
-/**
- * Created by alex on 17/4/2015.
- */
-class HomeViewModel(val activeConsultations:List[democracit.dtos.Consultation],
-                    val recentConsultations:List[democracit.dtos.Consultation],
+import model.dtos._
+
+case class HomeViewModel(val activeConsultations:List[Consultation],
+                    val recentConsultations:List[Consultation],
+                    val stats : PlatformStats,
                      val user: Option[model.User])

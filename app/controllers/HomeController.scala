@@ -4,7 +4,7 @@ package controllers
 import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Silhouette, Environment, LogoutEvent}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import democracit.services.ConsultationManager
+import model.services.ConsultationManager
 import forms._
 import scala.concurrent.Future
 

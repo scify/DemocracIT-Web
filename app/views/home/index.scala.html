@@ -1,4 +1,4 @@
-@(viewmodel:democracit.model.viewmodels.HomeViewModel)
+@(viewmodel:model.viewmodels.HomeViewModel)
 @js ={
 }
 @css = {
@@ -6,30 +6,35 @@
 }
 
 @layout("Αρχική",css,js, viewmodel.user){
-    <div id="intro">
-        <div class="container">
-            <h1>Επαναπροσδιορίζοντας τη δημόσια διαβούλευση</h1>
+
+    <div id="stats">
+        <div class="stat">
+        @viewmodel.stats.totalConsultations
+            <br>
+            διαβουλεύσεις
+
+            <div class="info">
+                @for(orgs <- viewmodel.stats.organizationsPerCategory) {
+                    @orgs.category
+                    <ul>
+                        @for(stat <- orgs.stats) {
+                            <li>@stat.title (@stat.totalConsultations)</li>
+                        }
+                    </ul>
+                }
+            </div>
         </div>
     </div>
 
-    <div id="search-box">
-        <div class="container">
-            @helper.form(action= routes.ConsultationController.search()) {
-                <div class="box">
-                    <span class="icon"><i class="fa fa-search"></i></span>
-                    <input type="search" id="search" name="query" placeholder="Αναζήτηση..." />
-                    <button type="submit">Submit</button>
-                </div>
-            }
-        </div>
-    </div>
+    @common.searchbox()
+
     <div id="consultations">
         <div class="container">
-                <div id="in-progress">
-                    <h2>Σε εξέλιξη:</h2>
-                    @displayConsultation(viewmodel.activeConsultations, "λήξη")
-                </div>
-                <hr/>
+            <div id="in-progress">
+                <h2>Σε εξέλιξη:</h2>
+                @displayConsultation(viewmodel.activeConsultations, "λήξη")
+            </div>
+            <hr/>
             <div id="recent">
             <h2>Πρόσφατες:</h2>
                 @displayConsultation(viewmodel.recentConsultations, "έληξε")
@@ -67,7 +72,7 @@
     </div>
 }
 
-@displayConsultation(consultations:List[democracit.dtos.Consultation], label:String)= {
+@displayConsultation(consultations:List[model.dtos.Consultation], label:String)= {
 
         @if(consultations.length==0){
             <div class="empty">

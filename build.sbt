@@ -32,6 +32,6 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-TwirlKeys.templateImports ++=Seq("democracit.dtos._")
+TwirlKeys.templateImports ++=Seq("model.dtos._")
 
 

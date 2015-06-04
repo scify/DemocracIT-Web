@@ -108,3 +108,48 @@
   display:block;
 
 }
+
+.ann {
+  display: inline-block;
+  padding-right: 30px;
+  position: relative;
+  width: 100%;
+}
+.article-title-text .ann
+{
+  width:97%;
+}
+
+
+$annotation-icon-bg-color: lightgray;
+$annotation-icon--color: #fff;
+
+.ann:hover .ann-icon {
+  display: block;
+}
+
+.ann-icon
+{
+  border-radius: 8px;
+  cursor: pointer;
+  display: none;
+  font: 12px Arial,sans-serif;
+  padding-bottom: 3px;
+  padding-top: 2px;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 27px;
+  color: $annotation-icon--color;
+  background: $annotation-icon-bg-color;
+}
+.ann-icon:before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 7px;
+  border-width: 0px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent $annotation-icon-bg-color;
+}

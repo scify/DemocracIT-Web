@@ -1,6 +1,6 @@
-package democracit.services
-import democracit.dtos._
-import democracit.repositories._
+package model.services
+import model.dtos._
+import model.repositories._
 
 /**
  * Created by alex on 24/2/2015.

@@ -1,3 +1,3 @@
-package democracit.dtos
+package model.dtos
 
-case  class Organization(val id:Int, val name:String);
+case class Organization(val id:Int, val title:String)

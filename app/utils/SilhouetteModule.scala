@@ -21,7 +21,7 @@ import com.mohiva.play.silhouette.impl.providers.openid._
 import model.User
 import model.repositories._
 import model.services._
-import models.services.UserServiceImpl
+import model.services.UserServiceImpl
 import net.codingwell.scalaguice._
 import play.api.Play
 import play.api.Play.current

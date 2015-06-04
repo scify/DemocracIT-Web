@@ -4,8 +4,8 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Silhouette, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import democracit.dtos._
-import democracit.services._
+import model.dtos._
+import model.services._
 import play.api.mvc._
 
 //@Singleton

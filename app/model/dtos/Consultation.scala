@@ -1,4 +1,4 @@
-package democracit.dtos
+package model.dtos
 
 import java.util.{ResourceBundle, Locale, Calendar, Date}
 

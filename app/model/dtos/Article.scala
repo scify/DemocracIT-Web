@@ -1,4 +1,4 @@
-package democracit.dtos
+package model.dtos
 
 case class Article(val id: BigInt,
               val consultationId:BigInt,

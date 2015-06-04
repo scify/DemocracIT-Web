@@ -1,4 +1,5 @@
-@(model: democracit.model.viewmodels.ConsultationViewModel)
+@import model.viewmodels.ConsultationViewModel
+@(model: ConsultationViewModel)
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
@@ -28,7 +29,7 @@
         <section id="consultation-body">
             @for(article <- model.consultation.articles) {
                 <div data-id="@article.id" class="row article ">
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="title">
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
@@ -37,7 +38,7 @@
                             @Html(article.body)
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         </div>
                 </div>
             }
@@ -52,9 +53,8 @@
                 <blockquote></blockquote></div>
             <div>
                 <hr>
-                <label>Υπόδειξη προβλήματος:</label><br>
                 <select name="tagId">
-                    <option>:</option>
+                    <option>Υπόδειξη προβλήματος:</option>
                 @for(annotation <- model.allowedAnnotations){
                     <option value="@annotation.id">@annotation.description </option>
                 }

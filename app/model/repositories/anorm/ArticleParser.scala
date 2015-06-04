@@ -2,7 +2,7 @@ package repositories.anorm
 
 import anorm._
 import anorm.SqlParser._
-import democracit.dtos._
+import model.dtos._
 
 
 object ArticleParser{
