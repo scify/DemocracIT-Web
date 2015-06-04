@@ -1,8 +1,8 @@
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import democracit.services._
-import democracit.dtos._
+import model.services._
+import model.dtos._
 
 class DBRepositoriesSpec extends Specification  {
 

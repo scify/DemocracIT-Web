@@ -1,4 +1,4 @@
-package models.services
+package model.services
 
 import java.util.UUID
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-@(viewmodel:democracit.model.viewmodels.HomeViewModel)
+@(viewmodel:model.viewmodels.HomeViewModel)
 @js ={
 }
 @css = {
@@ -6,6 +6,25 @@
 }
 
 @layout("Αρχική",css,js, viewmodel.user){
+
+    <div id="stats">
+        <div class="stat">
+        @viewmodel.stats.totalConsultations
+            <br>
+            διαβουλεύσεις
+
+            <div class="info">
+                @for(orgs <- viewmodel.stats.organizationsPerCategory) {
+                    @orgs.category
+                    <ul>
+                        @for(stat <- orgs.stats) {
+                            <li>@stat.title (@stat.totalConsultations)</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
 
     @common.searchbox()
 
@@ -53,7 +72,7 @@
     </div>
 }
 
-@displayConsultation(consultations:List[democracit.dtos.Consultation], label:String)= {
+@displayConsultation(consultations:List[model.dtos.Consultation], label:String)= {
 
         @if(consultations.length==0){
             <div class="empty">
