@@ -64,8 +64,8 @@ img, .btn, i, a {
   margin-right: 5px; }
 
 #footer .info {
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 12px;
+  line-height: 13px;
   margin-bottom: 17px;
   margin-top: 23px; }
 
@@ -283,7 +283,7 @@ legend {
   margin-right: 5px; }
 
 /*</editor-fold>*/
-.btn-blue {
+.btn {
   background-color: #49c0f4;
   background-image: none;
   border: medium none;
@@ -293,7 +293,7 @@ legend {
   padding: 14px 10px;
   vertical-align: 0; }
 
-.btn-blue:hover {
+.btn:hover {
   background-color: #5eceff; }
 
 /*# sourceMappingURL=common.css.map */
