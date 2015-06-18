@@ -7,23 +7,48 @@
 
 @layout("Αρχική",css,js, viewmodel.user){
 
-    <div id="stats">
+    <div id="platform-stats">
+        <div class="container">
         <div class="stat">
-        @viewmodel.stats.totalConsultations
-            <br>
-            διαβουλεύσεις
+            <div class="row">
+                <div class="total col-md-4">
+                    <div class="wrp" data-target="#organizations" data-toggle="collapse">
+                    @viewmodel.stats.totalConsultations
+                    <br>
+                    διαβουλεύσεις
+                    </div>
+                </div>
+                <div class="total col-md-4">
+                    <div class="wrp">
+                        10000
+                        <br>
+                        σχόλια ανα διαβούλευση
+                    </div>
+                </div>
+                <div class=" total col-md-4">
+                    <div class="wrp">
+                        30
+                        <br>
+                        ημέρες ανα διαβούλευση
+                    </div>
+                </div>
+            </div>
 
-            <div class="info">
+            <div id="organizations" class="row collapse">
                 @for(orgs <- viewmodel.stats.organizationsPerCategory) {
-                    @orgs.category
-                    <ul>
-                        @for(stat <- orgs.stats) {
-                            <li>@stat.title (@stat.totalConsultations)</li>
-                        }
-                    </ul>
+                    <div class="organization-group col-md-4">
+                        <label>@orgs.category</label>
+                        <hr/>
+                        <ul>
+                            @for(stat <- orgs.stats) {
+                                <li><a href="@routes.ConsultationController.search()?ministryId=@stat.id">@stat.title (@stat.totalConsultations)</a></li>
+                            }
+                        </ul>
+                     </div>
                 }
             </div>
         </div>
+            </div>
     </div>
 
     @common.searchbox()

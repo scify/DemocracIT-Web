@@ -10,10 +10,10 @@ object OrganizationStatsParser{
     int("id") ~
     str("title") ~
     str("categTitle") ~
-    int("count")  map
+    int("count")  ~ int("order") map
       {
-        case id ~ title ~ categTitle ~ count=>
-          new OrganizationStats(id,title,categTitle,count)
+        case id ~ title ~ categTitle ~ count ~ order=>
+          new OrganizationStats(id,title,categTitle,count,order)
       }
   }
 }

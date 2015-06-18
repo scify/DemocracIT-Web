@@ -36,9 +36,10 @@ class ConsultationManager {
     val consultations = repository.latestConsultations(10)
 
     val organizationStats = repository.getOrganizationStats()
-    val groups = organizationStats.groupBy(_.category).map(tuple =>  OrganizationPerCategory(tuple._1,tuple._2)).toList
+    val groups = organizationStats.groupBy(_.category).map(tuple =>  OrganizationPerCategory(tuple._1,tuple._2,tuple._2(0).orderId)).toList
+
     val totalConsultations = organizationStats.map(_.totalConsultations).sum
-    val platformStats = PlatformStats( totalConsultations, groups)
+    val platformStats = PlatformStats( totalConsultations, groups.sortBy(_.orderId))
 
     val today = new Date();
     new HomeViewModel(

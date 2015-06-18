@@ -24,12 +24,16 @@ class ConsultationRepository {
                  (
 
                    select id, title,
-               case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
-               when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
-               when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
-               else
-               'n/a'
-               End  as categTitle
+                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
+                        when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
+                        when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
+                        else 'n/a'
+                    End  as categTitle,
+                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 1
+                       when id in (343,345,347,342,341,346,348,344,340) then 2
+                       when id in (335,333,334,338,339,336,330,329,337) then 3
+                       else 3
+                   End  as order
                from public.organization_lkp
                ),
                groups as
@@ -39,10 +43,10 @@ class ConsultationRepository {
                inner join public.consultation c on o.id =c.organization_id
                group by c.organization_id
                )
-               select id, title, categTitle,count
+               select id, title, categTitle,count, o.order
                from groups g
                inner join organizations o on g.organization_id = o.id
-               order by categtitle, count desc
+               order by o.order, count desc
 
         """.as(OrganizationStatsParser.Parse *)
     }
@@ -69,7 +73,7 @@ class ConsultationRepository {
                       c.title like ${"%"+searchRequest.query+"%"} or
                       c.short_description like ${"%"+searchRequest.query+"%"} or
                       c.id in (select a.consultation_id from relatedArticles a)
-                order by end_date desc """.as(ConsultationParser.Parse *)
+                order by id desc """.as(ConsultationParser.Parse *)
         }
   }
 

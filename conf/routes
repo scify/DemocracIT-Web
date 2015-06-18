@@ -18,7 +18,7 @@ POST        /annotation/save                     @controllers.AnnotationControll
 
 
 
-GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="")
+GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="", ministryId:Option[Int] ?=None)
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
 
 

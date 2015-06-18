@@ -264,7 +264,6 @@ legend {
   background-color: $gray-background;
   padding-bottom: 60px;
   padding-top: 60px;
-  margin-top:-20px;
 }
 
 #search-box .wrapper
@@ -333,7 +332,7 @@ legend {
 }
 /*</editor-fold>*/
 
-.btn
+.btn.blue
 {
   background-color: #49c0f4;
   background-image: none;
@@ -344,6 +343,6 @@ legend {
   padding: 14px 10px;
   vertical-align: 0;
 }
-.btn:hover {
+.btn.blue:hover {
   background-color: #5eceff;
 }
