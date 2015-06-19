@@ -2,6 +2,7 @@ package model.dtos
 
 import java.util.{ResourceBundle, Locale, Calendar, Date}
 
+import org.joda.time.DateTime
 import org.ocpsoft.prettytime.PrettyTime
 
 case class Consultation(val id:Long,
@@ -15,6 +16,9 @@ case class Consultation(val id:Long,
                    val articlesNum:Int,
                    var articles:List[Article] =Nil)
 {
+  val isActive = endDate > DateTime.now()
+  val duration = endDate-startDate
+  git
   def endDateFormatted = {
        // val lang = play.api.Play.current.configuration.getString("application.langs").get
       //  val locale = new Locale("el");
