@@ -20,16 +20,16 @@
                 </div>
                 <div class="total col-md-4">
                     <div class="wrp">
-                        10000
+                        Μέσος αριθμός σχολίων/διαβούλευση
                         <br>
-                        σχόλια ανα διαβούλευση
+                            1000
                     </div>
                 </div>
                 <div class=" total col-md-4">
                     <div class="wrp">
-                        30
+                        Μέση διάρκεια διαβούλευσης
                         <br>
-                        ημέρες ανα διαβούλευση
+                        30 ημέρες
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                         <hr/>
                         <ul>
                             @for(stat <- orgs.stats) {
-                                <li><a href="@routes.ConsultationController.search()?ministryId=@stat.id">@stat.title (@stat.totalConsultations)</a></li>
+                                <li><a href="@routes.ConsultationController.search()?ministryId=@stat.id">@stat.title (@stat.consultationCount)</a></li>
                             }
                         </ul>
                      </div>

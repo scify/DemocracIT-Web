@@ -31,23 +31,48 @@ class ConsultationManager {
                                         None)
   }
 
+  def median(s: List[Int]):Int =
+  {
+    val (lower, upper) = s.sortWith(_<_).splitAt(s.size / 2)
+    if (s.size % 2 == 0) Math.ceil((lower.last + upper.head) / 2.0).asInstanceOf[Int]  else upper.head
+  }
+
   def getConsultationsForHomePage(user: Option[model.User]): HomeViewModel = {
-    val repository = new ConsultationRepository()
-    val consultations = repository.latestConsultations(10)
 
-    val organizationStats = repository.getOrganizationStats()
-    val groups = organizationStats.groupBy(_.category).map(tuple =>  OrganizationPerCategory(tuple._1,tuple._2,tuple._2(0).orderId)).toList
-
-    val totalConsultations = organizationStats.map(_.totalConsultations).sum
-    val platformStats = PlatformStats( totalConsultations, groups.sortBy(_.orderId))
-
+    val consultations = new ConsultationRepository().latestConsultations(10)
     val today = new Date();
     new HomeViewModel(
       activeConsultations = consultations.filter(p => p.endDate.after(today)),
       recentConsultations = consultations.filter(p => p.endDate.before(today)),
-      platformStats,
+      calculatePlatformStats(),
       user
     )
+  }
+
+  private def calculatePlatformStats() = {
+    val repository = new ConsultationRepository()
+    val consultationStats = repository.getConsultationStats()
+
+    val organizationStats  = consultationStats.groupBy(_.organizationId).map(tuple =>
+      OrganizationStats(id = tuple._1,
+        title = tuple._2(0).organizationTitle,
+        category = tuple._2(0).organizationCategory,
+        categDisplayOrder = tuple._2(0).organizationOrder,
+        consultationCount = tuple._2.length,
+        activeConsultations =tuple._2.filter(_.isActive).length,
+        medianAverageComments = median(tuple._2.map(_.numberOfComments)),
+        medianAverageDays = median(tuple._2.map(_.daysActive)))
+    ).toList
+
+    val organizationStatsPerCategory = organizationStats.groupBy(_.category).map(tuple=>
+      OrganizationStatsGrouped(tuple._2(0).categDisplayOrder,tuple._1,tuple._2)
+    ).toList.sortBy(_.orderId)
+
+    PlatformStats(
+      totalConsultations = consultationStats.length,
+      averageCommentsPerConsultations = median(consultationStats.map(_.numberOfComments)),
+      averageDaysPerConsultation =median(consultationStats.map(_.daysActive)),
+      organizationsPerCategory = organizationStatsPerCategory)
   }
 
 }
