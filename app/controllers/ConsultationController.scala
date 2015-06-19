@@ -15,8 +15,8 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
 
   private val consultationManager = new ConsultationManager()
 
-  def search(query:String)= Action {
-    val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,-1))
+  def search(query:String, ministryId:Option[Int] )= Action {
+    val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,ministryId.getOrElse(-1).asInstanceOf[Byte]))
     Ok(views.html.consultation.search(query,results))
   }
 

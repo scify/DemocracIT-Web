@@ -37,3 +37,69 @@
 .consultation i{
   font-size:16px;
 }
+
+.total
+{
+  cursor: pointer;
+  color:white;
+  padding-bottom: 40px;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.total .wrp, .total .wrp.collapsed:hover
+{
+  background-color: #355163;
+  font-size: 20px;
+  padding-bottom: 40px;
+  padding-top: 40px;
+}
+
+.total .wrp.collapsed
+{
+  background-color: lightblue;
+}
+.organization-group hr{
+  margin:5px 0;
+}
+.organization-group ul
+{
+  padding-left:0;
+  list-style: none;
+}
+.organization-group li
+{
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+#platform-stats   h2
+{
+  margin-bottom: 40px;
+  margin-top:0;
+  text-align: center;
+}
+#platform-stats .table
+{
+  font-size: 12px;
+}
+
+#platform-stats .table td:last-child
+{
+  text-align: center;
+  min-width:70px;
+}
+#platform-stats .table td
+{
+  vertical-align: middle;
+}
+#platform-stats  .active
+{
+  color:darkred;
+}
+#platform-stats .panel
+{
+  box-shadow:none;
+  margin:0;
+  border:none;
+}

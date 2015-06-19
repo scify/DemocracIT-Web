@@ -153,3 +153,12 @@ $annotation-icon--color: #fff;
   border-style: solid;
   border-color: transparent $annotation-icon-bg-color;
 }
+
+
+#results tr{
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}

@@ -16,38 +16,83 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class ConsultationRepository {
 
-  def getOrganizationStats():List[OrganizationStats]  = {
-   DB.withConnection { implicit c =>
+  def getConsultationStats():List[ConsultationStats]  = {
+    DB.withConnection { implicit c =>
 
-     SQL"""
-           with organizations as
-                 (
+      SQL"""
+            with organizations as
+               (
 
-                   select id, title,
-               case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
-               when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
-               when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
-               else
-               'n/a'
-               End  as categTitle
-               from public.organization_lkp
-               ),
-               groups as
-                 (
-                   select c.organization_id, count(*) as Count
-               from organizations o
-               inner join public.consultation c on o.id =c.organization_id
-               group by c.organization_id
-               )
-               select id, title, categTitle,count
-               from groups g
-               inner join organizations o on g.organization_id = o.id
-               order by categtitle, count desc
+                 select id as OrganizationId, title,
+             case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
+             when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
+             when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
+             else 'n/a'
+             End  as categTitle,
+             case when id in (323,324,325,326,327,328,350,351,331,332,349) then 1
+             when id in (343,345,347,342,341,346,348,344,340) then 2
+             when id in (335,333,334,338,339,336,330,329,337) then 3
+             else 3
+             End  as order
+             from public.organization_lkp
+             ),
+             CommentsPerConsultation as
+               (
+                 select consultation_id,count(a.consultation_id) as NumberOfArticles,
+                 sum(case when comment_num<0 then 0 else comment_num end) as NumberOfComments
+               from public.articles a
+               group by a.consultation_id
+             )
 
-        """.as(OrganizationStatsParser.Parse *)
+             select c.id,m.NumberOfArticles,m.NumberOfComments,  DATE_PART('day',c.end_date -c.start_date) as DaysActive,
+             case when c.end_date> Now() then true
+           	     else false end  as isActive,
+           	o.*
+             from public.consultation c
+               inner join organizations o on o.OrganizationId =c.organization_id
+             left outer join CommentsPerConsultation as m  on m.consultation_id = c.id
+             order by o.order, o.title
+        """.as(ConsultationStatsParser.Parse *)
     }
   }
 
+//
+//  def getOrganizationStats():List[OrganizationStats]  = {
+//   DB.withConnection { implicit c =>
+//
+//     SQL"""
+//           with organizations as
+//                 (
+//
+//                   select id, title,
+//                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
+//                        when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
+//                        when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
+//                        else 'n/a'
+//                    End  as categTitle,
+//                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 1
+//                       when id in (343,345,347,342,341,346,348,344,340) then 2
+//                       when id in (335,333,334,338,339,336,330,329,337) then 3
+//                       else 3
+//                   End  as order
+//               from public.organization_lkp
+//               ),
+//               groups as
+//                 (
+//                   select c.organization_id, count(*) as Count
+//               from organizations o
+//               inner join public.consultation c on o.id =c.organization_id
+//               group by c.organization_id
+//               )
+//               select id, title, categTitle,count, o.order
+//               from groups g
+//               inner join organizations o on g.organization_id = o.id
+//               order by o.order, count desc
+//
+//        """.as(OrganizationStatsParser.Parse *)
+//    }
+//  }
+//
 
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
@@ -69,7 +114,7 @@ class ConsultationRepository {
                       c.title like ${"%"+searchRequest.query+"%"} or
                       c.short_description like ${"%"+searchRequest.query+"%"} or
                       c.id in (select a.consultation_id from relatedArticles a)
-                order by end_date desc """.as(ConsultationParser.Parse *)
+                order by id desc """.as(ConsultationParser.Parse *)
         }
   }
 

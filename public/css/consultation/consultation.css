@@ -110,4 +110,11 @@
   border-style: solid;
   border-color: transparent lightgray; }
 
+#results tr {
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px; }
+
 /*# sourceMappingURL=consultation.css.map */

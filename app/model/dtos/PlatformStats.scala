@@ -1,6 +1,9 @@
 package model.dtos
 
-case class OrganizationPerCategory(val category:String, stats:List[OrganizationStats])
+case class PlatformStats(val totalConsultations:Int,
+                        val medianAverageCommentsPerConsultations:Int,
+                        val medianAverageDaysPerConsultation:Int,
+                        val organizationsPerCategory:List[OrganizationStatsGrouped])
 
-case class PlatformStats(val totalConsultations:Int, val organizationsPerCategory:List[OrganizationPerCategory])
+
 
