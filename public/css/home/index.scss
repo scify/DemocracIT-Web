@@ -42,17 +42,22 @@
 {
   cursor: pointer;
   color:white;
-  padding-bottom: 20px;
+  padding-bottom: 40px;
   padding-top: 20px;
   text-align: center;
 }
 
-.total .wrp
+.total .wrp, .total .wrp.collapsed:hover
 {
-  background-color: lightblue;
+  background-color: #355163;
   font-size: 20px;
   padding-bottom: 40px;
   padding-top: 40px;
+}
+
+.total .wrp.collapsed
+{
+  background-color: lightblue;
 }
 .organization-group hr{
   margin:5px 0;
@@ -71,7 +76,7 @@
 #platform-stats   h2
 {
   margin-bottom: 40px;
-  margin-top:20px;
+  margin-top:0;
   text-align: center;
 }
 #platform-stats .table
