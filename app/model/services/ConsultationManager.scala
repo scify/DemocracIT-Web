@@ -70,8 +70,8 @@ class ConsultationManager {
 
     PlatformStats(
       totalConsultations = consultationStats.length,
-      averageCommentsPerConsultations = median(consultationStats.map(_.numberOfComments)),
-      averageDaysPerConsultation =median(consultationStats.map(_.daysActive)),
+      medianAverageCommentsPerConsultations = median(consultationStats.map(_.numberOfComments)),
+      medianAverageDaysPerConsultation =median(consultationStats.map(_.daysActive)),
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
