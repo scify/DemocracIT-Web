@@ -8,14 +8,14 @@ import model.viewmodels._
 import model.dtos.PlatformStats
 import org.scify.democracit.solr.{DitSorlQuery}
 
-case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
-{
-  val totalResults = consultations.length
-  val activeConsultations = consultations.filter(_.a)
-  def calculateStats = {
-    //do stuff with the consultations
-  }
-}
+//case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
+//{
+//  val totalResults = consultations.length
+//  val activeConsultations = consultations.filter(_.a)
+//  def calculateStats = {
+//    //do stuff with the consultations
+//  }
+//}
 
 class ConsultationManager {
 
