@@ -3,7 +3,7 @@
     @js ={}
     @css = {}
 
-    @import views.html.bootstrap._
+    @import views.html.common._
 
 @layout("Εγγραφη",css,js,None) {
     @request.flash.get("error").map { msg =>
