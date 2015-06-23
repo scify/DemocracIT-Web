@@ -110,9 +110,9 @@ class ConsultationRepository {
         """.as((ConsultationParser.Parse ~ ArticleParser.Parse map(flatten)) *)
       //due to the inner join we have tuples of the same consultations and different articles
 
-      val newResults = results.groupBy(z =>{z._1}) //group results by consultation. The results is a tuple with 2 properties. (Consultation, List[(Consultation,Article)]
-      val consultation:Consultation = newResults.head._1;  //fetch the consultation from the first property of the tuple
-      for (tuple <- newResults.head._2)
+     // val newResults = results.groupBy(z =>{z._1}) //group results by consultation. The results is a tuple with 2 properties. (Consultation, List[(Consultation,Article)]
+      val consultation:Consultation = results.head._1;  //fetch the consultation from the first property of the tuple
+      for (tuple <- results)
       {
         consultation.articles  =consultation.articles :+ tuple._2
       }
