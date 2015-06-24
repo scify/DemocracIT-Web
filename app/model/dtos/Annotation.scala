@@ -1,3 +1,3 @@
 package model.dtos
 
-case class Annotation(id:BigInt,annotationType:AnnotationType)
+case class Annotation(id:Long,annotationType:AnnotationType)

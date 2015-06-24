@@ -53,6 +53,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             article.find(".show-hide").trigger("click");
     },
     recurseAllTextNodesAndApply = function(element,action){
+
+        if (element.className && element.className.indexOf("skip-ann")>=0)
+            return;
+
         if (element.childNodes.length > 0)
             for (var i = 0; i < element.childNodes.length; i++)
                 recurseAllTextNodesAndApply(element.childNodes[i],action);
@@ -78,6 +82,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         attachBallons = function(){
             $(".ann").append("<span class='ann-icon'>+</span>");
         },
+        attachArticleComments = function(){
+          $(".")
+        },
+
     displayToolBar = function(e,selectedText,startIndex,lastIndex){
         //todo: Use react.js for this.
 

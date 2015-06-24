@@ -1,12 +1,9 @@
 package model.repositories
 
-
 import java.util.Date
-
 import anorm._
 import anorm.SqlParser._
 import model.dtos._
-
 import repositories.anorm._
 import org.joda.time.DateTime
 import play.api.db.DB
@@ -55,44 +52,6 @@ class ConsultationRepository {
         """.as(ConsultationStatsParser.Parse *)
     }
   }
-
-//
-//  def getOrganizationStats():List[OrganizationStats]  = {
-//   DB.withConnection { implicit c =>
-//
-//     SQL"""
-//           with organizations as
-//                 (
-//
-//                   select id, title,
-//                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
-//                        when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
-//                        when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
-//                        else 'n/a'
-//                    End  as categTitle,
-//                   case when id in (323,324,325,326,327,328,350,351,331,332,349) then 1
-//                       when id in (343,345,347,342,341,346,348,344,340) then 2
-//                       when id in (335,333,334,338,339,336,330,329,337) then 3
-//                       else 3
-//                   End  as order
-//               from public.organization_lkp
-//               ),
-//               groups as
-//                 (
-//                   select c.organization_id, count(*) as Count
-//               from organizations o
-//               inner join public.consultation c on o.id =c.organization_id
-//               group by c.organization_id
-//               )
-//               select id, title, categTitle,count, o.order
-//               from groups g
-//               inner join organizations o on g.organization_id = o.id
-//               order by o.order, count desc
-//
-//        """.as(OrganizationStatsParser.Parse *)
-//    }
-//  }
-//
 
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
@@ -148,9 +107,9 @@ class ConsultationRepository {
         """.as((ConsultationParser.Parse ~ ArticleParser.Parse map(flatten)) *)
       //due to the inner join we have tuples of the same consultations and different articles
 
-      val newResults = results.groupBy(z =>{z._1}) //group results by consultation. The results is a tuple with 2 properties. (Consultation, List[(Consultation,Article)]
-      val consultation:Consultation = newResults.head._1;  //fetch the consultation from the first property of the tuple
-      for (tuple <- newResults.head._2)
+     // val newResults = results.groupBy(z =>{z._1}) //group results by consultation. The results is a tuple with 2 properties. (Consultation, List[(Consultation,Article)]
+      val consultation:Consultation = results.head._1;  //fetch the consultation from the first property of the tuple
+      for (tuple <- results)
       {
         consultation.articles  =consultation.articles :+ tuple._2
       }

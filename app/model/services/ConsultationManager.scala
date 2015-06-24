@@ -1,20 +1,41 @@
 package model.services
 
+import java.{lang, util}
 import java.util.Date
 import model.dtos._
 import model.repositories._
 import model.viewmodels._
 import model.dtos.PlatformStats
-import org.scify.democracit.solr.comments.{DitSorlQuery, IDitQuery}
-import org.scify.democracit.solr.model.QueryResult
+import org.scify.democracit.solr.{DitSorlQuery}
+
+//case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
+//{
+//  val totalResults = consultations.length
+//  val activeConsultations = consultations.filter(_.a)
+//  def calculateStats = {
+//    //do stuff with the consultations
+//  }
+//}
 
 class ConsultationManager {
 
+  private val commentsPageSize = 50
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
-    val q: IDitQuery = new DitSorlQuery
-    val res: QueryResult = q.query(searchRequest.query, QueryResult.Type.BOTH)
+    val q= new DitSorlQuery()
+
+    val ministryIds = new util.HashSet[java.lang.Long]()
+    if (searchRequest.ministryId>0)
+      ministryIds.add(searchRequest.ministryId.asInstanceOf[Long])
+
+    val res = q.queryConsultations(searchRequest.query,false,ministryIds)
+    val i =res.iterator()
+
+    while(i.hasNext()) {
+      val each = i.next()
+      System.out.println(each + " : " + each.getTitle());
+    }
 
     //todo: define the view model and drop the List[Consultation]. What should we display to the user? We probably need total number found of consultations and comments.
     val repository = new ConsultationRepository()
@@ -75,4 +96,10 @@ class ConsultationManager {
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
+
+  def getOpenGovComments(consultationId:Long,articleId:Long, maxCommentId:Option[Long]): List[Comment] = {
+
+    val commentsRepository = new CommentsRepository()
+    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
+  }
 }
