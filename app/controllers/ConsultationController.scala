@@ -4,9 +4,13 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Silhouette, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import model.services._
 import play.api.mvc._
+import play.api.libs.json.{Json, JsValue, JsPath, Writes}
+
+
 
 //@Singleton
 //class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
@@ -21,7 +25,18 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
   }
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>
+
         Ok(views.html.consultation.index(consultationManager.get(consultationId)))
   }
 
+  def getOpenGovComments(consultationId:Int,
+                         articleId:Int,
+                         discussionThreadId:Option[Int],
+                         maxCommentId:Option[Long]) = Action {
+
+    import utils.ImplicitWrites._
+    //@todo for now discard consultation id..notice there exists consultations with no articles and all comments are under the consultationid
+    val comments = consultationManager.getOpenGovComments(consultationId,articleId, maxCommentId)
+    Ok(Json.toJson(comments))
+  }
 }

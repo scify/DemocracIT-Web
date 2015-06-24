@@ -19,6 +19,7 @@ import org.scify.democracit.solr.{DitSorlQuery}
 
 class ConsultationManager {
 
+  private val commentsPageSize = 50
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
@@ -95,4 +96,10 @@ class ConsultationManager {
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
+
+  def getOpenGovComments(consultationId:Int,articleId:Int, maxCommentId:Option[Long]): List[Comment] = {
+
+    val commentsRepository = new CommentsRepository()
+    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
+  }
 }

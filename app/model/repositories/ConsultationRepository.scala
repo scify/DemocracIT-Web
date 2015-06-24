@@ -1,12 +1,9 @@
 package model.repositories
 
-
 import java.util.Date
-
 import anorm._
 import anorm.SqlParser._
 import model.dtos._
-
 import repositories.anorm._
 import org.joda.time.DateTime
 import play.api.db.DB
