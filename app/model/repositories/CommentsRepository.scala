@@ -15,8 +15,8 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class CommentsRepository {
 
-  def getComments(consultationId:Int,
-                  articleId:Int,
+  def getComments(consultationId:Long,
+                  articleId:Long,
                   discussionThreadId:Option[Int],
                   source: CommentSource,
                   maxCommentId:Option[Long],

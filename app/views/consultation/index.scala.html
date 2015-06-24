@@ -38,7 +38,7 @@
                             @Html(article.body)
                         </div>
                     </div>
-                    <div class="skip-ann col-md-3"><a class="open-gov-comments" href="">article.commentsNum σχολια</a>
+                    <div class="skip-ann col-md-3"><a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια</a>
                         </div>
                 </div>
             }

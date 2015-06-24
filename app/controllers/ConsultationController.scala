@@ -29,8 +29,8 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
         Ok(views.html.consultation.index(consultationManager.get(consultationId)))
   }
 
-  def getOpenGovComments(consultationId:Int,
-                         articleId:Int,
+  def getOpenGovComments(consultationId:Long,
+                         articleId:Long,
                          discussionThreadId:Option[Int],
                          maxCommentId:Option[Long]) = Action {
 

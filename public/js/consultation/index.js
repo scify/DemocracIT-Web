@@ -54,7 +54,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     recurseAllTextNodesAndApply = function(element,action){
 
-        if (element.className.indexOf("skip-ann"))
+        if (element.className && element.className.indexOf("skip-ann")>=0)
             return;
 
         if (element.childNodes.length > 0)
