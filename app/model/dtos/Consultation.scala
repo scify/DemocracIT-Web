@@ -6,6 +6,7 @@ import java.util.{ResourceBundle, Locale, Calendar, Date}
 
 import org.joda.time.{Period,Days, DateTime}
 import org.ocpsoft.prettytime.PrettyTime
+import utils.Pluralizer
 
 
 case class Consultation(val id:Long,
@@ -21,7 +22,13 @@ case class Consultation(val id:Long,
 {
   val isActive = endDate.after(DateTime.now().toDate)
   val totalDurationInDays =   TimeUnit.DAYS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)
-  //val remainingDays = TimeUnit.DAYS.convert(DateTime.now() - endDate.getTime , TimeUnit.MILLISECONDS)
+
+  def totalDurationFormatted = {
+    if (totalDurationInDays==0)
+      Pluralizer.get(TimeUnit.HOURS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)," ώρα", " ώρες")
+    else
+    Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
+  }
 
   def endDateFormatted = {
        // val lang = play.api.Play.current.configuration.getString("application.langs").get

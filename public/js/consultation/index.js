@@ -79,13 +79,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
 
     },
-        attachBallons = function(){
-            $(".ann").append("<span class='ann-icon'>+</span>");
-        },
-        attachArticleComments = function(){
-          $(".")
-        },
-
+    attachBallons = function(){
+        $(".ann").append("<span class='ann-icon'>+</span>");
+    },
     displayToolBar = function(e,selectedText,startIndex,lastIndex){
         //todo: Use react.js for this.
 
@@ -146,3 +142,4 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         init:init
     }
 }();
+

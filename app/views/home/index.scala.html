@@ -163,7 +163,7 @@
         @for(cons <- consultations) {
             <div class="consultation">
                 <a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a>
-                <br> <i>@label: @cons.endDateFormatted</i>, διάρκεια @cons.totalDurationInDays ημέρες
+                <br> <i>@label: @cons.endDateFormatted</i>, διάρκεια @cons.totalDurationFormatted
             </div>
         }
 }

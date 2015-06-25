@@ -19,6 +19,9 @@
 @layout("DemocracIT", css, js,None) {
 
     <div id="wrapper" class="container">
+        <section id="stats">
+          Διάρκεια @model.consultation.totalDurationFormatted  (Από @model.consultation.startDate έως @model.consultation.endDate)
+        </section>
         <section id="consultation-header">
         <div class="row">
             <div class="col-md-12 title" >
