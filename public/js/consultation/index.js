@@ -117,7 +117,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         attachBallons();
 
-        $("#wrapper").mouseup(function(e){
+        $("body").on("mouseup",".ann",function(e){
             var selection= getSelection();
            if (!selectionIsAllowed(selection)){
                clearSelection(selection);
