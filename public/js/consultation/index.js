@@ -1,3 +1,4 @@
+var scify = scify || {};
 
 scify.ConsultationIndexPageHandler = function(annotationTags){
     this.annotationTags = annotationTags;
@@ -18,7 +19,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         else if (document.selection)
             return selection.createRange().text;
     },
-     getSelectionHtml = function(selection) {
+    getSelectionHtml = function(selection) {
         var html = "";
         if (window.getSelection) {
             if (selection.rangeCount) {
@@ -47,6 +48,19 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 selection.removeAllRanges();
         }
     },
+    attachAnnotationEvents = function(){
+        var instance = this;
+        $("body").on("mouseup",".ann",function(e){
+            var selection= getSelection();
+            if (!selectionIsAllowed(selection)){
+                clearSelection(selection);
+                hideToolBar();
+            }
+            else
+                displayToolBar.call(instance,e,getSelectionText(selection));
+        });
+        $(".ann-icon").click($.proxy(displayToolBar,instance));
+    },
     expandArticleOnClick = function(){
         var article = $(this).closest(".article");
         if (!article.find(".article-body").hasClass("in"))
@@ -64,8 +78,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
             action(element);
     },
-    createAnnotatableAreas = function()
-    {
+    createAnnotatableAreas = function() {
         var counter=0;
         var action = function(element)
         {
@@ -108,36 +121,32 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         toolbar.find("blockquote").text(selectedText);
 
     },
-        hideToolBar = function(){
+    hideToolBar = function(){
             $("#toolbar").hide();
         },
     init = function(){
         var instance= this;
         createAnnotatableAreas();
-
         attachBallons();
-
-        $("body").on("mouseup",".ann",function(e){
-            var selection= getSelection();
-           if (!selectionIsAllowed(selection)){
-               clearSelection(selection);
-               hideToolBar();
-           }
-            else
-           {
-               var range = selection.getRangeAt(0);
-               displayToolBar.call(instance,e,getSelectionText(selection));
-           }
-       });
-
-        $(".ann-icon").click($.proxy(displayToolBar,instance));
+        attachAnnotationEvents();
 
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 
         tinymce.init({selector:'textarea'})
 
+
+        $("body").on("click",".open-gov-comments", function(){
+            scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
+            return false;
+
+        });
+
+       // React.render(<scify.CommentBox />,document.getElementById('wrapper'));
+     //   React.render(React.createElement("CommentBox"),document.getElementById('wrapper'))
+
     };
+
     return {
         init:init
     }

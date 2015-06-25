@@ -19,7 +19,7 @@ POST /annotation/save        @controllers.AnnotationController.annotatePost
 
 GET  /consultation/search        @controllers.ConsultationController.search(query:String ?="", ministryId:Option[Int] ?=None)
 GET  /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
-GET  /comments/opengov/        @controllers.ConsultationController.getOpenGovComments(consultationId:Long,articleId:Long,discussionThreadId:Option[Int] ?=None,maxCommentId:Option[Long] ?=None)
+POST  /comments/opengov/        @controllers.ConsultationController.getOpenGovComments(consultationId:Long,articleId:Long,discussionThreadId:Option[Int] ?=None,maxCommentId:Option[Long] ?=None)
 
 
 # Map static resources from the /public folder to the /assets URL path
