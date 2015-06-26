@@ -31,7 +31,7 @@ var CommentBox = React.createClass({
             });
 
             return (
-                <div className="{classes}">
+                <div className={classes}>
                    <CommentForm />
                    <CommentList data={this.state.comments} />
                 </div>
@@ -66,11 +66,14 @@ var Comment = React.createClass({
         render: function() {
             return (
                 <div className="comment">
-                <h2 className="commentAuthor">
-                {this.props.data.fullName}
-        </h2>
-        {this.props.data.body}
-    </div>
+                  <span className="commentAuthor">{this.props.data.fullName}</span>
+                    <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                    <div class="options">
+                        <a href="#">Συμφωνώ</a>
+                        <a href="">Απάντηση</a>
+                        <span>6h</span>
+                    </div>
+                </div>
 );
 }
 });
