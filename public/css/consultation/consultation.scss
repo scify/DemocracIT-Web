@@ -16,7 +16,7 @@
 }
 
 #consultation-header .title {
-  font-size: 20px;
+  font-size: 16px;
   margin-top: 20px;
 }
 
@@ -56,8 +56,7 @@
   color: #333333;
   font-size: 13px;
   font-weight: normal;
-  line-height: 1.8em;
-  padding-left: 15px;
+  line-height: 1.6em;
   margin-top:10px;
 }
 
@@ -134,23 +133,23 @@ $annotation-icon--color: #fff;
   cursor: pointer;
   display: none;
   font: 12px Arial,sans-serif;
-  padding-bottom: 3px;
-  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-top: 1px;
   position: absolute;
-  right: 0;
+  right: 12px;
   text-align: center;
   top: 0;
-  width: 27px;
+  width: 23px;
   color: $annotation-icon--color;
   background: $annotation-icon-bg-color;
 }
 .ann-icon:before {
+  border-style: solid;
+  border-width: 0 0 8px 7px;
+  bottom: -6px;
   content: "";
   position: absolute;
-  bottom: -8px;
-  right: 7px;
-  border-width: 0px 0 8px 8px;
-  border-style: solid;
+  right: 0;
   border-color: transparent $annotation-icon-bg-color;
 }
 
@@ -161,4 +160,19 @@ $annotation-icon--color: #fff;
   margin-bottom: 10px;
   padding-bottom: 10px;
   padding-top: 10px;
+}
+
+.comment-wrp
+{
+  padding:0;
+  margin-left:-32px;
+}
+
+.commentBox.loading
+{
+  display:none;
+}
+.commentBox .commentForm
+{
+  display:none;
 }

@@ -162,8 +162,9 @@
 
         @for(cons <- consultations) {
             <div class="consultation">
-                <a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title</a>
-                <br> <i>@label: @cons.endDateFormatted</i>, διάρκεια @cons.totalDurationFormatted
+                <a href="@routes.ConsultationController.getConsultation(cons.id)">@Html(cons.title)</a>
+                <br>
+                <span class="duration">@label: @cons.endDateFormatted | διάρκεια @cons.totalDurationFormatted</span>
             </div>
         }
 }

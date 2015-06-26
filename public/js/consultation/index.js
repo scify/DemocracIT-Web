@@ -138,6 +138,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         $("body").on("click",".open-gov-comments", function(){
             scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
+            $("#comment-box-wrp").appendTo($(this).parent());
             return false;
 
         });
