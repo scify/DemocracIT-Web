@@ -60,6 +60,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 displayToolBar.call(instance,e,getSelectionText(selection));
         });
         $(".ann-icon").click($.proxy(displayToolBar,instance));
+
     },
     expandArticleOnClick = function(){
         var article = $(this).closest(".article");
@@ -135,14 +136,15 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         tinymce.init({selector:'textarea'})
 
+        $("#toolbar").find(".close").click(hideToolBar);
 
         $("body").on("click",".open-gov-comments", function(){
             scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
-            $("#comment-box-wrp").appendTo($(this).parent());
+            $("#comment-box-wrp").appendTo($(this).parent().prev().find(".title"));
             return false;
 
         });
-
+        moment.locale('el');
        // React.render(<scify.CommentBox />,document.getElementById('wrapper'));
      //   React.render(React.createElement("CommentBox"),document.getElementById('wrapper'))
 

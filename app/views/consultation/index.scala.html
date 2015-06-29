@@ -6,6 +6,8 @@
       <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
     <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
     <script src="@routes.Assets.at("js/JSXTransformer.js")"></script>
+    <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+
     <script type="text/jsx" src="@routes.Assets.at("js/consultation/commentBox.jsx")" ></script>
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
@@ -18,25 +20,26 @@
 
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
 }
 
 @layout("DemocracIT", css, js,None) {
 
     <section id="stats" class="container">
-        Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate
+        Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
     </section>
     <div id="wrapper" class="container">
         <section id="consultation-header">
         <div class="row">
             <div class="col-md-12 title" >
-                @model.consultation.title
+                @Html(model.consultation.title)
             </div>
         </div>
             </section>
         <section id="consultation-body">
             @for(article <- model.consultation.articles) {
                 <div data-id="@article.id"  class="row article ">
-                    <div class="col-md-8">
+                    <div class="col-md-11">
                         <div class="title">
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
@@ -45,7 +48,7 @@
                             @Html(article.body)
                         </div>
                     </div>
-                    <div data-total="" class="comment-wrp skip-ann col-md-4">
+                    <div data-total="" class="comment-wrp skip-ann col-md-1">
                         <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια</a>
                         </div>
                 </div>
@@ -85,6 +88,7 @@
             <input type="hidden" name="text" value=""/>
 
             <button class="btn blue" type="submit">Καταχώρηση</button>
+            <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
         </form>
     </div>
 

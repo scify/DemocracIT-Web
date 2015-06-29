@@ -15,19 +15,20 @@ object ConsultationParser{
     str("title") ~
     str("short_description") ~
     int("organization_id") ~
+    str("consultation_url") ~
     str("OrganizationTitle") ~
     get[Option[String]]("report_text") ~
     int("num_of_articles") map
       {
         case id ~ start_date ~ end_date ~ title ~ short_description ~
-             organization_id ~ organization_title ~ report_text ~
+             organization_id ~ consultation_url ~ organization_title ~ report_text ~
              num_of_articles =>
 
           new Consultation(
             id, start_date,end_date, title, short_description,
             new Organization(organization_id,organization_title),
             -1,
-            report_text, num_of_articles,Nil
+            report_text, num_of_articles,consultation_url,Nil
           )
       }
 

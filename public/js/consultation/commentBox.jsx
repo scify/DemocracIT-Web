@@ -25,16 +25,28 @@ var CommentBox = React.createClass({
             })
         },
         render: function() {
-            var classes = React.addons.classSet({
-                'commentBox' :true,
-                'loading': this.state.loading
-            });
+            //var classes = React.addons.classSet({
+            //    'commentBox' :true,
+            //    'loading': this.state.loading
+            //});
+
+            if (this.state.loading)
+            {
+                return (
+                    <div className="loading-wrp">
+                        <div className="spinner-loader">
+                            Loading…
+                        </div>
+                    </div>
+                );
+            }
 
             return (
-                <div className={classes}>
-                   <CommentForm />
-                   <CommentList data={this.state.comments} />
-                </div>
+                    <div className="commentBox">
+                           <CommentForm />
+                           <CommentList data={this.state.comments} />
+                    </div>
+
              );
         }
 });
@@ -64,14 +76,23 @@ var CommentList = React.createClass({
 });
 var Comment = React.createClass({
         render: function() {
+            var date =moment(this.props.data.dateAdded).format('llll');
+             //new Date(this.props.data.dateAdded).toDateString()
+            // console.log(this.props.data.dateAdded);
             return (
                 <div className="comment">
-                  <span className="commentAuthor">{this.props.data.fullName}</span>
-                    <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                    <div class="options">
-                        <a href="#">Συμφωνώ</a>
-                        <a href="">Απάντηση</a>
-                        <span>6h</span>
+                    <div className='avatar'>
+                        <img src="/assets/images/profile_default.jpg" />
+                    </div>
+                    <div className='body'>
+                        <span className="commentAuthor">{this.props.data.fullName}</span>
+                        <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                    </div>
+                    <div className="options">
+                        <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
+                        <a className="disagree" href="#">Διαφωνώ<i className="fa fa-thumbs-o-down"></i></a>
+                        <a className="reply" href="#">Απάντηση <i className="fa fa-reply"></i></a>
+                        <span className="date">{date}</span>
                     </div>
                 </div>
 );

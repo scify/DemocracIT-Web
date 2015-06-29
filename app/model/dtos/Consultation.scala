@@ -18,6 +18,7 @@ case class Consultation(val id:Long,
                    val status: Short,
                    val report_text: Option[String],
                    val articlesNum:Int,
+                   val opengov_url:String,
                    var articles:List[Article] =Nil)
 {
   val isActive = endDate.after(DateTime.now().toDate)

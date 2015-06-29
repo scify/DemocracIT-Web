@@ -1,7 +1,10 @@
 package model.dtos
 
+import java.util.{Date, Locale, Calendar}
+
 import model.dtos.CommentSource.CommentSource
-import org.joda.time.DateTime
+import org.joda.time.{Period,Days, DateTime}
+import org.ocpsoft.prettytime.PrettyTime
 
 case class Comment( id:Long,
                      articleId:Int,
@@ -9,7 +12,7 @@ case class Comment( id:Long,
                      body:String,
                      userId:Int,
                      fullName:String,
-                     dateAdded:DateTime,
+                     dateAdded:Date,
                      revision:Int,
                      depth:String,
                      annotations:List[Annotation],
