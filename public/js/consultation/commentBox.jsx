@@ -2,10 +2,9 @@ var CommentBox = React.createClass({
         getInitialState : function(){
            return {comments: []};
         },
-        refreshComments : function(url){
+        getCommentsFromServer : function(url){
             var instance = this;
-            //todo: cancel previous event
-            //todo: display loading icon.
+            //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
@@ -16,6 +15,7 @@ var CommentBox = React.createClass({
                 success : function(data){
                     instance.state.comments = data;
                     instance.state.loading=false;
+                    instance.state.display=true;
                     instance.setState(instance.state);
 
                 },
@@ -24,25 +24,37 @@ var CommentBox = React.createClass({
                 }
             })
         },
+        setVisibibility : function(display){
+           this.state.display=display;
+           this.setState(this.state);
+        },
+        refreshComments : function(url){
+            var instance = this;
+            if (!instance.state.comments || instance.state.comments.length==0)
+                instance.getCommentsFromServer.call(instance,url);
+            else if (instance.state.display)
+                instance.setVisibibility.call(instance,false);
+            else
+                instance.setVisibibility.call(instance,true);
+        },
         render: function() {
-            //var classes = React.addons.classSet({
-            //    'commentBox' :true,
-            //    'loading': this.state.loading
-            //});
-
             if (this.state.loading)
             {
                 return (
                     <div className="loading-wrp">
                         <div className="spinner-loader">
-                            Loading…
+                            Φόρτωση
                         </div>
                     </div>
                 );
             }
 
+            var classes = React.addons.classSet({
+                'hide' :!this.state.display,
+                'commentBox' :true
+            });
             return (
-                    <div className="commentBox">
+                    <div className={classes}>
                            <CommentForm />
                            <CommentList data={this.state.comments} />
                     </div>
@@ -54,8 +66,8 @@ var CommentForm = React.createClass({
     render: function() {
         return (
             <div className="commentForm">
-            <textarea placeholder="leave your comment here"></textarea>
-        </div>
+                     <textarea placeholder="leave your comment here"></textarea>
+            </div>
         );
     }
 });

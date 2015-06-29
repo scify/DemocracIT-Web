@@ -138,10 +138,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         $("#toolbar").find(".close").click(hideToolBar);
 
-        $("body").on("click",".open-gov-comments", function(){
+        $("body").on("click",".open-gov-comments", function(e){
+            e.preventDefault();
             scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
             $("#comment-box-wrp").appendTo($(this).parent().prev().find(".title"));
-            return false;
 
         });
         moment.locale('el');
