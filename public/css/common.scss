@@ -2,7 +2,7 @@
 
 body {
   font-family: $font-default;
-  font-size:16px;
+  font-size:14px;
 }
 
 .h2, h2 {
@@ -345,4 +345,23 @@ legend {
 }
 .btn.blue:hover {
   background-color: #5eceff;
+}
+
+.btn.red {
+  background-color: red;
+  background-image: none;
+  border: medium none;
+  border-radius: 5px;
+  box-shadow: none;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.42857;
+  opacity: 1;
+  padding: 14px 10px;
+  text-shadow: none;
+  vertical-align: 0;
+}
+
+.btn.red:hover {
+  background-color: rgba(255, 0, 0, 0.85);
 }

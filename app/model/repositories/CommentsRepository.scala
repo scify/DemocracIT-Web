@@ -36,6 +36,7 @@ class CommentsRepository {
               and  (discussion_thread_id = $paramDiscussionThread or $paramDiscussionThread = -9999)
               and  c.source_type_id= ${source.id}
               and  (c.id < $paramMaxCommentId or $paramMaxCommentId =-9999)
+              order by c.date_added desc, c.id desc
               limit $pageSize
         """.as(CommentsParser.Parse *)
     }

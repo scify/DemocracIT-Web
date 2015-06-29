@@ -6,11 +6,10 @@
   margin: 0; }
 
 .consultation {
-  margin: 30px 0;
-  font-size: 20px; }
+  margin: 15px 0; }
 
-.consultation i {
-  font-size: 16px; }
+.consultation .duration {
+  font-size: 13px; }
 
 .total {
   cursor: pointer;

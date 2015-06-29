@@ -1,11 +1,11 @@
 package repositories.anorm
 
+import java.util.Date
+
 import anorm.SqlParser._
 import anorm._
 
 import model.dtos._
-import org.joda.time.DateTime
-
 
 object CommentsParser{
 
@@ -20,7 +20,7 @@ object CommentsParser{
     get[Option[Int]]("discussion_thread_id") ~
     get[Option[Int]]("user_id") ~
     str("fullname") ~
-    get[DateTime]("date_added") ~
+    get[Date]("date_added") ~
     int("revision") ~
     str("depth") map
       {
