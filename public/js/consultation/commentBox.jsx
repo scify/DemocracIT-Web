@@ -48,11 +48,8 @@ var CommentBox = React.createClass({
                     </div>
                 );
             }
+            var classes = classNames("commentBox",{ hide :!this.state.display});
 
-            var classes = React.addons.classSet({
-                'hide' :!this.state.display,
-                'commentBox' :true
-            });
             return (
                     <div className={classes}>
                            <CommentForm />
