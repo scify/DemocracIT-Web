@@ -35,3 +35,7 @@ https://www.jetbrains.com/idea/help/transpiling-sass-less-and-scss-to-css.html#d
 
 ### Set up the React/JSX transpiler (webstorm and intellij)
 http://babeljs.io/docs/setup/#webstorm
+
+If you are using intellij you may have to go to  Tools > File watchers and add Babel. In the watcher setting add a new scope with the pattern
+file[root]:public/js/*.jsx
+If you dont this Babel also parses the .js files since the file type is "Javascript" (there is no JSX file type in intellij)
