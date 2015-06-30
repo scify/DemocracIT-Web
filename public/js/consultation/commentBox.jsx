@@ -86,6 +86,7 @@ var CommentList = React.createClass({
         );
     }
 });
+
 var Comment = React.createClass({
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');

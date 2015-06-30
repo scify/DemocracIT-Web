@@ -28,6 +28,10 @@ $ TWITTER_CONSUMER_KEY=key goes here
 $ TWITTER_CONSUMER_SECRET=secret goes here
 ```
 
-### Set up the Sass/SCSS transpiler
+### Set up the Sass/SCSS transpiler (webstorm and intellij)
 
 https://www.jetbrains.com/idea/help/transpiling-sass-less-and-scss-to-css.html#d532231e166
+
+
+### Set up the React/JSX transpiler (webstorm and intellij)
+http://babeljs.io/docs/setup/#webstorm
