@@ -42,10 +42,12 @@
                         <div class="title">
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
+                            <div class="open-gov-commentbox-wrap"></div>
                         </div>
                         <div class="article-body collapse" id="body-@article.id" style="height:0;" >
                             @Html(article.body)
                         </div>
+
                     </div>
                     <div data-total="" class="comment-wrp skip-ann col-md-1">
                         <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια</a>

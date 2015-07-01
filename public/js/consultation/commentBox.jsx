@@ -1,6 +1,7 @@
-var CommentBox = React.createClass({
+(function(){
+    scify.CommentBox = React.createClass({
         getInitialState : function(){
-           return {comments: []};
+            return {comments: []};
         },
         getCommentsFromServer : function(url){
             var instance = this;
@@ -25,8 +26,8 @@ var CommentBox = React.createClass({
             })
         },
         setVisibibility : function(display){
-           this.state.display=display;
-           this.setState(this.state);
+            this.state.display=display;
+            this.setState(this.state);
         },
         refreshComments : function(url){
             var instance = this;
@@ -51,43 +52,42 @@ var CommentBox = React.createClass({
             var classes = classNames("commentBox",{ hide :!this.state.display});
 
             return (
-                    <div className={classes}>
-                           <CommentForm />
-                           <CommentList data={this.state.comments} />
-                    </div>
+                <div className={classes}>
+                    <CommentForm />
+                    <CommentList data={this.state.comments} />
+                </div>
 
-             );
-        }
-});
-var CommentForm = React.createClass({
-    render: function() {
-        return (
-            <div className="commentForm">
-                     <textarea placeholder="leave your comment here"></textarea>
-            </div>
-        );
-    }
-});
-var CommentList = React.createClass({
-    render: function() {
-        var commentNodes = this.props.data.map(function (comment) {
-            return (
-                <Comment data={comment} />
             );
-        });
+        }
+    });
+    var CommentForm = React.createClass({
+        render: function() {
+            return (
+                <div className="commentForm">
+                    <textarea placeholder="leave your comment here"></textarea>
+                </div>
+            );
+        }
+    });
+    var CommentList = React.createClass({
+        render: function() {
+            var commentNodes = this.props.data.map(function (comment) {
+                return (
+                    <Comment data={comment} />
+                );
+            });
 
-        return (
-            <div className="commentList">
-                {commentNodes}
-            </div>
-        );
-    }
-});
-
-var Comment = React.createClass({
+            return (
+                <div className="commentList">
+                    {commentNodes}
+                </div>
+            );
+        }
+    });
+    var Comment = React.createClass({
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-             //new Date(this.props.data.dateAdded).toDateString()
+            //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
             return (
                 <div className="comment">
@@ -105,11 +105,9 @@ var Comment = React.createClass({
                         <span className="date">{date}</span>
                     </div>
                 </div>
-);
-}
-});
+            );
+        }
+    });
+})()
 
 
-$(function(){
-    scify.commentBox = React.render(<CommentBox/>, document.getElementById('comment-box-wrp'));
-})

@@ -1,4 +1,3 @@
-var scify = scify || {};
 
 scify.ConsultationIndexPageHandler = function(annotationTags){
     this.annotationTags = annotationTags;
@@ -125,6 +124,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     hideToolBar = function(){
             $("#toolbar").hide();
         },
+    createOpenGovReactComponents = function(){
+        scify.openGovComponents ={}; //an object that will contain reference to all the React divs that host the comments
+        $(".article").each(function(index,element){
+            var domElementToAddComponent = $(element).find(".open-gov-commentbox-wrap")[0];
+            scify.openGovComponents[$(element).data("id")] = React.render(React.createElement(scify.CommentBox, null),domElementToAddComponent );
+        });
+    },
+    fetchOpenGovComments = function(e){
+        e.preventDefault();
+        var articleDiv = $(this).parent().parent();
+        var articleid =articleDiv.data("id");
+        var reactComponent =scify.openGovComponents[articleid];
+        var url = $(this).attr("href");
+        reactComponent.refreshComments(url);
+    },
     init = function(){
         var instance= this;
         createAnnotatableAreas();
@@ -137,17 +151,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         tinymce.init({selector:'textarea'})
 
         $("#toolbar").find(".close").click(hideToolBar);
-
-        $("body").on("click",".open-gov-comments", function(e){
-            e.preventDefault();
-            scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
-            $("#comment-box-wrp").appendTo($(this).parent().prev().find(".title"));
-
-        });
         moment.locale('el');
-       // React.render(<scify.CommentBox />,document.getElementById('wrapper'));
-     //   React.render(React.createElement("CommentBox"),document.getElementById('wrapper'))
-
+        createOpenGovReactComponents();
+        $("body").on("click",".open-gov-comments", fetchOpenGovComments);
     };
 
     return {
