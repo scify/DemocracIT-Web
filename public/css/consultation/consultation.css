@@ -224,4 +224,11 @@
   100% {
     transform: rotate(360deg); } }
 
+.activeCons {
+  color: #3c763d;
+}
+.inactiveCons {
+  color: #c12e2a;
+}
+
 /*# sourceMappingURL=consultation.css.map */
