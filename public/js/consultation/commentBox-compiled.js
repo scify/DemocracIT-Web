@@ -38,8 +38,8 @@
                 fullName: "full name",
                 body: data.comment,
                 annText: data.text,
-                annTagId: -1,
-                annTagText: data.tagText,
+                annTagId: data.annTagId,
+                tagText: data.tagText,
                 dateAdded: new Date()
             };
             instance.state.comments.push(comment);
@@ -69,6 +69,10 @@
             var instance = this;
             if (!instance.state.comments || instance.state.comments.length == 0) instance.getCommentsFromServer.call(instance, url);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
+        toogleBox: function toogleBox() {
+            this.state.display = !this.state.display;
+            this.setState(this.state);
+        },
         render: function render() {
             if (this.state.loading) {
                 return React.createElement(
@@ -86,6 +90,11 @@
             return React.createElement(
                 "div",
                 { className: classes },
+                React.createElement(
+                    "a",
+                    { onClick: toggleBox },
+                    this.state.display ? "Κλεισιμο" : "Ανοιγμα"
+                ),
                 React.createElement(CommentForm, { consultationid: this.props.consultationid,
                     articleid: this.props.articleid
                 }),
@@ -123,11 +132,17 @@
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
             var tagInfo;
-            if (this.props.data.annTagid > 0 && this.props.data.annTagText && this.props.data.annTagText.length > 0) tagInfo = React.createElement(
-                "span",
-                { className: "tag" },
-                this.props.data.annTagText
-            );
+            if (this.props.data.annTagId > 0 && this.props.data.tagText && this.props.data.tagText.length > 0) {
+                tagInfo = React.createElement(
+                    "div",
+                    { className: "tag" },
+                    React.createElement(
+                        "span",
+                        null,
+                        this.props.data.tagText
+                    )
+                );
+            }
 
             return React.createElement(
                 "div",

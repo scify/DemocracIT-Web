@@ -138,18 +138,19 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //todo: load existing rooms from database
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
         $(".article").each(function(index,articleDiv){
-            var articleid =$(articleDiv).data("id")
+            var articleid =$(articleDiv).data("id");
+            var commentBoxId=getCommentBoxId(articleid);
             var commentBoxProperties= {
                 consultationid      : instance.consultationid,
                 articleid           : articleid,
-                discussionthreadid  : getComponentId(articleid),
-                id                  : null
+                discussionthreadid  : getDiscussionThreadId(articleid,commentBoxId),
+                id                  : commentBoxId
             };
             var domElementToAddComponent = $(articleDiv).find(".open-gov-commentbox-wrap")[0];
             scify.discussionRooms[commentBoxProperties.id] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
 
             $(articleDiv).find(".ann").each(function(i,ann){
-                commentBoxProperties.id = getComponentId(commentBoxProperties.articleid,$(ann).data("id"))
+                commentBoxProperties.id = getCommentBoxId(commentBoxProperties.articleid,$(ann).data("id"))
                 commentBoxProperties.discussionthreadid = getDiscussionThreadId(commentBoxProperties.articleid,commentBoxProperties.id);
                 $(ann).after('<div class="commentbox-wrap"></div>');
                 domElementToAddComponent = $(ann).next()[0];
@@ -158,11 +159,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     getDiscussionRoom = function(articleid,annId){
-        return scify.discussionRooms[getComponentId(articleid,annId)];
+        return scify.discussionRooms[getCommentBoxId(articleid,annId)];
     },
-    getComponentId = function(articleid,annId){
-        // discussion threads with id refer to the whole article..where opengov comments also reside
-        return articleid+(annId? annId:"");
+    getCommentBoxId = function(articleid,annId){
+        return articleid+(annId ? annId :"");
     },
     fetchOpenGovComments = function(e){
         e.preventDefault();
