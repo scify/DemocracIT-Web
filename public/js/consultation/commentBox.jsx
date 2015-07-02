@@ -1,4 +1,6 @@
 (function(){
+
+
     scify.CommentBox = React.createClass({
         getInitialState : function(){
             return {comments: []};
@@ -53,7 +55,9 @@
 
             return (
                 <div className={classes}>
-                    <CommentForm />
+                    <CommentForm consultationid={this.props.consultationid}
+                                 articleid={this.props.articleid}
+                                 />
                     <CommentList data={this.state.comments} />
                 </div>
 
@@ -64,7 +68,34 @@
         render: function() {
             return (
                 <div className="commentForm">
-                    <textarea placeholder="leave your comment here"></textarea>
+                    {/*
+                    <form action="/home/save" method="post">
+                        <div>
+                            Επισημείωση για το τμήμα κειμένου:
+                            <blockquote></blockquote></div>
+                        <div>
+                            <hr/>
+                            <select name="tagId">
+                                <option>Υπόδειξη προβλήματος:</option>
+                                <option value="-1">πρόβλημα 1</option>
+                                <option value="-2">πρόβλημα 2</option>
+                                <option value="-3">πρόβλημα 3</option>
+                            </select>
+                        </div>
+                        <div className="comment-wrap">
+                            Θα ηθελα να δηλωσω οτι:
+                            <textarea name="comment"></textarea>
+                        </div>
+                        <input type="hidden" name="consultationId" value="{this.props.consulationid}"/>
+                        <input type="hidden" name="articleId" value="{this.props.articleid}"/>
+                        <input type="hidden" name="startIndex" value="-1"/>
+                        <input type="hidden" name="endIndex" value="-1"/>
+                        <input type="hidden" name="annotation-tag" value="{this.state.annotationId}"/>
+                        <input type="hidden" name="text" value="{this.state.annotation.text}"/>
+                        <button className="btn blue" type="submit">Καταχώρηση</button>
+                        <button className="close btn red" type="button"  >Κλείσιμο</button>
+                    </form>
+                     */}
                 </div>
             );
         }

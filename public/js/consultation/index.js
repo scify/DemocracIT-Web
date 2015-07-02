@@ -1,6 +1,7 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid){
     this.annotationTags = annotationTags;
+    this.consultationid= consultationid;
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -124,18 +125,38 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     hideToolBar = function(){
             $("#toolbar").hide();
         },
-    createOpenGovReactComponents = function(){
-        scify.openGovComponents ={}; //an object that will contain reference to all the React divs that host the comments
-        $(".article").each(function(index,element){
-            var domElementToAddComponent = $(element).find(".open-gov-commentbox-wrap")[0];
-            scify.openGovComponents[$(element).data("id")] = React.render(React.createElement(scify.CommentBox, null),domElementToAddComponent );
+    createDiscussionRooms = function(){
+        var instance = this;
+        //todo: load existing rooms from database
+        scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
+        $(".article").each(function(index,articleDiv){
+            var commentBoxProperties= {
+                consultationid: instance.consultationid,
+                articleid:      $(articleDiv).data("id"),
+                id: null
+            };
+            commentBoxProperties.id=getComponentId(commentBoxProperties.articleid);
+            var domElementToAddComponent = $(articleDiv).find(".open-gov-commentbox-wrap")[0];
+            scify.discussionRooms[commentBoxProperties.id] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+
+            $(articleDiv).find(".ann").each(function(i,ann){
+                commentBoxProperties.id = getComponentId(commentBoxProperties.articleid,$(ann).data("id"))
+                $(ann).after('<div class="commentbox-wrap"></div>');
+                domElementToAddComponent = $(ann).next()[0];
+                scify.discussionRooms[commentBoxProperties.id] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+            });
         });
     },
+    getComponentId = function(articleid,annId){
+        // discussion threads with id refer to the whole article..where opengov comments also reside
+        return articleid+(annId? annId:"");
+    },
+
     fetchOpenGovComments = function(e){
         e.preventDefault();
-        var articleDiv = $(this).parent().parent();
+        var articleDiv = $(this).closest(".article");
         var articleid =articleDiv.data("id");
-        var reactComponent =scify.openGovComponents[articleid];
+        var reactComponent =scify.discussionRooms[articleid];
         var url = $(this).attr("href");
         reactComponent.refreshComments(url);
     },
@@ -152,8 +173,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         $("#toolbar").find(".close").click(hideToolBar);
         moment.locale('el');
-        createOpenGovReactComponents();
         $("body").on("click",".open-gov-comments", fetchOpenGovComments);
+        createDiscussionRooms();
+
     };
 
     return {
