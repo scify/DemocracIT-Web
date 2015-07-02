@@ -106,7 +106,7 @@ class ConsultationRepository {
                                                 from public.consultation c
                                         inner join public.organization_lkp o on c.organization_id = o.id
                                         inner join public.articles a on a.consultation_id = c.id
-                                        inner join commentsCount count on count.article_id = a.id
+                                        left outer join commentsCount count on count.article_id = a.id
                                         where
                                               c.id =$consultationId
                                         order by end_date, a.art_order
