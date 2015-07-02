@@ -27,6 +27,39 @@
                 }
             })
         },
+        saveComment : function(url,data){
+            var instance = this;
+            data.discussionthreadid = this.props.discussionthreadid;
+
+            //Render it before it is saved
+            var comment = {
+                    fullName : "full name",
+                    body : data.comment,
+                    annText: data.text,
+                    annTagId: -1,
+                    annTagText: data.tagText,
+                    dateAdded : new Date()
+                };
+            instance.state.comments.push(comment);
+            instance.state.saving=true;
+            instance.state.display=true;
+            instance.setState(instance.state);
+
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: url,
+                data:data,
+                success : function(comment){
+                    instance.state.saving=false;
+                    instance.setState(instance.state);
+                },
+                error: function(error){
+                    alert(error)
+                }
+            })
+
+        },
         setVisibibility : function(display){
             this.state.display=display;
             this.setState(this.state);
@@ -116,10 +149,15 @@
         }
     });
     var Comment = React.createClass({
+
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
+            var tagInfo ;
+            if (this.props.data.annTagid>0 && this.props.data.annTagText && this.props.data.annTagText .length>0)
+                tagInfo = <span className="tag">{this.props.data.annTagText }</span>
+
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -128,6 +166,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                        {tagInfo}
                     </div>
                     <div className="options">
                         <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>

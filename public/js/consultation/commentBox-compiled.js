@@ -29,6 +29,38 @@
                 }
             });
         },
+        saveComment: function saveComment(url, data) {
+            var instance = this;
+            data.discussionthreadid = this.props.discussionthreadid;
+
+            //Render it before it is saved
+            var comment = {
+                fullName: "full name",
+                body: data.comment,
+                annText: data.text,
+                annTagId: -1,
+                annTagText: data.tagText,
+                dateAdded: new Date()
+            };
+            instance.state.comments.push(comment);
+            instance.state.saving = true;
+            instance.state.display = true;
+            instance.setState(instance.state);
+
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: data,
+                success: function success(comment) {
+                    instance.state.saving = false;
+                    instance.setState(instance.state);
+                },
+                error: function error(_error) {
+                    alert(_error);
+                }
+            });
+        },
         setVisibibility: function setVisibibility(display) {
             this.state.display = display;
             this.setState(this.state);
@@ -90,6 +122,13 @@
             var date = moment(this.props.data.dateAdded).format("llll");
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
+            var tagInfo;
+            if (this.props.data.annTagid > 0 && this.props.data.annTagText && this.props.data.annTagText.length > 0) tagInfo = React.createElement(
+                "span",
+                { className: "tag" },
+                this.props.data.annTagText
+            );
+
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -106,7 +145,8 @@
                         { className: "commentAuthor" },
                         this.props.data.fullName
                     ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
+                    tagInfo
                 ),
                 React.createElement(
                     "div",

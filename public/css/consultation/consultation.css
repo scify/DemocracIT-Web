@@ -63,6 +63,12 @@
   width: 100%;
   margin-bottom: 15px; }
 
+#toolbar textarea {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%; }
+
 #toolbar .mce-tinymce {
   margin-top: 5px;
   margin-bottom: 15px; }
@@ -223,12 +229,5 @@
 @keyframes animation-rotate {
   100% {
     transform: rotate(360deg); } }
-
-.activeCons {
-  color: #3c763d;
-}
-.inactiveCons {
-  color: #c12e2a;
-}
 
 /*# sourceMappingURL=consultation.css.map */

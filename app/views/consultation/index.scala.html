@@ -11,7 +11,7 @@
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()));
+        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),@model.consultation.id);
         controller.init();
         })
     </script>
@@ -74,10 +74,10 @@
                 <blockquote></blockquote></div>
             <div>
                 <hr>
-                <select name="tagId">
-                    <option>Υπόδειξη προβλήματος:</option>
+                <select name="annTagId">
+                    <option value="-1">Υπόδειξη προβλήματος:</option>
                 @for(annotation <- model.allowedAnnotations){
-                    <option value="@annotation.id">@annotation.description </option>
+                    <option value="@annotation.id">@annotation.description</option>
                 }
                 </select>
             </div>
@@ -85,19 +85,14 @@
 
             <div id="comment-wrap">
                 Θα ηθελα να δηλωσω οτι:
-                <textarea name="comment">
-
-                </textarea>
+                <textarea name="comment"></textarea>
             </div>
 
-            <input type="hidden" name="consultationId" value="@model.consultation.id"/>
-            <input type="hidden" name="articleId" value=""/>
-            <input type="hidden" name="startIndex" value=""/>
-            <input type="hidden" name="endIndex" value=""/>
-            <input type="hidden" name="asdasd" value=""/>
-            <input type="hidden" name="text" value=""/>
+            <input type="hidden" name="articleid" value=""/>
+            <input type="hidden" name="annid" value=""/>
+            <input type="hidden" name="annText" value=""/>
 
-            <button class="btn blue" type="submit">Καταχώρηση</button>
+            <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
             <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
         </form>
     </div>
