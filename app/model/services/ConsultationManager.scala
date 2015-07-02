@@ -46,10 +46,10 @@ class ConsultationManager {
     val repository = new ConsultationRepository()
     var annotationRepo = new AnnotationRepository()
 
-    ConsultationViewModel(repository.get(consultationId),
-                                        annotationRepo.loadAnnotationTypes(),
-                                        Nil,
-                                        None)
+    ConsultationViewModel(consultation = repository.get(consultationId),
+                          allowedAnnotations = annotationRepo.loadAnnotationTypes(),
+                          discussionThreads = Nil,
+                          user = None)
   }
 
   def median(s: List[Int]):Int =

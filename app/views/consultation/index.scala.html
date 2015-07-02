@@ -26,7 +26,13 @@
 
     <section id="stats" class="container">
         Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
+            @if(model.consultation.isActive) {
+                <div class="consState activeCons">Ενεργή Διαβούλευση</div>
+            } else {
+                <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
+            }
     </section>
+
     <div id="wrapper" class="container">
         <section id="consultation-header">
         <div class="row">
