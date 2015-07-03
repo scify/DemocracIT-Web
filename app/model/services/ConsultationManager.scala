@@ -97,10 +97,4 @@ class ConsultationManager {
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
-
-  def getOpenGovComments(consultationId:Long,articleId:Long, maxCommentId:Option[Long]): List[Comment] = {
-
-    val commentsRepository = new CommentsRepository()
-    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
-  }
 }
