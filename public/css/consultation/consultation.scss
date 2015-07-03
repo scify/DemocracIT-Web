@@ -92,6 +92,13 @@
   width:100%;
   margin-bottom: 15px;
 }
+#toolbar textarea
+{
+  display:block;
+  margin-top:10px;
+  margin-bottom:10px;
+  width:100%;
+}
 #toolbar .mce-tinymce
 {
   margin-top:5px;
@@ -202,6 +209,7 @@ $annotation-icon--color: #fff;
 .commentBox .comment .avatar {
   float: left;
   margin-right: 10px;
+  margin-bottom:10px;
 }
 .commentBox .comment .avatar img
 {
@@ -232,6 +240,18 @@ $annotation-icon--color: #fff;
   color: #c12e2a;
 }
 
+.commentBox .comment .tag
+{
+  margin-top:10px;
+}
+.commentBox .comment .tag span
+{
+  display: inline-block;
+  background-color: lightgray;
+  width: auto;
+  border-radius: 10px;
+  padding:4px 13px;
+}
 .loading-wrp
 {
   text-align: center;

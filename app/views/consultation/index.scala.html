@@ -11,7 +11,7 @@
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()));
+        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),@model.consultation.id);
         controller.init();
         })
     </script>
@@ -48,16 +48,18 @@
                         <div class="title">
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
-                            <div class="open-gov-commentbox-wrap"></div>
                         </div>
                         <div class="article-body collapse" id="body-@article.id" style="height:0;" >
                             @Html(article.body)
                         </div>
-
-                    </div>
-                    <div data-total="" class="comment-wrp skip-ann col-md-1">
-                        <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια</a>
+                        <div data-total="" class="comment-wrp skip-ann">
+                            <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια στο open gov</a>
+                            <div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>
                         </div>
+                    </div>
+                    <div class="col-md-1">
+                        </div>
+
                 </div>
             }
         </section>
@@ -72,10 +74,10 @@
                 <blockquote></blockquote></div>
             <div>
                 <hr>
-                <select name="tagId">
-                    <option>Υπόδειξη προβλήματος:</option>
+                <select name="annTagId">
+                    <option value="-1">Υπόδειξη προβλήματος:</option>
                 @for(annotation <- model.allowedAnnotations){
-                    <option value="@annotation.id">@annotation.description </option>
+                    <option value="@annotation.id">@annotation.description</option>
                 }
                 </select>
             </div>
@@ -83,18 +85,14 @@
 
             <div id="comment-wrap">
                 Θα ηθελα να δηλωσω οτι:
-                <textarea name="comment">
-
-                </textarea>
+                <textarea name="comment"></textarea>
             </div>
 
-            <input type="hidden" name="consultationId" value="@model.consultation.id"/>
-            <input type="hidden" name="articleId" value=""/>
-            <input type="hidden" name="startIndex" value=""/>
-            <input type="hidden" name="endIndex" value=""/>
-            <input type="hidden" name="text" value=""/>
+            <input type="hidden" name="articleid" value=""/>
+            <input type="hidden" name="annid" value=""/>
+            <input type="hidden" name="annText" value=""/>
 
-            <button class="btn blue" type="submit">Καταχώρηση</button>
+            <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
             <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
         </form>
     </div>
