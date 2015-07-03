@@ -86,6 +86,16 @@ class ConsultationRepository {
     }
   }
 
+  def getRelevantMaterial (consultationId: Long):Seq[RelevantMaterial] = {
+    DB.withConnection { implicit c =>
+      val results = SQL"""
+        select c.* from public.relevant_mat c where c.consultation_id = $consultationId
+        """.as(RelevantMaterialParser.Parse *)
+      results
+    }
+
+  }
+
   def get(consultationId: BigInt): Consultation =
   {
     DB.withConnection { implicit c =>
