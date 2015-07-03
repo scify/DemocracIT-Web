@@ -15,12 +15,12 @@
                 method: "POST",
                 url: url,
                 beforeSend: function beforeSend() {
-                    instance.state.loading = true;
+                    instance.state.busy = true;
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    instance.state.loading = false;
+                    instance.state.busy = false;
                     instance.state.display = true;
                     instance.setState(instance.state);
                 },
@@ -32,7 +32,6 @@
         saveComment: function saveComment(url, data) {
             var instance = this;
 
-            //Render it before it is saved
             var comment = {
                 consultationId: this.props.consultationid,
                 articleId: this.props.articleid,
@@ -45,21 +44,26 @@
                 tagText: data.tagText,
                 dateAdded: new Date()
             };
-            instance.state.comments.push(comment);
-            instance.state.saving = true;
-            instance.state.display = true;
-            instance.setState(instance.state);
 
             //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
                 data: comment,
-                success: function success(response) {
-                    instance.state.saving = false;
+                beforeSend: function beforeSend() {
+                    instance.state.display = true;
+                    instance.state.busy = true;
                     instance.setState(instance.state);
                 },
-                error: function error(_error) {}
+                success: function success(response) {
+                    instance.state.comments.push(comment);
+                },
+                complete: function complete(error) {
+                    instance.state.busy = false;
+
+                    instance.state.display = instance.comments.length > 0;
+                    instance.setState(instance.state);
+                }
             });
         },
         setVisibibility: function setVisibibility(display) {
@@ -75,14 +79,14 @@
             this.setState(this.state);
         },
         render: function render() {
-            if (this.state.loading) {
+            if (this.state.busy) {
                 return React.createElement(
                     "div",
                     { className: "loading-wrp" },
                     React.createElement(
                         "div",
                         { className: "spinner-loader" },
-                        "Φόρτωση"
+                        "..."
                     )
                 );
             }

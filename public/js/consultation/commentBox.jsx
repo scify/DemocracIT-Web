@@ -12,12 +12,12 @@
                 method: "POST",
                 url: url,
                 beforeSend: function(){
-                    instance.state.loading=true;
+                    instance.state.busy=true;
                     instance.setState(instance.state);
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    instance.state.loading=false;
+                    instance.state.busy=false;
                     instance.state.display=true;
                     instance.setState(instance.state);
 
@@ -30,34 +30,38 @@
         saveComment : function(url,data){
             var instance = this;
 
-            //Render it before it is saved
             var comment = {
-                    consultationId : this.props.consultationid,
-                    articleId: this.props.articleid,
-                    body : data.body,
-                    annTagId: data.annTagId,
-                    annotatedText: data.annotatedText,
-                    discussionThreadId : this.props.discussionthreadid,
+                consultationId : this.props.consultationid,
+                articleId: this.props.articleid,
+                body : data.body,
+                annTagId: data.annTagId,
+                annotatedText: data.annotatedText,
+                discussionThreadId : this.props.discussionthreadid,
 
-                    fullName : "full name",
-                    tagText: data.tagText,
-                    dateAdded : new Date()
-                };
-            instance.state.comments.push(comment);
-            instance.state.saving=true;
-            instance.state.display=true;
-            instance.setState(instance.state);
+                fullName : "full name",
+                tagText: data.tagText,
+                dateAdded : new Date()
+            };
 
             //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
                 data:comment,
-                success : function(response){
-                    instance.state.saving=false;
+                beforeSend:function(){
+                    instance.state.display=true;
+                    instance.state.busy=true;
                     instance.setState(instance.state);
                 },
-                error: function(error){}
+                success : function(response){
+                    instance.state.comments.push(comment);
+                },
+                complete: function(error){
+                    instance.state.busy=false;
+
+                    instance.state.display = instance.comments.length>0;
+                    instance.setState(instance.state);
+                }
             })
 
         },
@@ -79,12 +83,12 @@
             this.setState(this.state);
         },
         render: function() {
-            if (this.state.loading)
+            if (this.state.busy)
             {
                 return (
                     <div className="loading-wrp">
                         <div className="spinner-loader">
-                            Φόρτωση
+                            ...
                         </div>
                     </div>
                 );
