@@ -7,7 +7,8 @@ import utils.ImplicitWrites._
 case class ConsultationViewModel(val consultation:model.dtos.Consultation,
                             val allowedAnnotations: Seq[AnnotationType],
                             val discussionThreads : Seq[DiscussionThread],
-                            val user: Option[model.User])
+                            val user: Option[model.User],
+                                 val relevantMaterial: Seq[RelevantMaterial])
 {
    def annotationTypesToJson():String =
    {

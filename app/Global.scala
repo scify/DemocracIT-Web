@@ -7,6 +7,7 @@ import play.api.GlobalSettings
 import play.api.i18n.{ Lang, Messages }
 import play.api.mvc.Results._
 import play.api.mvc.{ RequestHeader, Result }
+import play.api.libs.json.Json
 import utils.SilhouetteModule
 
 import scala.concurrent.Future
@@ -55,8 +56,18 @@ trait Global extends GlobalSettings with SecuredSettings with com.mohiva.play.si
    * @return The result to send to the client.
    */
   override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future.successful(Redirect(routes.AccountController.signIn)))
+
+    val isAjax = request.headers.get("X-Requested-With") == Some("XMLHttpRequest")
+    if (isAjax){
+      Some(Future.successful(Unauthorized(Json.toJson(routes.AccountController.signIn.url))))
+    }
+    else {
+      Some(Future.successful(Redirect(routes.AccountController.signIn)))
+    }
+
   }
+
+
 
   /**
    * Called when a user is authenticated but not authorized.
@@ -68,6 +79,16 @@ trait Global extends GlobalSettings with SecuredSettings with com.mohiva.play.si
    * @return The result to send to the client.
    */
   override def onNotAuthorized(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future.successful(Redirect(routes.AccountController.signIn).flashing("error" -> Messages("access.denied"))))
+    val isAjax = request.headers.get("X-Requested-With") == Some("XMLHttpRequest")
+
+    if (isAjax){
+      //todo: move to resources
+      Some(Future.successful(Forbidden(Json.toJson( Messages("access.denied")))))
+    }
+    else {
+      Some(Future.successful(Redirect(routes.AccountController.signIn)
+        .flashing("error" -> Messages("access.denied"))))
+    }
+
   }
 }

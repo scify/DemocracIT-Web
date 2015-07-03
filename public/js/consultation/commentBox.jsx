@@ -1,21 +1,24 @@
-var CommentBox = React.createClass({
+(function(){
+
+
+    scify.CommentBox = React.createClass({
         getInitialState : function(){
-           return {comments: []};
+            return {comments: []};
         },
-        refreshComments : function(url){
+        getCommentsFromServer : function(url){
             var instance = this;
-            //todo: cancel previous event
-            //todo: display loading icon.
+            //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
                 beforeSend: function(){
-                    instance.state.loading=true;
+                    instance.state.busy=true;
                     instance.setState(instance.state);
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    instance.state.loading=false;
+                    instance.state.busy=false;
+                    instance.state.display=true;
                     instance.setState(instance.state);
 
                 },
@@ -24,61 +27,146 @@ var CommentBox = React.createClass({
                 }
             })
         },
-        render: function() {
-            //var classes = React.addons.classSet({
-            //    'commentBox' :true,
-            //    'loading': this.state.loading
-            //});
+        saveComment : function(url,data){
+            var instance = this;
 
-            if (this.state.loading)
+            var comment = {
+                consultationId : this.props.consultationid,
+                articleId: this.props.articleid,
+                body : data.body,
+                annTagId: data.annTagId,
+                annotatedText: data.annotatedText,
+                discussionThreadId : this.props.discussionthreadid,
+
+                fullName : "full name",
+                tagText: data.tagText,
+                dateAdded : new Date()
+            };
+
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: url,
+                data:comment,
+                beforeSend:function(){
+                    instance.state.display=true;
+                    instance.state.busy=true;
+                    instance.setState(instance.state);
+                },
+                success : function(response){
+                    instance.state.comments.push(comment);
+                },
+                complete: function(error){
+                    instance.state.busy=false;
+
+                    instance.state.display = instance.comments.length>0;
+                    instance.setState(instance.state);
+                }
+            })
+
+        },
+        setVisibibility : function(display){
+            this.state.display=display;
+            this.setState(this.state);
+        },
+        refreshComments : function(url){
+            var instance = this;
+            if (!instance.state.comments || instance.state.comments.length==0)
+                instance.getCommentsFromServer.call(instance,url);
+            else if (instance.state.display)
+                instance.setVisibibility.call(instance,false);
+            else
+                instance.setVisibibility.call(instance,true);
+        },
+        toogleBox: function(){
+            this.state.display= !this.state.display;
+            this.setState(this.state);
+        },
+        render: function() {
+            if (this.state.busy)
             {
                 return (
                     <div className="loading-wrp">
                         <div className="spinner-loader">
-                            Loading…
+                            ...
                         </div>
                     </div>
                 );
             }
+            var classes = classNames("commentBox",{ hide :!this.state.display});
 
             return (
-                    <div className="commentBox">
-                           <CommentForm />
-                           <CommentList data={this.state.comments} />
-                    </div>
+                <div className={classes}>
+                    <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a>
+                    <CommentForm />
+                    <CommentList data={this.state.comments} />
+                </div>
 
-             );
-        }
-});
-var CommentForm = React.createClass({
-    render: function() {
-        return (
-            <div className="commentForm">
-            <textarea placeholder="leave your comment here"></textarea>
-        </div>
-        );
-    }
-});
-var CommentList = React.createClass({
-    render: function() {
-        var commentNodes = this.props.data.map(function (comment) {
-            return (
-                <Comment data={comment} />
             );
-        });
+        }
+    });
+    var CommentForm = React.createClass({
+        render: function() {
+            return (
+                <div className="commentForm">
+                    {/*
+                    <form action="/home/save" method="post">
+                        <div>
+                            Επισημείωση για το τμήμα κειμένου:
+                            <blockquote></blockquote></div>
+                        <div>
+                            <hr/>
+                            <select name="tagId">
+                                <option>Υπόδειξη προβλήματος:</option>
+                                <option value="-1">πρόβλημα 1</option>
+                                <option value="-2">πρόβλημα 2</option>
+                                <option value="-3">πρόβλημα 3</option>
+                            </select>
+                        </div>
+                        <div className="comment-wrap">
+                            Θα ηθελα να δηλωσω οτι:
+                            <textarea name="comment"></textarea>
+                        </div>
+                        <input type="hidden" name="consultationId" value="{this.props.consulationid}"/>
+                        <input type="hidden" name="articleId" value="{this.props.articleid}"/>
+                        <input type="hidden" name="startIndex" value="-1"/>
+                        <input type="hidden" name="endIndex" value="-1"/>
+                        <input type="hidden" name="annotation-tag" value="{this.state.annotationId}"/>
+                        <input type="hidden" name="text" value="{this.state.annotation.text}"/>
+                        <button className="btn blue" type="submit">Καταχώρηση</button>
+                        <button className="close btn red" type="button"  >Κλείσιμο</button>
+                    </form>
+                     */}
+                </div>
+            );
+        }
+    });
+    var CommentList = React.createClass({
+        render: function() {
+            var commentNodes = this.props.data.map(function (comment) {
+                return (
+                    <Comment data={comment} />
+                );
+            });
 
-        return (
-            <div className="commentList">
-                {commentNodes}
-            </div>
-        );
-    }
-});
-var Comment = React.createClass({
+            return (
+                <div className="commentList">
+                    {commentNodes}
+                </div>
+            );
+        }
+    });
+    var Comment = React.createClass({
+
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-             //new Date(this.props.data.dateAdded).toDateString()
+            //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
+            var tagInfo ;
+            if (this.props.data.annTagId>0 && this.props.data.tagText && this.props.data.tagText .length>0){
+                tagInfo = <div className="tag"><span >{this.props.data.tagText }</span></div>
+            }
+
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -87,6 +175,7 @@ var Comment = React.createClass({
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                        {tagInfo}
                     </div>
                     <div className="options">
                         <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
@@ -95,11 +184,9 @@ var Comment = React.createClass({
                         <span className="date">{date}</span>
                     </div>
                 </div>
-);
-}
-});
+            );
+        }
+    });
+})()
 
 
-$(function(){
-    scify.commentBox = React.render(<CommentBox/>, document.getElementById('comment-box-wrp'));
-})

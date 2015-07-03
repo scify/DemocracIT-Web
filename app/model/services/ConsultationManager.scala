@@ -46,10 +46,11 @@ class ConsultationManager {
     val repository = new ConsultationRepository()
     var annotationRepo = new AnnotationRepository()
 
-    ConsultationViewModel(repository.get(consultationId),
-                                        annotationRepo.loadAnnotationTypes(),
-                                        Nil,
-                                        None)
+    ConsultationViewModel(consultation = repository.get(consultationId),
+                          allowedAnnotations = annotationRepo.loadAnnotationTypes(),
+                          discussionThreads = Nil,
+                          user = None,
+                          relevantMaterial = repository.getRelevantMaterial(consultationId))
   }
 
   def median(s: List[Int]):Int =
@@ -96,10 +97,4 @@ class ConsultationManager {
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
-
-  def getOpenGovComments(consultationId:Long,articleId:Long, maxCommentId:Option[Long]): List[Comment] = {
-
-    val commentsRepository = new CommentsRepository()
-    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
-  }
 }

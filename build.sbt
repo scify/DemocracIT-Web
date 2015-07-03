@@ -5,7 +5,7 @@ version := "0.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 // http://www.ocpsoft.org/prettytime/ format hours/dates
 libraryDependencies ++= Seq(

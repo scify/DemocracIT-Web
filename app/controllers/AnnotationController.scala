@@ -10,16 +10,24 @@ import utils.ImplicitWrites.FormErrorWrites
 
 class AnnotationController @Inject() (implicit val env: Environment[model.User, SessionAuthenticator]) extends Silhouette[model.User, SessionAuthenticator] {
 
-  def annotatePost() =  UserAwareAction { implicit request =>
+  def annotatePost() =  SecuredAction { implicit request =>
     //request.identity contains an Option[User]
     AnnotationForm.form.bindFromRequest.fold(
-     form => UnprocessableEntity(Json.toJson(form.errors)),
+     form => {
+       val z= "stop"
+       UnprocessableEntity(Json.toJson(form.errors))
+     },
      value => {
-       if (request.identity.isDefined)
-         UnprocessableEntity(Json.toJson(-1)) //notify that he is not logged in. There must be a better way to handle this. Maybe using a trait?
-
        //todo: save to database and return result.
        Ok(Json.toJson("not saved"))
+//       if (!request.identity.isDefined)
+//      {
+//        Unauthorized(Json.toJson(-9999)) //notify that he is not logged in. There must be a better way to handle this. Maybe using a trait?
+//      }
+//      else
+//       {
+//
+//       }
      }
     )
 

@@ -42,4 +42,62 @@ class CommentsRepository {
     }
   }
 
+    def getDiscussionThreadId(locationIdentifier:String):Long = {
+      DB.withConnection { implicit c =>
+        SQL"""
+           select id from public.discussion_thread t where t.locationidentifier = $locationIdentifier
+              """.as(SqlParser.long("id").single)
+
+      }
+    }
+
+    def saveDiscussionThread(locationIdentifier:String,threadText:String): Option[Long] =
+    {
+      DB.withConnection { implicit c =>
+        val result = SQL"""
+           insert into public.discussion_thread (locationidentifier,text)
+            select $locationIdentifier,$threadText
+            where not exists (select 1 from public.discussion_thread where locationidentifier = $locationIdentifier)
+              """.executeInsert()
+
+        result
+
+      }
+    }
+
+    def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
+      DB.withConnection { implicit c =>
+
+       val result = SQL"""
+          INSERT INTO public.comments
+                      (
+                      url_source,
+                      article_id,
+                      parent_id,
+                      "comment",
+                      source_type_id,
+                      discussion_thread_id,
+                      user_id,
+                      date_added,
+                      revision,
+                      depth)
+          VALUES
+                    (
+                      NULL,
+                      ${comment.articleId},
+                      NULL,
+                      ${comment.body},
+                      1,
+                      ${discussionThreadId},
+                      ${comment.userId},
+                      now(),
+                      ${comment.revision},
+                      ${comment.depth})
+                  """.executeInsert()
+
+        result
+      }
+    }
+
+
 }

@@ -1,7 +1,7 @@
-var scify = scify || {};
 
-scify.ConsultationIndexPageHandler = function(annotationTags){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid){
     this.annotationTags = annotationTags;
+    this.consultationid= consultationid;
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -96,7 +96,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     attachBallons = function(){
         $(".ann").append("<span class='ann-icon'>+</span>");
     },
-    displayToolBar = function(e,selectedText,startIndex,lastIndex){
+    displayToolBar = function(e,selectedText){
         //todo: Use react.js for this.
 
        var target = $(e.target),
@@ -115,18 +115,76 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         toolbar.addClass(toolbarClass);
         toolbar.fadeIn("fast");
         toolbar.css({top:top, left: left});
-       // toolbar.find["input[name='articleId'"].val(article.data("id"));
-        toolbar.find("input[name='text']").val(selectedText);
-        toolbar.find("input[name='startIndex']").val(startIndex);
-        toolbar.find("input[name='endIndex']").val(lastIndex);
+        toolbar.find("input[name='annText']").val(selectedText);
+
+        var parent = target.closest(".ann")
+        var annid=parent.data("id");
+        var articleid=target.closest(".article").data("id");
+        toolbar.find("input[name='articleid']").val(articleid);
+        toolbar.find("input[name='annid']").val(annid);
         toolbar.find("blockquote").text(selectedText);
 
     },
     hideToolBar = function(){
             $("#toolbar").hide();
-        },
+    },
+    getDiscussionThreadId = function(articleId,commentBoxId){
+        //todo: implement this
+        //should be loaded from the database. for each commentbox id and article id we have one discussion thread id
+        return -1;
+    },
+    createDiscussionRooms = function(){
+        var instance = this;
+        //todo: load existing rooms from database
+        scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
+        $(".article").each(function(index,articleDiv){
+            var articleid =$(articleDiv).data("id");
+            var commentBoxId=getCommentBoxId(articleid);
+            var commentBoxProperties= {
+                consultationid      : instance.consultationid,
+                articleid           : articleid,
+                discussionthreadid  : getDiscussionThreadId(articleid,commentBoxId),
+                id                  : commentBoxId
+            };
+            var domElementToAddComponent = $(articleDiv).find(".open-gov-commentbox-wrap")[0];
+            scify.discussionRooms[commentBoxProperties.id] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+
+            $(articleDiv).find(".ann").each(function(i,ann){
+                commentBoxProperties.id = getCommentBoxId(commentBoxProperties.articleid,$(ann).data("id"))
+                commentBoxProperties.discussionthreadid = getDiscussionThreadId(commentBoxProperties.articleid,commentBoxProperties.id);
+                $(ann).after('<div class="commentbox-wrap"></div>');
+                domElementToAddComponent = $(ann).next()[0];
+                scify.discussionRooms[commentBoxProperties.id] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+            });
+        });
+    },
+    getDiscussionRoom = function(articleid,annId){
+        return scify.discussionRooms[getCommentBoxId(articleid,annId)];
+    },
+    getCommentBoxId = function(articleid,annId){
+        return articleid+(annId ? annId :"");
+    },
+    fetchOpenGovComments = function(e){
+        e.preventDefault();
+        var articleDiv = $(this).closest(".article");
+        var articleid =articleDiv.data("id");
+        var url = $(this).attr("href");
+        getDiscussionRoom(articleid).refreshComments(url);
+    },
+     handleAnnotationSave = function(e){
+         e.preventDefault();
+         var form = $(this).closest("form");
+         var data = {};
+         form.serializeArray().map(function(x){data[x.name] = x.value;});
+         data.tagText = form.find("option:selected").text();
+         data.annotatedText = form.find("blockquote").html();
+         getDiscussionRoom(data.articleid,data.annid).saveComment(form.attr("action"),data);
+         hideToolBar();
+     },
     init = function(){
         var instance= this;
+        moment.locale('el');
+
         createAnnotatableAreas();
         attachBallons();
         attachAnnotationEvents();
@@ -134,20 +192,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 
-        tinymce.init({selector:'textarea'})
+        $("body").on("click",".open-gov-comments", fetchOpenGovComments);
+        createDiscussionRooms.call(instance);
 
+        //tinymce.init({selector:'textarea'})
         $("#toolbar").find(".close").click(hideToolBar);
-
-        $("body").on("click",".open-gov-comments", function(){
-            scify.commentBox.refreshComments.call(scify.commentBox, $(this).attr("href"));
-            $("#comment-box-wrp").appendTo($(this).parent().prev().find(".title"));
-            return false;
-
-        });
-        moment.locale('el');
-       // React.render(<scify.CommentBox />,document.getElementById('wrapper'));
-     //   React.render(React.createElement("CommentBox"),document.getElementById('wrapper'))
-
+        $("#save-annotation").click(handleAnnotationSave);
     };
 
     return {

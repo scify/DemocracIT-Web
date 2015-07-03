@@ -6,7 +6,7 @@ import model.dtos.CommentSource.CommentSource
 import org.joda.time.{Period,Days, DateTime}
 import org.ocpsoft.prettytime.PrettyTime
 
-case class Comment( id:Long,
+case class Comment( var id:Long,
                      articleId:Int,
                      source:CommentSource,
                      body:String,

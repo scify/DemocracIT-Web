@@ -5,14 +5,13 @@
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
     <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
-    <script src="@routes.Assets.at("js/JSXTransformer.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
-
-    <script type="text/jsx" src="@routes.Assets.at("js/consultation/commentBox.jsx")" ></script>
+    <script src="@routes.Assets.at("js/classnames.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()));
+        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),@model.consultation.id);
         controller.init();
         })
     </script>
@@ -27,7 +26,13 @@
 
     <section id="stats" class="container">
         Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
+            @if(model.consultation.isActive) {
+                <div class="consState activeCons">Ενεργή Διαβούλευση</div>
+            } else {
+                <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
+            }
     </section>
+
     <div id="wrapper" class="container">
         <section id="consultation-header">
         <div class="row">
@@ -47,10 +52,14 @@
                         <div class="article-body collapse" id="body-@article.id" style="height:0;" >
                             @Html(article.body)
                         </div>
-                    </div>
-                    <div data-total="" class="comment-wrp skip-ann col-md-1">
-                        <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια</a>
+                        <div data-total="" class="comment-wrp skip-ann">
+                            <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια στο open gov</a>
+                            <div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>
                         </div>
+                    </div>
+                    <div class="col-md-1">
+                        </div>
+
                 </div>
             }
         </section>
@@ -65,10 +74,10 @@
                 <blockquote></blockquote></div>
             <div>
                 <hr>
-                <select name="tagId">
-                    <option>Υπόδειξη προβλήματος:</option>
+                <select name="annTagId">
+                    <option value="-1">Υπόδειξη προβλήματος:</option>
                 @for(annotation <- model.allowedAnnotations){
-                    <option value="@annotation.id">@annotation.description </option>
+                    <option value="@annotation.id">@annotation.description</option>
                 }
                 </select>
             </div>
@@ -76,18 +85,14 @@
 
             <div id="comment-wrap">
                 Θα ηθελα να δηλωσω οτι:
-                <textarea name="comment">
-
-                </textarea>
+                <textarea name="body"></textarea>
             </div>
 
-            <input type="hidden" name="consultationId" value="@model.consultation.id"/>
-            <input type="hidden" name="articleId" value=""/>
-            <input type="hidden" name="startIndex" value=""/>
-            <input type="hidden" name="endIndex" value=""/>
-            <input type="hidden" name="text" value=""/>
+            <input type="hidden" name="articleid" value=""/>
+            <input type="hidden" name="annid" value=""/>
+            <input type="hidden" name="annotatedText" value=""/>
 
-            <button class="btn blue" type="submit">Καταχώρηση</button>
+            <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
             <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
         </form>
     </div>

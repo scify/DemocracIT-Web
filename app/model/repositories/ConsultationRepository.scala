@@ -86,6 +86,16 @@ class ConsultationRepository {
     }
   }
 
+  def getRelevantMaterial (consultationId: Long):Seq[RelevantMaterial] = {
+    DB.withConnection { implicit c =>
+      val results = SQL"""
+        select c.* from public.relevant_mat c where c.consultation_id = $consultationId
+        """.as(RelevantMaterialParser.Parse *)
+      results
+    }
+
+  }
+
   def get(consultationId: BigInt): Consultation =
   {
     DB.withConnection { implicit c =>
@@ -106,7 +116,7 @@ class ConsultationRepository {
                                                 from public.consultation c
                                         inner join public.organization_lkp o on c.organization_id = o.id
                                         inner join public.articles a on a.consultation_id = c.id
-                                        inner join commentsCount count on count.article_id = a.id
+                                        left outer join commentsCount count on count.article_id = a.id
                                         where
                                               c.id =$consultationId
                                         order by end_date, a.art_order
