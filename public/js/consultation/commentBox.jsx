@@ -29,14 +29,17 @@
         },
         saveComment : function(url,data){
             var instance = this;
-            data.discussionthreadid = this.props.discussionthreadid;
 
             //Render it before it is saved
             var comment = {
-                    fullName : "full name",
-                    body : data.comment,
-                    annText: data.text,
+                    consultationId : this.props.consultationid,
+                    articleId: this.props.articleid,
+                    body : data.body,
                     annTagId: data.annTagId,
+                    annotatedText: data.annotatedText,
+                    discussionThreadId : this.props.discussionthreadid,
+
+                    fullName : "full name",
                     tagText: data.tagText,
                     dateAdded : new Date()
                 };
@@ -49,14 +52,12 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data:data,
-                success : function(comment){
+                data:comment,
+                success : function(response){
                     instance.state.saving=false;
                     instance.setState(instance.state);
                 },
-                error: function(error){
-                    alert(error)
-                }
+                error: function(error){}
             })
 
         },
@@ -92,10 +93,8 @@
 
             return (
                 <div className={classes}>
-                    <a onClick={toggleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a>
-                    <CommentForm consultationid={this.props.consultationid}
-                                 articleid={this.props.articleid}
-                                 />
+                    <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a>
+                    <CommentForm />
                     <CommentList data={this.state.comments} />
                 </div>
 

@@ -31,14 +31,17 @@
         },
         saveComment: function saveComment(url, data) {
             var instance = this;
-            data.discussionthreadid = this.props.discussionthreadid;
 
             //Render it before it is saved
             var comment = {
-                fullName: "full name",
-                body: data.comment,
-                annText: data.text,
+                consultationId: this.props.consultationid,
+                articleId: this.props.articleid,
+                body: data.body,
                 annTagId: data.annTagId,
+                annotatedText: data.annotatedText,
+                discussionThreadId: this.props.discussionthreadid,
+
+                fullName: "full name",
                 tagText: data.tagText,
                 dateAdded: new Date()
             };
@@ -51,14 +54,12 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data: data,
-                success: function success(comment) {
+                data: comment,
+                success: function success(response) {
                     instance.state.saving = false;
                     instance.setState(instance.state);
                 },
-                error: function error(_error) {
-                    alert(_error);
-                }
+                error: function error(_error) {}
             });
         },
         setVisibibility: function setVisibibility(display) {
@@ -92,12 +93,10 @@
                 { className: classes },
                 React.createElement(
                     "a",
-                    { onClick: toggleBox },
+                    { onClick: this.toogleBox },
                     this.state.display ? "Κλεισιμο" : "Ανοιγμα"
                 ),
-                React.createElement(CommentForm, { consultationid: this.props.consultationid,
-                    articleid: this.props.articleid
-                }),
+                React.createElement(CommentForm, null),
                 React.createElement(CommentList, { data: this.state.comments })
             );
         }

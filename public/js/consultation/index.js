@@ -177,6 +177,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          var data = {};
          form.serializeArray().map(function(x){data[x.name] = x.value;});
          data.tagText = form.find("option:selected").text();
+         data.annotatedText = form.find("blockquote").html();
          getDiscussionRoom(data.articleid,data.annid).saveComment(form.attr("action"),data);
          hideToolBar();
      },
@@ -192,7 +193,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         $(".article-title-text").first().trigger("click");
 
         $("body").on("click",".open-gov-comments", fetchOpenGovComments);
-        createDiscussionRooms();
+        createDiscussionRooms.call(instance);
 
         //tinymce.init({selector:'textarea'})
         $("#toolbar").find(".close").click(hideToolBar);

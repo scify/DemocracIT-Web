@@ -10,20 +10,20 @@ object AnnotationForm {
     mapping(
       "consultationId" -> longNumber,
       "articleId" -> longNumber,
-      "tagId" -> number,
-      "text" -> nonEmptyText,
-      "comment" -> nonEmptyText,
-      "startIndex" -> number,
-      "endIndex" -> number
+      "body" -> text,
+      "annTagId" -> number,
+      "annotatedText" -> text,
+      "discussionThreadId" ->number
+
     )(AnnotationViewModel.apply)(AnnotationViewModel.unapply)
   )
 
   case class AnnotationViewModel(
     consultationId: Long,
     articleId:Long,
-    tagId:Int,
-    text: String,
-    comment: String,
-    startIndex:Int,
-    endIndex:Int)
+    body:String,
+    annTagId:Int,
+    annotatedText: String,
+    discussionThreadId: Int
+    )
 }
