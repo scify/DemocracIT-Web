@@ -167,6 +167,12 @@
 .commentBox .comment .date {
   color: gray; }
 
+.activeCons {
+  color: #3c763d; }
+
+.inactiveCons {
+  color: #c12e2a; }
+
 .loading-wrp {
   text-align: center; }
 
@@ -223,12 +229,5 @@
 @keyframes animation-rotate {
   100% {
     transform: rotate(360deg); } }
-
-.activeCons {
-  color: #3c763d;
-}
-.inactiveCons {
-  color: #c12e2a;
-}
 
 /*# sourceMappingURL=consultation.css.map */
