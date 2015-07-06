@@ -1,7 +1,7 @@
 package utils
 
 import model.dtos.CommentSource._
-import model.dtos.{Comment, Annotation, DiscussionThread, AnnotationType}
+import model.dtos.{Comment, DiscussionThread, AnnotationType}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
@@ -22,7 +22,7 @@ object ImplicitWrites {
     )
   }
 
-  implicit val annotationWrites = Json.writes[Annotation]
+  implicit val annotationWrites = Json.writes[AnnotationType]
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource]
   {

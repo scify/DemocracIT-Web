@@ -30,7 +30,7 @@ object CommentsParser{
                       article_id,
                       if (source_type_id==1) CommentSource.Democracit else  CommentSource.OpenGov,
                       comment,
-                      user_id.getOrElse(-1),
+                      user_id.getOrElse("").toString,
                       full_name,
                       date_added,
                       revision,depth,Nil,None)

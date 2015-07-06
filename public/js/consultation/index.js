@@ -1,7 +1,9 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
+    this.userId = userId;
+    this.fullName = fullName;
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -121,7 +123,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var annid=parent.data("id");
         var articleid=target.closest(".article").data("id");
         toolbar.find("input[name='articleid']").val(articleid);
-        toolbar.find("input[name='annid']").val(annid);
+        toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
         toolbar.find("blockquote").text(selectedText);
 
     },
@@ -139,29 +141,32 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
         $(".article").each(function(index,articleDiv){
             var articleid =$(articleDiv).data("id");
-            var commentBoxId=getCommentBoxId(articleid);
+            var commentBoxId=getDiscussionThreadClientId(articleid);
             var commentBoxProperties= {
                 consultationid      : instance.consultationid,
                 articleid           : articleid,
                 discussionthreadid  : getDiscussionThreadId(articleid,commentBoxId),
-                id                  : commentBoxId
+                discussionThreadClientId: -1
             };
             var domElementToAddComponent = $(articleDiv).find(".open-gov-commentbox-wrap")[0];
             scify.discussionRooms[commentBoxProperties.id] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
 
             $(articleDiv).find(".ann").each(function(i,ann){
-                commentBoxProperties.id = getCommentBoxId(commentBoxProperties.articleid,$(ann).data("id"))
+                commentBoxProperties.discussionThreadClientId = getDiscussionThreadClientId(commentBoxProperties.articleid,$(ann).data("id"))
                 commentBoxProperties.discussionthreadid = getDiscussionThreadId(commentBoxProperties.articleid,commentBoxProperties.id);
+                commentBoxProperties.userId = instance.userId;
+                commentBoxProperties.fullName = instance.fullName;
+                commentBoxProperties.discussionThreadText = $(this).html();
                 $(ann).after('<div class="commentbox-wrap"></div>');
                 domElementToAddComponent = $(ann).next()[0];
-                scify.discussionRooms[commentBoxProperties.id] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+                scify.discussionRooms[commentBoxProperties.discussionThreadClientId] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
             });
         });
     },
     getDiscussionRoom = function(articleid,annId){
-        return scify.discussionRooms[getCommentBoxId(articleid,annId)];
+        return scify.discussionRooms[getDiscussionThreadClientId(articleid,annId)];
     },
-    getCommentBoxId = function(articleid,annId){
+    getDiscussionThreadClientId = function(articleid,annId){
         return articleid+(annId ? annId :"");
     },
     fetchOpenGovComments = function(e){
@@ -175,10 +180,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          e.preventDefault();
          var form = $(this).closest("form");
          var data = {};
-         form.serializeArray().map(function(x){data[x.name] = x.value;});
-         data.tagText = form.find("option:selected").text();
-         data.annotatedText = form.find("blockquote").html();
-         getDiscussionRoom(data.articleid,data.annid).saveComment(form.attr("action"),data);
+         form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
+         data.annotationTagText = form.find("option:selected").text(); //tag text of the problem user selected
+         data.userAnnotatedText = form.find("blockquote").html();  // the text in the document user annotated
+         getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
          hideToolBar();
      },
     init = function(){

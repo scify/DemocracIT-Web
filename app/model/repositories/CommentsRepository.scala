@@ -42,22 +42,25 @@ class CommentsRepository {
     }
   }
 
-    def getDiscussionThreadId(locationIdentifier:String):Long = {
+    def getDiscussionThreadId(discussionThreadTagId:String):Long = {
       DB.withConnection { implicit c =>
         SQL"""
-           select id from public.discussion_thread t where t.locationidentifier = $locationIdentifier
+           select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
               """.as(SqlParser.long("id").single)
 
       }
     }
 
-    def saveDiscussionThread(locationIdentifier:String,threadText:String): Option[Long] =
+    /* Saves a discussion thread only if does not exist already.
+    * In case a new discussion thread is created then the id is returned
+    * */
+    def saveDiscussionThread(discussionThreadTagId:String,discussionThreadWholeText:String): Option[Long] =
     {
       DB.withConnection { implicit c =>
         val result = SQL"""
-           insert into public.discussion_thread (locationidentifier,text)
-            select $locationIdentifier,$threadText
-            where not exists (select 1 from public.discussion_thread where locationidentifier = $locationIdentifier)
+           insert into public.discussion_thread (tagid,relatedText)
+            select $discussionThreadTagId,$discussionThreadWholeText
+            where not exists (select 1 from public.discussion_thread where tagid = $discussionThreadTagId)
               """.executeInsert()
 
         result
@@ -65,10 +68,11 @@ class CommentsRepository {
       }
     }
 
-    def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
-      DB.withConnection { implicit c =>
 
-       val result = SQL"""
+    def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
+      DB.withTransaction() { implicit c =>
+
+       val commentId = SQL"""
           INSERT INTO public.comments
                       (
                       url_source,
@@ -95,7 +99,17 @@ class CommentsRepository {
                       ${comment.depth})
                   """.executeInsert()
 
-        result
+        for (annotation <- comment.annotations)
+        {
+          SQL"""
+          INSERT INTO public.annotation_items
+                      (public_comment_id,annotation_type_id)
+          VALUES
+                    ($commentId,${annotation.id})
+                  """.execute()
+        }
+
+        commentId
       }
     }
 

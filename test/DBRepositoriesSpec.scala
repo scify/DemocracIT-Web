@@ -17,31 +17,31 @@ class DBRepositoriesSpec extends Specification  {
 //      }
 //    }
 
-  "Comment manager" should {
-    "save comment" in {
-      running(FakeApplication()) {
-        val articleId = 60034
-        val consultationId = 60035
-
-        val commentsManager = new CommentManager();
-        val comment = model.dtos.Comment(id = -1,
-                              articleId = articleId,
-                              source = CommentSource.Democracit,
-                               body = "αυτό ειναι ενα δοκιμαστικό σχόλιο",
-                               userId = 1,
-                               fullName = "alexandros tzoumas",
-                               dateAdded = DateTime.now().toDate ,
-                               revision = 1 ,
-                               depth = "1",
-                               annotations = Nil,
-                               discussionThread = None)
-
-        val result =commentsManager.saveComment(comment,articleId+"ann-0", "whole text")
-
-        result.id>0
-      }
-    }
-  }
+//  "Comment manager" should {
+//    "save comment" in {
+//      running(FakeApplication()) {
+//        val articleId = 60034
+//        val consultationId = 60035
+//
+//        val commentsManager = new CommentManager();
+//        val comment = model.dtos.Comment(id = -1,
+//                              articleId = articleId,
+//                              source = CommentSource.Democracit,
+//                               body = "αυτό ειναι ενα δοκιμαστικό σχόλιο",
+//                               userId = "1",
+//                               fullName = "alexandros tzoumas",
+//                               dateAdded = DateTime.now().toDate ,
+//                               revision = 1 ,
+//                               depth = "1",
+//                               annotations = Nil,
+//                               discussionThread = None)
+//
+//        val result =commentsManager.saveComment(comment)
+//
+//        result.id>0
+//      }
+//    }
+//}
 
 //
 //  "Search manager" should "return results for query 'Νόμος'" in {
