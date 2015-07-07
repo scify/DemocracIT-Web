@@ -114,12 +114,16 @@ class CommentsRepository {
 
         for (annotation <- comment.annotationTags)
         {
-          SQL"""
-          INSERT INTO public.annotation_items
-                      (public_comment_id,annotation_type_id)
-          VALUES
-                    ($commentId,${annotation.id})
-                  """.execute()
+          if (annotation.id>0)
+            {
+                SQL"""
+                      INSERT INTO public.annotation_items
+                                  (public_comment_id,annotation_type_id)
+                      VALUES
+                      ($commentId,${annotation.id})
+                    """.execute()
+            }
+
         }
 
         commentId
