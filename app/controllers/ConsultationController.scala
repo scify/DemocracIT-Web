@@ -27,7 +27,7 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>
 
-        Ok(views.html.consultation.index(consultationManager.get(consultationId)))
+        Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
   def getOpenGovComments(consultationId:Long,

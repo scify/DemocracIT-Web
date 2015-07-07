@@ -42,7 +42,7 @@ class CommentsRepository {
     }
   }
 
-    def getDiscussionThreadId(discussionThreadTagId:String):Long = {
+    private def getDiscussionThreadId(discussionThreadTagId:String):Long = {
       DB.withConnection { implicit c =>
         SQL"""
            select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
@@ -63,8 +63,16 @@ class CommentsRepository {
             where not exists (select 1 from public.discussion_thread where tagid = $discussionThreadTagId)
               """.executeInsert()
 
-        result
+        if (result.asInstanceOf[Option[Long]].isDefined)
+            result
+        else
+        {
+         val id=  SQL"""
+             select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
+                """.as(SqlParser.long("id").single)
 
+          Some(id)
+        }
       }
     }
 

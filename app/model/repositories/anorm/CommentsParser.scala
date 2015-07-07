@@ -17,7 +17,7 @@ object CommentsParser{
     get[Option[Int]]("parent_id") ~
     str("comment") ~
     int("source_type_id") ~
-    get[Option[Int]]("discussion_thread_id") ~
+    get[Option[Long]]("discussion_thread_id") ~
     get[Option[java.util.UUID]]("user_id") ~
     str("fullname") ~
     get[Date]("date_added") ~
@@ -27,7 +27,7 @@ object CommentsParser{
       {
         case id ~ url_source ~ article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~
              user_id ~ full_name ~ date_added ~ revision ~depth ~ annotatedText =>
-          new Comment(id,
+          new Comment(Some(id),
                       article_id,
                       if (source_type_id==1) CommentSource.Democracit else  CommentSource.OpenGov,
                       comment,
@@ -38,7 +38,7 @@ object CommentsParser{
                       revision,
                       depth,
                       Nil, //todo, load the annotation tags | for now we only have one so a simple inner join is enough
-                      if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id.get,"","",None)) else None //todo: load here the rest of the information
+                      if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id,"","",None)) else None //todo: load here the rest of the information
                       )
       }
 
