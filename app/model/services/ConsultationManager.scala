@@ -48,7 +48,7 @@ class ConsultationManager {
     var annotationRepo = new AnnotationRepository()
 
     ConsultationViewModel(consultation = repository.get(consultationId),
-                          allowedAnnotations = annotationRepo.loadAnnotationTypes(),
+                          allowedAnnotations = annotationRepo.loadAnnotationTags(),
                           discussionThreads = Nil,
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId))

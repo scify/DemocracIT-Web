@@ -7,7 +7,7 @@ import play.api.Play.current
 
 class AnnotationRepository {
 
-  def loadAnnotationTypes():Seq[AnnotationTags] = {
+  def loadAnnotationTags():Seq[AnnotationTags] = {
 
     DB.withConnection { implicit c =>
 
