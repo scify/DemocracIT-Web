@@ -37,7 +37,7 @@
                 <div class="relevantMaterialContainer">
                 @for(relevantMaterial <- model.relevantMaterials) {
 
-                    <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> Σύνδεσμος pdf</a></div>
+                    <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> @relevantMaterial.title</a></div>
 
                 }
                 </div>

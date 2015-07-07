@@ -198,6 +198,9 @@
 .relevantMaterialContainer a {
   color: #fff; }
 
+.relevantMaterialContainer .url {
+  margin-bottom: 2px; }
+
 .relevantMaterialContainer a:hover {
   text-decoration: none; }
 
