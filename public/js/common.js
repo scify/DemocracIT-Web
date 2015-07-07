@@ -7,7 +7,7 @@ $(document).ajaxError(function(event, request, settings){
 
         swal({
             title: "Είσοδος",
-            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="'+request.responseJson+'">συνδεδεμένοι</a>',
+            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="'+request.responseJSON+'">συνδεδεμένοι</a>',
             html: true
             });
     }

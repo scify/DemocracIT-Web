@@ -11,7 +11,10 @@
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),@model.consultation.id);
+        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),
+                                                                @model.consultation.id,
+                                                                @(if (model.user.isDefined) model.user.get.userID.toString else -1),
+                                                                @(if (model.user.isDefined) model.user.get.fullName else Html("''")));
         controller.init();
         })
     </script>
@@ -74,7 +77,7 @@
                 <blockquote></blockquote></div>
             <div>
                 <hr>
-                <select name="annTagId">
+                <select name="annotationTagId">
                     <option value="-1">Υπόδειξη προβλήματος:</option>
                 @for(annotation <- model.allowedAnnotations){
                     <option value="@annotation.id">@annotation.description</option>
@@ -89,8 +92,7 @@
             </div>
 
             <input type="hidden" name="articleid" value=""/>
-            <input type="hidden" name="annid" value=""/>
-            <input type="hidden" name="annotatedText" value=""/>
+            <input type="hidden" name="discussionroomannotationtagid" value=""/>
 
             <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
             <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
