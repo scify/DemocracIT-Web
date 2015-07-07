@@ -21,11 +21,12 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-        val annotationTags = List(AnnotationType(annotation.annotationTagId,""))
+        val annotationTags = List(AnnotationTags(annotation.annotationTagId,""))
        val discussionthread =DiscussionThread(-1,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
        val comment = Comment(-1, annotation.articleId,CommentSource.OpenGov,
                            annotation.body,
-                           request.identity.userID.toString,
+                           annotation.userAnnotatedText,
+                           Some(request.identity.userID),
                            request.identity.fullName.get,
                            DateTime.now().toDate,
                            1,"",annotationTags,Some(discussionthread))

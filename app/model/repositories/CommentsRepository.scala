@@ -1,7 +1,7 @@
 package model.repositories
 
-import java.util.Date
-import _root_.anorm.SqlParser
+import java.util.{UUID, Date}
+import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
 import anorm._
 import anorm.SqlParser._
 import model.dtos.CommentSource.CommentSource
@@ -69,8 +69,11 @@ class CommentsRepository {
     }
 
 
+
     def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
       DB.withTransaction() { implicit c =>
+
+       import utils.ImplicitAnormHelperMethods._
 
        val commentId = SQL"""
           INSERT INTO public.comments
@@ -84,7 +87,8 @@ class CommentsRepository {
                       user_id,
                       date_added,
                       revision,
-                      depth)
+                      depth,
+                      annotatedtext)
           VALUES
                     (
                       NULL,
@@ -96,10 +100,11 @@ class CommentsRepository {
                       ${comment.userId},
                       now(),
                       ${comment.revision},
-                      ${comment.depth})
+                      ${comment.depth},
+                      ${comment.userAnnotatedText})
                   """.executeInsert()
 
-        for (annotation <- comment.annotations)
+        for (annotation <- comment.annotationTags)
         {
           SQL"""
           INSERT INTO public.annotation_items

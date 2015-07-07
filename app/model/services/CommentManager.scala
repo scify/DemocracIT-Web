@@ -17,12 +17,13 @@ class CommentManager {
     val commentsRepository = new CommentsRepository()
     var discussionThreadId: Option[Long] = if (comment.discussionThread.get.id >0)
                                                   Some(comment.discussionThread.get.id ) else  None
-    if (discussionThreadId.isEmpty)  {//if not discussion thread is is assigner save or retrieve from database
+    if (discussionThreadId.isEmpty)  {//if not discussion thread is assigned to the comment save or retrieve from database
       discussionThreadId = commentsRepository.saveDiscussionThread(comment.discussionThread.get.discussionThreadClientId, comment.discussionThread.get.text)
       comment.discussionThread.get.id = discussionThreadId.get
     }
 
-    if (discussionThreadId.isEmpty){ //the discussion thread already existed so its not saved. Retrieve its id.
+    if (discussionThreadId.isEmpty){ //saveDiscussionThread returns the id only if its saved. we need the id.
+      //todo: move the getDiscussionThreadId inside the saveDiscussionThread method
       discussionThreadId = Some(commentsRepository.getDiscussionThreadId(comment.discussionThread.get.discussionThreadClientId))
       comment.discussionThread.get.id = discussionThreadId.get
     }
