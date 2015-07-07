@@ -1,7 +1,7 @@
 package utils
 
 import model.dtos.CommentSource._
-import model.dtos.{AnnotationType, DiscussionThread}
+import model.dtos.{AnnotationTags, DiscussionThread}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.libs.functional.syntax._

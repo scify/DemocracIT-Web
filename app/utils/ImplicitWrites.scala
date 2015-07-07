@@ -1,7 +1,7 @@
 package utils
 
 import model.dtos.CommentSource._
-import model.dtos.{Comment, DiscussionThread, AnnotationType}
+import model.dtos.{Comment, DiscussionThread, AnnotationTags}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
@@ -10,10 +10,10 @@ import play.api.libs.json._
 
 object ImplicitWrites {
 
-  implicit val annotationTypeWrites: Writes[AnnotationType] = (
+  implicit val annotationTypeWrites: Writes[AnnotationTags] = (
     (JsPath \ "id").write[Long] and
       (JsPath \ "description").write[String]
-    )(unlift(AnnotationType.unapply))
+    )(unlift(AnnotationTags.unapply))
 
   implicit object FormErrorWrites extends Writes[FormError] {
     override def writes(o: FormError): JsValue = Json.obj(
@@ -22,7 +22,7 @@ object ImplicitWrites {
     )
   }
 
-  implicit val annotationWrites = Json.writes[AnnotationType]
+  implicit val annotationWrites = Json.writes[AnnotationTags]
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource]
   {

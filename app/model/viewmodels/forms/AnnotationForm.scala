@@ -12,7 +12,7 @@ object AnnotationForm {
       "articleId" -> longNumber,
       "body" -> text ,
       "annotationTagId" -> number ,//the id from the select box
-      "userAnnotatedText" -> text , //the user user annotated
+      "userAnnotatedText" -> optional(text), //the user user annotated
       "discussionThreadId" -> number ,
       "discussionThreadClientId" -> text ,
       "discussionThreadText" -> text
@@ -24,7 +24,7 @@ object AnnotationForm {
           articleId:Long,
           body:String,
           annotationTagId:Int,
-          userAnnotatedText: String,
+          userAnnotatedText: Option[String],
           discussionThreadId: Int,
           discussionThreadClientId:String,
           discusionThreadText:String

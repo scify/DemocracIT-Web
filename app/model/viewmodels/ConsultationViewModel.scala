@@ -5,7 +5,7 @@ import model.dtos._
 import utils.ImplicitWrites._
 
 case class ConsultationViewModel(val consultation:model.dtos.Consultation,
-                            val allowedAnnotations: Seq[AnnotationType],
+                            val allowedAnnotations: Seq[AnnotationTags],
                             val discussionThreads : Seq[DiscussionThread],
                             val user: Option[model.User],
                                  val relevantMaterials: Seq[RelevantMaterial])
