@@ -13,8 +13,8 @@
      $(function(){
         var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),
                                                                 @model.consultation.id,
-                                                                @(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else -1),
-                                                                @(if (model.user.isDefined) "'"+model.user.get.fullName+"'" else Html("''")));
+                                                                @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else ""),
+                                                                @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"));
         controller.init();
         })
     </script>
