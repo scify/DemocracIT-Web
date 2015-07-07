@@ -77,6 +77,20 @@ class CommentsRepository {
     }
 
 
+  def loadAnnotationTags():Seq[AnnotationTags] = {
+
+    DB.withConnection { implicit c =>
+
+      val sql:SqlQuery = SQL("select * from public.annotation_types_lkp")
+
+      sql().map( row =>
+        AnnotationTags(row[Long]("id"),
+          row[String]("description"))
+      ).toList
+
+    }
+
+  }
 
     def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
       DB.withTransaction() { implicit c =>
