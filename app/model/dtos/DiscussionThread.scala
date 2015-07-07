@@ -1,7 +1,7 @@
 package model.dtos
 
 case class DiscussionThread(var id:Option[Long],
-                            discussionThreadClientId:String,
+                            clientId:String, //id produced by javascript
                             text:String,
                             numberOfComments:Option[Int])
 

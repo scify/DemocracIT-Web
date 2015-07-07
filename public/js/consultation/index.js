@@ -1,9 +1,10 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
     this.fullName = fullName;
+    this.discussionThreads =discussionThreads;
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 

@@ -14,7 +14,9 @@
         var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),
                                                                 @model.consultation.id,
                                                                 @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else "''"),
-                                                                @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"));
+                                                                @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                @Html(model.discussionThreadsToJson())
+                                                                );
         controller.init();
         })
     </script>

@@ -17,7 +17,7 @@ class CommentManager {
     val commentsRepository = new CommentsRepository()
 
     if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <=0 )
-        comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.discussionThreadClientId, comment.discussionThread.get.text)
+        comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text)
 
     comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
 
