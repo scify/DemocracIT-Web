@@ -99,10 +99,11 @@ class ConsultationRepository {
   def get(consultationId: BigInt): Consultation =
   {
     DB.withConnection { implicit c =>
-     val results = SQL"""with commentsCount as (
+     val results = SQL"""with openGovcommentsCount as (
                           select c.article_id, count(*) as comment_num from public.comments c
                         	inner join public.articles a on c.article_id = a.id
                           where a.consultation_id= $consultationId
+                                and c.source_type_id =2
                           group by c.article_id
                         )
                          select c.*,
@@ -112,11 +113,11 @@ class ConsultationRepository {
                                                a.title as article_title,
                                                a.body as article_body,
                                                a.art_order,
-                                               count.comment_num
+                                               openGovCount.comment_num
                                                 from public.consultation c
                                         inner join public.organization_lkp o on c.organization_id = o.id
                                         inner join public.articles a on a.consultation_id = c.id
-                                        left outer join commentsCount count on count.article_id = a.id
+                                        left outer join openGovcommentsCount  openGovCount on openGovCount.article_id = a.id
                                         where
                                               c.id =$consultationId
                                         order by end_date, a.art_order

@@ -49,7 +49,7 @@ class ConsultationManager {
 
     ConsultationViewModel(consultation = repository.get(consultationId),
                           allowedAnnotations = commentsRepo.loadAnnotationTags(),
-                          discussionThreads = Nil,
+                          discussionThreads = commentsRepo.loadDiscussionThreadsWithCommentsCount(consultationId),
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId))
   }

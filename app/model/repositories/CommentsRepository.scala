@@ -3,7 +3,6 @@ package model.repositories
 import java.util.{UUID, Date}
 import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
 import anorm._
-import anorm.SqlParser._
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import repositories.anorm._
@@ -76,17 +75,28 @@ class CommentsRepository {
       }
     }
 
+  def loadDiscussionThreadsWithCommentsCount(consultationId:Long): Seq[DiscussionThread] =
+  {
+    DB.withConnection { implicit c =>
+      SQL"""
+              select t.id,t.tagid, count(*) as numberOfComments from public.comments c
+                inner join public.articles a on a.id = c.article_id
+                inner join public.discussion_thread t on t.id = c.discussion_thread_id
+                where a.consultation_id = $consultationId
+              group by t.id,t.tagid
+              """.as(DiscussionThreadWithCommentsCountParser.Parse *)
+    }
+  }
 
   def loadAnnotationTags():Seq[AnnotationTags] = {
 
     DB.withConnection { implicit c =>
 
-      val sql:SqlQuery = SQL("select * from public.annotation_types_lkp")
+      val sql = SQL("select * from public.annotation_types_lkp")
 
       sql().map( row =>
-        AnnotationTags(row[Long]("id"),
-          row[String]("description"))
-      ).toList
+                    AnnotationTags(row[Long]("id"),row[String]("description"))
+                ).toList
 
     }
 
