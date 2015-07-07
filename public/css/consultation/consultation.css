@@ -180,6 +180,27 @@
 .inactiveCons {
   color: #c12e2a; }
 
+/*Relevant Material*/
+#relevantMaterial {
+  float: right; }
+
+.relevantMaterialTitle {
+  color: #428bca;
+  padding-right: 42px;
+  margin-bottom: 5px;
+  text-align: right; }
+
+.relevantMaterialContainer {
+  float: right;
+  padding: 10px;
+  background-color: #428bca; }
+
+.relevantMaterialContainer a {
+  color: #fff; }
+
+.relevantMaterialContainer a:hover {
+  text-decoration: none; }
+
 .commentBox .comment .tag {
   margin-top: 10px; }
 

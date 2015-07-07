@@ -8,7 +8,7 @@ case class ConsultationViewModel(val consultation:model.dtos.Consultation,
                             val allowedAnnotations: Seq[AnnotationType],
                             val discussionThreads : Seq[DiscussionThread],
                             val user: Option[model.User],
-                                 val relevantMaterial: Seq[RelevantMaterial])
+                                 val relevantMaterials: Seq[RelevantMaterial])
 {
    def annotationTypesToJson():String =
    {

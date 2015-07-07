@@ -23,18 +23,33 @@
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
     <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 }
 
 @layout("DemocracIT", css, js,None) {
 
     <section id="stats" class="container">
         Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
+
+
+            <div id="relevantMaterial" class="">
+                <div class="relevantMaterialTitle">Σχετικό υλικό:</div>
+                <div class="relevantMaterialContainer">
+                @for(relevantMaterial <- model.relevantMaterials) {
+
+                    <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> Σύνδεσμος pdf</a></div>
+
+                }
+                </div>
+            </div>
             @if(model.consultation.isActive) {
                 <div class="consState activeCons">Ενεργή Διαβούλευση</div>
             } else {
                 <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
             }
     </section>
+
+
 
     <div id="wrapper" class="container">
         <section id="consultation-header">

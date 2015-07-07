@@ -50,7 +50,7 @@ class ConsultationManager {
                           allowedAnnotations = annotationRepo.loadAnnotationTypes(),
                           discussionThreads = Nil,
                           user = None,
-                          relevantMaterial = repository.getRelevantMaterial(consultationId))
+                          relevantMaterials = repository.getRelevantMaterial(consultationId))
   }
 
   def median(s: List[Int]):Int =
