@@ -27,17 +27,20 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>
 
-        Ok(views.html.consultation.index(consultationManager.get(consultationId)))
+        Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
-  def getOpenGovComments(consultationId:Long,
-                         articleId:Long,
-                         discussionThreadId:Option[Int],
-                         maxCommentId:Option[Long]) = Action {
+  def getComments(consultationId:Long,
+                   articleId:Long,
+                   source: String ,
+                   discussionthreadid:Option[Int] ,
+                   discussionthreadclientid:String,
+                   page:Option[Int]
+                   ) = Action {
 
     import utils.ImplicitWrites._
-    //@todo for now discard consultation id..notice there exists consultations with no articles and all comments are under the consultationid
-    val comments = commentManager.getOpenGovComments(consultationId,articleId, maxCommentId)
+
+    val comments = commentManager.getComments(consultationId,articleId, source,discussionthreadid,discussionthreadclientid)
     Ok(Json.toJson(comments))
   }
 }

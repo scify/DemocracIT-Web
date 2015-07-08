@@ -3,7 +3,8 @@ package model.dtos
 /**
  * Created by pisaris on 3/7/2015.
  */
-case class RelevantMaterial (val id: Long,
-                             val consultationId:Long,
-                             val source_url:String,
-                             val pdf_url:String);
+case class RelevantMaterial (id: Long,
+                             title:String,
+                             consultationId:Long,
+                             source_url:String,
+                             pdf_url:String);

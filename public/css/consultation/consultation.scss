@@ -43,13 +43,11 @@
   display:inline;
 }
 
-.ann:hover {
-   background-color:lightyellow;
-}
 
 .article {
-
   padding-top: 20px;
+  border-bottom: 1px solid gray;
+  padding-bottom: 20px;
 }
 
 .article .article-body {
@@ -59,6 +57,7 @@
   line-height: 1.6em;
   margin-top:10px;
 }
+
 
 
 #toolbar {
@@ -112,15 +111,17 @@
 .ann #toolbar
 {
   display:block;
-
 }
-
 .ann {
   display: inline-block;
-  padding-right: 30px;
   position: relative;
-  width: 100%;
+  width: 90%;
+  padding-right: 5%;
 }
+.ann:hover {
+  background-color:lightyellow;
+}
+
 .article-title-text .ann
 {
   width:97%;
@@ -233,11 +234,50 @@ $annotation-icon--color: #fff;
   color:gray;
 }
 
+.commentBox .comment .load
+{
+  cursor:pointer;
+}
+
 .activeCons {
   color: #3c763d;
 }
 .inactiveCons {
   color: #c12e2a;
+}
+
+/*Not logged in message*/
+
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+/*Relevant Material*/
+#relevantMaterial {
+  float: right;
+}
+.relevantMaterialTitle {
+  color: #428bca;
+  margin-bottom: 5px;
+  text-align: left;
+}
+.relevantMaterialContainer {
+  float: right;
+  padding: 10px;
+  background-color: #428bca;
+}
+.relevantMaterialContainer a {
+  color: #fff;
+
+}
+.relevantMaterialContainer .url {
+  margin-bottom: 2px;
+}
+
+.relevantMaterialContainer a:hover {
+  text-decoration: none;
 }
 
 .commentBox .comment .tag

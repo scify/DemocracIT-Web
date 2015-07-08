@@ -1,9 +1,8 @@
 package model.repositories
 
-import java.util.Date
-import _root_.anorm.SqlParser
+import java.util.{UUID, Date}
+import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
 import anorm._
-import anorm.SqlParser._
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import repositories.anorm._
@@ -15,34 +14,45 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class CommentsRepository {
 
-  def getComments(consultationId:Long,
-                  articleId:Long,
-                  discussionThreadId:Option[Int],
-                  source: CommentSource,
-                  maxCommentId:Option[Long],
-                  pageSize:Int
-                   ):List[Comment]  = {
+  def getComments(discussionthreadclientid:String,
+                  pageSize:Int):List[Comment]  = {
     DB.withConnection { implicit c =>
 
       //It seems that None is not replaced correctly with Null by anorm
       // use a magic number... http://stackoverflow.com/questions/26798371/anorm-play-scala-and-postgresql-dynamic-sql-clause-not-working
-      val paramDiscussionThread:Int = discussionThreadId.getOrElse(-9999)
-      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
+      //      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
 
-       SQL"""
-          select c.*, o.fullname  from public.comments c
-              left outer join public.comment_opengov o on o.id =c.id
-              where c.article_id = $articleId
-              and  (discussion_thread_id = $paramDiscussionThread or $paramDiscussionThread = -9999)
-              and  c.source_type_id= ${source.id}
-              and  (c.id < $paramMaxCommentId or $paramMaxCommentId =-9999)
-              order by c.date_added desc, c.id desc
-              limit $pageSize
+
+      SQL"""
+            select c.*, CAST(c.user_id  AS varchar) as fullName
+              from public.comments c
+                 inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                 left outer join public.users u on u.id = c.user_id
+                 where t.tagid =$discussionthreadclientid
+            order by c.date_added desc, c.id desc
+            limit $pageSize
         """.as(CommentsParser.Parse *)
     }
   }
 
-    def getDiscussionThreadId(discussionThreadTagId:String):Long = {
+
+  def getOpenGovComments(consultationId:Long,
+                         articleId:Long,pageSize:Int
+                   ):List[Comment]  = {
+    DB.withConnection { implicit c =>
+
+      //todo: add paging
+       SQL"""
+          select c.*, o.fullname  from public.comments c
+              left outer join public.comment_opengov o on o.id =c.id
+              where c.article_id = $articleId
+              and  c.source_type_id= 2
+              order by c.date_added desc, c.id desc
+        """.as(CommentsParser.Parse *)
+    }
+  }
+
+    private def getDiscussionThreadId(discussionThreadTagId:String):Long = {
       DB.withConnection { implicit c =>
         SQL"""
            select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
@@ -63,14 +73,50 @@ class CommentsRepository {
             where not exists (select 1 from public.discussion_thread where tagid = $discussionThreadTagId)
               """.executeInsert()
 
-        result
+        if (result.asInstanceOf[Option[Long]].isDefined)
+            result
+        else
+        {
+         val id=  SQL"""
+             select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
+                """.as(SqlParser.long("id").single)
 
+          Some(id)
+        }
       }
     }
 
+  def loadDiscussionThreadsWithCommentsCount(consultationId:Long): Seq[DiscussionThread] =
+  {
+    DB.withConnection { implicit c =>
+      SQL"""
+              select t.id,t.tagid, count(*) as numberOfComments from public.comments c
+                inner join public.articles a on a.id = c.article_id
+                inner join public.discussion_thread t on t.id = c.discussion_thread_id
+                where a.consultation_id = $consultationId
+              group by t.id,t.tagid
+              """.as(DiscussionThreadWithCommentsCountParser.Parse *)
+    }
+  }
+
+  def loadAnnotationTags():Seq[AnnotationTags] = {
+
+    DB.withConnection { implicit c =>
+
+      val sql = SQL("select * from public.annotation_types_lkp")
+
+      sql().map( row =>
+                    AnnotationTags(row[Long]("id"),row[String]("description"))
+                ).toList
+
+    }
+
+  }
 
     def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
       DB.withTransaction() { implicit c =>
+
+       import utils.ImplicitAnormHelperMethods._
 
        val commentId = SQL"""
           INSERT INTO public.comments
@@ -84,7 +130,8 @@ class CommentsRepository {
                       user_id,
                       date_added,
                       revision,
-                      depth)
+                      depth,
+                      annotatedtext)
           VALUES
                     (
                       NULL,
@@ -96,17 +143,22 @@ class CommentsRepository {
                       ${comment.userId},
                       now(),
                       ${comment.revision},
-                      ${comment.depth})
+                      ${comment.depth},
+                      ${comment.userAnnotatedText})
                   """.executeInsert()
 
-        for (annotation <- comment.annotations)
+        for (annotation <- comment.annotationTags)
         {
-          SQL"""
-          INSERT INTO public.annotation_items
-                      (public_comment_id,annotation_type_id)
-          VALUES
-                    ($commentId,${annotation.id})
-                  """.execute()
+          if (annotation.id>0)
+            {
+                SQL"""
+                      INSERT INTO public.annotation_items
+                                  (public_comment_id,annotation_type_id)
+                      VALUES
+                      ($commentId,${annotation.id})
+                    """.execute()
+            }
+
         }
 
         commentId

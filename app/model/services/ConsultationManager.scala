@@ -2,6 +2,7 @@ package model.services
 
 import java.{lang, util}
 import java.util.Date
+import model.User
 import model.dtos._
 import model.repositories._
 import model.viewmodels._
@@ -42,15 +43,15 @@ class ConsultationManager {
     repository.search(searchRequest)
   }
 
-  def get(consultationId: Long): ConsultationViewModel= {
+  def get(consultationId: Long, user:Option[User]): ConsultationViewModel= {
     val repository = new ConsultationRepository()
-    var annotationRepo = new AnnotationRepository()
+    var commentsRepo = new CommentsRepository()
 
     ConsultationViewModel(consultation = repository.get(consultationId),
-                          allowedAnnotations = annotationRepo.loadAnnotationTypes(),
-                          discussionThreads = Nil,
-                          user = None,
-                          relevantMaterial = repository.getRelevantMaterial(consultationId))
+                          allowedAnnotations = commentsRepo.loadAnnotationTags(),
+                          discussionThreads = commentsRepo.loadDiscussionThreadsWithCommentsCount(consultationId),
+                          user = user,
+                          relevantMaterials = repository.getRelevantMaterial(consultationId))
   }
 
   def median(s: List[Int]):Int =

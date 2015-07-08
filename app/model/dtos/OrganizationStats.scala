@@ -1,10 +1,10 @@
 package model.dtos
 
-case class OrganizationStats(val id:Int,
-                             val title:String,
-                             val category:String,
-                             val categDisplayOrder:Int,
-                             val consultationCount:Int,
-                             val activeConsultations:Int,
-                             val medianAverageComments:Int,
-                             val medianAverageDays:Int)
+case class OrganizationStats(id:Int,
+                             title:String,
+                             category:String,
+                             categDisplayOrder:Int,
+                             consultationCount:Int,
+                             activeConsultations:Int,
+                             medianAverageComments:Int,
+                             medianAverageDays:Int)

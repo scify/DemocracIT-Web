@@ -9,16 +9,16 @@ import org.ocpsoft.prettytime.PrettyTime
 import utils.Pluralizer
 
 
-case class Consultation(val id:Long,
-                   val startDate:Date,
-                   val endDate:Date,
-                   val title: String,
-                   val shortDescr:String,
-                   val organization: Organization,
-                   val status: Short,
-                   val report_text: Option[String],
-                   val articlesNum:Int,
-                   val opengov_url:String,
+case class Consultation( id:Long,
+                   startDate:Date,
+                   endDate:Date,
+                   title: String,
+                   shortDescr:String,
+                   organization: Organization,
+                   status: Short,
+                   report_text: Option[String],
+                   articlesNum:Int,
+                   opengov_url:String,
                    var articles:List[Article] =Nil)
 {
   val isActive = endDate.after(DateTime.now().toDate)

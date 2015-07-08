@@ -1,5 +1,5 @@
 package model.dtos
 
-case  class ConsultationSearchRequest(val statusId: Byte,
-                                val query: String,
-                                var ministryId: Byte)
+case  class ConsultationSearchRequest(statusId: Byte,
+                                query: String,
+                                ministryId: Byte)

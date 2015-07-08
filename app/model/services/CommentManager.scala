@@ -15,26 +15,30 @@ class CommentManager {
 
   def saveComment(comment:Comment): Comment = {
     val commentsRepository = new CommentsRepository()
-    var discussionThreadId: Option[Long] = if (comment.discussionThread.get.id >0)
-                                                  Some(comment.discussionThread.get.id ) else  None
-    if (discussionThreadId.isEmpty)  {//if not discussion thread is is assigner save or retrieve from database
-      discussionThreadId = commentsRepository.saveDiscussionThread(comment.discussionThread.get.discussionThreadClientId, comment.discussionThread.get.text)
-      comment.discussionThread.get.id = discussionThreadId.get
-    }
 
-    if (discussionThreadId.isEmpty){ //the discussion thread already existed so its not saved. Retrieve its id.
-      discussionThreadId = Some(commentsRepository.getDiscussionThreadId(comment.discussionThread.get.discussionThreadClientId))
-      comment.discussionThread.get.id = discussionThreadId.get
-    }
+    if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <=0 )
+        comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text)
 
-    comment.id= commentsRepository.saveComment(comment,discussionThreadId.get).get
+    comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
 
     comment
   }
 
-  def getOpenGovComments(consultationId:Long,articleId:Long, maxCommentId:Option[Long]): List[Comment] = {
+  def getComments(consultationId:Long,
+                   articleId:Long,
+                   source: String,
+                   discussionthreadid:Option[Int],
+                   discussionthreadclientid:String): List[Comment] = {
 
     val commentsRepository = new CommentsRepository()
-    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
+    val pageSize=10;
+    var comments:List[Comment] = Nil
+
+    if (source=="opengov")
+       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize )
+    else
+      comments =commentsRepository.getComments(discussionthreadclientid,pageSize)
+
+    comments
   }
 }

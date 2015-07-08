@@ -11,7 +11,6 @@ import scala.concurrent.Future
 class AccountController @Inject()
       (implicit val env: Environment[model.User, SessionAuthenticator]) extends Silhouette[model.User, SessionAuthenticator] {
 
-//  //todo: fix
 //  def tokenRetrieve = Action { implicit request =>
 //
 //    import play.api.libs.json._

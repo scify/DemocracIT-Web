@@ -15,24 +15,25 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
 
   def annotatePost() =  SecuredAction { implicit request =>
 
-    //request.identity contains an Option[User]
+    import utils.ImplicitWrites._
+
     AnnotationForm.form.bindFromRequest.fold(
      form => {
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-        val annotationTags = List(AnnotationType(annotation.annotationTagId,""))
-       val discussionthread =DiscussionThread(-1,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
-       val comment = Comment(-1, annotation.articleId,CommentSource.OpenGov,
+        val annotationTags = List(AnnotationTags(annotation.annotationTagId,""))
+       val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+       val comment = Comment(None, annotation.articleId,CommentSource.OpenGov,
                            annotation.body,
-                           request.identity.userID.toString,
+                           annotation.userAnnotatedText,
+                           Some(request.identity.userID),
                            request.identity.fullName.get,
                            DateTime.now().toDate,
                            1,"",annotationTags,Some(discussionthread))
 
-        val cman = new CommentManager()
-       val savedComment = cman.saveComment(comment)
-       Ok(Json.toJson(savedComment.id))
+       val savedComment = new CommentManager().saveComment(comment)
+       Ok(Json.toJson(savedComment))
      }
     )
 
