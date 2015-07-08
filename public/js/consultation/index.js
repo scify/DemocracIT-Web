@@ -195,6 +195,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         attachBallons();
         attachAnnotationEvents();
 
+        // TODO: Annotate feks (laws) in every ann class
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 

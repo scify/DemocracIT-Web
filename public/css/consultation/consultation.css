@@ -186,9 +186,8 @@
 
 .relevantMaterialTitle {
   color: #428bca;
-  padding-right: 42px;
   margin-bottom: 5px;
-  text-align: right; }
+  text-align: left; }
 
 .relevantMaterialContainer {
   float: right;
