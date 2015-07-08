@@ -75,13 +75,39 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         if (element.className && element.className.indexOf("skip-ann")>=0)
             return;
 
-        if (element.childNodes.length > 0)
-            for (var i = 0; i < element.childNodes.length; i++)
-                recurseAllTextNodesAndApply(element.childNodes[i],action);
-
-        if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
+        if (elementCanBeAnnotated(element))
+        {
             action(element);
+            return; //dont allow iteration to children
+        }
+
+        if (element.childNodes.length > 0)
+        for (var i = 0; i < element.childNodes.length; i++)
+        {
+             recurseAllTextNodesAndApply(element.childNodes[i],action);
+        }
+
+
+
     },
+        elementCanBeAnnotated= function(element)
+        {
+            //an element can be annotated if its a #TEXT node with actual text
+            if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
+                return true;
+
+            //an element can be annotated if all it's children are #TEXT OR SUP nodes
+            var bannedNodeFound=false;
+            for (var i = 0; i < element.childNodes.length; i++) {
+                if ( element.childNodes[i].nodeName !="SUP" && element.childNodes[i].nodeName !="#text"  )
+                    bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
+            }
+            if (bannedNodeFound || element.textContent.trim().length==0)
+                return false;
+
+            return true;
+
+        },
     createAnnotatableAreas = function() {
         var counter=0;
         var action = function(element)

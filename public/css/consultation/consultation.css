@@ -23,9 +23,6 @@
 .show-hide.collapsed span:last-child {
   display: inline; }
 
-.ann:hover {
-  background-color: lightyellow; }
-
 .article {
   padding-top: 20px; }
 
@@ -81,9 +78,10 @@
 
 .ann {
   display: inline-block;
-  padding-right: 30px;
-  position: relative;
-  width: 100%; }
+  position: relative; }
+
+.ann:hover {
+  background-color: lightyellow; }
 
 .article-title-text .ann {
   width: 97%; }

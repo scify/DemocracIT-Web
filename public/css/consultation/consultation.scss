@@ -43,9 +43,6 @@
   display:inline;
 }
 
-.ann:hover {
-   background-color:lightyellow;
-}
 
 .article {
 
@@ -114,13 +111,14 @@
   display:block;
 
 }
-
 .ann {
   display: inline-block;
-  padding-right: 30px;
   position: relative;
-  width: 100%;
 }
+.ann:hover {
+  background-color:lightyellow;
+}
+
 .article-title-text .ann
 {
   width:97%;
