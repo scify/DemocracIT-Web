@@ -59,6 +59,7 @@
 }
 
 
+
 #toolbar {
   position:fixed;
  top:0;
@@ -231,6 +232,11 @@ $annotation-icon--color: #fff;
 .commentBox .comment .date
 {
   color:gray;
+}
+
+.commentBox .comment .load
+{
+  cursor:pointer;
 }
 
 .activeCons {

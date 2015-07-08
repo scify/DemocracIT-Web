@@ -66,11 +66,13 @@
                 beforeSend: function beforeSend() {
                     instance.state.display = true;
                     instance.state.busy = true;
+
                     instance.setState(instance.state);
                 },
                 success: function success(response) {
                     comment.id = response.id;
                     instance.state.discussionthreadid = response.discussionThread.id; //set discussion thread to state
+                    instance.state.commentsCount = instance.state.commentsCount + 1;
                     instance.state.comments.push(comment);
                 },
                 complete: function complete() {
@@ -145,7 +147,7 @@
 
             if (this.props.count > 0) return React.createElement(
                 "a",
-                { onClick: this.handleClick },
+                { className: "load", onClick: this.handleClick },
                 this.props.count,
                 " ",
                 label,

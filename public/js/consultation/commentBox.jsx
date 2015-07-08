@@ -64,11 +64,13 @@
                 beforeSend:function(){
                     instance.state.display=true;
                     instance.state.busy=true;
+
                     instance.setState(instance.state);
                 },
                 success : function(response){
                     comment.id = response.id;
                     instance.state.discussionthreadid = response.discussionThread.id; //set discussion thread to state
+                    instance.state.commentsCount = instance.state.commentsCount+1;
                     instance.state.comments.push(comment);
                 },
                 complete: function(){
@@ -141,7 +143,7 @@
 
             if (this.props.count>0)
                 return (
-                    <a onClick={this.handleClick}>{this.props.count} {label} </a>
+                    <a className="load" onClick={this.handleClick}>{this.props.count} {label} </a>
                 )
             else //todo: how can i return an empty element?
                 return (<span></span>)

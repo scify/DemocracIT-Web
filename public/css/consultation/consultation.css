@@ -176,6 +176,9 @@
 .commentBox .comment .date {
   color: gray; }
 
+.commentBox .comment .load {
+  cursor: pointer; }
+
 .activeCons {
   color: #3c763d; }
 

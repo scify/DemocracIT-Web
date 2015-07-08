@@ -117,10 +117,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
             counter++;
         }
-
         $(".article-body,.article-title-text, #consultation-header .title").each(function(i,el){
-            counter=0;
-            recurseAllTextNodesAndApply(el,action );
+         recurseAllTextNodesAndApply(el,action );
         });
 
     },

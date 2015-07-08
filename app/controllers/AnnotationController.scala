@@ -23,7 +23,7 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
      },
      annotation => {
         val annotationTags = List(AnnotationTags(annotation.annotationTagId,""))
-       val discussionthread =DiscussionThread(Some(annotation.discussionThreadId),annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+       val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
        val comment = Comment(None, annotation.articleId,CommentSource.OpenGov,
                            annotation.body,
                            annotation.userAnnotatedText,
