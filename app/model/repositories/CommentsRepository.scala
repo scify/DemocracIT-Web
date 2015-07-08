@@ -14,29 +14,40 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class CommentsRepository {
 
-  def getComments(consultationId:Long,
-                  articleId:Long,
-                  discussionThreadId:Option[Int],
-                  source: CommentSource,
-                  maxCommentId:Option[Long],
-                  pageSize:Int
-                   ):List[Comment]  = {
+  def getComments(discussionthreadclientid:String,
+                  pageSize:Int):List[Comment]  = {
     DB.withConnection { implicit c =>
 
       //It seems that None is not replaced correctly with Null by anorm
       // use a magic number... http://stackoverflow.com/questions/26798371/anorm-play-scala-and-postgresql-dynamic-sql-clause-not-working
-      val paramDiscussionThread:Int = discussionThreadId.getOrElse(-9999)
-      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
+      //      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
 
+
+      SQL"""
+            select c.*, CAST(c.user_id  AS varchar) as fullName
+              from public.comments c
+                 inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                 left outer join public.users u on u.id = c.user_id
+                 where t.tagid =$discussionthreadclientid
+            order by c.date_added desc, c.id desc
+            limit $pageSize
+        """.as(CommentsParser.Parse *)
+    }
+  }
+
+
+  def getOpenGovComments(consultationId:Long,
+                         articleId:Long,pageSize:Int
+                   ):List[Comment]  = {
+    DB.withConnection { implicit c =>
+
+      //todo: add paging
        SQL"""
           select c.*, o.fullname  from public.comments c
               left outer join public.comment_opengov o on o.id =c.id
               where c.article_id = $articleId
-              and  (discussion_thread_id = $paramDiscussionThread or $paramDiscussionThread = -9999)
-              and  c.source_type_id= ${source.id}
-              and  (c.id < $paramMaxCommentId or $paramMaxCommentId =-9999)
+              and  c.source_type_id= 2
               order by c.date_added desc, c.id desc
-              limit $pageSize
         """.as(CommentsParser.Parse *)
     }
   }

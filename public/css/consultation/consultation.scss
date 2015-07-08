@@ -109,11 +109,12 @@
 .ann #toolbar
 {
   display:block;
-
 }
 .ann {
   display: inline-block;
   position: relative;
+  width: 90%;
+  padding-right: 5%;
 }
 .ann:hover {
   background-color:lightyellow;

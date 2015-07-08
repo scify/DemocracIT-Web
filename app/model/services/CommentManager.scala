@@ -24,9 +24,21 @@ class CommentManager {
     comment
   }
 
-  def getOpenGovComments(consultationId:Long,articleId:Long, maxCommentId:Option[Long]): List[Comment] = {
+  def getComments(consultationId:Long,
+                   articleId:Long,
+                   source: String,
+                   discussionthreadid:Option[Int],
+                   discussionthreadclientid:String): List[Comment] = {
 
     val commentsRepository = new CommentsRepository()
-    commentsRepository.getComments(consultationId,articleId,None,CommentSource.OpenGov,maxCommentId,commentsPageSize )
+    val pageSize=10;
+    var comments:List[Comment] = Nil
+
+    if (source=="opengov")
+       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize )
+    else
+      comments =commentsRepository.getComments(discussionthreadclientid,pageSize)
+
+    comments
   }
 }

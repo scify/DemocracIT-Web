@@ -12,7 +12,6 @@ object CommentsParser{
   val Parse: RowParser[Comment] = {
 
     long("id") ~
-    str("url_source") ~
     int("article_id") ~
     get[Option[Int]]("parent_id") ~
     str("comment") ~
@@ -25,7 +24,7 @@ object CommentsParser{
     str("depth") ~
     get[Option[String]]("annotatedText") map
       {
-        case id ~ url_source ~ article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~
+        case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~
              user_id ~ full_name ~ date_added ~ revision ~depth ~ annotatedText =>
           new Comment(Some(id),
                       article_id,

@@ -4,7 +4,13 @@ scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,use
     this.consultationid= consultationid;
     this.userId = userId;
     this.fullName = fullName;
-    this.discussionThreads =discussionThreads;
+
+    this.discussionThreads ={};
+    for (var i=0; i<discussionThreads.length; i++)
+    {
+        this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
+    }
+
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -86,28 +92,24 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         {
              recurseAllTextNodesAndApply(element.childNodes[i],action);
         }
-
-
-
     },
-        elementCanBeAnnotated= function(element)
-        {
-            //an element can be annotated if its a #TEXT node with actual text
-            if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
-                return true;
-
-            //an element can be annotated if all it's children are #TEXT OR SUP nodes
-            var bannedNodeFound=false;
-            for (var i = 0; i < element.childNodes.length; i++) {
-                if ( element.childNodes[i].nodeName !="SUP" && element.childNodes[i].nodeName !="#text"  )
-                    bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
-            }
-            if (bannedNodeFound || element.textContent.trim().length==0)
-                return false;
-
+    elementCanBeAnnotated= function(element) {
+        //an element can be annotated if its a #TEXT node with actual text
+        if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
             return true;
 
-        },
+        //an element can be annotated if all it's children are #TEXT OR SUP nodes
+        var bannedNodeFound=false;
+        for (var i = 0; i < element.childNodes.length; i++) {
+            if ( element.childNodes[i].nodeName !="SUP" && element.childNodes[i].nodeName !="#text"  )
+                bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
+        }
+        if (bannedNodeFound || element.textContent.trim().length==0)
+            return false;
+
+        return true;
+
+    },
     createAnnotatableAreas = function() {
         var counter=0;
         var action = function(element)
@@ -157,10 +159,19 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     hideToolBar = function(){
             $("#toolbar").hide();
     },
-    getDiscussionThreadId = function(articleId,commentBoxId){
-        //todo: implement this
-        //should be loaded from the database. for each commentbox id and article id we have one discussion thread id
+    getDiscussionThreadNumberOfComments = function(articleId,annotationId){
+        if (this.discussionThreads.hasOwnProperty(getDiscussionThreadClientId(articleId,annotationId)))
+            return this.discussionThreads[getDiscussionThreadClientId(articleId,annotationId)].num
+
+        return 0;
+    },
+    getDiscussionThreadId = function(articleId,annotationId){
+
+        if (this.discussionThreads.hasOwnProperty(getDiscussionThreadClientId(articleId,annotationId)))
+            return this.discussionThreads[getDiscussionThreadClientId(articleId,annotationId)].id
+
         return -1;
+
     },
     createDiscussionRooms = function(){
         var instance = this;
@@ -168,25 +179,30 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
         $(".article").each(function(index,articleDiv){
             var articleid =$(articleDiv).data("id");
-            var commentBoxId=getDiscussionThreadClientId(articleid);
+
             var commentBoxProperties= {
                 consultationid      : instance.consultationid,
                 articleid           : articleid,
-                discussionthreadid  : getDiscussionThreadId(articleid,commentBoxId),
-                discussionThreadClientId: -1
+                discussionthreadid  : -1,
+                discussionthreadclientid: getDiscussionThreadClientId(articleid),
+                source :"opengov",
+                commentsCount : $(articleDiv).find(".open-gov").data("count")  //for open gov we retrieve the counter from
             };
-            var domElementToAddComponent = $(articleDiv).find(".open-gov-commentbox-wrap")[0];
-            scify.discussionRooms[commentBoxProperties.id] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+            var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
+            scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
 
             $(articleDiv).find(".ann").each(function(i,ann){
-                commentBoxProperties.discussionThreadClientId = getDiscussionThreadClientId(commentBoxProperties.articleid,$(ann).data("id"))
-                commentBoxProperties.discussionthreadid = getDiscussionThreadId(commentBoxProperties.articleid,commentBoxProperties.id);
+                var annId = $(ann).data("id");
+                commentBoxProperties.discussionthreadclientid = getDiscussionThreadClientId(articleid,annId );
+                commentBoxProperties.discussionthreadid = getDiscussionThreadId.call(instance,articleid,annId );
+                commentBoxProperties.commentsCount  = getDiscussionThreadNumberOfComments.call(instance,articleid,annId )
+                commentBoxProperties.source="dm";
                 commentBoxProperties.userId = instance.userId;
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).html();
                 $(ann).after('<div class="commentbox-wrap"></div>');
                 domElementToAddComponent = $(ann).next()[0];
-                scify.discussionRooms[commentBoxProperties.discussionThreadClientId] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+                scify.discussionRooms[commentBoxProperties.discussionthreadclientid] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
             });
         });
     },
@@ -196,13 +212,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     getDiscussionThreadClientId = function(articleid,annId){
         return articleid+(annId ? annId :"");
     },
-    fetchOpenGovComments = function(e){
-        e.preventDefault();
-        var articleDiv = $(this).closest(".article");
-        var articleid =articleDiv.data("id");
-        var url = $(this).attr("href");
-        getDiscussionRoom(articleid).refreshComments(url);
-    },
+    //fetchOpenGovComments = function(e){
+    //    e.preventDefault();
+    //    var articleDiv = $(this).closest(".article");
+    //    var articleid =articleDiv.data("id");
+    //    var url = $(this).attr("href");
+    //    getDiscussionRoom(articleid).refreshComments(url);
+    //},
      handleAnnotationSave = function(e){
          e.preventDefault();
          var form = $(this).closest("form");
@@ -225,7 +241,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 
-        $("body").on("click",".open-gov-comments", fetchOpenGovComments);
+        //$("body").on("click",".open-gov-comments", fetchOpenGovComments);
         createDiscussionRooms.call(instance);
 
         //tinymce.init({selector:'textarea'})

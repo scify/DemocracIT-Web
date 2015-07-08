@@ -64,7 +64,7 @@
         <section id="consultation-body">
             @for(article <- model.consultation.articles) {
                 <div data-id="@article.id"  class="row article ">
-                    <div class="col-md-11">
+                    <div class="col-md-12">
                         <div class="title">
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
@@ -72,14 +72,11 @@
                         <div class="article-body collapse" id="body-@article.id" style="height:0;" >
                             @Html(article.body)
                         </div>
-                        <div data-total="" class="comment-wrp skip-ann">
-                            <a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">@article.commentsNum σχολια στο open gov</a>
-                            <div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>
+                        <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum">
+                            @*<a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">σχολια στο open gov</a>*@
+                            @*<div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>*@
                         </div>
                     </div>
-                    <div class="col-md-1">
-                        </div>
-
                 </div>
             }
         </section>
