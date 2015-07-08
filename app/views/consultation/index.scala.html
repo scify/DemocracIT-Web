@@ -93,12 +93,13 @@
                 Επισημείωση για το τμήμα κειμένου:
                 <blockquote></blockquote></div>
             <div>
+            @if(model.user.isDefined){
                 <hr>
                 <select name="annotationTagId">
                     <option value="-1">Υπόδειξη προβλήματος:</option>
-                @for(annotation <- model.allowedAnnotations){
-                    <option value="@annotation.id">@annotation.description</option>
-                }
+                    @for(annotation <- model.allowedAnnotations){
+                        <option value="@annotation.id">@annotation.description</option>
+                    }
                 </select>
             </div>
 
@@ -113,6 +114,13 @@
 
             <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
             <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
+            } else {
+                <div class="notLoggedinWrapper">
+                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a></p></div>
+                </div>
+
+
+        }
         </form>
     </div>
 

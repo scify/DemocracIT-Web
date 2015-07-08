@@ -178,6 +178,12 @@
 .inactiveCons {
   color: #c12e2a; }
 
+/*Not logged in message*/
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px; }
+
 /*Relevant Material*/
 #relevantMaterial {
   float: right; }
