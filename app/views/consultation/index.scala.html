@@ -34,7 +34,7 @@
     <section id="stats" class="container">
 
 
-        Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
+        Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.prettyDateFormat(model.consultation.startDate) έως @model.consultation.prettyDateFormat(model.consultation.endDate) | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
 
 
             <div id="relevantMaterial" class="">
@@ -48,22 +48,25 @@
                 </div>
             </div>
 
-            <div id="relevantLaws" class="">
-                <div class="relevantMaterialTitle">Σχετικοί νόμοι:</div>
-                <div class="relevantMaterialContainer">
-                @for(relevantLaw <- model.relevantLaws) {
 
-                    <div class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a> @relevantLaw.article_id</div>
-
-                }
-                </div>
-            </div>
             @if(model.consultation.isActive) {
                 <div class="consState activeCons">Ενεργή Διαβούλευση</div>
             } else {
                 <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
             }
     </section>
+
+
+    <div id="relevantLawsList" class="">
+        <div class="relevantMaterialTitle">Σχετικοί νόμοι:</div>
+        <li class="relevantMaterialContainer">
+        @for(relevantLaw <- model.relevantLaws) {
+
+            <ul class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></ul>
+
+        }
+        </li>
+    </div>
 
 
 

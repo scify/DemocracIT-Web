@@ -254,6 +254,17 @@ $annotation-icon--color: #fff;
   margin-top: 3px;
 }
 
+/*Relevant Laws*/
+#relevantLawsList {
+  position: absolute;
+  margin-left: 2%;
+  margin-top: -65px;
+}
+
+#relevantLawsList li {
+  list-style-type: none;
+}
+
 /*Relevant Material*/
 #relevantMaterial {
   float: right;
