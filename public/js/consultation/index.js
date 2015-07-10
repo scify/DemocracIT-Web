@@ -1,5 +1,5 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads, relevantLaws){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
@@ -9,6 +9,11 @@ scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,use
     for (var i=0; i<discussionThreads.length; i++)
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
+    }
+
+    this.relevantLaws = {};
+    for (var i=0; i<relevantLaws.length; i++) {
+        console.log(relevantLaws[i]);
     }
 
 };

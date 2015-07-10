@@ -1,5 +1,7 @@
 package repositories.anorm
 
+import java.text.SimpleDateFormat
+
 import anorm._
 import anorm.SqlParser._
 import model.dtos._

@@ -15,7 +15,8 @@
                                                                 @model.consultation.id,
                                                                 @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"),
-                                                                @Html(model.discussionThreadsToJson())
+                                                                @Html(model.discussionThreadsToJson()),
+                                                                @Html(model.relevantLawsToJson())
                                                                 );
         controller.init();
         })
@@ -31,6 +32,8 @@
 @layout("DemocracIT", css, js,None) {
 
     <section id="stats" class="container">
+
+
         Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.startDate έως @model.consultation.endDate | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
 
 
@@ -40,6 +43,17 @@
                 @for(relevantMaterial <- model.relevantMaterials) {
 
                     <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> @relevantMaterial.title</a></div>
+
+                }
+                </div>
+            </div>
+
+            <div id="relevantLaws" class="">
+                <div class="relevantMaterialTitle">Σχετικοί νόμοι:</div>
+                <div class="relevantMaterialContainer">
+                @for(relevantLaw <- model.relevantLaws) {
+
+                    <div class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a> @relevantLaw.article_id</div>
 
                 }
                 </div>

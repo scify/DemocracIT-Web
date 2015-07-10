@@ -1,6 +1,7 @@
 package model.dtos
 
 
+import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 import java.util.{ResourceBundle, Locale, Calendar, Date}
 
@@ -31,6 +32,9 @@ case class Consultation( id:Long,
     Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
   }
 
+  def format = {
+     new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startDate.toString)
+  }
   def endDateFormatted = {
        // val lang = play.api.Play.current.configuration.getString("application.langs").get
       //  val locale = new Locale("el");

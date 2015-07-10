@@ -51,7 +51,8 @@ class ConsultationManager {
                           allowedAnnotations = commentsRepo.loadAnnotationTags(),
                           discussionThreads = commentsRepo.loadDiscussionThreadsWithCommentsCount(consultationId),
                           user = user,
-                          relevantMaterials = repository.getRelevantMaterial(consultationId))
+                          relevantMaterials = repository.getRelevantMaterial(consultationId),
+                          relevantLaws = repository.getRelevantLaws(consultationId))
   }
 
   def median(s: List[Int]):Int =
