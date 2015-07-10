@@ -19,7 +19,20 @@
                                                                 @Html(model.relevantLawsToJson())
                                                                 );
         controller.init();
-        })
+        $("#relevantLawsBtn").on("click", function(){
+            $("#relevantLawsBtn").toggleClass("clicked");
+            if($("#relevantLawsBtn").hasClass("clicked")) {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
+                $("#relevantLawsBtn i").addClass("fa-chevron-up");
+                $("#relevantLawsList .relevantMaterialContainer").show("slow");
+            }
+            else {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
+                $("#relevantLawsBtn i").addClass("fa-chevron-down");
+                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
+            }
+        });
+     })
     </script>
 }
 
@@ -58,7 +71,7 @@
 
 
     <div id="relevantLawsList" class="">
-        <div class="relevantMaterialTitle">Σχετικοί νόμοι:</div>
+        <div class="relevantMaterialTitle">Σχετικοί νόμοι <div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div></div>
         <li class="relevantMaterialContainer">
         @for(relevantLaw <- model.relevantLaws) {
 
