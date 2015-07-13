@@ -199,7 +199,9 @@
   width: 7%; }
 
 #relevantLawsList .relevantMaterialContainer {
-  display: none; }
+  display: none;
+  max-height: 800px;
+  overflow-y: scroll; }
 
 #relevantLawsBtn {
   float: right; }
@@ -210,6 +212,17 @@
 #relevantLawsList .url {
   padding: 0px !important;
   width: 100%; }
+
+/*Minister messages modal*/
+#ministerMessagesModal .modal-backdrop {
+  z-index: -1; }
+
+.ministerMessagesList li {
+  list-style-type: none; }
+
+.ministerMessagesList li .date {
+  float: right;
+  background-color: lightgray; }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width: 1200px) {

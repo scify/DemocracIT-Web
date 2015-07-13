@@ -9,11 +9,14 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  discussionThreads : Seq[DiscussionThread],
                                  user: Option[model.User],
                                  relevantMaterials: Seq[RelevantMaterial],
-                                 relevantLaws: Seq[RelevantLaws])
+                                 relevantLaws: Seq[RelevantLaws],
+                                  ministerMessages: Seq[MinisterMessage])
 {
    def annotationTypesToJson():String = Json.toJson(allowedAnnotations).toString()
 
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
   def relevantLawsToJson():String =Json.toJson(relevantLaws).toString()
+
+  def ministerMessagesToJson():String = Json.toJson(ministerMessages).toString()
 
 }

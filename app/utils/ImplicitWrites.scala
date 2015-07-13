@@ -1,7 +1,8 @@
 package utils
 
+import model.dtos.CommentSource.CommentSource
 import model.dtos.CommentSource._
-import model.dtos.{RelevantLaws, Comment, DiscussionThread, AnnotationTags}
+import model.dtos._
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
@@ -24,6 +25,7 @@ object ImplicitWrites {
 
   implicit val annotationWrites = Json.writes[AnnotationTags]
   implicit val relevantLawsWrites = Json.writes[RelevantLaws]
+  implicit val ministerMessagesWrites = Json.writes[MinisterMessage]
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource]
   {
