@@ -73,7 +73,7 @@
     <div id="relevantLawsList" class="">
         <div class="relevantMaterialTitle">Σχετικοί νόμοι <div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div></div>
         <li class="relevantMaterialContainer">
-        @for(relevantLaw <- model.relevantLaws) {
+        @for(relevantLaw <- model.distinctLaws()) {
 
             <ul class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></ul>
 

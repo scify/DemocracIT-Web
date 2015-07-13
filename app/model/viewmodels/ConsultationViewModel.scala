@@ -14,6 +14,17 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
    def annotationTypesToJson():String = Json.toJson(allowedAnnotations).toString()
 
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
-  def relevantLawsToJson():String =Json.toJson(relevantLaws).toString()
+  def relevantLawsToJson():String =Json.toJson(this.distinctLaws(false)).toString()
+
+  def distinctLaws(ignoreCharacters:Boolean = true):Seq[RelevantLaws] = {
+
+    val grouppingFunction =if (ignoreCharacters)
+                                        (x:RelevantLaws) => x.entity_text.toLowerCase().replace(" ","").replace(".","")
+                            else
+                                  (x:RelevantLaws) => x.entity_text.toLowerCase()
+
+    this.relevantLaws.groupBy(grouppingFunction).map(tuple => tuple._2.head).toList
+
+  }
 
 }
