@@ -264,7 +264,7 @@ $annotation-icon--color: #fff;
 #relevantLawsList .relevantMaterialContainer {
   display: none;
   max-height: 800px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 #relevantLawsBtn {
   float: right;

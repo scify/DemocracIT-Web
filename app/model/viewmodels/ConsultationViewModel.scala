@@ -9,8 +9,7 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  discussionThreads : Seq[DiscussionThread],
                                  user: Option[model.User],
                                  relevantMaterials: Seq[RelevantMaterial],
-                                 relevantLaws: Seq[RelevantLaws],
-                                  ministerMessages: Seq[MinisterMessage])
+                                 relevantLaws: Seq[RelevantLaws])
 {
    def annotationTypesToJson():String = Json.toJson(allowedAnnotations).toString()
 
@@ -27,7 +26,5 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
     this.relevantLaws.groupBy(grouppingFunction).map(tuple => tuple._2.head).toList
 
   }
-
-  def ministerMessagesToJson():String = Json.toJson(ministerMessages).toString()
 
 }

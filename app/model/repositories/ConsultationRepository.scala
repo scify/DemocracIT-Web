@@ -106,16 +106,6 @@ class ConsultationRepository {
 
   }
 
-  def getMinisterMessages (consultationId: Long):Seq[MinisterMessage] = {
-    DB.withConnection { implicit c =>
-      val results = SQL"""
-        select c.* from public.opengov_messages c where c.consultation_id = $consultationId
-        """.as(MinisterMessagesParser.Parse *)
-      results
-    }
-
-  }
-
   def get(consultationId: BigInt): Consultation =
   {
     DB.withConnection { implicit c =>

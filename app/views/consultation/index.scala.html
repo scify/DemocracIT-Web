@@ -81,11 +81,9 @@
     </div>
 
     <!-- Button trigger modal -->
-    @if(model.ministerMessages.length > 0) {
         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#ministerMessagesModal">
             Launch demo modal
         </button>
-    }
 
     <!-- Modal -->
 
@@ -99,11 +97,10 @@
                 </div>
                 <div class="modal-body">
                     <ul class="ministerMessagesList">
-                    @for(ministerMessage <- model.ministerMessages) {
 
-                        <li class="msg">@ministerMessage.message <div class="date">@ministerMessage.prettyDateFormat(ministerMessage.date_added)</div></li>
+                        <li class="msg">ministerMessage.message <div class="date">ministerMessage.prettyDateFormat(ministerMessage.date_added)</div></li>
 
-                    }
+
                     </ul>
                 </div>
                 <div class="modal-footer">
