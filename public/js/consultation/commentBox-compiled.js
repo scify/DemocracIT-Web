@@ -121,11 +121,6 @@
                 React.createElement(
                     "div",
                     { className: classes },
-                    React.createElement(
-                        "a",
-                        { onClick: this.toogleBox },
-                        this.state.display ? "Κλεισιμο" : "Ανοιγμα"
-                    ),
                     React.createElement(CommentForm, null),
                     React.createElement(CommentList, { data: this.state.comments })
                 )
@@ -248,5 +243,6 @@
         }
     });
 })();
+/*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */
 
 //# sourceMappingURL=commentBox-compiled.js.map

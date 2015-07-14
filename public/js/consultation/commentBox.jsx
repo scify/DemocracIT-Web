@@ -119,7 +119,7 @@
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
                     <div className={classes}>
-                        <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a>
+                        { /*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */ }
                         <CommentForm />
                         <CommentList data={this.state.comments} />
                     </div>
