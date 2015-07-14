@@ -1,5 +1,5 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads, relevantLaws){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
@@ -9,6 +9,12 @@ scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,use
     for (var i=0; i<discussionThreads.length; i++)
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
+    }
+
+    this.relevantLaws = [];
+    console.log(relevantLaws.length);
+    for (var i=0; i<relevantLaws.length; i++) {
+        this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
     }
 
 };
@@ -227,6 +233,15 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
          hideToolBar();
      },
+        replaceRelevantLaws = function(relevantLaws) {
+            for (var i=0; i<relevantLaws.length; i++) {
+                var replaceText = relevantLaws[i].entity_text;
+                var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
+                $("div[data-id="+ relevantLaws[i].article_id +"]").html(replacedHtml);
+            }
+
+        },
+
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -236,6 +251,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         attachAnnotationEvents();
 
         // TODO: Annotate feks (laws) in every ann class
+        console.log("replaceRelevantLaws");
+        replaceRelevantLaws(this.relevantLaws);
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 

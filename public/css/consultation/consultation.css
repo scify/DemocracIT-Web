@@ -191,6 +191,43 @@
   margin-right: 10px;
   margin-top: 3px; }
 
+/*Relevant Laws*/
+#relevantLawsList {
+  position: absolute;
+  margin-left: 2%;
+  margin-top: -65px;
+  width: 7%; }
+
+#relevantLawsList .relevantMaterialContainer {
+  display: none;
+  max-height: 800px;
+  overflow-y: auto; }
+
+#relevantLawsBtn {
+  float: right; }
+
+#relevantLawsList li {
+  list-style-type: none; }
+
+#relevantLawsList .url {
+  padding: 0px !important;
+  width: 100%; }
+
+/*Minister messages modal*/
+#ministerMessagesModal .modal-backdrop {
+  z-index: -1; }
+
+.ministerMessagesList li {
+  list-style-type: none; }
+
+.ministerMessagesList li .date {
+  float: right;
+  background-color: lightgray; }
+
+/* Small Devices, Tablets */
+@media only screen and (max-width: 1200px) {
+  #relevantLawsList {
+    display: none; } }
 /*Relevant Material*/
 #relevantMaterial {
   float: right; }
