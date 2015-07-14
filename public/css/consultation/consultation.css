@@ -193,15 +193,36 @@
 
 /*Relevant Laws*/
 #relevantLawsList {
-  position: absolute;
+  /*position: absolute;
   margin-left: 2%;
   margin-top: -65px;
-  width: 7%; }
+  width: 7%;*/ }
+
+.statsFloatingList {
+  padding: 0px; }
+
+.statsFloatingList li {
+  list-style-type: none;
+  float: left;
+  margin-right: 10px; }
+
+#relevantLawsList .relevantMaterialTitle {
+  float: left; }
+
+.relevantMaterialTitle .divider {
+  color: #000 !important; }
+
+#relevantLawsList #relevantLawsBtn {
+  float: right;
+  padding-left: 5px; }
 
 #relevantLawsList .relevantMaterialContainer {
   display: none;
   max-height: 800px;
-  overflow-y: auto; }
+  overflow-y: auto;
+  margin-top: 5px;
+  margin-left: 15px;
+  float: left; }
 
 #relevantLawsBtn {
   float: right; }
@@ -217,6 +238,9 @@
 #ministerMessagesModal .modal-backdrop {
   z-index: -1; }
 
+#initialMessagesModal .modal-backdrop {
+  z-index: -1; }
+
 .ministerMessagesList li {
   list-style-type: none; }
 
@@ -226,8 +250,9 @@
 
 /* Small Devices, Tablets */
 @media only screen and (max-width: 1200px) {
-  #relevantLawsList {
-    display: none; } }
+  /*#relevantLawsList {
+    display: none;
+  }*/ }
 /*Relevant Material*/
 #relevantMaterial {
   float: right; }

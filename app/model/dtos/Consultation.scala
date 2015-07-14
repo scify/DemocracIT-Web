@@ -18,6 +18,8 @@ case class Consultation( id:Long,
                    organization: Organization,
                    status: Short,
                    report_text: Option[String],
+                         report_url: Option[String],
+                         completed_text: Option[String],
                    articlesNum:Int,
                    opengov_url:String,
                    var articles:List[Article] =Nil)
@@ -31,6 +33,7 @@ case class Consultation( id:Long,
     else
     Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
   }
+
 
   def prettyDateFormat(date:Date) = {
     val formatIncomming = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
