@@ -153,13 +153,13 @@
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
                         </div>
-                        <div class="article-body collapse" id="body-@article.id" style="height:0;" >
-                            @Html(article.body)
+                        <div id="body-@article.id" class="collapse " style="height:0;" >
+                            <div class="article-body">
+                                @Html(article.body)
+                            </div>
+                            <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                         </div>
-                        <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum">
-                            @*<a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">σχολια στο open gov</a>*@
-                            @*<div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>*@
-                        </div>
+
                     </div>
                 </div>
             }
