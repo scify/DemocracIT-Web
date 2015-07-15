@@ -236,6 +236,12 @@
   padding: 0px !important;
   width: 100%; }
 
+#ministerMessagesModal .modal-dialog {
+  width: 50%; }
+
+#initialMessagesModal .modal-dialog {
+  width: 50%; }
+
 /*Minister messages modal*/
 #ministerMessagesModal .modal-backdrop {
   z-index: -1; }
