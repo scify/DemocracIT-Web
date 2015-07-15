@@ -19,19 +19,6 @@
                                                                 @Html(model.relevantLawsToJson())
                                                                 );
         controller.init();
-        $("#relevantLawsBtn").on("click", function(){
-            $("#relevantLawsBtn").toggleClass("clicked");
-            if($("#relevantLawsBtn").hasClass("clicked")) {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
-                $("#relevantLawsBtn i").addClass("fa-chevron-up");
-                $("#relevantLawsList .relevantMaterialContainer").show("slow");
-            }
-            else {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
-                $("#relevantLawsBtn i").addClass("fa-chevron-down");
-                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
-            }
-        });
      })
     </script>
 }
@@ -70,7 +57,7 @@
             <ul class="statsFloatingList">
                 <li>
                     <div id="relevantLawsList" class="">
-                        <div class="relevantMaterialTitle">Βρέθηκαν @model.distinctLaws().length σχετικοί νόμοι @if(model.distinctLaws().length > 0){<div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div>} <span class="divider">|</span></div>
+                        <div class="relevantMaterialTitle">Βρέθηκαν @model.distinctLaws().length σχετικοί νόμοι @if(model.distinctLaws().length > 0){<div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div>}</div>
                         <ul class="relevantMaterialContainer">
                         @for(relevantLaw <- model.distinctLaws()) {
 
@@ -82,14 +69,15 @@
                 </li>
                 <li>
                     <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#initialMessagesModal">
-                        Αρχικο Μήνυμα Διαβούλευσης <span class="divider">|</span>
+                         <span class="divider">|</span> Αρχικο Μήνυμα Διαβούλευσης
                     </div>
                 </li>
-                <li>
+                @if(model.consultation.isCompletedText) {<li>
                     <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#ministerMessagesModal">
-                        Μηνύματα Υπουργου
+                        <span class="divider">|</span> Μηνύματα Υπουργου
                     </div>
                 </li>
+                    }
             </ul>
     </section>
 

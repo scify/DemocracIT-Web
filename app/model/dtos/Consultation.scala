@@ -34,6 +34,9 @@ case class Consultation( id:Long,
     Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
   }
 
+  def isCompletedText = {
+    !completed_text.isEmpty
+  }
 
   def prettyDateFormat(date:Date) = {
     val formatIncomming = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

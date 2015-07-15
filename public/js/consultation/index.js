@@ -216,6 +216,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     getDiscussionThreadClientId = function(articleid,annId){
         return articleid+(annId ? annId :"");
     },
+        addRelevantLawsHandler = function(){
+            $("#relevantLawsBtn").on("click", function(){
+                $("#relevantLawsBtn").toggleClass("clicked");
+                if($("#relevantLawsBtn").hasClass("clicked")) {
+                    $("#relevantLawsBtn i").removeClass("fa-chevron-down");
+                    $("#relevantLawsBtn i").addClass("fa-chevron-up");
+                    $("#relevantLawsList .relevantMaterialContainer").show("slow");
+                }
+                else {
+                    $("#relevantLawsBtn i").removeClass("fa-chevron-up");
+                    $("#relevantLawsBtn i").addClass("fa-chevron-down");
+                    $("#relevantLawsList .relevantMaterialContainer").hide("fast");
+                }
+            });
+        },
     //fetchOpenGovComments = function(e){
     //    e.preventDefault();
     //    var articleDiv = $(this).closest(".article");
@@ -236,7 +251,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
                 var replaceText = relevantLaws[i].entity_text;
-                var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
+                var regEx = new RegExp(relevantLaws[i].entity_text, "ig");
+                var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(regEx, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
                 $("div[data-id="+ relevantLaws[i].article_id +"]").html(replacedHtml);
             }
 
@@ -250,9 +266,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         attachBallons();
         attachAnnotationEvents();
 
-        // TODO: Annotate feks (laws) in every ann class
-        console.log("replaceRelevantLaws");
         replaceRelevantLaws(this.relevantLaws);
+        addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
         $(".article-title-text").first().trigger("click");
 

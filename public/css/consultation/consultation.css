@@ -207,7 +207,7 @@
   margin-right: 10px; }
 
 #relevantLawsList .relevantMaterialTitle {
-  float: left; }
+  /*float:left;*/ }
 
 .relevantMaterialTitle .divider {
   color: #000 !important; }
@@ -218,11 +218,13 @@
 
 #relevantLawsList .relevantMaterialContainer {
   display: none;
-  max-height: 800px;
   overflow-y: auto;
   margin-top: 5px;
-  margin-left: 15px;
-  float: left; }
+  float: left;
+  max-width: 250px;
+  max-height: 230px;
+  margin-left: 0px;
+  position: relative; }
 
 #relevantLawsBtn {
   float: right; }
