@@ -251,8 +251,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
                 var replaceText = relevantLaws[i].entity_text;
-                var regEx = new RegExp(relevantLaws[i].entity_text, "ig");
-                var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(regEx, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
+                var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
                 $("div[data-id="+ relevantLaws[i].article_id +"]").html(replacedHtml);
             }
 
