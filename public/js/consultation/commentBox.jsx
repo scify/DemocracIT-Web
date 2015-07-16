@@ -126,7 +126,7 @@
                     <div className={commendBoxclasses }>
                         { /*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */ }
                         <div className={loadMoreClasses} >
-                            <a onClick={this.refreshComments}>φόρτωση σχολίων</a>
+                            <a onClick={this.refreshComments}>φόρτωση ολων των σχολίων</a>
                         </div>
                         <CommentList data={this.state.comments} />
                         <CommentForm />

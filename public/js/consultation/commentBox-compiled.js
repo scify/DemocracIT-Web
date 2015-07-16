@@ -132,7 +132,7 @@
                         React.createElement(
                             "a",
                             { onClick: this.refreshComments },
-                            "φόρτωση σχολίων"
+                            "φόρτωση ολων των σχολίων"
                         )
                     ),
                     React.createElement(CommentList, { data: this.state.comments }),

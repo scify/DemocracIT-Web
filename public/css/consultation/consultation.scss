@@ -365,7 +365,14 @@ $annotation-icon--color: #fff;
 {
   cursor:pointer;
 }
-
+.commentBox .load-more
+{
+padding-top: 10px;
+padding-bottom: 10px;
+padding-left: 10px;
+font-size: 12px;
+  cursor:pointer;
+}
 .commentBox .comment .tag
 {
   margin-top:10px;
