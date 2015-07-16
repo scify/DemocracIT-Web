@@ -11,7 +11,7 @@
         getCommentsFromServer : function(url){
             var instance = this;
 
-            $.ajax({
+           var promise = $.ajax({
                 method: "GET",
                 url: "/comments/retrieve",
                 cache:false,
@@ -36,7 +36,9 @@
                 error: function(x,z,y){
                     alert(x)
                 }
-            })
+            });
+
+            return promise;
         },
         saveComment : function(url,data){
             var instance = this;
@@ -68,7 +70,9 @@
                 },
                 success : function(comment){
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+
                     instance.state.commentsCount = instance.state.commentsCount+1;
+                    //attach first
                     instance.state.comments.push(comment);
                 },
                 complete: function(){
@@ -85,7 +89,7 @@
         },
         refreshComments : function(){
             var instance = this;
-            if (!instance.state.comments || instance.state.comments.length==0)
+            if (instance.state.commentsCount > instance.state.comments.length )
                 instance.getCommentsFromServer.call(instance);
             else if (instance.state.display)
                 instance.setVisibibility.call(instance,false);
@@ -95,6 +99,9 @@
         toogleBox: function(){
             this.state.display= !this.state.display;
             this.setState(this.state);
+        },
+        shouldDisplayLoadMoreOption : function(){
+             return  this.state.commentsCount > this.state.comments.length;
         },
         render: function() {
             if (this.state.busy)
@@ -111,15 +118,18 @@
                 );
             }
             var topClasses = classNames({hide: this.state.commentsCount==0});
-            var classes = classNames("commentBox",{ hide :!this.state.display});
-
+            var commendBoxclasses = classNames("commentBox",{ hide :!this.state.display});
+            var loadMoreClasses =classNames("load-more",{ hide :!this.shouldDisplayLoadMoreOption()});
             return (
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
-                    <div className={classes}>
+                    <div className={commendBoxclasses }>
                         { /*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */ }
-                        <CommentForm />
+                        <div className={loadMoreClasses} >
+                            <a onClick={this.refreshComments}>φόρτωση σχολίων</a>
+                        </div>
                         <CommentList data={this.state.comments} />
+                        <CommentForm />
                     </div>
                 </div>
 

@@ -14,7 +14,7 @@
         getCommentsFromServer: function getCommentsFromServer(url) {
             var instance = this;
 
-            $.ajax({
+            var promise = $.ajax({
                 method: "GET",
                 url: "/comments/retrieve",
                 cache: false,
@@ -39,6 +39,8 @@
                     alert(x);
                 }
             });
+
+            return promise;
         },
         saveComment: function saveComment(url, data) {
             var instance = this;
@@ -70,7 +72,9 @@
                 },
                 success: function success(comment) {
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+
                     instance.state.commentsCount = instance.state.commentsCount + 1;
+                    //attach first
                     instance.state.comments.push(comment);
                 },
                 complete: function complete() {
@@ -86,11 +90,14 @@
         },
         refreshComments: function refreshComments() {
             var instance = this;
-            if (!instance.state.comments || instance.state.comments.length == 0) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
+            if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         toogleBox: function toogleBox() {
             this.state.display = !this.state.display;
             this.setState(this.state);
+        },
+        shouldDisplayLoadMoreOption: function shouldDisplayLoadMoreOption() {
+            return this.state.commentsCount > this.state.comments.length;
         },
         render: function render() {
             if (this.state.busy) {
@@ -110,17 +117,26 @@
                 );
             }
             var topClasses = classNames({ hide: this.state.commentsCount == 0 });
-            var classes = classNames("commentBox", { hide: !this.state.display });
-
+            var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
+            var loadMoreClasses = classNames("load-more", { hide: !this.shouldDisplayLoadMoreOption() });
             return React.createElement(
                 "div",
                 { className: topClasses },
                 React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.commentsCount, source: this.props.source }),
                 React.createElement(
                     "div",
-                    { className: classes },
-                    React.createElement(CommentForm, null),
-                    React.createElement(CommentList, { data: this.state.comments })
+                    { className: commendBoxclasses },
+                    React.createElement(
+                        "div",
+                        { className: loadMoreClasses },
+                        React.createElement(
+                            "a",
+                            { onClick: this.refreshComments },
+                            "φόρτωση σχολίων"
+                        )
+                    ),
+                    React.createElement(CommentList, { data: this.state.comments }),
+                    React.createElement(CommentForm, null)
                 )
             );
         }
