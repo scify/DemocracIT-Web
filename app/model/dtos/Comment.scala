@@ -16,6 +16,6 @@ case class Comment(var id:Option[Long],
                        dateAdded:Date,
                        revision:Int,
                        depth:String,
-                       annotationTags:List[AnnotationTags],
+                       var annotationTags:List[AnnotationTags], //list of tags that user selected for this comment
                        discussionThread: Option[DiscussionThread]
                     )

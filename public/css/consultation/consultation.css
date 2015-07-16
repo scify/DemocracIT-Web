@@ -193,15 +193,38 @@
 
 /*Relevant Laws*/
 #relevantLawsList {
-  position: absolute;
+  /*position: absolute;
   margin-left: 2%;
   margin-top: -65px;
-  width: 7%; }
+  width: 7%;*/ }
+
+.statsFloatingList {
+  padding: 0px; }
+
+.statsFloatingList li {
+  list-style-type: none;
+  float: left;
+  margin-right: 10px; }
+
+#relevantLawsList .relevantMaterialTitle {
+  /*float:left;*/ }
+
+.relevantMaterialTitle .divider {
+  color: #000 !important; }
+
+#relevantLawsList #relevantLawsBtn {
+  float: right;
+  padding-left: 5px; }
 
 #relevantLawsList .relevantMaterialContainer {
   display: none;
-  max-height: 800px;
-  overflow-y: auto; }
+  overflow-y: auto;
+  margin-top: 5px;
+  float: left;
+  max-width: 250px;
+  max-height: 230px;
+  margin-left: 0px;
+  position: relative; }
 
 #relevantLawsBtn {
   float: right; }
@@ -213,8 +236,17 @@
   padding: 0px !important;
   width: 100%; }
 
+#ministerMessagesModal .modal-dialog {
+  width: 50%; }
+
+#initialMessagesModal .modal-dialog {
+  width: 50%; }
+
 /*Minister messages modal*/
 #ministerMessagesModal .modal-backdrop {
+  z-index: -1; }
+
+#initialMessagesModal .modal-backdrop {
   z-index: -1; }
 
 .ministerMessagesList li {
@@ -226,8 +258,9 @@
 
 /* Small Devices, Tablets */
 @media only screen and (max-width: 1200px) {
-  #relevantLawsList {
-    display: none; } }
+  /*#relevantLawsList {
+    display: none;
+  }*/ }
 /*Relevant Material*/
 #relevantMaterial {
   float: right; }
@@ -250,6 +283,16 @@
 
 .relevantMaterialContainer a:hover {
   text-decoration: none; }
+
+.commentBox .comment .load {
+  cursor: pointer; }
+
+.commentBox .load-more {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  font-size: 12px;
+  cursor: pointer; }
 
 .commentBox .comment .tag {
   margin-top: 10px; }

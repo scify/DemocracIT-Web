@@ -12,7 +12,7 @@ import play.api.libs.json._
 object ImplicitWrites {
 
   implicit val annotationTypeWrites: Writes[AnnotationTags] = (
-    (JsPath \ "id").write[Long] and
+    (JsPath \ "id").write[Int] and
       (JsPath \ "description").write[String]
     )(unlift(AnnotationTags.unapply))
 

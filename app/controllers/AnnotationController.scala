@@ -22,7 +22,7 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-        val annotationTags = List(AnnotationTags(annotation.annotationTagId,""))
+        val annotationTags = List(AnnotationTags(annotation.annotationTagId,annotation.annotationTagText))
        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
        val comment = Comment(None, annotation.articleId,CommentSource.OpenGov,
                            annotation.body,

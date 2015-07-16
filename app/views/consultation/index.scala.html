@@ -19,19 +19,6 @@
                                                                 @Html(model.relevantLawsToJson())
                                                                 );
         controller.init();
-        $("#relevantLawsBtn").on("click", function(){
-            $("#relevantLawsBtn").toggleClass("clicked");
-            if($("#relevantLawsBtn").hasClass("clicked")) {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
-                $("#relevantLawsBtn i").addClass("fa-chevron-up");
-                $("#relevantLawsList .relevantMaterialContainer").show("slow");
-            }
-            else {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
-                $("#relevantLawsBtn i").addClass("fa-chevron-down");
-                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
-            }
-        });
      })
     </script>
 }
@@ -66,27 +53,55 @@
             } else {
                 <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
             }
+
+            <ul class="statsFloatingList">
+                <li>
+                    <div id="relevantLawsList" class="">
+                        <div class="relevantMaterialTitle">Βρέθηκαν @model.distinctLaws().length σχετικοί νόμοι @if(model.distinctLaws().length > 0){<div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div>}</div>
+                        <ul class="relevantMaterialContainer">
+                        @for(relevantLaw <- model.distinctLaws()) {
+
+                            <li class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></li>
+
+                        }
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#initialMessagesModal">
+                         <span class="divider">|</span> Αρχικο Μήνυμα Διαβούλευσης
+                    </div>
+                </li>
+                @if(model.consultation.isCompletedText) {<li>
+                    <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#ministerMessagesModal">
+                        <span class="divider">|</span> Μηνύματα Υπουργου
+                    </div>
+                </li>
+                    }
+            </ul>
     </section>
 
 
-    <div id="relevantLawsList" class="">
-        <div class="relevantMaterialTitle">Σχετικοί νόμοι <div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div></div>
-        <li class="relevantMaterialContainer">
-        @for(relevantLaw <- model.distinctLaws()) {
+    <div class="modal fade" id="initialMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Αρχικο Μηνυμα Διαβούλευσης</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="ministerMessagesList">
 
-            <ul class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></ul>
+                        <li class="msg">@Html(model.consultation.shortDescr)</li>
 
-        }
-        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#ministerMessagesModal">
-            Launch demo modal
-        </button>
-
-    <!-- Modal -->
-
 
     <div class="modal fade" id="ministerMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -98,8 +113,8 @@
                 <div class="modal-body">
                     <ul class="ministerMessagesList">
 
-                        <li class="msg">ministerMessage.message <div class="date">ministerMessage.prettyDateFormat(ministerMessage.date_added)</div></li>
-
+                        <li class="msg">@Html(model.consultation.completed_text.orNull)</li>
+                        <li class="msg">@Html(model.consultation.report_text.orNull)<div class="url"><a href="@model.consultation.report_url">Σύνδεσμος</a></div></li>
 
                     </ul>
                 </div>
@@ -126,13 +141,13 @@
                           <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
                           <span class="article-title-text">@article.title</span>
                         </div>
-                        <div class="article-body collapse" id="body-@article.id" style="height:0;" >
-                            @Html(article.body)
+                        <div id="body-@article.id" class="collapse " style="height:0;" >
+                            <div class="article-body">
+                                @Html(article.body)
+                            </div>
+                            <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                         </div>
-                        <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum">
-                            @*<a class="open-gov-comments" href="@routes.ConsultationController.getOpenGovComments(model.consultation.id,article.id,None,None)">σχολια στο open gov</a>*@
-                            @*<div data-ann-id="@article.id" class="open-gov-commentbox-wrap"></div>*@
-                        </div>
+
                     </div>
                 </div>
             }

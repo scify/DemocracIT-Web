@@ -18,6 +18,8 @@ case class Consultation( id:Long,
                    organization: Organization,
                    status: Short,
                    report_text: Option[String],
+                         report_url: Option[String],
+                         completed_text: Option[String],
                    articlesNum:Int,
                    opengov_url:String,
                    var articles:List[Article] =Nil)
@@ -30,6 +32,10 @@ case class Consultation( id:Long,
       Pluralizer.get(TimeUnit.HOURS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)," ώρα", " ώρες")
     else
     Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
+  }
+
+  def isCompletedText = {
+    !completed_text.isEmpty
   }
 
   def prettyDateFormat(date:Date) = {

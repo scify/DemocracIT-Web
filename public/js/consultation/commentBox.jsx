@@ -11,7 +11,7 @@
         getCommentsFromServer : function(url){
             var instance = this;
 
-            $.ajax({
+           var promise = $.ajax({
                 method: "GET",
                 url: "/comments/retrieve",
                 cache:false,
@@ -36,12 +36,14 @@
                 error: function(x,z,y){
                     alert(x)
                 }
-            })
+            });
+
+            return promise;
         },
         saveComment : function(url,data){
             var instance = this;
 
-            var comment = {
+            var postedData = {
                 consultationId : this.props.consultationid,
                 articleId: this.props.articleid,
                 body : data.body,
@@ -60,17 +62,17 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data:comment,
+                data:postedData,
                 beforeSend:function(){
                     instance.state.display=true;
                     instance.state.busy=true;
-
                     instance.setState(instance.state);
                 },
-                success : function(response){
-                    comment.id = response.id;
-                    instance.state.discussionthreadid = response.discussionThread.id; //set discussion thread to state
+                success : function(comment){
+                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+
                     instance.state.commentsCount = instance.state.commentsCount+1;
+                    //attach first
                     instance.state.comments.push(comment);
                 },
                 complete: function(){
@@ -87,7 +89,7 @@
         },
         refreshComments : function(){
             var instance = this;
-            if (!instance.state.comments || instance.state.comments.length==0)
+            if (instance.state.commentsCount > instance.state.comments.length )
                 instance.getCommentsFromServer.call(instance);
             else if (instance.state.display)
                 instance.setVisibibility.call(instance,false);
@@ -97,6 +99,9 @@
         toogleBox: function(){
             this.state.display= !this.state.display;
             this.setState(this.state);
+        },
+        shouldDisplayLoadMoreOption : function(){
+             return  this.state.commentsCount > this.state.comments.length;
         },
         render: function() {
             if (this.state.busy)
@@ -113,15 +118,18 @@
                 );
             }
             var topClasses = classNames({hide: this.state.commentsCount==0});
-            var classes = classNames("commentBox",{ hide :!this.state.display});
-
+            var commendBoxclasses = classNames("commentBox",{ hide :!this.state.display});
+            var loadMoreClasses =classNames("load-more",{ hide :!this.shouldDisplayLoadMoreOption()});
             return (
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
-                    <div className={classes}>
-                        <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a>
-                        <CommentForm />
+                    <div className={commendBoxclasses }>
+                        { /*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */ }
+                        <div className={loadMoreClasses} >
+                            <a onClick={this.refreshComments}>φόρτωση ολων των σχολίων</a>
+                        </div>
                         <CommentList data={this.state.comments} />
+                        <CommentForm />
                     </div>
                 </div>
 
@@ -179,10 +187,12 @@
             var date =moment(this.props.data.dateAdded).format('llll');
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
-            var tagInfo ;
-            if (this.props.data.annTagId>0 && this.props.data.tagText && this.props.data.tagText .length>0){
-                tagInfo = <div className="tag"><span >{this.props.data.tagText }</span></div>
-            }
+
+            var tagNodes = this.props.data.annotationTags.map(function (tag) {
+                return (
+                    <div className="tag"><span >{tag.description }</span></div>
+                );
+            });
 
             return (
                 <div className="comment">
@@ -192,7 +202,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        {tagInfo}
+                        {tagNodes}
                     </div>
                     <div className="options">
                         <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
