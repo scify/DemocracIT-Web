@@ -22,16 +22,28 @@ class CommentsRepository {
       // use a magic number... http://stackoverflow.com/questions/26798371/anorm-play-scala-and-postgresql-dynamic-sql-clause-not-working
       //      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
 
-
-      SQL"""
-            select c.*, CAST(c.user_id  AS varchar) as fullName
+      //todo: get the user fields when login/register related tasks are completed
+      //currently we allow only one annotation tag per comment ( public.annotation_items  contains maximum one annotation per comment)
+     SQL"""
+           select c.*, CAST(c.user_id  AS varchar) as fullName,
+                  ant.id as annotationTypeId,
+                  ant.description as annotationTypeDescr
               from public.comments c
-                 inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                 left outer join public.users u on u.id = c.user_id
-                 where t.tagid =$discussionthreadclientid
+                                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                    left outer join public.users u on u.id = c.user_id
+                                    left outer join public.annotation_items i on i.public_comment_id = c.id
+                           		      left outer join public.annotation_types_lkp ant on ant.id = i.annotation_type_id
+            where t.tagid =$discussionthreadclientid
             order by c.date_added desc, c.id desc
             limit $pageSize
-        """.as(CommentsParser.Parse *)
+        """.as {
+                  (CommentsParser.Parse ~ AnnotationTypesParser.Parse map {
+                    tuple => {
+                      tuple._1.annotationTags = List(tuple._2)
+                      tuple._1
+                    }
+                  }) *
+               }
     }
   }
 
@@ -106,7 +118,7 @@ class CommentsRepository {
       val sql = SQL("select * from public.annotation_types_lkp")
 
       sql().map( row =>
-                    AnnotationTags(row[Long]("id"),row[String]("description"))
+                    AnnotationTags(row[Int]("id"),row[String]("description"))
                 ).toList
 
     }

@@ -43,7 +43,7 @@
         saveComment: function saveComment(url, data) {
             var instance = this;
 
-            var comment = {
+            var postedData = {
                 consultationId: this.props.consultationid,
                 articleId: this.props.articleid,
                 body: data.body,
@@ -62,16 +62,14 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data: comment,
+                data: postedData,
                 beforeSend: function beforeSend() {
                     instance.state.display = true;
                     instance.state.busy = true;
-
                     instance.setState(instance.state);
                 },
-                success: function success(response) {
-                    comment.id = response.id;
-                    instance.state.discussionthreadid = response.discussionThread.id; //set discussion thread to state
+                success: function success(comment) {
+                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
                     instance.state.commentsCount = instance.state.commentsCount + 1;
                     instance.state.comments.push(comment);
                 },
@@ -180,18 +178,18 @@
             var date = moment(this.props.data.dateAdded).format("llll");
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
-            var tagInfo;
-            if (this.props.data.annTagId > 0 && this.props.data.tagText && this.props.data.tagText.length > 0) {
-                tagInfo = React.createElement(
+
+            var tagNodes = this.props.data.annotationTags.map(function (tag) {
+                return React.createElement(
                     "div",
                     { className: "tag" },
                     React.createElement(
                         "span",
                         null,
-                        this.props.data.tagText
+                        tag.description
                     )
                 );
-            }
+            });
 
             return React.createElement(
                 "div",
@@ -210,7 +208,7 @@
                         this.props.data.fullName
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
-                    tagInfo
+                    tagNodes
                 ),
                 React.createElement(
                     "div",

@@ -41,7 +41,7 @@
         saveComment : function(url,data){
             var instance = this;
 
-            var comment = {
+            var postedData = {
                 consultationId : this.props.consultationid,
                 articleId: this.props.articleid,
                 body : data.body,
@@ -60,16 +60,14 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data:comment,
+                data:postedData,
                 beforeSend:function(){
                     instance.state.display=true;
                     instance.state.busy=true;
-
                     instance.setState(instance.state);
                 },
-                success : function(response){
-                    comment.id = response.id;
-                    instance.state.discussionthreadid = response.discussionThread.id; //set discussion thread to state
+                success : function(comment){
+                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
                     instance.state.commentsCount = instance.state.commentsCount+1;
                     instance.state.comments.push(comment);
                 },
@@ -179,10 +177,12 @@
             var date =moment(this.props.data.dateAdded).format('llll');
             //new Date(this.props.data.dateAdded).toDateString()
             // console.log(this.props.data.dateAdded);
-            var tagInfo ;
-            if (this.props.data.annTagId>0 && this.props.data.tagText && this.props.data.tagText .length>0){
-                tagInfo = <div className="tag"><span >{this.props.data.tagText }</span></div>
-            }
+
+            var tagNodes = this.props.data.annotationTags.map(function (tag) {
+                return (
+                    <div className="tag"><span >{tag.description }</span></div>
+                );
+            });
 
             return (
                 <div className="comment">
@@ -192,7 +192,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        {tagInfo}
+                        {tagNodes}
                     </div>
                     <div className="options">
                         <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
