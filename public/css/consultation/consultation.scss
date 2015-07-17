@@ -60,16 +60,16 @@
 
 
 
-#toolbar {
-  position:fixed;
- top:0;
- background-color:white;
-  padding:10px;
-  max-width:600px;
-  display:none;
-  border:1px solid gray;
-  border-radius:10px;
-}
+//#toolbar {
+//  position:fixed;
+// top:0;
+// background-color:white;
+//  padding:10px;
+//  max-width:600px;
+//  display:none;
+//  border:1px solid gray;
+//  border-radius:10px;
+//}
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
@@ -81,6 +81,12 @@
 {
   margin-top:10px;
 }
+
+.modal-footer
+{
+  border-top:none;
+}
+
 
 #toolbar hr{
   margin:15px;
@@ -310,14 +316,10 @@ $annotation-icon--color: #fff;
   width:50%;
 }
 
-/*Minister messages modal*/
-#ministerMessagesModal .modal-backdrop {
+.modal-backdrop {
   z-index: -1;
 }
 
-#initialMessagesModal .modal-backdrop {
-  z-index: -1;
-}
 
 .ministerMessagesList li {
   list-style-type: none;

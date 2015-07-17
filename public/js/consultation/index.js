@@ -144,12 +144,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         {
             selectedText = target.parent().text();
             selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
-            left =left - toolbar.width();
+          //  left =left - toolbar.width();
         }
 
-        toolbar.addClass(toolbarClass);
-        toolbar.fadeIn("fast");
-        toolbar.css({top:top, left: left});
+        $("#toolbar-modal").modal("show");
+       // toolbar.addClass(toolbarClass);
+      //  toolbar.fadeIn("fast");
+      //  toolbar.css({top:top, left: left});
         toolbar.find("input[name='annText']").val(selectedText);
 
         var parent = target.closest(".ann")
@@ -161,7 +162,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
     },
     hideToolBar = function(){
-            $("#toolbar").hide();
+        $("#toolbar-modal").modal("hide");
+            // $("#toolbar").hide();
     },
     getDiscussionThreadNumberOfComments = function(articleId,annotationId){
         if (this.discussionThreads.hasOwnProperty(getDiscussionThreadClientId(articleId,annotationId)))
