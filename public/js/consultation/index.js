@@ -74,7 +74,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             else
                 displayToolBar.call(instance,e,getSelectionText(selection));
         });
-        $(".ann-icon").click($.proxy(displayToolBar,instance));
+        $("body").on("click",".ann-icon",displayToolBar.bind(instance));
 
     },
     expandArticleOnClick = function(){
@@ -218,21 +218,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     getDiscussionThreadClientId = function(articleid,annId){
         return articleid+(annId ? annId :"");
     },
-        addRelevantLawsHandler = function(){
-            $("#relevantLawsBtn").on("click", function(){
-                $("#relevantLawsBtn").toggleClass("clicked");
-                if($("#relevantLawsBtn").hasClass("clicked")) {
-                    $("#relevantLawsBtn i").removeClass("fa-chevron-down");
-                    $("#relevantLawsBtn i").addClass("fa-chevron-up");
-                    $("#relevantLawsList .relevantMaterialContainer").show("slow");
-                }
-                else {
-                    $("#relevantLawsBtn i").removeClass("fa-chevron-up");
-                    $("#relevantLawsBtn i").addClass("fa-chevron-down");
-                    $("#relevantLawsList .relevantMaterialContainer").hide("fast");
-                }
-            });
-        },
+    addRelevantLawsHandler = function(){
+        $("#relevantLawsBtn").on("click", function(){
+            $("#relevantLawsBtn").toggleClass("clicked");
+            if($("#relevantLawsBtn").hasClass("clicked")) {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
+                $("#relevantLawsBtn i").addClass("fa-chevron-up");
+                $("#relevantLawsList .relevantMaterialContainer").show("slow");
+            }
+            else {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
+                $("#relevantLawsBtn i").addClass("fa-chevron-down");
+                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
+            }
+        });
+    },
     //fetchOpenGovComments = function(e){
     //    e.preventDefault();
     //    var articleDiv = $(this).closest(".article");
@@ -250,7 +250,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
          hideToolBar();
      },
-        replaceRelevantLaws = function(relevantLaws) {
+     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
                 var replaceText = relevantLaws[i].entity_text;
                 var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
@@ -276,7 +276,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createDiscussionRooms.call(instance);
 
         //tinymce.init({selector:'textarea'})
-        $("#toolbar").find(".close").click(hideToolBar);
+        // $("#toolbar").find(".close").click(hideToolBar);
         $("#save-annotation").click(handleAnnotationSave);
     };
 
