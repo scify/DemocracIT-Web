@@ -242,7 +242,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     //},
      handleAnnotationSave = function(e){
          e.preventDefault();
-         var form = $(this).closest("form");
+         var form = $("#toolbar-modal").find("form");
          var data = {};
          form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
          data.annotationTagText = form.find("option:selected").text(); //tag text of the problem user selected

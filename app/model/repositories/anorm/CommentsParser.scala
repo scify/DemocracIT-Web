@@ -9,12 +9,15 @@ import model.dtos._
 
 object AnnotationTypesParser {
 
-  val Parse: RowParser[AnnotationTags] = {
-    get[Int]("annotationTypeId") ~
-    get[String]("annotationTypeDescr")  map
+  val Parse: RowParser[Option[AnnotationTags]] = {
+    get[Option[Int]]("annotationTypeId") ~
+    get[Option[String]]("annotationTypeDescr")  map
     {
       case annotationTypeId ~ annotationTypeDescr =>
-          AnnotationTags(annotationTypeId, annotationTypeDescr)
+        if (annotationTypeId.isDefined)
+          Some(AnnotationTags(annotationTypeId.get, annotationTypeDescr.get))
+        else
+          None
     }
   }
 }

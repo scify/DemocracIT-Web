@@ -35,11 +35,10 @@ class CommentsRepository {
                            		      left outer join public.annotation_types_lkp ant on ant.id = i.annotation_type_id
             where t.tagid =$discussionthreadclientid
             order by c.date_added desc, c.id desc
-            limit $pageSize
         """.as {
                   (CommentsParser.Parse ~ AnnotationTypesParser.Parse map {
                     tuple => {
-                      tuple._1.annotationTags = List(tuple._2)
+                      tuple._1.annotationTags =  if (tuple._2.isDefined) List(tuple._2.get) else Nil
                       tuple._1
                     }
                   }) *
