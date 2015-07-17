@@ -28,6 +28,12 @@ $ TWITTER_CONSUMER_KEY=key goes here
 $ TWITTER_CONSUMER_SECRET=secret goes here
 ```
 
+And the play app secret (for production configuration - you can generate it by running activator playGenerateSecret command)
+
+```
+$ PLAY_APP_SECRET= secret goes here 
+```
+
 ### Set up the Sass/SCSS transpiler (webstorm and intellij)
 
 https://www.jetbrains.com/idea/help/transpiling-sass-less-and-scss-to-css.html#d532231e166
