@@ -207,6 +207,8 @@
                 );
             });
 
+            var replyClasses = classNames("reply", { hide: this.props.data.source.commentSource == 2 }); //hide for opengov
+
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -243,7 +245,7 @@
                     ),
                     React.createElement(
                         "a",
-                        { className: "reply", href: "#" },
+                        { className: replyClasses, href: "#" },
                         "Απάντηση ",
                         React.createElement("i", { className: "fa fa-reply" })
                     ),

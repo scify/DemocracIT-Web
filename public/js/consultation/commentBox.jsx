@@ -194,6 +194,8 @@
                 );
             });
 
+            var replyClasses = classNames("reply",{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -207,7 +209,7 @@
                     <div className="options">
                         <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
                         <a className="disagree" href="#">Διαφωνώ<i className="fa fa-thumbs-o-down"></i></a>
-                        <a className="reply" href="#">Απάντηση <i className="fa fa-reply"></i></a>
+                        <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
                     </div>
                 </div>
