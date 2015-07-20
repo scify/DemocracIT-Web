@@ -14,6 +14,34 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class CommentsRepository {
 
+  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]):Unit = {
+
+    DB.withConnection { implicit c =>
+
+      //todo: insert if not exists , else update
+      if (liked.isDefined)
+
+          SQL"""
+              UPDATE comment_rating
+                      set liked = ${liked.get}
+                      where user_id = $user_id  and comment_id = $comment_id;
+
+              INSERT INTO comment_rating (user_id,comment_id,liked,date_added)
+                      select $user_id , $comment_id , ${liked.get} , now()
+                             where not exists (select 1 from comment_rating where user_id = $user_id and comment_id = $comment_id );
+
+                """.execute()
+      else
+        SQL"""
+               delete from comment_rating
+                      where user_id = $user_id and comment_id = $comment_id ;
+
+              """.execute()
+
+    }
+
+  }
+
   def getComments(discussionthreadclientid:String,
                   pageSize:Int):List[Comment]  = {
     DB.withConnection { implicit c =>

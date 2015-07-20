@@ -7,11 +7,27 @@ import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import forms._
 import model.dtos._
 import model.services.CommentManager
+import model.viewmodels.forms.RateCommentForm
 import org.joda.time.DateTime
 import play.api.libs.json.{Json, JsValue, JsPath, Writes}
 import utils.ImplicitWrites.FormErrorWrites
 
 class AnnotationController @Inject() (implicit val env: Environment[model.User, SessionAuthenticator]) extends Silhouette[model.User, SessionAuthenticator] {
+
+  var commentManager = new CommentManager()
+
+  def rateComment() = SecuredAction { implicit request =>
+
+      RateCommentForm.form.bindFromRequest.fold(
+        form => {
+          UnprocessableEntity(Json.toJson(form.errors))
+        },
+        rating => {
+          commentManager.rateComment(request.identity.userID,rating.comment_id,rating.liked)
+          Created()
+        }
+      )
+  }
 
   def annotatePost() =  SecuredAction { implicit request =>
 
@@ -32,7 +48,7 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
                            DateTime.now().toDate,
                            1,"",annotationTags,Some(discussionthread))
 
-       val savedComment = new CommentManager().saveComment(comment)
+       val savedComment = commentManager.saveComment(comment)
        Ok(Json.toJson(savedComment))
      }
     )

@@ -17,10 +17,10 @@ object AnnotationForm {
       "discussionthreadid" -> optional(longNumber),
       "discussionthreadclientid" -> text ,
       "discussionThreadText" -> text
-    )(AnnotationViewModel.apply)(AnnotationViewModel.unapply)
+    )(AnnotationFormModel.apply)(AnnotationFormModel.unapply)
   )
 
-  case class AnnotationViewModel(
+  case class AnnotationFormModel(
           consultationId: Long,
           articleId:Long,
           body:String,

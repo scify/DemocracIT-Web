@@ -12,9 +12,9 @@ import org.scify.democracit.solr.DitSorlQuery
 class CommentManager {
 
   private val commentsPageSize = 50
+  val commentsRepository = new CommentsRepository()
 
   def saveComment(comment:Comment): Comment = {
-    val commentsRepository = new CommentsRepository()
 
     if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <=0 )
         comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text)
@@ -24,13 +24,16 @@ class CommentManager {
     comment
   }
 
+  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]) = {
+    commentsRepository.rateComment(user_id,comment_id,liked)
+  }
+
   def getComments(consultationId:Long,
                    articleId:Long,
                    source: String,
                    discussionthreadid:Option[Int],
                    discussionthreadclientid:String): List[Comment] = {
 
-    val commentsRepository = new CommentsRepository()
     val pageSize=10;
     var comments:List[Comment] = Nil
 
