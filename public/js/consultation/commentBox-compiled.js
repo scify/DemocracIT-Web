@@ -11,6 +11,21 @@
                 commentsCount: this.props.commentsCount
             };
         },
+        findTopComments: function findTopComments(comments) {
+
+            if (comments.length < 9) return comments; //dont filter;
+
+            var topComments = _.filter(comments, function (comment) {
+                return comment.likesCounter > 0;
+            }); //get all comments with likes, and then sort them
+
+            topComments = _.sortBy(topComments, function (comment) {
+                return -comment.likesCounter;
+            });
+
+            if (topComments.length > 1) //display top if they more than one
+                return topComments.splice(0, 5);else return comments;
+        },
         getCommentsFromServer: function getCommentsFromServer(url) {
             var instance = this;
 
@@ -30,7 +45,9 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    instance.state.comments = data;
+                    instance.state.allComments = data;
+                    instance.state.topcomments = instance.findTopComments(data);
+                    instance.state.comments = instance.state.topcomments;
                     instance.state.busy = false;
                     instance.state.display = true;
                     instance.setState(instance.state);
@@ -41,6 +58,9 @@
             });
 
             return promise;
+        },
+        loadAll: function loadAll() {
+            this.setState({ comments: this.state.allComments });
         },
         saveComment: function saveComment(url, data) {
             var instance = this;
@@ -118,7 +138,8 @@
             }
             var topClasses = classNames({ hide: this.state.commentsCount == 0 });
             var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
-            var loadMoreClasses = classNames("load-more", { hide: !this.shouldDisplayLoadMoreOption() });
+            var loadAllClasses = classNames("load-all", { hide: !this.shouldDisplayLoadMoreOption() });
+
             return React.createElement(
                 "div",
                 { className: topClasses },
@@ -128,11 +149,14 @@
                     { className: commendBoxclasses },
                     React.createElement(
                         "div",
-                        { className: loadMoreClasses },
+                        { className: loadAllClasses },
+                        "βλέπετε τα ",
+                        this.state.comments.length,
+                        " πιο σημαντικά σχόλια ",
                         React.createElement(
                             "a",
-                            { onClick: this.refreshComments },
-                            "φόρτωση ολων των σχολίων"
+                            { onClick: this.loadAll },
+                            "κλικ εδώ για να τα δείτε όλα"
                         )
                     ),
                     React.createElement(CommentList, { data: this.state.comments }),
@@ -177,7 +201,7 @@
 
         render: function render() {
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(Comment, { data: comment });
+                return React.createElement(Comment, { key: comment.id, data: comment });
             });
 
             return React.createElement(
@@ -296,7 +320,7 @@
                     { className: "options" },
                     React.createElement(
                         "a",
-                        { className: agreeClasses, onClick: this.handleLikeComment, href: "#" },
+                        { className: agreeClasses, onClick: this.handleLikeComment },
                         "Συμφωνώ",
                         React.createElement("i", { className: "fa fa-thumbs-o-up" })
                     ),
@@ -309,7 +333,7 @@
                     ),
                     React.createElement(
                         "a",
-                        { className: disagreeClasses, onClick: this.handleDislikeComment, href: "#" },
+                        { className: disagreeClasses, onClick: this.handleDislikeComment },
                         "Διαφωνώ",
                         React.createElement("i", { className: "fa fa-thumbs-o-down" })
                     ),
@@ -337,6 +361,5 @@
         }
     });
 })();
-/*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */
 
 //# sourceMappingURL=commentBox-compiled.js.map

@@ -157,6 +157,9 @@
 .commentBox .comment .options {
   margin-top: 10px; }
 
+.commentBox .comment .options a {
+  cursor: pointer; }
+
 .commentBox .comment .options .c {
   margin-right: 20px;
   margin-left: 5px;
@@ -278,7 +281,7 @@
 .commentBox .comment .load {
   cursor: pointer; }
 
-.commentBox .load-more {
+.commentBox .load-all {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
