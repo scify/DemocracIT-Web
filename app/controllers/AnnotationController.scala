@@ -24,7 +24,7 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
         },
         rating => {
           commentManager.rateComment(request.identity.userID,rating.comment_id,rating.liked)
-          Created()
+          Created("")
         }
       )
   }

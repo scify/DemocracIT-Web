@@ -80,7 +80,7 @@
                     instance.state.display = instance.state.comments.length>0;
                     instance.setState(instance.state);
                 }
-            })
+            });
 
         },
         setVisibibility : function(display){
@@ -182,11 +182,70 @@
         }
     });
     var Comment = React.createClass({
+        getInitialState: function(){
+            return {
+                        likeCounter:  0 ,//this.props.likeCounter,
+                        dislikeCounter: 0,//this.props.dislikeCounter,
+                        liked : null
+                    };
+        },
+        rateComment: function(){
+            var instance = this;
+           //todo: make ajax call and increment decremet the counters.
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: "/comments/rate",
+                data: { comment_id : this.props.data.id , liked : instance.state.liked},
+                beforeSend:function(){
+                    instance.setState(instance.state);
+                },
+                success : function(response){
+                    var x = "stop";
+                },
+                complete: function(){},
+                error:function(x,y,z){
+                    console.log(x);
+                }
+            })
 
+        },
+        handleLikeComment :function(){ //user pressed the liked button
+            var oldLikeStatus =this.state.liked;
+            var newLikeStatus=true;
+
+            if (oldLikeStatus ===true) { //if comment was already liked, undo it
+                newLikeStatus=null;
+                this.state.likeCounter = this.state.likeCounter -1;
+            }
+            if (oldLikeStatus ===false) //comment was disliked and now it was liked, remove it from counter
+                this.state.dislikeCounter= this.state.dislikeCounter-1;
+
+            if (newLikeStatus===true)
+                this.state.likeCounter = this.state.likeCounter + 1
+
+            this.state.liked= newLikeStatus;
+            this.rateComment();
+        },
+        handleDislikeComment:function(){ //user pressed the dislike button
+            var oldLikeStatus =this.state.liked;
+            var newLikeStatus=false;
+
+            if (oldLikeStatus ===false) { //if comment was already disliked, undo it
+                newLikeStatus=null;
+                this.state.dislikeCounter = this.state.dislikeCounter  -1;
+            }
+            if (oldLikeStatus ===true) //comment was liked and now it was disliked, remove it from counter
+                this.state.likeCounter= this.state.likeCounter-1;
+
+            if (newLikeStatus===false)
+                this.state.dislikeCounter = this.state.dislikeCounter + 1
+
+            this.state.liked= newLikeStatus;
+            this.rateComment();
+        },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-            //new Date(this.props.data.dateAdded).toDateString()
-            // console.log(this.props.data.dateAdded);
 
             var tagNodes = this.props.data.annotationTags.map(function (tag) {
                 return (
@@ -195,7 +254,8 @@
             });
 
             var replyClasses = classNames("reply",{hide: this.props.data.source.commentSource ==2}); //hide for opengov
-
+            var agreeClasses = classNames("agree", {active: this.state.liked===true});
+            var disagreeClasses = classNames("disagree", {active: this.state.liked ===false})
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -207,8 +267,12 @@
                         {tagNodes}
                     </div>
                     <div className="options">
-                        <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
-                        <a className="disagree" href="#">Διαφωνώ<i className="fa fa-thumbs-o-down"></i></a>
+                        <a className={agreeClasses} onClick={this.handleLikeComment} href="#">
+                                Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+                        </a> {this.state.likeCounter}
+                        <a className={disagreeClasses} onClick={this.handleDislikeComment} href="#">
+                                Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
+                        </a> {this.state.dislikeCounter}
                         <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
                     </div>

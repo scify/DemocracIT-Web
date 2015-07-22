@@ -190,10 +190,71 @@
     var Comment = React.createClass({
         displayName: "Comment",
 
+        getInitialState: function getInitialState() {
+            return {
+                likeCounter: 0, //this.props.likeCounter,
+                dislikeCounter: 0, //this.props.dislikeCounter,
+                liked: null
+            };
+        },
+        rateComment: function rateComment() {
+            var instance = this;
+            //todo: make ajax call and increment decremet the counters.
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: "/comments/rate",
+                data: { comment_id: this.props.data.id, liked: instance.state.liked },
+                beforeSend: function beforeSend() {
+                    instance.setState(instance.state);
+                },
+                success: function success(response) {
+                    var x = "stop";
+                },
+                complete: function complete() {},
+                error: function error(x, y, z) {
+                    console.log(x);
+                }
+            });
+        },
+        handleLikeComment: function handleLikeComment() {
+            //user pressed the liked button
+            var oldLikeStatus = this.state.liked;
+            var newLikeStatus = true;
+
+            if (oldLikeStatus === true) {
+                //if comment was already liked, undo it
+                newLikeStatus = null;
+                this.state.likeCounter = this.state.likeCounter - 1;
+            }
+            if (oldLikeStatus === false) //comment was disliked and now it was liked, remove it from counter
+                this.state.dislikeCounter = this.state.dislikeCounter - 1;
+
+            if (newLikeStatus === true) this.state.likeCounter = this.state.likeCounter + 1;
+
+            this.state.liked = newLikeStatus;
+            this.rateComment();
+        },
+        handleDislikeComment: function handleDislikeComment() {
+            //user pressed the dislike button
+            var oldLikeStatus = this.state.liked;
+            var newLikeStatus = false;
+
+            if (oldLikeStatus === false) {
+                //if comment was already disliked, undo it
+                newLikeStatus = null;
+                this.state.dislikeCounter = this.state.dislikeCounter - 1;
+            }
+            if (oldLikeStatus === true) //comment was liked and now it was disliked, remove it from counter
+                this.state.likeCounter = this.state.likeCounter - 1;
+
+            if (newLikeStatus === false) this.state.dislikeCounter = this.state.dislikeCounter + 1;
+
+            this.state.liked = newLikeStatus;
+            this.rateComment();
+        },
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
-            //new Date(this.props.data.dateAdded).toDateString()
-            // console.log(this.props.data.dateAdded);
 
             var tagNodes = this.props.data.annotationTags.map(function (tag) {
                 return React.createElement(
@@ -208,7 +269,8 @@
             });
 
             var replyClasses = classNames("reply", { hide: this.props.data.source.commentSource == 2 }); //hide for opengov
-
+            var agreeClasses = classNames("agree", { active: this.state.liked === true });
+            var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -233,16 +295,20 @@
                     { className: "options" },
                     React.createElement(
                         "a",
-                        { className: "agree", href: "#" },
+                        { className: agreeClasses, onClick: this.handleLikeComment, href: "#" },
                         "Συμφωνώ",
                         React.createElement("i", { className: "fa fa-thumbs-o-up" })
                     ),
+                    " ",
+                    this.state.likeCounter,
                     React.createElement(
                         "a",
-                        { className: "disagree", href: "#" },
+                        { className: disagreeClasses, onClick: this.handleDislikeComment, href: "#" },
                         "Διαφωνώ",
                         React.createElement("i", { className: "fa fa-thumbs-o-down" })
                     ),
+                    " ",
+                    this.state.dislikeCounter,
                     React.createElement(
                         "a",
                         { className: replyClasses, href: "#" },

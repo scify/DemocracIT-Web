@@ -20,21 +20,24 @@ class CommentsRepository {
 
       //todo: insert if not exists , else update
       if (liked.isDefined)
+      {
+          val likedBit = if (liked.get) 1 else 0
 
-          SQL"""
-              UPDATE comment_rating
-                      set liked = ${liked.get}
-                      where user_id = $user_id  and comment_id = $comment_id;
+            SQL"""
+                UPDATE comment_rating
+                        set liked = CAST($likedBit AS BIT)
+                        where user_id = CAST($user_id AS UUID)  and comment_id = $comment_id;
 
-              INSERT INTO comment_rating (user_id,comment_id,liked,date_added)
-                      select $user_id , $comment_id , ${liked.get} , now()
-                             where not exists (select 1 from comment_rating where user_id = $user_id and comment_id = $comment_id );
+                INSERT INTO comment_rating (user_id,comment_id,liked,date_added)
+                        select CAST($user_id AS UUID), $comment_id ,CAST($likedBit AS BIT) , now()
+                               where not exists (select 1 from comment_rating where user_id = CAST($user_id AS UUID) and comment_id = $comment_id );
 
-                """.execute()
+                  """.execute()
+      }
       else
         SQL"""
                delete from comment_rating
-                      where user_id = $user_id and comment_id = $comment_id ;
+                      where user_id = CAST($user_id AS UUID) and comment_id = $comment_id ;
 
               """.execute()
 
