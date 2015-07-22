@@ -223,10 +223,14 @@ $annotation-icon--color: #fff;
 .commentBox .comment .options {
    margin-top: 10px;
 }
-
-.commentBox .comment .options a {
-  display: inline-block;
-  margin-right: 20px;
+.commentBox .comment .options .c {
+  margin-right:20px;
+  margin-left:5px;
+  display:inline-block;
+}
+.commentBox .comment .options a.active
+{
+  color:gray;
 }
 .commentBox .comment .options .fa
 {
@@ -382,8 +386,8 @@ font-size: 12px;
   display: inline-block;
   background-color: lightgray;
   width: auto;
-  border-radius: 10px;
-  padding:4px 13px;
+  border-radius: 4px;
+  padding: 1px 4px;
 }
 .loading-wrp
 {

@@ -184,12 +184,12 @@
     var Comment = React.createClass({
         getInitialState: function(){
             return {
-                        likeCounter:  0 ,//this.props.likeCounter,
-                        dislikeCounter: 0,//this.props.dislikeCounter,
-                        liked : null
+                        likeCounter: this.props.data.likesCounter,
+                        dislikeCounter: this.props.data.dislikesCounter,
+                        liked : this.props.data.loggedInUserRating  //if not null it means has liked/disliked this comment
                     };
         },
-        rateComment: function(){
+        postRateCommentAndRefresh: function(){
             var instance = this;
            //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
@@ -225,7 +225,7 @@
                 this.state.likeCounter = this.state.likeCounter + 1
 
             this.state.liked= newLikeStatus;
-            this.rateComment();
+            this.postRateCommentAndRefresh();
         },
         handleDislikeComment:function(){ //user pressed the dislike button
             var oldLikeStatus =this.state.liked;
@@ -242,7 +242,7 @@
                 this.state.dislikeCounter = this.state.dislikeCounter + 1
 
             this.state.liked= newLikeStatus;
-            this.rateComment();
+            this.postRateCommentAndRefresh();
         },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
@@ -269,11 +269,12 @@
                     </div>
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment} href="#">
-                                Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
-                        </a> {this.state.likeCounter}
+                            Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+
+                        </a><span className="c"> ({this.state.likeCounter})</span>
                         <a className={disagreeClasses} onClick={this.handleDislikeComment} href="#">
                                 Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
-                        </a> {this.state.dislikeCounter}
+                        </a> <span className="c"> ({this.state.dislikeCounter})</span>
                         <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
                     </div>

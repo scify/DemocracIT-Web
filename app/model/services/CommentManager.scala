@@ -32,15 +32,16 @@ class CommentManager {
                    articleId:Long,
                    source: String,
                    discussionthreadid:Option[Int],
-                   discussionthreadclientid:String): List[Comment] = {
+                   discussionthreadclientid:String,
+                   user_id:Option[java.util.UUID]): List[Comment] = {
 
     val pageSize=10;
     var comments:List[Comment] = Nil
 
     if (source=="opengov")
-       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize )
+       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize,user_id )
     else
-      comments =commentsRepository.getComments(discussionthreadclientid,pageSize)
+      comments =commentsRepository.getComments(discussionthreadclientid,pageSize,user_id)
 
     comments
   }

@@ -46,7 +46,7 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
                            Some(request.identity.userID),
                            request.identity.fullName.get,
                            DateTime.now().toDate,
-                           1,"",annotationTags,Some(discussionthread))
+                           1,"",annotationTags,Some(discussionthread),0,0,None)
 
        val savedComment = commentManager.saveComment(comment)
        Ok(Json.toJson(savedComment))

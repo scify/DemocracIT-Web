@@ -192,12 +192,12 @@
 
         getInitialState: function getInitialState() {
             return {
-                likeCounter: 0, //this.props.likeCounter,
-                dislikeCounter: 0, //this.props.dislikeCounter,
-                liked: null
+                likeCounter: this.props.data.likesCounter,
+                dislikeCounter: this.props.data.dislikesCounter,
+                liked: this.props.data.loggedInUserRating //if not null it means has liked/disliked this comment
             };
         },
-        rateComment: function rateComment() {
+        postRateCommentAndRefresh: function postRateCommentAndRefresh() {
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
@@ -233,7 +233,7 @@
             if (newLikeStatus === true) this.state.likeCounter = this.state.likeCounter + 1;
 
             this.state.liked = newLikeStatus;
-            this.rateComment();
+            this.postRateCommentAndRefresh();
         },
         handleDislikeComment: function handleDislikeComment() {
             //user pressed the dislike button
@@ -251,7 +251,7 @@
             if (newLikeStatus === false) this.state.dislikeCounter = this.state.dislikeCounter + 1;
 
             this.state.liked = newLikeStatus;
-            this.rateComment();
+            this.postRateCommentAndRefresh();
         },
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
@@ -300,8 +300,13 @@
                         "Συμφωνώ",
                         React.createElement("i", { className: "fa fa-thumbs-o-up" })
                     ),
-                    " ",
-                    this.state.likeCounter,
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.likeCounter,
+                        ")"
+                    ),
                     React.createElement(
                         "a",
                         { className: disagreeClasses, onClick: this.handleDislikeComment, href: "#" },
@@ -309,7 +314,13 @@
                         React.createElement("i", { className: "fa fa-thumbs-o-down" })
                     ),
                     " ",
-                    this.state.dislikeCounter,
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.dislikeCounter,
+                        ")"
+                    ),
                     React.createElement(
                         "a",
                         { className: replyClasses, href: "#" },
