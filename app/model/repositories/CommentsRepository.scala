@@ -122,7 +122,7 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname
+                      select c.*, o.fullname,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes
