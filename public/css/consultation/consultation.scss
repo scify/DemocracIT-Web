@@ -195,6 +195,8 @@ $annotation-icon--color: #fff;
 .commentBox .comment {
   font-weight: normal;
   padding: 10px 1em;
+  padding-right:40px;
+  position:relative;
 }
 
 .commentBox .comment:nth-child(2n)
@@ -232,6 +234,10 @@ $annotation-icon--color: #fff;
   margin-left:5px;
   display:inline-block;
 }
+.commentBox .comment .icons{
+  position: absolute;   right: 14px;   top: 5px;   opacity: 0.8;
+}
+
 .commentBox .comment .options a.active
 {
   color:gray;

@@ -1,5 +1,8 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads, relevantLaws){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName,
+                                              discussionThreads,
+                                              relevantLaws,
+                                              consultationEndDate){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
@@ -16,6 +19,8 @@ scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,use
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
     }
+
+    this.consultationEndDate = consultationEndDate;
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -187,9 +192,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             var articleid =$(articleDiv).data("id");
 
             var commentBoxProperties= {
-                consultationid      : instance.consultationid,
-                articleid           : articleid,
-                discussionthreadid  : -1,
+                consultationid          : instance.consultationid,
+                consultationEndDate    : instance.consultationEndDate,
+                articleid               : articleid,
+                discussionthreadid      : -1,
                 discussionthreadclientid: getDiscussionThreadClientId(articleid),
                 source :"opengov",
                 commentsCount : $(articleDiv).find(".open-gov").data("count")  //for open gov we retrieve the counter from

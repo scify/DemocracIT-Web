@@ -17,7 +17,8 @@
                                                                 @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(model.discussionThreadsToJson()),
-                                                                @Html(model.relevantLawsToJson())
+                                                                @Html(model.relevantLawsToJson()),
+                                                                Date.parse('@model.consultation.endDate')
                                                                 );
         controller.init();
      })

@@ -159,7 +159,7 @@
                             "κλικ εδώ για να τα δείτε όλα"
                         )
                     ),
-                    React.createElement(CommentList, { data: this.state.comments }),
+                    React.createElement(CommentList, { consultationEndDate: this.props.consultationEndDate, data: this.state.comments }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -200,8 +200,10 @@
         displayName: "CommentList",
 
         render: function render() {
+
+            var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(Comment, { key: comment.id, data: comment });
+                return React.createElement(Comment, { consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
 
             return React.createElement(
@@ -277,6 +279,9 @@
             this.state.liked = newLikeStatus;
             this.postRateCommentAndRefresh();
         },
+        componentDidMount: function componentDidMount() {
+            $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
+        },
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
 
@@ -296,6 +301,9 @@
             var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
+            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+            var iconsClasses = classNames("icons", { hide: this.props.data.source.commentSource == 2 || this.props.data.dateAdded < this.props.consultationEndDate
+            });
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -355,6 +363,15 @@
                         "span",
                         { className: "date" },
                         date
+                    )
+                ),
+                React.createElement(
+                    "div",
+                    { className: iconsClasses },
+                    React.createElement(
+                        "a",
+                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
+                        React.createElement("img", { src: "/assets/images/closed.gif" })
                     )
                 )
             );

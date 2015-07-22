@@ -152,7 +152,7 @@
                         <div className={loadAllClasses} >
                             βλέπετε τα { this.state.comments.length } πιο σημαντικά σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
                         </div>
-                        <CommentList data={this.state.comments} />
+                        <CommentList consultationEndDate={this.props.consultationEndDate} data={this.state.comments} />
                         <CommentForm />
                     </div>
                 </div>
@@ -192,9 +192,11 @@
     });
     var CommentList = React.createClass({
         render: function() {
+
+            var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <Comment key={comment.id} data={comment} />
+                    <Comment consultationEndDate={instance .props.consultationEndDate} key={comment.id} data={comment} />
                 );
             });
 
@@ -268,6 +270,9 @@
             this.state.liked= newLikeStatus;
             this.postRateCommentAndRefresh();
         },
+        componentDidMount : function(){
+            $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
+        },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
 
@@ -281,6 +286,11 @@
             var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false})
+            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+            var iconsClasses = classNames("icons",
+                                          { hide: this.props.data.source.commentSource ==2 ||
+                                                  this.props.data.dateAdded < this.props.consultationEndDate
+                                          });
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -302,6 +312,9 @@
                         <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
                     </div>
+                    <div className={iconsClasses}>
+                        <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                     </div>
                 </div>
             );
         }
