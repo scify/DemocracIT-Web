@@ -150,7 +150,7 @@
                     <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
                     <div className={commendBoxclasses }>
                         <div className={loadAllClasses} >
-                            βλέπετε τα { this.state.comments.length } πιο σημαντικά σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
+                            βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
                         </div>
                         <CommentList consultationEndDate={this.props.consultationEndDate} data={this.state.comments} />
                         <CommentForm />

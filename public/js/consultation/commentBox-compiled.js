@@ -152,7 +152,7 @@
                         { className: loadAllClasses },
                         "βλέπετε τα ",
                         this.state.comments.length,
-                        " πιο σημαντικά σχόλια ",
+                        " πιο δημοφιλη σχόλια ",
                         React.createElement(
                             "a",
                             { onClick: this.loadAll },
