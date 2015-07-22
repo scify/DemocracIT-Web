@@ -268,7 +268,8 @@
                 );
             });
 
-            var replyClasses = classNames("reply", { hide: this.props.data.source.commentSource == 2 }); //hide for opengov
+            //todo: enable reply functionality, now its hidden
+            var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             return React.createElement(
