@@ -128,8 +128,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
             counter++;
         }
-        $(".article-body,.article-title-text, #consultation-header .title").each(function(i,el){
-         recurseAllTextNodesAndApply(el,action );
+        $(".article-body,.article-title-text").each(function(i,el){
+            var html = $(el).html();
+            html = html.replace(/<br>/g,"#brNode#").replace(/<br\/>/g,"#brNode#");
+            $(el).html(html);
+           recurseAllTextNodesAndApply(el,action );
+            html= $(this).html().replace(/#brNode#/g,"<br>");
+            $(this).html(html);
         });
 
     },
