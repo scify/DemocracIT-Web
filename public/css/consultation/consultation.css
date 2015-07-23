@@ -1,9 +1,45 @@
+h2 {
+  font-size: 16px; }
+
+#header {
+  font-size: 12px; }
+
+#header.active {
+  background-color: #f4fef4; }
+
+#header .message h2 {
+  margin-top: 0;
+  margin-bottom: 5px; }
+
+#header .message {
+  margin-bottom: 20px; }
+
+#duration {
+  border-radius: 2px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 5px; }
+
+.inactive #duration {
+  border: 1px solid green; }
+
+.active #duration {
+  border: 1px solid darkblue; }
+
+#duration .dates {
+  padding: 10px 0px; }
+
+#consulation-articles-summary {
+  background-color: lightgray;
+  margin-bottom: 20px; }
+
 .highlight {
   color: red; }
 
 #consultation-title {
   font-size: 18px;
-  margin-top: 20px; }
+  margin-top: 20px;
+  margin-bottom: 40px; }
 
 #consultation-title a {
   font-size: 11px; }
@@ -19,7 +55,7 @@
   vertical-align: -1px;
   width: 11px;
   position: absolute;
-  top: 8px;
+  top: 5px;
   z-index: 10; }
 
 .show-hide.collapsed span:first-child,
@@ -27,8 +63,7 @@
   display: none; }
 
 .show-hide.collapsed span:last-child {
-  display: block;
-  margin-top: 2px; }
+  display: block; }
 
 .article {
   padding-top: 20px;
@@ -78,6 +113,12 @@
 .ann #toolbar {
   display: block; }
 
+.article-title-text .ann {
+  width: 97%; }
+
+#consultation-body li {
+  list-style: none; }
+
 .ann {
   display: inline-block;
   position: relative;
@@ -85,13 +126,15 @@
   margin-top: 5px;
   margin-bottom: 10px;
   padding-bottom: 3px;
-  padding-top: 3px; }
+  padding-top: 3px;
+  width: 100%; }
 
 .title .ann {
   width: 98%;
   margin-left: 11px;
   padding-left: 5px;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  padding-top: 0; }
 
 .title .ann-icon {
   padding-left: 0; }
@@ -102,12 +145,6 @@
 .ann p {
   padding: 0;
   margin: 0; }
-
-.article-title-text .ann {
-  width: 97%; }
-
-#consultation-body li {
-  list-style: none; }
 
 .ann:hover .ann-icon {
   display: block; }
@@ -122,7 +159,7 @@
   position: absolute;
   width: 100%;
   top: -17px;
-  font-size: 11px;
+  font-size: 12px;
   left: 0; }
 
 #results tr {
@@ -131,6 +168,53 @@
   margin-bottom: 10px;
   padding-bottom: 10px;
   padding-top: 10px; }
+
+.activeCons {
+  color: #3c763d; }
+
+.inactiveCons {
+  color: #c12e2a; }
+
+/*Not logged in message*/
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px; }
+
+.aside-button {
+  padding: 6px 7px;
+  color: white;
+  background-color: #428bca;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  text-align: center; }
+
+.aside-button.completed {
+  background-color: #f47a21; }
+
+.aside-button .fa {
+  margin-right: 5px;
+  font-size: 26px;
+  vertical-align: middle; }
+
+.aside-button a, .aside-button {
+  color: white; }
+
+#ministerMessagesModal .modal-dialog {
+  width: 50%; }
+
+#initialMessagesModal .modal-dialog {
+  width: 50%; }
+
+.modal-backdrop {
+  z-index: -1; }
+
+.ministerMessagesList li {
+  list-style-type: none; }
+
+.ministerMessagesList li .date {
+  float: right;
+  background-color: lightgray; }
 
 #comment-box-wrp {
   color: #141823;
@@ -196,107 +280,6 @@
 
 .load {
   cursor: pointer; }
-
-.activeCons {
-  color: #3c763d; }
-
-.inactiveCons {
-  color: #c12e2a; }
-
-/*Not logged in message*/
-.notLoggedinWrapper .fa-exclamation-triangle {
-  float: left;
-  margin-right: 10px;
-  margin-top: 3px; }
-
-/*Relevant Laws*/
-#relevantLawsList {
-  /*position: absolute;
-  margin-left: 2%;
-  margin-top: -65px;
-  width: 7%;*/ }
-
-.statsFloatingList {
-  padding: 0px; }
-
-.statsFloatingList li {
-  list-style-type: none;
-  float: left;
-  margin-right: 10px; }
-
-#relevantLawsList .relevantMaterialTitle {
-  /*float:left;*/ }
-
-.relevantMaterialTitle .divider {
-  color: #000 !important; }
-
-#relevantLawsList #relevantLawsBtn {
-  float: right;
-  padding-left: 5px; }
-
-#relevantLawsList .relevantMaterialContainer {
-  display: none;
-  overflow-y: auto;
-  margin-top: 5px;
-  float: left;
-  max-width: 250px;
-  max-height: 230px;
-  margin-left: 0px;
-  position: relative; }
-
-#relevantLawsBtn {
-  float: right; }
-
-#relevantLawsList li {
-  list-style-type: none; }
-
-#relevantLawsList .url {
-  padding: 0px !important;
-  width: 100%; }
-
-#ministerMessagesModal .modal-dialog {
-  width: 50%; }
-
-#initialMessagesModal .modal-dialog {
-  width: 50%; }
-
-.modal-backdrop {
-  z-index: -1; }
-
-.ministerMessagesList li {
-  list-style-type: none; }
-
-.ministerMessagesList li .date {
-  float: right;
-  background-color: lightgray; }
-
-/* Small Devices, Tablets */
-@media only screen and (max-width: 1200px) {
-  /*#relevantLawsList {
-    display: none;
-  }*/ }
-/*Relevant Material*/
-#relevantMaterial {
-  float: right; }
-
-.relevantMaterialTitle {
-  color: #428bca;
-  margin-bottom: 5px;
-  text-align: left; }
-
-.relevantMaterialContainer {
-  float: right;
-  padding: 10px;
-  background-color: #428bca; }
-
-.relevantMaterialContainer a {
-  color: #fff; }
-
-.relevantMaterialContainer .url {
-  margin-bottom: 2px; }
-
-.relevantMaterialContainer a:hover {
-  text-decoration: none; }
 
 .commentBox .comment .load {
   cursor: pointer; }

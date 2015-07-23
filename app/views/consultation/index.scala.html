@@ -1,5 +1,5 @@
 @import model.viewmodels.ConsultationViewModel
-@(model: ConsultationViewModel)
+@(vm: ConsultationViewModel)
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
@@ -12,13 +12,13 @@
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),
-                                                                @model.consultation.id,
-                                                                @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else "''"),
-                                                                @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"),
-                                                                @Html(model.discussionThreadsToJson()),
-                                                                @Html(model.relevantLawsToJson()),
-                                                                Date.parse('@model.consultation.endDate')
+        var controller = new scify.ConsultationIndexPageHandler(@Html(vm.annotationTypesToJson()),
+                                                                @vm.consultation.id,
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                @Html(vm.discussionThreadsToJson()),
+                                                                @Html(vm.relevantLawsToJson()),
+                                                                Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
      })
@@ -34,134 +34,128 @@
 @layout("DemocracIT", css, js,None) {
 
 
-
-
-    <div id="wrapper" class="container">
-
-        <div class="row">
-            <div class="col-md-12">
-                    <h1 id="consultation-title">@Html(model.consultation.title)  <a href="@model.consultation.opengov_url" title="η διαβούλευση στο open.gov" target="_blank">open.gov</a></h1>
-            </div>
-        </div>
-
-
-
-        <section id="stats" class="row">
-            <div class="col-md-12">
-
-                Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.prettyDateFormat(model.consultation.startDate) έως @model.consultation.prettyDateFormat(model.consultation.endDate) |
-
-                <div id="relevantMaterial" class="">
-                    <div class="relevantMaterialTitle">Σχετικό υλικό:</div>
-                    <div class="relevantMaterialContainer">
-                    @for(relevantMaterial <- model.relevantMaterials) {
-
-                        <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> @relevantMaterial.title</a></div>
-
-                    }
-                    </div>
-                </div>
-
-
-                @if(model.consultation.isActive) {
-                    <div class="consState activeCons">Ενεργή Διαβούλευση</div>
-                } else {
-                    <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
-                }
-
-                <ul class="statsFloatingList">
-                    <li>
-                        <div id="relevantLawsList" class="">
-                            <div class="relevantMaterialTitle">Βρέθηκαν @model.distinctLaws().length σχετικοί νόμοι @if(model.distinctLaws().length > 0){<div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div>}</div>
-                            <ul class="relevantMaterialContainer">
-                            @for(relevantLaw <- model.distinctLaws()) {
-
-                                <li class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></li>
-
-                            }
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#initialMessagesModal">
-                            <span class="divider">|</span> Αρχικο Μήνυμα Διαβούλευσης
-                        </div>
-                    </li>
-                    @if(model.consultation.isCompletedText) {<li>
-                        <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#ministerMessagesModal">
-                            <span class="divider">|</span> Μηνύματα Υπουργου
-                        </div>
-                    </li>
-                    }
-                </ul>
-            </div>
-
-
-        </section>
-
-        <section id="consultation-body">
-            @for(article <- model.consultation.articles) {
-                <div data-id="@article.id"  class="row article ">
+        <div id="header" class="@{if (vm.consultation.isActive) "active" else "inactive"}">
+            <div class="container">
+                <div class="row">
                     <div class="col-md-12">
-                        <div class="title">
-                          <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
-                          <span class="article-title-text">@article.title</span>
+                        <h1 id="consultation-title">@Html(vm.consultation.title)  <a href="@vm.consultation.opengov_url" title="η διαβούλευση στο open.gov" target="_blank">open.gov</a></h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <div id="intro-text" class="message">
+                            <h2>Εισαγωγή:</h2>
+                            @Html(vm.consultation.shortDescr)
                         </div>
-                        <div id="body-@article.id" class="collapse " style="height:0;" >
-                            <div class="article-body">
-                                @Html(article.body)
+                    </div>
+                    <div class="col-md-2">
+                        <div id="duration">
+                            @if(vm.consultation.isActive) {
+                                <span class="consState activeCons">ενεργη</span>
+                            } else {
+                                <span class="consState inactiveCons">ολοκληρώθηκε</span>
+                            }
+                            <div class="dates">
+                                Αναρτήθηκε
+                                <br>
+                                @vm.consultation.prettyDateFormat(vm.consultation.startDate)<br>
+                                λήξη
+                                <br>
+                                @vm.consultation.prettyDateFormat(vm.consultation.endDate)
                             </div>
-                            <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
+                            Διάρκεια @vm.consultation.totalDurationFormatted
+
                         </div>
+                        <div id="aside">
+                        @for(relevantMaterial <- vm.relevantMaterials) {
+                            <div class="aside-button">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="@relevantMaterial.pdf_url" target="_blank"> @relevantMaterial.title</a>
+                            </div>
+                        }
+                            @if(vm.consultation.report_url.isDefined){
+                                <div class="aside-button">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                    <a href="@vm.consultation.report_url" target="_blank"> Εκθεση διαβουλευσης</a>
+                                </div>
+                                }
+
+                            @if(vm.consultation.report_text.isDefined) {
+                                <div  class="aside-button completed">
+                                    <i class="fa fa-inbox"></i>
+                                    <a href="#" target="_blank"> Αναγγελία ολοκλήρωσης</a>
+                                </div>
+                            }
+                        </div>
+
+
 
                     </div>
                 </div>
-            }
-        </section>
-        <div id="comment-box-wrp"></div>
-    </div>
-
-    <div class="modal fade" id="initialMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Αρχικο Μηνυμα Διαβούλευσης</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="ministerMessagesList">
-
-                        <li class="msg">@Html(model.consultation.shortDescr)</li>
-
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
-                </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" id="ministerMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Μηνύματα Υπουργού</h4>
+        <div  class="container">
+                <div id="consulation-articles-summary"  class="row">
+                    <div class="col-md-12">
+                        <h2>Περιεχόμενο διαβούλευσης</h2>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <ul class="ministerMessagesList">
+         <div class="row">
 
-                        <li class="msg">@Html(model.consultation.completed_text.orNull)</li>
-                        <li class="msg">@Html(model.consultation.report_text.orNull)<div class="url"><a href="@model.consultation.report_url">Σύνδεσμος</a></div></li>
+             <div class="col-md-6">Περιεχόμενο και σχολιασμός</div>
+             <div class="col-md-6">Περιεχόμενο και σχολιασμός</div>
 
-                    </ul>
+         </div>
+                <div id="relevantLawsList" class="row">
+                    <div class="col-md-12">
+
+                    @if(vm.distinctLaws().length>0) {
+                        Γίνονται @vm.distinctLaws().length αναφορές σε νόμους
+                        <table class="table table-striped">
+                            <thead><tr>
+                                <th>#</th>
+                                <th>Αναφόρα</th>
+                            </tr>
+                            </thead>
+
+                            @for(i <- 0 until vm.distinctLaws().length) {
+                                <tr>
+                                    <td> @{i+1}</td>
+                                    <td>
+                                        <a href="@vm.distinctLaws()(i).pdf_url"> @vm.distinctLaws()(i).entity_text</a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
-                </div>
-            </div>
         </div>
-    </div>
+        <div class="container">
+            <section id="consultation-body">
+                @for(article <- vm.consultation.articles) {
+                    <div data-id="@article.id"  class="row article ">
+                        <div class="col-md-12">
+                            <div class="title">
+                              <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
+                              <span class="article-title-text">@article.title</span>
+                            </div>
+                            <div id="body-@article.id" class="collapse " style="height:0;" >
+                                <div class="article-body">
+                                    @Html(article.body)
+                                </div>
+                                <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </section>
+            <div id="comment-box-wrp"></div>
+        </div>
+
+
 
     <div class="modal fade" id="toolbar-modal" tabindex="-1" role="dialog" aria-labelledby="annotate-toolbar">
         <div class="modal-dialog" role="document">
@@ -179,11 +173,11 @@
                                 <blockquote></blockquote>
                             </div>
                             <div>
-                            @if(model.user.isDefined){
+                            @if(vm.user.isDefined){
                                 <hr>
                                 <select name="annotationTagId">
                                     <option value="-1">Υπόδειξη προβλήματος:</option>
-                                    @for(annotation <- model.allowedAnnotations){
+                                    @for(annotation <- vm.allowedAnnotations){
                                         <option value="@annotation.id">@annotation.description</option>
                                     }
                                 </select>
@@ -210,7 +204,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                @if(model.user.isDefined) {
+                @if(vm.user.isDefined) {
                     <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
                 }
                     <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
