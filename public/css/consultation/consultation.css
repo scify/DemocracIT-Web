@@ -1,9 +1,12 @@
 .highlight {
   color: red; }
 
-#consultation-header .title {
-  font-size: 16px;
+#consultation-title {
+  font-size: 18px;
   margin-top: 20px; }
+
+#consultation-title a {
+  font-size: 11px; }
 
 .show-hide {
   border: medium none;
@@ -14,14 +17,18 @@
   line-height: 20px;
   padding: 0;
   vertical-align: -1px;
-  width: 11px; }
+  width: 11px;
+  position: absolute;
+  top: 8px;
+  z-index: 10; }
 
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
   display: none; }
 
 .show-hide.collapsed span:last-child {
-  display: inline; }
+  display: block;
+  margin-top: 2px; }
 
 .article {
   padding-top: 20px;
@@ -74,11 +81,27 @@
 .ann {
   display: inline-block;
   position: relative;
-  width: 90%;
-  padding-right: 5%; }
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 3px;
+  padding-top: 3px; }
+
+.title .ann {
+  width: 98%;
+  margin-left: 11px;
+  padding-left: 5px;
+  margin-bottom: 0; }
+
+.title .ann-icon {
+  padding-left: 0; }
 
 .ann:hover {
-  background-color: lightyellow; }
+  background-color: #fefbd1; }
+
+.ann p {
+  padding: 0;
+  margin: 0; }
 
 .article-title-text .ann {
   width: 97%; }
@@ -90,28 +113,17 @@
   display: block; }
 
 .ann-icon {
-  border-radius: 8px;
-  cursor: pointer;
   display: none;
-  font: 12px Arial,sans-serif;
-  padding-bottom: 2px;
-  padding-top: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+  padding: 0px 10px;
   position: absolute;
-  right: 6px;
-  text-align: center;
-  top: 0;
-  width: 23px;
-  color: #fff;
-  background: lightgray; }
-
-.ann-icon:before {
-  border-style: solid;
-  border-width: 0 0 8px 7px;
-  bottom: -6px;
-  content: "";
-  position: absolute;
-  right: 8px;
-  border-color: transparent lightgray; }
+  width: 100%;
+  top: -17px;
+  font-size: 11px;
+  left: 0; }
 
 #results tr {
   border-bottom: 1px solid lightgray;

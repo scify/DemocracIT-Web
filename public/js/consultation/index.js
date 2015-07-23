@@ -125,7 +125,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var counter=0;
         var action = function(element)
         {
-            $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
+            $(element).wrap("<div data-id='ann-"+counter+"' class='ann'></div>");
             counter++;
         }
         $(".article-body,.article-title-text").each(function(i,el){
@@ -138,8 +138,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
 
     },
-    attachBallons = function(){
-        $(".ann").append("<span class='ann-icon'>+</span>");
+    attachAnnotationPrompts= function(){
+        $(".ann").append("<div class='ann-icon'><a href='javascript:void(0)'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</a></div>");
     },
     displayToolBar = function(e,selectedText){
         //todo: Use react.js for this.
@@ -275,7 +275,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         moment.locale('el');
 
         createAnnotatableAreas();
-        attachBallons();
+        attachAnnotationPrompts();
         attachAnnotationEvents();
 
         replaceRelevantLaws(this.relevantLaws);
