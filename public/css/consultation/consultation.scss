@@ -7,6 +7,7 @@ h2
   font-size:16px;
 }
 
+// <editor-fold descr="header">
 
 #header
 {
@@ -15,6 +16,21 @@ h2
 #header.active
 {
   background-color:#f4fef4;
+}
+
+
+#consultation-title {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+#consultation-title a {
+  font-size: 11px;
+}
+
+#header .message h3
+{
+  font-size:16px;
 }
 #header .message h2
 {
@@ -30,7 +46,7 @@ h2
   border-radius: 2px;
   padding: 10px;
   text-align: center;
-  margin-bottom:5px;
+  margin-bottom:10px;
 }
 .inactive #duration
 {
@@ -47,29 +63,10 @@ h2
 }
 
 
+// </editor-fold>
 
-#consulation-articles-summary
-{
-  background-color:lightgray;
-  margin-bottom: 20px;
-}
-
-.highlight
-{
-  color:red;
-}
-
-#consultation-title {
-  font-size: 18px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-#consultation-title a {
-  font-size: 11px;
-}
-
-.show-hide
-{
+// <editor-fold descr="articles">
+.show-hide {
   border: medium none;
   box-shadow: none;
   color: gray;
@@ -83,10 +80,8 @@ h2
   top: 5px;
   z-index: 10;
 }
-
 .show-hide.collapsed span:first-child,
-.show-hide span:last-child
-{
+.show-hide span:last-child {
   display:none;
 }
 .show-hide.collapsed span:last-child
@@ -94,7 +89,6 @@ h2
   display:block;
 
 }
-
 
 .article {
   padding-top: 20px;
@@ -109,6 +103,11 @@ h2
   line-height: 1.6em;
   margin-top:10px;
 }
+
+// </editor-fold>
+
+// <editor-fold descr="toolbar">
+
 
 //#toolbar {
 //  position:fixed;
@@ -137,6 +136,11 @@ h2
   border-top:none;
 }
 
+
+.highlight
+{
+  color:red;
+}
 
 #toolbar hr{
   margin:15px;
@@ -213,8 +217,7 @@ h2
   display: block;
 }
 
-.ann-icon
-{
+.ann-icon{
   display:none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -228,28 +231,7 @@ h2
   left: 0;
 }
 
-#results tr{
-  border-bottom: 1px solid lightgray;
-  display: block;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-
-.activeCons {
-  color: #3c763d;
-}
-.inactiveCons {
-  color: #c12e2a;
-}
-
-/*Not logged in message*/
-
-.notLoggedinWrapper .fa-exclamation-triangle {
-  float: left;
-  margin-right: 10px;
-  margin-top: 3px;
-}
+// </editor-fold >
 
 // <editor-fold descr="aside">
 
@@ -258,8 +240,11 @@ h2
   color:white;
   background-color: #428bca;
   border-radius: 2px;
-  margin-bottom:20px;
-  text-align: center;
+  margin-bottom:10px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .aside-button.completed {
@@ -276,6 +261,10 @@ h2
   color:white;
 }
 
+.aside-button#final-doc
+{
+  background-color:green;
+}
 
 
 
@@ -306,11 +295,6 @@ h2
 
 // <editor-fold descr="comments">
 
-
-#comment-box-wrp {
-  color: #141823;
-  margin-top: 1em;
-}
 .commentBox {
   background-color: #f6f7f8;
   font-size: 12px;
@@ -486,3 +470,62 @@ h2
 
 
 // </editor-fold>
+
+#results tr{
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.activeCons {
+  color: #3c763d;
+}
+.inactiveCons {
+  color: #c12e2a;
+}
+
+/*Not logged in message*/
+
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+#tabs.nav
+{
+
+  background-color:#254254;
+}
+#tabs.nav-tabs
+{
+  border: none;
+}
+#tabs.nav-tabs>li {
+  float: left;
+  margin-bottom: 0px;
+  border: none;
+  border-radius: 0;
+}
+
+#tabs.nav-tabs > li > a {
+  background-color: transparent;
+  border:none;
+  color: white;
+  border-radius:0;
+}
+#tabs.nav-tabs > li > a:hover{
+  background-color:#ed6d46;
+}
+
+#tabs.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{
+
+  border: none;
+  border-radius: 0;
+  cursor: default;
+  background-color:#7cb6f7;
+  color: white;
+}

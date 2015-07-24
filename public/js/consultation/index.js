@@ -112,7 +112,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //an element can be annotated if all it's children are #TEXT OR SUP nodes
         var bannedNodeFound=false;
         for (var i = 0; i < element.childNodes.length; i++) {
-            if ( element.childNodes[i].nodeName !="SUP" && element.childNodes[i].nodeName !="#text"  )
+            if ( element.childNodes[i].nodeName !="SUP" &&
+                 element.childNodes[i].nodeName !="#text" &&
+                element.childNodes[i].nodeName !="STRONG" )
                 bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
         }
         if (bannedNodeFound || element.textContent.trim().length==0)
@@ -267,9 +269,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
                 $("div[data-id="+ relevantLaws[i].article_id +"]").html(replacedHtml);
             }
-
         },
-
+        removeParagraphsWithNoText = function(){
+            $(".message").find("p").each(function(i,el){
+                if ($.trim($(this).text()).length==0)
+                    $(this).remove();
+            });
+        }
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -285,7 +291,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         //$("body").on("click",".open-gov-comments", fetchOpenGovComments);
         createDiscussionRooms.call(instance);
-
+        removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
         // $("#toolbar").find(".close").click(hideToolBar);
         $("#save-annotation").click(handleAnnotationSave);
