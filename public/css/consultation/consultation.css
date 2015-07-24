@@ -122,9 +122,9 @@ h2 {
   display: inline-block;
   position: relative;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding-bottom: 3px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
   padding-top: 3px;
   width: 100%; }
 
@@ -154,12 +154,17 @@ h2 {
   border-top-right-radius: 5px;
   cursor: pointer;
   text-align: left;
-  padding: 0px 10px;
+  padding: 5px 10px;
   position: absolute;
   width: 100%;
-  top: -17px;
+  top: -26px;
   font-size: 12px;
-  left: 0; }
+  left: 0;
+  background-color: #fefbd1;
+  color: blue; }
+
+a.load {
+  color: darkred; }
 
 .aside-button {
   padding: 6px 7px;

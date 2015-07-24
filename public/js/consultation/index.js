@@ -141,7 +141,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
     },
     attachAnnotationPrompts= function(){
-        $(".ann").append("<div class='ann-icon'><a href='javascript:void(0)'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</a></div>");
+        $(".ann").append("<div class='ann-icon'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</div>");
     },
     displayToolBar = function(e,selectedText){
         //todo: Use react.js for this.
