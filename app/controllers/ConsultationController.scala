@@ -36,11 +36,15 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
                    discussionthreadid:Option[Int] ,
                    discussionthreadclientid:String,
                    page:Option[Int]
-                   ) = Action {
+                   ) = UserAwareAction {  implicit request =>
 
     import utils.ImplicitWrites._
 
-    val comments = commentManager.getComments(consultationId,articleId, source,discussionthreadid,discussionthreadclientid)
+    val comments = commentManager.getComments(consultationId,articleId,
+                                              source,
+                                              discussionthreadid,
+                                              discussionthreadclientid,
+                                              if (request.identity.isDefined) Some(request.identity.get.userID) else None)
     Ok(Json.toJson(comments))
   }
 }

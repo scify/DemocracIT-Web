@@ -9,12 +9,15 @@ import model.dtos._
 
 object AnnotationTypesParser {
 
-  val Parse: RowParser[AnnotationTags] = {
-    get[Int]("annotationTypeId") ~
-    get[String]("annotationTypeDescr")  map
+  val Parse: RowParser[Option[AnnotationTags]] = {
+    get[Option[Int]]("annotationTypeId") ~
+    get[Option[String]]("annotationTypeDescr")  map
     {
       case annotationTypeId ~ annotationTypeDescr =>
-          AnnotationTags(annotationTypeId, annotationTypeDescr)
+        if (annotationTypeId.isDefined)
+          Some(AnnotationTags(annotationTypeId.get, annotationTypeDescr.get))
+        else
+          None
     }
   }
 }
@@ -34,10 +37,13 @@ object CommentsParser{
     get[Date]("date_added") ~
     int("revision") ~
     str("depth") ~
-    get[Option[String]]("annotatedText")   map
+    get[Option[String]]("annotatedText") ~
+    get[Option[Int]]("likes") ~
+    get[Option[Int]]("dislikes") ~
+    get[Option[Boolean]]("userrating")  map
       {
         case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~
-             user_id ~ full_name ~ date_added ~ revision ~depth ~ annotatedText  =>
+             user_id ~ full_name ~ date_added ~ revision ~depth ~ annotatedText  ~ likes ~ dislikes ~ userrating =>
 
           val discussionThread = if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id,"","",None)) else None
           new Comment(Some(id),
@@ -51,8 +57,10 @@ object CommentsParser{
                       revision,
                       depth,
                       Nil,
-                      discussionThread
-                      )
+                      discussionThread,
+                      likes.getOrElse(0),
+                      dislikes.getOrElse(0),
+                      userrating)
       }
 
   }

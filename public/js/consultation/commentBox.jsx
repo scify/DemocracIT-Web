@@ -8,6 +8,25 @@
                      commentsCount: this.props.commentsCount
             };
         },
+        findTopComments : function(comments){
+
+            if (comments.length<9)
+                return comments;  //dont filter;
+
+            var topComments =_.filter(comments,function(comment){
+                return comment.likesCounter >0;
+            }); //get all comments with likes, and then sort them
+
+            topComments =_.sortBy(topComments,function(comment){
+               return    -comment.likesCounter;
+            })
+
+            if (topComments.length>1) //display top if they more than one
+                return topComments.splice(0,5);
+            else
+                return comments;
+
+        },
         getCommentsFromServer : function(url){
             var instance = this;
 
@@ -27,7 +46,9 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    instance.state.comments = data;
+                    instance.state.allComments = data;
+                    instance.state.topcomments = instance.findTopComments(data);
+                    instance.state.comments =instance.state.topcomments;
                     instance.state.busy=false;
                     instance.state.display=true;
                     instance.setState(instance.state);
@@ -39,6 +60,9 @@
             });
 
             return promise;
+        },
+        loadAll: function(){
+            this.setState({comments:this.state.allComments})
         },
         saveComment : function(url,data){
             var instance = this;
@@ -80,7 +104,7 @@
                     instance.state.display = instance.state.comments.length>0;
                     instance.setState(instance.state);
                 }
-            })
+            });
 
         },
         setVisibibility : function(display){
@@ -119,16 +143,16 @@
             }
             var topClasses = classNames({hide: this.state.commentsCount==0});
             var commendBoxclasses = classNames("commentBox",{ hide :!this.state.display});
-            var loadMoreClasses =classNames("load-more",{ hide :!this.shouldDisplayLoadMoreOption()});
+            var loadAllClasses =classNames("load-all",{ hide :!this.shouldDisplayLoadMoreOption()});
+
             return (
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
                     <div className={commendBoxclasses }>
-                        { /*  <a onClick={this.toogleBox}>{this.state.display? "Κλεισιμο" : "Ανοιγμα"}</a> */ }
-                        <div className={loadMoreClasses} >
-                            <a onClick={this.refreshComments}>φόρτωση ολων των σχολίων</a>
+                        <div className={loadAllClasses} >
+                            βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
                         </div>
-                        <CommentList data={this.state.comments} />
+                        <CommentList consultationEndDate={this.props.consultationEndDate} data={this.state.comments} />
                         <CommentForm />
                     </div>
                 </div>
@@ -168,9 +192,11 @@
     });
     var CommentList = React.createClass({
         render: function() {
+
+            var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <Comment data={comment} />
+                    <Comment consultationEndDate={instance .props.consultationEndDate} key={comment.id} data={comment} />
                 );
             });
 
@@ -182,11 +208,73 @@
         }
     });
     var Comment = React.createClass({
+        getInitialState: function(){
+            return {
+                        likeCounter: this.props.data.likesCounter,
+                        dislikeCounter: this.props.data.dislikesCounter,
+                        liked : this.props.data.loggedInUserRating  //if not null it means has liked/disliked this comment
+                    };
+        },
+        postRateCommentAndRefresh: function(){
+            var instance = this;
+           //todo: make ajax call and increment decremet the counters.
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: "/comments/rate",
+                data: { comment_id : this.props.data.id , liked : instance.state.liked},
+                beforeSend:function(){
+                    instance.setState(instance.state);
+                },
+                success : function(response){
+                    var x = "stop";
+                },
+                complete: function(){},
+                error:function(x,y,z){
+                    console.log(x);
+                }
+            })
 
+        },
+        handleLikeComment :function(){ //user pressed the liked button
+            var oldLikeStatus =this.state.liked;
+            var newLikeStatus=true;
+
+            if (oldLikeStatus ===true) { //if comment was already liked, undo it
+                newLikeStatus=null;
+                this.state.likeCounter = this.state.likeCounter -1;
+            }
+            if (oldLikeStatus ===false) //comment was disliked and now it was liked, remove it from counter
+                this.state.dislikeCounter= this.state.dislikeCounter-1;
+
+            if (newLikeStatus===true)
+                this.state.likeCounter = this.state.likeCounter + 1
+
+            this.state.liked= newLikeStatus;
+            this.postRateCommentAndRefresh();
+        },
+        handleDislikeComment:function(){ //user pressed the dislike button
+            var oldLikeStatus =this.state.liked;
+            var newLikeStatus=false;
+
+            if (oldLikeStatus ===false) { //if comment was already disliked, undo it
+                newLikeStatus=null;
+                this.state.dislikeCounter = this.state.dislikeCounter  -1;
+            }
+            if (oldLikeStatus ===true) //comment was liked and now it was disliked, remove it from counter
+                this.state.likeCounter= this.state.likeCounter-1;
+
+            if (newLikeStatus===false)
+                this.state.dislikeCounter = this.state.dislikeCounter + 1
+
+            this.state.liked= newLikeStatus;
+            this.postRateCommentAndRefresh();
+        },
+        componentDidMount : function(){
+            $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
+        },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-            //new Date(this.props.data.dateAdded).toDateString()
-            // console.log(this.props.data.dateAdded);
 
             var tagNodes = this.props.data.annotationTags.map(function (tag) {
                 return (
@@ -194,6 +282,15 @@
                 );
             });
 
+            //todo: enable reply functionality, now its hidden
+            var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var agreeClasses = classNames("agree", {active: this.state.liked===true});
+            var disagreeClasses = classNames("disagree", {active: this.state.liked ===false})
+            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+            var iconsClasses = classNames("icons",
+                                          { hide: this.props.data.source.commentSource ==2 ||
+                                                  this.props.data.dateAdded < this.props.consultationEndDate
+                                          });
             return (
                 <div className="comment">
                     <div className='avatar'>
@@ -205,11 +302,19 @@
                         {tagNodes}
                     </div>
                     <div className="options">
-                        <a className="agree" href="#">Συμφωνώ<i className="fa fa-thumbs-o-up"></i></a>
-                        <a className="disagree" href="#">Διαφωνώ<i className="fa fa-thumbs-o-down"></i></a>
-                        <a className="reply" href="#">Απάντηση <i className="fa fa-reply"></i></a>
+                        <a className={agreeClasses} onClick={this.handleLikeComment}>
+                            Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+
+                        </a><span className="c"> ({this.state.likeCounter})</span>
+                        <a className={disagreeClasses} onClick={this.handleDislikeComment}>
+                                Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
+                        </a> <span className="c"> ({this.state.dislikeCounter})</span>
+                        <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
                     </div>
+                    <div className={iconsClasses}>
+                        <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                     </div>
                 </div>
             );
         }

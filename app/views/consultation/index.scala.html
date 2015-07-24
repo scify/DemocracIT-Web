@@ -1,22 +1,24 @@
 @import model.viewmodels.ConsultationViewModel
-@(model: ConsultationViewModel)
+@(vm: ConsultationViewModel)
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
     <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
+    <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(model.annotationTypesToJson()),
-                                                                @model.consultation.id,
-                                                                @Html(if (model.user.isDefined) "'"+model.user.get.userID.toString+"'" else "''"),
-                                                                @Html(if (model.user.isDefined) "'"+model.user.get.fullName.getOrElse("n/a")+"'" else "''"),
-                                                                @Html(model.discussionThreadsToJson()),
-                                                                @Html(model.relevantLawsToJson())
+        var controller = new scify.ConsultationIndexPageHandler(@Html(vm.annotationTypesToJson()),
+                                                                @vm.consultation.id,
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                @Html(vm.discussionThreadsToJson()),
+                                                                @Html(vm.relevantLawsToJson()),
+                                                                Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
      })
@@ -31,166 +33,182 @@
 
 @layout("DemocracIT", css, js,None) {
 
-    <section id="stats" class="container">
+
+        <div id="header" class="@{if (vm.consultation.isActive) "active" else "inactive"}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 id="consultation-title">@Html(vm.consultation.title)  <a href="@vm.consultation.opengov_url" title="η διαβούλευση στο open.gov" target="_blank">open.gov</a></h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <div id="intro-text" class="message">
+                            <h2>Εισαγωγή:</h2>
+                            @Html(vm.consultation.shortDescr)
+                        </div>
+                        @if(vm.consultation.report_text.isDefined) {
+                            <div id="report-text" class="message">
+                                <h2>Αναγγελία ολοκλήρωσης:</h2>
+                                @Html(vm.consultation.report_text.get)
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-md-2">
+                        <div id="duration">
+                            @if(vm.consultation.isActive) {
+                                <span class="consState activeCons">ενεργη</span>
+                            } else {
+                                <span class="consState inactiveCons">ολοκληρώθηκε</span>
+                            }
+                            <div class="dates">
+                                Αναρτήθηκε
+                                <br>
+                                @vm.consultation.prettyDateFormat(vm.consultation.startDate)<br>
+                                λήξη
+                                <br>
+                                @vm.consultation.prettyDateFormat(vm.consultation.endDate)
+                            </div>
+                            Διάρκεια @vm.consultation.totalDurationFormatted
+
+                        </div>
+                        <div id="aside">
+                        @for(
+                            relevantMaterial <- vm.relevantMaterials
+                            if (relevantMaterial.pdf_url != vm.consultation.report_url.getOrElse(""))
+                        ) {
+                            <div class="aside-button">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="@relevantMaterial.pdf_url" target="_blank"> @relevantMaterial.title</a>
+                            </div>
+                        }
+                        @if(vm.consultation.report_url.isDefined){
+                            <div id="final-doc" class="aside-button">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="@vm.consultation.report_url" target="_blank">Τελική εκθεση</a>
+                            </div>
+                            }
 
 
-        Διάρκεια @model.consultation.totalDurationFormatted | @model.consultation.prettyDateFormat(model.consultation.startDate) έως @model.consultation.prettyDateFormat(model.consultation.endDate) | <a href="@model.consultation.opengov_url" target="_blank">open gov link</a>
+                        </div>
 
-            <div id="relevantMaterial" class="">
-                <div class="relevantMaterialTitle">Σχετικό υλικό:</div>
-                <div class="relevantMaterialContainer">
-                @for(relevantMaterial <- model.relevantMaterials) {
 
-                    <div class="url"><a href="@relevantMaterial.pdf_url"><i class="fa fa-file-pdf-o" style="margin-right: 5px"></i> @relevantMaterial.title</a></div>
 
-                }
+                    </div>
                 </div>
             </div>
+        </div>
+        <div  class="container">
+            <ul id="tabs" class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
+                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
+                <li role="presentation"> <a href="/consultation/reporter/@vm.consultation.id" target="_blank">Ανάλυση σχολίων</a></li>
+                @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="consultation-body">
+                    @for(article <- vm.consultation.articles) {
+                        <div data-id="@article.id"  class="row article ">
+                            <div class="col-md-12">
+                                <div class="title">
+                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
+                                    <span class="article-title-text">@article.title</span>
+                                </div>
+                                <div id="body-@article.id" class="collapse " style="height:0;" >
+                                    <div class="article-body">
+                                    @Html(article.body)
+                                    </div>
+                                    <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div role="tabpanel" class="tab-pane" id="relevantLawsList">
+                    <div class="row">
+                        <div class="col-md-12">
+                        @if(vm.distinctLaws().length>0) {
+                           <h2>@vm.distinctLaws().length αναφορές σε νόμους</h2>
+                            <table class="table table-striped table-condensed">
+                                <thead><tr>
+                                    <th>#</th>
+                                    <th>Αναφόρα</th>
+                                </tr>
+                                </thead>
+
+                                @for(i <- 0 until vm.distinctLaws().length) {
+                                    <tr>
+                                        <td> @{i+1}</td>
+                                        <td>
+                                            <a href="@vm.distinctLaws()(i).pdf_url"> @vm.distinctLaws()(i).entity_text</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="toolbar-modal" tabindex="-1" role="dialog" aria-labelledby="annotate-toolbar">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Αφήστε το σχόλιο σας:</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="toolbar">
+
+                        <form action="@routes.AnnotationController.annotatePost()" method="post">
+
+                            <div>
+                                <blockquote></blockquote>
+                            </div>
+                            <div>
+                            @if(vm.user.isDefined){
+                                <hr>
+                                <select name="annotationTagId">
+                                    <option value="-1">Υπόδειξη προβλήματος:</option>
+                                    @for(annotation <- vm.allowedAnnotations){
+                                        <option value="@annotation.id">@annotation.description</option>
+                                    }
+                                </select>
+                            </div>
 
 
-            @if(model.consultation.isActive) {
-                <div class="consState activeCons">Ενεργή Διαβούλευση</div>
-            } else {
-                <div class="consState inactiveCons">Αυτή η διαβούλευση δεν είναι πλέον ενεργή.</div>
-            }
+                            <div id="comment-wrap">
+                                Έχετε κάποια παρατήρηση:
+                                <textarea name="body"></textarea>
+                            </div>
 
-            <ul class="statsFloatingList">
-                <li>
-                    <div id="relevantLawsList" class="">
-                        <div class="relevantMaterialTitle">Βρέθηκαν @model.distinctLaws().length σχετικοί νόμοι @if(model.distinctLaws().length > 0){<div id="relevantLawsBtn"><i class="fa fa-chevron-down"></i></div>}</div>
-                        <ul class="relevantMaterialContainer">
-                        @for(relevantLaw <- model.distinctLaws()) {
+                            <input type="hidden" name="articleid" value=""/>
+                            <input type="hidden" name="discussionroomannotationtagid" value=""/>
 
-                            <li class="url"><a href="@relevantLaw.pdf_url"> @relevantLaw.entity_text</a></li>
+
+                            } else {
+                            <div class="notLoggedinWrapper">
+                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a></p></div>
+                            </div>
+
 
                         }
-                        </ul>
+                        </form>
                     </div>
-                </li>
-                <li>
-                    <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#initialMessagesModal">
-                         <span class="divider">|</span> Αρχικο Μήνυμα Διαβούλευσης
-                    </div>
-                </li>
-                @if(model.consultation.isCompletedText) {<li>
-                    <div  class="relevantMaterialTitle" data-toggle="modal" data-target="#ministerMessagesModal">
-                        <span class="divider">|</span> Μηνύματα Υπουργου
-                    </div>
-                </li>
-                    }
-            </ul>
-    </section>
-
-
-    <div class="modal fade" id="initialMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Αρχικο Μηνυμα Διαβούλευσης</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="ministerMessagesList">
-
-                        <li class="msg">@Html(model.consultation.shortDescr)</li>
-
-                    </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                @if(vm.user.isDefined) {
+                    <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
+                }
+                    <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade" id="ministerMessagesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Μηνύματα Υπουργού</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="ministerMessagesList">
-
-                        <li class="msg">@Html(model.consultation.completed_text.orNull)</li>
-                        <li class="msg">@Html(model.consultation.report_text.orNull)<div class="url"><a href="@model.consultation.report_url">Σύνδεσμος</a></div></li>
-
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="wrapper" class="container">
-        <section id="consultation-header">
-        <div class="row">
-            <div class="col-md-12 title" >
-                @Html(model.consultation.title)
-            </div>
-        </div>
-            </section>
-        <section id="consultation-body">
-            @for(article <- model.consultation.articles) {
-                <div data-id="@article.id"  class="row article ">
-                    <div class="col-md-12">
-                        <div class="title">
-                          <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
-                          <span class="article-title-text">@article.title</span>
-                        </div>
-                        <div id="body-@article.id" class="collapse " style="height:0;" >
-                            <div class="article-body">
-                                @Html(article.body)
-                            </div>
-                            <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
-                        </div>
-
-                    </div>
-                </div>
-            }
-        </section>
-        <div id="comment-box-wrp"></div>
-    </div>
-    <div id="toolbar">
-
-        <form action="@routes.AnnotationController.annotatePost()" method="post">
-
-            <div>
-                Επισημείωση για το τμήμα κειμένου:
-                <blockquote></blockquote></div>
-            <div>
-            @if(model.user.isDefined){
-                <hr>
-                <select name="annotationTagId">
-                    <option value="-1">Υπόδειξη προβλήματος:</option>
-                    @for(annotation <- model.allowedAnnotations){
-                        <option value="@annotation.id">@annotation.description</option>
-                    }
-                </select>
-            </div>
-
-
-            <div id="comment-wrap">
-                Θα ηθελα να δηλωσω οτι:
-                <textarea name="body"></textarea>
-            </div>
-
-            <input type="hidden" name="articleid" value=""/>
-            <input type="hidden" name="discussionroomannotationtagid" value=""/>
-
-            <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
-            <button class="close btn red" type="button" class="btn red" >Κλείσιμο</button>
-            } else {
-                <div class="notLoggedinWrapper">
-                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a></p></div>
-                </div>
-
-
-        }
-        </form>
     </div>
 
 }

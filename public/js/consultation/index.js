@@ -1,5 +1,8 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName, discussionThreads, relevantLaws){
+scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName,
+                                              discussionThreads,
+                                              relevantLaws,
+                                              consultationEndDate){
     this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
@@ -16,6 +19,8 @@ scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,use
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
     }
+
+    this.consultationEndDate = consultationEndDate;
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -74,7 +79,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             else
                 displayToolBar.call(instance,e,getSelectionText(selection));
         });
-        $(".ann-icon").click($.proxy(displayToolBar,instance));
+        $("body").on("click",".ann-icon",displayToolBar.bind(instance));
 
     },
     expandArticleOnClick = function(){
@@ -107,7 +112,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //an element can be annotated if all it's children are #TEXT OR SUP nodes
         var bannedNodeFound=false;
         for (var i = 0; i < element.childNodes.length; i++) {
-            if ( element.childNodes[i].nodeName !="SUP" && element.childNodes[i].nodeName !="#text"  )
+            if ( element.childNodes[i].nodeName !="SUP" &&
+                 element.childNodes[i].nodeName !="#text" &&
+                element.childNodes[i].nodeName !="STRONG" )
                 bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
         }
         if (bannedNodeFound || element.textContent.trim().length==0)
@@ -120,16 +127,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var counter=0;
         var action = function(element)
         {
-            $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
+            $(element).wrap("<div data-id='ann-"+counter+"' class='ann'></div>");
             counter++;
         }
-        $(".article-body,.article-title-text, #consultation-header .title").each(function(i,el){
-         recurseAllTextNodesAndApply(el,action );
+        $(".article-body,.article-title-text").each(function(i,el){
+            var html = $(el).html();
+            html = html.replace(/<br>/g,"#brNode#").replace(/<br\/>/g,"#brNode#");
+            $(el).html(html);
+           recurseAllTextNodesAndApply(el,action );
+            html= $(this).html().replace(/#brNode#/g,"<br>");
+            $(this).html(html);
         });
 
     },
-    attachBallons = function(){
-        $(".ann").append("<span class='ann-icon'>+</span>");
+    attachAnnotationPrompts= function(){
+        $(".ann").append("<div class='ann-icon'><a href='javascript:void(0)'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</a></div>");
     },
     displayToolBar = function(e,selectedText){
         //todo: Use react.js for this.
@@ -144,12 +156,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         {
             selectedText = target.parent().text();
             selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
-            left =left - toolbar.width();
+          //  left =left - toolbar.width();
         }
 
-        toolbar.addClass(toolbarClass);
-        toolbar.fadeIn("fast");
-        toolbar.css({top:top, left: left});
+        $("#toolbar-modal").modal("show");
+       // toolbar.addClass(toolbarClass);
+      //  toolbar.fadeIn("fast");
+      //  toolbar.css({top:top, left: left});
         toolbar.find("input[name='annText']").val(selectedText);
 
         var parent = target.closest(".ann")
@@ -161,7 +174,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
     },
     hideToolBar = function(){
-            $("#toolbar").hide();
+        $("#toolbar-modal").modal("hide");
+            // $("#toolbar").hide();
     },
     getDiscussionThreadNumberOfComments = function(articleId,annotationId){
         if (this.discussionThreads.hasOwnProperty(getDiscussionThreadClientId(articleId,annotationId)))
@@ -185,9 +199,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             var articleid =$(articleDiv).data("id");
 
             var commentBoxProperties= {
-                consultationid      : instance.consultationid,
-                articleid           : articleid,
-                discussionthreadid  : -1,
+                consultationid          : instance.consultationid,
+                consultationEndDate    : instance.consultationEndDate,
+                articleid               : articleid,
+                discussionthreadid      : -1,
                 discussionthreadclientid: getDiscussionThreadClientId(articleid),
                 source :"opengov",
                 commentsCount : $(articleDiv).find(".open-gov").data("count")  //for open gov we retrieve the counter from
@@ -216,21 +231,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     getDiscussionThreadClientId = function(articleid,annId){
         return articleid+(annId ? annId :"");
     },
-        addRelevantLawsHandler = function(){
-            $("#relevantLawsBtn").on("click", function(){
-                $("#relevantLawsBtn").toggleClass("clicked");
-                if($("#relevantLawsBtn").hasClass("clicked")) {
-                    $("#relevantLawsBtn i").removeClass("fa-chevron-down");
-                    $("#relevantLawsBtn i").addClass("fa-chevron-up");
-                    $("#relevantLawsList .relevantMaterialContainer").show("slow");
-                }
-                else {
-                    $("#relevantLawsBtn i").removeClass("fa-chevron-up");
-                    $("#relevantLawsBtn i").addClass("fa-chevron-down");
-                    $("#relevantLawsList .relevantMaterialContainer").hide("fast");
-                }
-            });
-        },
+    addRelevantLawsHandler = function(){
+        $("#relevantLawsBtn").on("click", function(){
+            $("#relevantLawsBtn").toggleClass("clicked");
+            if($("#relevantLawsBtn").hasClass("clicked")) {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
+                $("#relevantLawsBtn i").addClass("fa-chevron-up");
+                $("#relevantLawsList .relevantMaterialContainer").show("slow");
+            }
+            else {
+                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
+                $("#relevantLawsBtn i").addClass("fa-chevron-down");
+                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
+            }
+        });
+    },
     //fetchOpenGovComments = function(e){
     //    e.preventDefault();
     //    var articleDiv = $(this).closest(".article");
@@ -240,7 +255,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     //},
      handleAnnotationSave = function(e){
          e.preventDefault();
-         var form = $(this).closest("form");
+         var form = $("#toolbar-modal").find("form");
          var data = {};
          form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
          data.annotationTagText = form.find("option:selected").text(); //tag text of the problem user selected
@@ -248,21 +263,25 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
          hideToolBar();
      },
-        replaceRelevantLaws = function(relevantLaws) {
+     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
                 var replaceText = relevantLaws[i].entity_text;
                 var replacedHtml = $("div[data-id="+ relevantLaws[i].article_id +"]").html().replace(relevantLaws[i].entity_text, "<a target='_blank' href='" + relevantLaws[i].pdf_url + "'>" + replaceText + "</a>");
                 $("div[data-id="+ relevantLaws[i].article_id +"]").html(replacedHtml);
             }
-
         },
-
+        removeParagraphsWithNoText = function(){
+            $(".message").find("p").each(function(i,el){
+                if ($.trim($(this).text()).length==0)
+                    $(this).remove();
+            });
+        }
     init = function(){
         var instance= this;
         moment.locale('el');
 
         createAnnotatableAreas();
-        attachBallons();
+        attachAnnotationPrompts();
         attachAnnotationEvents();
 
         replaceRelevantLaws(this.relevantLaws);
@@ -272,9 +291,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         //$("body").on("click",".open-gov-comments", fetchOpenGovComments);
         createDiscussionRooms.call(instance);
-
+        removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
-        $("#toolbar").find(".close").click(hideToolBar);
+        // $("#toolbar").find(".close").click(hideToolBar);
         $("#save-annotation").click(handleAnnotationSave);
     };
 

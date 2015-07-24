@@ -1,9 +1,44 @@
-.highlight {
-  color: red; }
+h2 {
+  font-size: 16px; }
 
-#consultation-header .title {
-  font-size: 16px;
-  margin-top: 20px; }
+#header {
+  font-size: 12px; }
+
+#header.active {
+  background-color: #f4fef4; }
+
+#consultation-title {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 40px; }
+
+#consultation-title a {
+  font-size: 11px; }
+
+#header .message h3 {
+  font-size: 16px; }
+
+#header .message h2 {
+  margin-top: 0;
+  margin-bottom: 5px; }
+
+#header .message {
+  margin-bottom: 20px; }
+
+#duration {
+  border-radius: 2px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 10px; }
+
+.inactive #duration {
+  border: 1px solid green; }
+
+.active #duration {
+  border: 1px solid darkblue; }
+
+#duration .dates {
+  padding: 10px 0px; }
 
 .show-hide {
   border: medium none;
@@ -14,14 +49,17 @@
   line-height: 20px;
   padding: 0;
   vertical-align: -1px;
-  width: 11px; }
+  width: 11px;
+  position: absolute;
+  top: 5px;
+  z-index: 10; }
 
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
   display: none; }
 
 .show-hide.collapsed span:last-child {
-  display: inline; }
+  display: block; }
 
 .article {
   padding-top: 20px;
@@ -35,16 +73,6 @@
   line-height: 1.6em;
   margin-top: 10px; }
 
-#toolbar {
-  position: fixed;
-  top: 0;
-  background-color: white;
-  padding: 10px;
-  max-width: 600px;
-  display: none;
-  border: 1px solid gray;
-  border-radius: 10px; }
-
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
@@ -54,6 +82,12 @@
 
 #toolbar #comment-wrap {
   margin-top: 10px; }
+
+.modal-footer {
+  border-top: none; }
+
+.highlight {
+  color: red; }
 
 #toolbar hr {
   margin: 15px; }
@@ -78,63 +112,98 @@
 .ann #toolbar {
   display: block; }
 
-.ann {
-  display: inline-block;
-  position: relative;
-  width: 90%;
-  padding-right: 5%; }
-
-.ann:hover {
-  background-color: lightyellow; }
-
 .article-title-text .ann {
   width: 97%; }
 
 #consultation-body li {
   list-style: none; }
 
+.ann {
+  display: inline-block;
+  position: relative;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  width: 100%; }
+
+.title .ann {
+  width: 98%;
+  margin-left: 11px;
+  padding-left: 5px;
+  margin-bottom: 0;
+  padding-top: 0; }
+
+.title .ann-icon {
+  padding-left: 0; }
+
+.ann:hover {
+  background-color: #fefbd1; }
+
+.ann p {
+  padding: 0;
+  margin: 0; }
+
 .ann:hover .ann-icon {
   display: block; }
 
 .ann-icon {
-  border-radius: 8px;
-  cursor: pointer;
   display: none;
-  font: 12px Arial,sans-serif;
-  padding-bottom: 2px;
-  padding-top: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+  padding: 0px 10px;
   position: absolute;
-  right: 6px;
-  text-align: center;
-  top: 0;
-  width: 23px;
-  color: #fff;
-  background: lightgray; }
+  width: 100%;
+  top: -17px;
+  font-size: 12px;
+  left: 0; }
 
-.ann-icon:before {
-  border-style: solid;
-  border-width: 0 0 8px 7px;
-  bottom: -6px;
-  content: "";
-  position: absolute;
-  right: 8px;
-  border-color: transparent lightgray; }
-
-#results tr {
-  border-bottom: 1px solid lightgray;
-  display: block;
+.aside-button {
+  padding: 6px 7px;
+  color: white;
+  background-color: #428bca;
+  border-radius: 2px;
   margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px; }
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
 
-#comment-box-wrp {
-  color: #141823;
-  margin-top: 1em; }
+.aside-button.completed {
+  background-color: #f47a21; }
+
+.aside-button .fa {
+  margin-right: 5px;
+  font-size: 26px;
+  vertical-align: middle; }
+
+.aside-button a, .aside-button {
+  color: white; }
+
+.aside-button#final-doc {
+  background-color: green; }
+
+#ministerMessagesModal .modal-dialog {
+  width: 50%; }
+
+#initialMessagesModal .modal-dialog {
+  width: 50%; }
+
+.modal-backdrop {
+  z-index: -1; }
+
+.ministerMessagesList li {
+  list-style-type: none; }
+
+.ministerMessagesList li .date {
+  float: right;
+  background-color: lightgray; }
 
 .commentBox {
   background-color: #f6f7f8;
-  border: 1px solid lightgray;
-  border-radius: 10px;
   font-size: 12px; }
 
 .commentBox .commentForm {
@@ -142,7 +211,9 @@
 
 .commentBox .comment {
   font-weight: normal;
-  padding: 10px 1em; }
+  padding: 10px 1em;
+  padding-right: 40px;
+  position: relative; }
 
 .commentBox .comment:nth-child(2n) {
   background-color: #fffff2; }
@@ -167,8 +238,21 @@
   margin-top: 10px; }
 
 .commentBox .comment .options a {
-  display: inline-block;
-  margin-right: 20px; }
+  cursor: pointer; }
+
+.commentBox .comment .options .c {
+  margin-right: 20px;
+  margin-left: 5px;
+  display: inline-block; }
+
+.commentBox .comment .icons {
+  position: absolute;
+  right: 14px;
+  top: 5px;
+  opacity: 0.8; }
+
+.commentBox .comment .options a.active {
+  color: gray; }
 
 .commentBox .comment .options .fa {
   margin-left: 5px; }
@@ -176,118 +260,13 @@
 .commentBox .comment .date {
   color: gray; }
 
-.commentBox .comment .load {
+.load {
   cursor: pointer; }
-
-.activeCons {
-  color: #3c763d; }
-
-.inactiveCons {
-  color: #c12e2a; }
-
-/*Not logged in message*/
-.notLoggedinWrapper .fa-exclamation-triangle {
-  float: left;
-  margin-right: 10px;
-  margin-top: 3px; }
-
-/*Relevant Laws*/
-#relevantLawsList {
-  /*position: absolute;
-  margin-left: 2%;
-  margin-top: -65px;
-  width: 7%;*/ }
-
-.statsFloatingList {
-  padding: 0px; }
-
-.statsFloatingList li {
-  list-style-type: none;
-  float: left;
-  margin-right: 10px; }
-
-#relevantLawsList .relevantMaterialTitle {
-  /*float:left;*/ }
-
-.relevantMaterialTitle .divider {
-  color: #000 !important; }
-
-#relevantLawsList #relevantLawsBtn {
-  float: right;
-  padding-left: 5px; }
-
-#relevantLawsList .relevantMaterialContainer {
-  display: none;
-  overflow-y: auto;
-  margin-top: 5px;
-  float: left;
-  max-width: 250px;
-  max-height: 230px;
-  margin-left: 0px;
-  position: relative; }
-
-#relevantLawsBtn {
-  float: right; }
-
-#relevantLawsList li {
-  list-style-type: none; }
-
-#relevantLawsList .url {
-  padding: 0px !important;
-  width: 100%; }
-
-#ministerMessagesModal .modal-dialog {
-  width: 50%; }
-
-#initialMessagesModal .modal-dialog {
-  width: 50%; }
-
-/*Minister messages modal*/
-#ministerMessagesModal .modal-backdrop {
-  z-index: -1; }
-
-#initialMessagesModal .modal-backdrop {
-  z-index: -1; }
-
-.ministerMessagesList li {
-  list-style-type: none; }
-
-.ministerMessagesList li .date {
-  float: right;
-  background-color: lightgray; }
-
-/* Small Devices, Tablets */
-@media only screen and (max-width: 1200px) {
-  /*#relevantLawsList {
-    display: none;
-  }*/ }
-/*Relevant Material*/
-#relevantMaterial {
-  float: right; }
-
-.relevantMaterialTitle {
-  color: #428bca;
-  margin-bottom: 5px;
-  text-align: left; }
-
-.relevantMaterialContainer {
-  float: right;
-  padding: 10px;
-  background-color: #428bca; }
-
-.relevantMaterialContainer a {
-  color: #fff; }
-
-.relevantMaterialContainer .url {
-  margin-bottom: 2px; }
-
-.relevantMaterialContainer a:hover {
-  text-decoration: none; }
 
 .commentBox .comment .load {
   cursor: pointer; }
 
-.commentBox .load-more {
+.commentBox .load-all {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
@@ -301,8 +280,8 @@
   display: inline-block;
   background-color: lightgray;
   width: auto;
-  border-radius: 10px;
-  padding: 4px 13px; }
+  border-radius: 4px;
+  padding: 1px 4px; }
 
 .loading-wrp {
   text-align: center; }
@@ -360,5 +339,51 @@
 @keyframes animation-rotate {
   100% {
     transform: rotate(360deg); } }
+#results tr {
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px; }
+
+.activeCons {
+  color: #3c763d; }
+
+.inactiveCons {
+  color: #c12e2a; }
+
+/*Not logged in message*/
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px; }
+
+#tabs.nav {
+  background-color: #254254; }
+
+#tabs.nav-tabs {
+  border: none; }
+
+#tabs.nav-tabs > li {
+  float: left;
+  margin-bottom: 0px;
+  border: none;
+  border-radius: 0; }
+
+#tabs.nav-tabs > li > a {
+  background-color: transparent;
+  border: none;
+  color: white;
+  border-radius: 0; }
+
+#tabs.nav-tabs > li > a:hover {
+  background-color: #ed6d46; }
+
+#tabs.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  border: none;
+  border-radius: 0;
+  cursor: default;
+  background-color: #7cb6f7;
+  color: white; }
 
 /*# sourceMappingURL=consultation.css.map */
