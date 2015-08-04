@@ -1,9 +1,8 @@
 
-scify.ConsultationIndexPageHandler = function(annotationTags, consultationid,userId,fullName,
+scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
                                               discussionThreads,
                                               relevantLaws,
                                               consultationEndDate){
-    this.annotationTags = annotationTags;
     this.consultationid= consultationid;
     this.userId = userId;
     this.fullName = fullName;
@@ -246,13 +245,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
         });
     },
-    //fetchOpenGovComments = function(e){
-    //    e.preventDefault();
-    //    var articleDiv = $(this).closest(".article");
-    //    var articleid =articleDiv.data("id");
-    //    var url = $(this).attr("href");
-    //    getDiscussionRoom(articleid).refreshComments(url);
-    //},
      handleAnnotationSave = function(e){
          e.preventDefault();
          var form = $("#toolbar-modal").find("form");
@@ -295,6 +287,20 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //tinymce.init({selector:'textarea'})
         // $("#toolbar").find(".close").click(hideToolBar);
         $("#save-annotation").click(handleAnnotationSave);
+
+        $("#annotationTagId").select2({
+           placeholder: "Υπόδειξη προβλήματος",
+           tags: true,
+           tokenSeparators: [',', ' ']
+        });
+
+        $("#annotationTagTopicId").select2({
+           placeholder: "Υπόδειξη θέματος",
+           tags: true,
+           tokenSeparators: [',', ' ']
+        });
+
+
     };
 
     return {

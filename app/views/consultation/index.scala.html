@@ -5,6 +5,9 @@
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
     <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
+    @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
@@ -12,8 +15,7 @@
     <script  src="@routes.Assets.at("js/consultation/index.js")" ></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@Html(vm.annotationTypesToJson()),
-                                                                @vm.consultation.id,
+        var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.discussionThreadsToJson()),
@@ -163,6 +165,7 @@
                     <h4 class="modal-title" id="myModalLabel">Αφήστε το σχόλιο σας:</h4>
                 </div>
                 <div class="modal-body">
+
                     <div id="toolbar">
 
                         <form action="@routes.AnnotationController.annotatePost()" method="post">
@@ -173,14 +176,19 @@
                             <div>
                             @if(vm.user.isDefined){
                                 <hr>
-                                <select name="annotationTagId">
-                                    <option value="-1">Υπόδειξη προβλήματος:</option>
-                                    @for(annotation <- vm.allowedAnnotations){
+                                <select id="annotationTagId" name="annotationTagId" multiple>
+                                @for(annotation <- vm.annotationsRelatedToProblems){
+                                    <option value="@annotation.id">@annotation.description</option>
+                                }
+                                </select>
+                                @if(vm.annotationsRelatedToTopics.length>0) {
+                                    <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
+                                    @for(annotation <- vm.annotationsRelatedToTopics) {
                                         <option value="@annotation.id">@annotation.description</option>
                                     }
-                                </select>
+                                    </select>
+                                }
                             </div>
-
 
                             <div id="comment-wrap">
                                 Έχετε κάποια παρατήρηση:
@@ -210,6 +218,7 @@
             </div>
         </div>
     </div>
+
 
 }
 

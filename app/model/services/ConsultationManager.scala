@@ -45,10 +45,11 @@ class ConsultationManager {
 
   def get(consultationId: Long, user:Option[User]): ConsultationViewModel= {
     val repository = new ConsultationRepository()
-    var commentsRepo = new CommentsRepository()
-
+    val commentsRepo = new CommentsRepository()
+    val annotationTags = commentsRepo.loadAnnotationTags()
     ConsultationViewModel(consultation = repository.get(consultationId),
-                          allowedAnnotations = commentsRepo.loadAnnotationTags(),
+                          annotationsRelatedToProblems = annotationTags.filter(_.type_id==2),
+                          annotationsRelatedToTopics= annotationTags.filter(_.type_id==1),
                           discussionThreads = commentsRepo.loadDiscussionThreadsWithCommentsCount(consultationId),
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId),

@@ -5,7 +5,8 @@ import model.dtos._
 import utils.ImplicitWrites._
 
 case class ConsultationViewModel(consultation:model.dtos.Consultation,
-                                 allowedAnnotations: Seq[AnnotationTags],
+                                 annotationsRelatedToProblems: Seq[AnnotationTags],
+                                 annotationsRelatedToTopics: Seq[AnnotationTags],
                                  discussionThreads : Seq[DiscussionThread],
                                  user: Option[model.User],
                                  relevantMaterials: Seq[RelevantMaterial],
@@ -13,7 +14,7 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 {
   private var _distinctLaws:Seq[RelevantLaws] = Nil
 
-   def annotationTypesToJson():String = Json.toJson(allowedAnnotations).toString()
+   //def annotationTypesToJson():String = Json.toJson(annotationsRelatedToProblems).toString()
 
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
   def relevantLawsToJson():String =Json.toJson(this.distinctLaws(false)).toString()
@@ -35,3 +36,4 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
   }
 
 }
+

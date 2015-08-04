@@ -190,7 +190,7 @@ class CommentsRepository {
 
     DB.withConnection { implicit c =>
 
-      val sql = SQL("select * from public.annotation_tag")
+      val sql = SQL("select * from public.annotation_tag where status_id not in (4,5)") //hide rejected or deleted comments
 
       sql().map( row =>
                     AnnotationTags(row[Int]("id"), row[String]("description"), row[Int]("type_id"))
