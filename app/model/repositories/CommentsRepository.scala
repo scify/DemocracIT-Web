@@ -75,13 +75,14 @@ class CommentsRepository {
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating,
-                           ant.id as annotationTypeId,
-                           ant.description as annotationTypeDescr
+                           ant.id as annotationTagId,
+                           ant.description as annotationTagDescr,
+                           ant.type_id as annotationTagTypeId
                        from public.comments c
                                              inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                              left outer join public.users u on u.id = c.user_id
-                                             left outer join public.annotation_items i on i.public_comment_id = c.id
-                                             left outer join public.annotation_types_lkp ant on ant.id = i.annotation_type_id
+                                             left outer join public.annotation_comment i on i.public_comment_id = c.id
+                                             left outer join public.annotation_tag ant on ant.id = i.annotation_type_id
                                              left outer join public.comment_rating cr on cr.user_id = CAST($useridParam as UUID)  and cr.comment_id = c.id
                                              left outer join ratingCounter counter on counter.comment_id = c.id
                     where t.tagid =$discussionthreadclientid
@@ -189,10 +190,10 @@ class CommentsRepository {
 
     DB.withConnection { implicit c =>
 
-      val sql = SQL("select * from public.annotation_types_lkp")
+      val sql = SQL("select * from public.annotation_tag")
 
       sql().map( row =>
-                    AnnotationTags(row[Int]("id"),row[String]("description"))
+                    AnnotationTags(row[Int]("id"), row[String]("description"), row[Int]("type_id"))
                 ).toList
 
     }
