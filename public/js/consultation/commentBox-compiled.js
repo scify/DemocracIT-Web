@@ -91,9 +91,7 @@
                 },
                 success: function success(comment) {
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
-
                     instance.state.commentsCount = instance.state.commentsCount + 1;
-                    //attach first
                     instance.state.comments.push(comment);
                 },
                 complete: function complete() {

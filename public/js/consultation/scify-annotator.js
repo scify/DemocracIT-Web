@@ -117,10 +117,7 @@ scify.Annotator.prototype = (function(){
             //todo: Use react.js for this.
 
             var target = $(e.target),
-                toolbar = $("#toolbar"),
-                toolbarClass ="",
-                left = e.clientX,
-                top = e.clientY + 20;
+                toolbar = $("#toolbar");
 
             if (target.hasClass("ann-icon")){
                 selectedText = target.parent().text();
@@ -129,9 +126,6 @@ scify.Annotator.prototype = (function(){
             }
 
             $("#toolbar-modal").modal("show");
-            // toolbar.addClass(toolbarClass);
-            //  toolbar.fadeIn("fast");
-            //  toolbar.css({top:top, left: left});
             toolbar.find("input[name='annText']").val(selectedText);
 
             var parent = target.closest(".ann")
@@ -144,7 +138,6 @@ scify.Annotator.prototype = (function(){
         },
         hideToolBar = function(){
             $("#toolbar-modal").modal("hide");
-            // $("#toolbar").hide();
         },
         init = function(){
             createAnnotatableAreas();
