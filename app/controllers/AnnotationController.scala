@@ -38,7 +38,6 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-        val annotationTags = List(AnnotationTags(annotation.annotationTagId,annotation.annotationTagText,2)) //todo: fix hardcoded value
        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
        val comment = Comment(None, annotation.articleId,CommentSource.OpenGov,
                            annotation.body,
@@ -46,7 +45,11 @@ class AnnotationController @Inject() (implicit val env: Environment[model.User, 
                            Some(request.identity.userID),
                            request.identity.fullName.get,
                            DateTime.now().toDate,
-                           1,"",annotationTags,Some(discussionthread),0,0,None)
+                           1,
+                           "",
+                          annotation.annotationTagProblems.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,2)).toList,
+                          annotation.annotationTagTopics.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,1)).toList,
+                          Some(discussionthread),0,0,None)
 
        val savedComment = commentManager.saveComment(comment)
        Ok(Json.toJson(savedComment))

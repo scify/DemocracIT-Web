@@ -92,7 +92,7 @@ class CommentsRepository {
         """.as {
                   (CommentsParser.Parse ~ AnnotationTypesParser.Parse map {
                     tuple => {
-                      tuple._1.annotationTags =  if (tuple._2.isDefined) List(tuple._2.get) else Nil
+                      tuple._1.annotationTagProblems =  if (tuple._2.isDefined) List(tuple._2.get) else Nil
                       tuple._1
                     }
                   }) *
@@ -234,7 +234,7 @@ class CommentsRepository {
                       ${comment.userAnnotatedText})
                   """.executeInsert()
 
-        for (annotation <- comment.annotationTags)
+        for (annotation <- comment.annotationTagProblems)
         {
           if (annotation.id>0)
             {

@@ -136,6 +136,30 @@ scify.Annotator.prototype = (function(){
             toolbar.find("blockquote").text(selectedText);
 
         },
+        collectAnnotatorData = function(e){
+            e.preventDefault();
+            var form = $("#toolbar-modal").find("form");
+            var data = {};
+            form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
+            var extractSelectedTags = function($select){
+                var tags = [];
+                $select.find("option:selected").each(function(index,el){
+                  tags.push({
+                        text :$(el).text(),
+                        value: $(el).attr("value") == $(el).text() ? -1 : $(el).attr("value")
+                    });
+                });
+                return tags;
+            }
+
+            //data.annotationTagText = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
+            data.annotationTagProblems = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
+            data.annotationTagTopics = extractSelectedTags($("#annotationTagTopicId"));
+
+            data.userAnnotatedText = form.find("blockquote").html();  // the text in the document user annotated
+
+            return data;
+        },
         hideToolBar = function(){
             $("#toolbar-modal").modal("hide");
         },
@@ -158,6 +182,7 @@ scify.Annotator.prototype = (function(){
 
     return {
         init:init,
-        hideToolBar : hideToolBar
+        hideToolBar : hideToolBar,
+        collectAnnotatorData : collectAnnotatorData
     }
 })();

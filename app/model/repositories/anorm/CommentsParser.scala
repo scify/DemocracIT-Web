@@ -57,7 +57,8 @@ object CommentsParser{
                       date_added,
                       revision,
                       depth,
-                      Nil,
+                      Nil, //annotation tags
+                      Nil, //annotation tags
                       discussionThread,
                       likes.getOrElse(0),
                       dislikes.getOrElse(0),

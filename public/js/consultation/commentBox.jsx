@@ -67,6 +67,7 @@
         saveComment : function(url,data){
             var instance = this;
 
+
             var postedData = {
                 consultationId : this.props.consultationid,
                 articleId: this.props.articleid,
@@ -75,18 +76,38 @@
                 discussionThreadText: this.props.discussionThreadText, //contains the whole discussion thread text
                 fullName :this.props.fullName,
                 dateAdded : new Date(),
-                annotationTagTopics : data.annotationTagTopics,
-                annotationTagProblems :data.annotationTagProblems,
                 userAnnotatedText: data.userAnnotatedText,
                 body : data.body
             };
 
+            //play framework wants arrays to be serialized like arrayElement[0].field = value
+            //the default implementation does it arrayElement[0][field] = value which fails.
+            //todo: override the bindformRequest method in scala or create a custom jquery url serializer
+            var serializeArrayForPlay = function(ar,prefix) {
+                var str = [];
+                for (var i =0; i <ar.length; i++)
+                {
+                    var obj = ar[i];
+
+                    for(var p in obj)
+                    {
+                        if (obj.hasOwnProperty(p)) {
+                            str.push(prefix +"["+i+"]."+p + "=" + encodeURIComponent(obj[p]));
+                        }
+                    }
+                }
+                return str.join("&");
+            }
+            var annotationTagTopics =serializeArrayForPlay(data.annotationTagTopics,"annotationTagTopics");
+            var annotationTagProblems =serializeArrayForPlay( data.annotationTagProblems,"annotationTagProblems" );
+
+            var postedDataEncoded = $.param( postedData) + "&" + annotationTagTopics + "&" + annotationTagProblems;
 
             //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
-                data:postedData,
+                data:postedDataEncoded,
                 beforeSend:function(){
                     instance.state.display=true;
                     instance.state.busy=true;
