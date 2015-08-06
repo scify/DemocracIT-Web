@@ -8,7 +8,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
     this.fullName = fullName;
 
     this.discussionThreads ={};
-    for (var i=0; i<discussionThreads.length; i++)
+    for (var i=0; i<discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
     }
