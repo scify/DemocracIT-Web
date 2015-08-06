@@ -99,14 +99,30 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(e){
+        var instance = this;
          e.preventDefault();
          var form = $("#toolbar-modal").find("form");
          var data = {};
          form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
-         data.annotationTagText = form.find("option:selected").text(); //tag text of the problem user selected
+         var extractSelectedTags = function($select){
+             var tags =[];
+             $select.find("option:selected").each(function(index,el){
+                 tags.push({
+                     name: $select.attr("name"),
+                     text :$(el).text(),
+                     value: $(el).attr("value") == $(el).text() ? -1 : $(el).attr("value")
+                 });
+             });
+             return tags;
+         }
+
+        //data.annotationTagText = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
+        data.annotationTagProblems = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
+        data.annotationTagTopics = extractSelectedTags($("#annotationTagTopicId"));
+
          data.userAnnotatedText = form.find("blockquote").html();  // the text in the document user annotated
          getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
-         hideToolBar();
+        instance.annotator.hideToolBar();
      },
     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
@@ -125,6 +141,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
 
+        this.annotator = new scify.Annotator();
+        this.annotator.init();
+
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
@@ -134,10 +153,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
         // $("#toolbar").find(".close").click(hideToolBar);
-        $("#save-annotation").click(handleAnnotationSave);
+        $("#save-annotation").click(handleAnnotationSave.bind(instance));
 
-        var annotator = new scify.Annotator();
-        annotator.init();
+
 
     };
 

@@ -122,8 +122,7 @@ scify.Annotator.prototype = (function(){
                 left = e.clientX,
                 top = e.clientY + 20;
 
-            if (target.hasClass("ann-icon"))
-            {
+            if (target.hasClass("ann-icon")){
                 selectedText = target.parent().text();
                 selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
                 //  left =left - toolbar.width();
@@ -152,7 +151,7 @@ scify.Annotator.prototype = (function(){
             attachAnnotationPrompts();
             attachAnnotationEvents();
 
-            $("#annotationTagId").select2({
+            $("#annotationTagProblemId").select2({
                 placeholder: "Υπόδειξη προβλήματος",
                 tags: true,
                 tokenSeparators: [',', ' ']
@@ -165,6 +164,7 @@ scify.Annotator.prototype = (function(){
         };
 
     return {
-        init:init
+        init:init,
+        hideToolBar : hideToolBar
     }
 })();

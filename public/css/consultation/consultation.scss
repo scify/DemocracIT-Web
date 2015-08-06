@@ -2,8 +2,7 @@
 
 $show-hide-width : 11px;
 
-h2
-{
+h2{
   font-size:16px;
 }
 
@@ -107,18 +106,6 @@ h2
 // </editor-fold>
 
 // <editor-fold descr="toolbar">
-
-
-//#toolbar {
-//  position:fixed;
-// top:0;
-// background-color:white;
-//  padding:10px;
-//  max-width:600px;
-//  display:none;
-//  border:1px solid gray;
-//  border-radius:10px;
-//}
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
@@ -126,61 +113,38 @@ h2
   padding-left: 5px;
   margin-top:5px;
 }
-#toolbar #comment-wrap
-{
+#toolbar #comment-wrap {
   margin-top:10px;
 }
-
-.modal-footer
-{
+.modal-footer {
   border-top:none;
 }
-
-
-.highlight
-{
+.highlight {
   color:red;
 }
-
-#toolbar hr{
+#toolbar hr {
   margin:15px;
 
 }
-#toolbar select
-{
-  width:100%;
-  margin-bottom: 15px;
-}
-#toolbar textarea
-{
+#toolbar textarea {
   display:block;
   margin-top:10px;
   margin-bottom:10px;
   width:100%;
 }
-#toolbar .mce-tinymce
-{
+#toolbar .mce-tinymce {
   margin-top:5px;
   margin-bottom:15px;
 }
-
-#toolbar .btn
-{
+#toolbar .btn {
   margin-bottom:15px;
 }
-.ann #toolbar
-{
+.ann #toolbar {
   display:block;
 }
-
-.article-title-text .ann
-{
+.article-title-text .ann {
   width:97%;
 }
-#consultation-body li{
-  list-style:none;
-}
-
 .ann {
   display: inline-block;
   position: relative;
@@ -191,7 +155,6 @@ h2
   padding-top: 3px;
   width: 100%;
 }
-
 .title .ann {
   width: 98%;
   margin-left:$show-hide-width;
@@ -199,24 +162,19 @@ h2
   margin-bottom:0;
   padding-top:0;
 }
-.title .ann-icon
-{
+.title .ann-icon {
   padding-left:0;
 }
-
-.ann:hover{
+.ann:hover {
   background-color:#fefbd1;
 }
-.ann p
-{
+.ann p {
   padding:0;
   margin:0;
 }
-
 .ann:hover .ann-icon {
   display: block;
 }
-
 .ann-icon{
   display:none;
   border-top-left-radius: 5px;
@@ -232,9 +190,19 @@ h2
   background-color: #fefbd1;
   color:blue;
 }
-a.load
-{
+a.load {
   color:darkred;
+}
+#consultation-body li {
+  list-style:none;
+}
+#annotationTagProblemId, #annotationTagTopicId
+{
+  width:550px;
+}
+.select2-search__field
+{
+  min-width:250px !important;
 }
 // </editor-fold >
 
@@ -476,36 +444,11 @@ a.load
 
 // </editor-fold>
 
-#results tr{
-  border-bottom: 1px solid lightgray;
-  display: block;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-
-.activeCons {
-  color: #3c763d;
-}
-.inactiveCons {
-  color: #c12e2a;
-}
-
-/*Not logged in message*/
-
-.notLoggedinWrapper .fa-exclamation-triangle {
-  float: left;
-  margin-right: 10px;
-  margin-top: 3px;
-}
-
-#tabs.nav
-{
-
+// <editor-fold descr="tabs">
+#tabs.nav {
   background-color:#254254;
 }
-#tabs.nav-tabs
-{
+#tabs.nav-tabs {
   border: none;
 }
 #tabs.nav-tabs>li {
@@ -525,12 +468,34 @@ a.load
   background-color:#ed6d46;
 }
 
-#tabs.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-{
+#tabs.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
 
   border: none;
   border-radius: 0;
   cursor: default;
   background-color:#7cb6f7;
   color: white;
+}
+// </editor-fold>
+
+// <editor-fold descr="relevant laws">
+  #results tr{
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+// </editor-fold>
+
+.activeCons {
+  color: #3c763d;
+}
+.inactiveCons {
+  color: #c12e2a;
+}
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px;
 }

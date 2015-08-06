@@ -177,7 +177,7 @@
                             <div>
                             @if(vm.user.isDefined){
                                 <hr>
-                                <select id="annotationTagId" name="annotationTagId" multiple>
+                                <select id="annotationTagProblemId" name="annotationTagProblemId" multiple>
                                 @for(annotation <- vm.annotationsRelatedToProblems){
                                     <option value="@annotation.id">@annotation.description</option>
                                 }
