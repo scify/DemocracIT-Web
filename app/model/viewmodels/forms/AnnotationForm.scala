@@ -11,24 +11,36 @@ object AnnotationForm {
       "consultationId" -> longNumber,
       "articleId" -> longNumber,
       "body" -> text ,
-      "annotationTagId" -> number ,//the id from the select box
-      "annotationTagText" -> text,//the text from the select box
       "userAnnotatedText" -> optional(text), //the user user annotated
       "discussionthreadid" -> optional(longNumber),
       "discussionthreadclientid" -> text ,
-      "discussionThreadText" -> text
+      "discussionThreadText" -> text,
+      "annotationTagTopics" -> seq(
+        mapping(
+          "text" -> text,
+          "value" -> optional(longNumber)
+        )(AnnotationTagFormModel.apply)(AnnotationTagFormModel.unapply)
+      ) ,
+      "annotationTagProblems" -> seq(
+        mapping(
+          "text" -> text,
+          "value" -> optional(longNumber)
+        )(AnnotationTagFormModel.apply)(AnnotationTagFormModel.unapply)
+      )
     )(AnnotationFormModel.apply)(AnnotationFormModel.unapply)
   )
+
+  case class AnnotationTagFormModel(text:String,value:Option[Long])
 
   case class AnnotationFormModel(
           consultationId: Long,
           articleId:Long,
           body:String,
-          annotationTagId:Int,
-          annotationTagText:String,
           userAnnotatedText: Option[String],
           discussionThreadId: Option[Long],
           discussionThreadClientId:String,
-          discusionThreadText:String
+          discusionThreadText:String,
+          annotationTagTopics:Seq[AnnotationTagFormModel],
+          annotationTagProblems:Seq[AnnotationTagFormModel]
     )
 }

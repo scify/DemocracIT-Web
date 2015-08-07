@@ -3,6 +3,7 @@ package model.repositories
 import java.util.{UUID, Date}
 import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
 import anorm._
+import anorm.SqlParser._
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import repositories.anorm._
@@ -53,13 +54,11 @@ class CommentsRepository {
       //It seems that None is not replaced correctly with Null by anorm
       // use a magic number... http://stackoverflow.com/questions/26798371/anorm-play-scala-and-postgresql-dynamic-sql-clause-not-working
       //      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
-
-
       val useridParam = if (user_id.isDefined) user_id.get else new java.util.UUID( 0L, 0L )
 
       //todo: get the user fields when login/register related tasks are completed. After this change left outer join to inner join on table users.
       //currently we allow only one annotation tag per comment ( public.annotation_items  contains maximum one annotation per comment)
-     SQL"""
+     val comments:List[Comment]= SQL"""
           with ratingCounter as
           (
            select cr.comment_id,
@@ -74,28 +73,33 @@ class CommentsRepository {
           select c.*, CAST(c.user_id  AS varchar) as fullName,
                            counter.likes,
                             counter.dislikes,
-                            cr.liked as userrating,
-                           ant.id as annotationTypeId,
-                           ant.description as annotationTypeDescr
+                            cr.liked as userrating
                        from public.comments c
                                              inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                              left outer join public.users u on u.id = c.user_id
-                                             left outer join public.annotation_items i on i.public_comment_id = c.id
-                                             left outer join public.annotation_types_lkp ant on ant.id = i.annotation_type_id
                                              left outer join public.comment_rating cr on cr.user_id = CAST($useridParam as UUID)  and cr.comment_id = c.id
                                              left outer join ratingCounter counter on counter.comment_id = c.id
                     where t.tagid =$discussionthreadclientid
                      order by c.date_added desc, c.id desc
 
 
-        """.as {
-                  (CommentsParser.Parse ~ AnnotationTypesParser.Parse map {
-                    tuple => {
-                      tuple._1.annotationTags =  if (tuple._2.isDefined) List(tuple._2.get) else Nil
-                      tuple._1
-                    }
-                  }) *
-               }
+        """.as(CommentsParser.Parse *)
+
+      val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
+                             select ac.public_comment_id, tag.* from annotation_comment ac
+                                    inner join annotation_tag tag on ac.annotation_tag_id = tag.id
+                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                    where t.tagid =$discussionthreadclientid
+                            """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
+
+      relatedTags.groupBy( _._1).foreach {
+        tuple =>
+             val c= comments.filter(_.id.get == tuple._1).head
+             c.annotationTagProblems = tuple._2.filter(_._2.type_id==1).map(_._2)
+             c.annotationTagTopics = tuple._2.filter(_._2.type_id==2).map(_._2)
+      }
+      comments
     }
   }
 
@@ -189,10 +193,10 @@ class CommentsRepository {
 
     DB.withConnection { implicit c =>
 
-      val sql = SQL("select * from public.annotation_types_lkp")
+      val sql = SQL("select * from public.annotation_tag where status_id not in (4,5)") //hide rejected or deleted comments
 
       sql().map( row =>
-                    AnnotationTags(row[Int]("id"),row[String]("description"))
+                    AnnotationTags(row[Long]("id"), row[String]("description"), row[Int]("type_id"))
                 ).toList
 
     }
@@ -203,6 +207,7 @@ class CommentsRepository {
       DB.withTransaction() { implicit c =>
 
        import utils.ImplicitAnormHelperMethods._
+
 
        val commentId = SQL"""
           INSERT INTO public.comments
@@ -233,17 +238,42 @@ class CommentsRepository {
                       ${comment.userAnnotatedText})
                   """.executeInsert()
 
-        for (annotation <- comment.annotationTags)
+
+        val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
+
+        for (annotation <- annotationTags )
         {
-          if (annotation.id>0)
+          if (annotation.id == -1)
             {
-                SQL"""
-                      INSERT INTO public.annotation_items
-                                  (public_comment_id,annotation_type_id)
-                      VALUES
-                      ($commentId,${annotation.id})
-                    """.execute()
+              //if it already exists we request the id, else save and retrieve it
+              val annotationid: Long= SQL"""
+                                     with existing as (
+                                          SELECT id FROM annotation_tag WHERE description = ${annotation.description}
+                                     ),
+                                     new as (
+                                         INSERT INTO annotation_tag   (description,type_id,date_added,status_id)
+                                         SELECT ${annotation.description} as description,
+                                                ${annotation.type_id} as type_id ,
+                                                now() as date_added,
+                                                2 as status_id
+                                         WHERE NOT EXISTS ( select id from existing)
+                                         returning id
+                                     )
+                                     select id from new
+                                      union all
+                                     select id from existing
+
+                                """.as(SqlParser.long("id").single) // .executeInsert()
+
+              annotation.id = annotationid
             }
+
+          SQL"""
+              INSERT INTO public.annotation_comment
+                          (public_comment_id,annotation_tag_id)
+              VALUES
+              ($commentId,${annotation.id})
+            """.execute()
 
         }
 

@@ -92,10 +92,6 @@ h2 {
 #toolbar hr {
   margin: 15px; }
 
-#toolbar select {
-  width: 100%;
-  margin-bottom: 15px; }
-
 #toolbar textarea {
   display: block;
   margin-top: 10px;
@@ -115,16 +111,13 @@ h2 {
 .article-title-text .ann {
   width: 97%; }
 
-#consultation-body li {
-  list-style: none; }
-
 .ann {
   display: inline-block;
   position: relative;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding-bottom: 3px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
   padding-top: 3px;
   width: 100%; }
 
@@ -154,12 +147,26 @@ h2 {
   border-top-right-radius: 5px;
   cursor: pointer;
   text-align: left;
-  padding: 0px 10px;
+  padding: 5px 10px;
   position: absolute;
   width: 100%;
-  top: -17px;
+  top: -26px;
   font-size: 12px;
-  left: 0; }
+  left: 0;
+  background-color: #fefbd1;
+  color: blue; }
+
+a.load {
+  color: darkred; }
+
+#consultation-body li {
+  list-style: none; }
+
+#annotationTagProblemId, #annotationTagTopicId {
+  width: 550px; }
+
+.select2-search__field {
+  min-width: 250px !important; }
 
 .aside-button {
   padding: 6px 7px;
@@ -339,25 +346,6 @@ h2 {
 @keyframes animation-rotate {
   100% {
     transform: rotate(360deg); } }
-#results tr {
-  border-bottom: 1px solid lightgray;
-  display: block;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px; }
-
-.activeCons {
-  color: #3c763d; }
-
-.inactiveCons {
-  color: #c12e2a; }
-
-/*Not logged in message*/
-.notLoggedinWrapper .fa-exclamation-triangle {
-  float: left;
-  margin-right: 10px;
-  margin-top: 3px; }
-
 #tabs.nav {
   background-color: #254254; }
 
@@ -385,5 +373,23 @@ h2 {
   cursor: default;
   background-color: #7cb6f7;
   color: white; }
+
+#results tr {
+  border-bottom: 1px solid lightgray;
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px; }
+
+.activeCons {
+  color: #3c763d; }
+
+.inactiveCons {
+  color: #c12e2a; }
+
+.notLoggedinWrapper .fa-exclamation-triangle {
+  float: left;
+  margin-right: 10px;
+  margin-top: 3px; }
 
 /*# sourceMappingURL=consultation.css.map */

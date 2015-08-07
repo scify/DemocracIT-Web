@@ -9,15 +9,14 @@ import model.dtos._
 
 object AnnotationTypesParser {
 
-  val Parse: RowParser[Option[AnnotationTags]] = {
-    get[Option[Int]]("annotationTypeId") ~
-    get[Option[String]]("annotationTypeDescr")  map
+  val Parse: RowParser[AnnotationTags] = {
+    get[Long]("id") ~
+    get[String]("description") ~
+    get[Int]("type_id") map
     {
-      case annotationTypeId ~ annotationTypeDescr =>
-        if (annotationTypeId.isDefined)
-          Some(AnnotationTags(annotationTypeId.get, annotationTypeDescr.get))
-        else
-          None
+      case id ~ description ~ type_id =>
+       AnnotationTags(id, description, type_id)
+
     }
   }
 }
@@ -56,7 +55,8 @@ object CommentsParser{
                       date_added,
                       revision,
                       depth,
-                      Nil,
+                      Nil, //annotation tags
+                      Nil, //annotation tags
                       discussionThread,
                       likes.getOrElse(0),
                       dislikes.getOrElse(0),
