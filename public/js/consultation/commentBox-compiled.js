@@ -284,7 +284,19 @@
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
 
-            var tagNodes = this.props.data.annotationTags.map(function (tag) {
+            var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
+                return React.createElement(
+                    "div",
+                    { className: "tag" },
+                    React.createElement(
+                        "span",
+                        null,
+                        tag.description
+                    )
+                );
+            });
+
+            var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return React.createElement(
                     "div",
                     { className: "tag" },
@@ -320,7 +332,9 @@
                         this.props.data.fullName
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
-                    tagNodes
+                    taggedProblems,
+                    " ",
+                    taggedTopics
                 ),
                 React.createElement(
                     "div",

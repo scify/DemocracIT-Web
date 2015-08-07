@@ -275,7 +275,13 @@
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
 
-            var tagNodes = this.props.data.annotationTags.map(function (tag) {
+            var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
+                return (
+                    <div className="tag"><span >{tag.description }</span></div>
+                );
+            });
+
+            var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return (
                     <div className="tag"><span >{tag.description }</span></div>
                 );
@@ -298,7 +304,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        {tagNodes}
+                        {taggedProblems} {taggedTopics}
                     </div>
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment}>
