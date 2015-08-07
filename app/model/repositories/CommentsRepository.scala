@@ -193,7 +193,7 @@ class CommentsRepository {
       val sql = SQL("select * from public.annotation_tag where status_id not in (4,5)") //hide rejected or deleted comments
 
       sql().map( row =>
-                    AnnotationTags(row[Int]("id"), row[String]("description"), row[Int]("type_id"))
+                    AnnotationTags(row[Long]("id"), row[String]("description"), row[Int]("type_id"))
                 ).toList
 
     }
@@ -204,6 +204,7 @@ class CommentsRepository {
       DB.withTransaction() { implicit c =>
 
        import utils.ImplicitAnormHelperMethods._
+
 
        val commentId = SQL"""
           INSERT INTO public.comments
@@ -234,17 +235,42 @@ class CommentsRepository {
                       ${comment.userAnnotatedText})
                   """.executeInsert()
 
-        for (annotation <- comment.annotationTagProblems)
+
+        val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
+
+        for (annotation <- annotationTags )
         {
-          if (annotation.id>0)
+          if (annotation.id == -1)
             {
-                SQL"""
-                      INSERT INTO public.annotation_items
-                                  (public_comment_id,annotation_type_id)
-                      VALUES
-                      ($commentId,${annotation.id})
-                    """.execute()
+              //if it already exists we request the id, else save and retrieve it
+              val annotationid: Long= SQL"""
+                                     with existing as (
+                                          SELECT id FROM annotation_tag WHERE description = ${annotation.description}
+                                     ),
+                                     new as (
+                                         INSERT INTO annotation_tag   (description,type_id,date_added,status_id)
+                                         SELECT ${annotation.description} as description,
+                                                ${annotation.type_id} as type_id ,
+                                                now() as date_added,
+                                                2 as status_id
+                                         WHERE NOT EXISTS ( select id from existing)
+                                         returning id
+                                     )
+                                     select id from new
+                                      union all
+                                     select id from existing
+
+                                """.as(SqlParser.long("id").single) // .executeInsert()
+
+              annotation.id = annotationid
             }
+
+          SQL"""
+              INSERT INTO public.annotation_comment
+                          (public_comment_id,annotation_tag_id)
+              VALUES
+              ($commentId,${annotation.id})
+            """.execute()
 
         }
 

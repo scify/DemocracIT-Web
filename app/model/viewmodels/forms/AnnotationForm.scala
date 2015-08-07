@@ -18,19 +18,19 @@ object AnnotationForm {
       "annotationTagTopics" -> seq(
         mapping(
           "text" -> text,
-          "value" -> optional(number)
+          "value" -> optional(longNumber)
         )(AnnotationTagFormModel.apply)(AnnotationTagFormModel.unapply)
       ) ,
       "annotationTagProblems" -> seq(
         mapping(
           "text" -> text,
-          "value" -> optional(number)
+          "value" -> optional(longNumber)
         )(AnnotationTagFormModel.apply)(AnnotationTagFormModel.unapply)
       )
     )(AnnotationFormModel.apply)(AnnotationFormModel.unapply)
   )
 
-  case class AnnotationTagFormModel(text:String,value:Option[Int])
+  case class AnnotationTagFormModel(text:String,value:Option[Long])
 
   case class AnnotationFormModel(
           consultationId: Long,
