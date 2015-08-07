@@ -74,35 +74,18 @@
                 fullName: this.props.fullName,
                 dateAdded: new Date(),
                 userAnnotatedText: data.userAnnotatedText,
-                body: data.body
+                body: data.body,
+                annotationTagTopics: data.annotationTagTopics,
+                annotationTagProblems: data.annotationTagProblems
             };
-
-            //play framework wants arrays to be serialized like arrayElement[0].field = value
-            //the default implementation does it arrayElement[0][field] = value which fails.
-            //todo: override the bindformRequest method in scala or create a custom jquery url serializer
-            var serializeArrayForPlay = function serializeArrayForPlay(ar, prefix) {
-                var str = [];
-                for (var i = 0; i < ar.length; i++) {
-                    var obj = ar[i];
-
-                    for (var p in obj) {
-                        if (obj.hasOwnProperty(p)) {
-                            str.push(prefix + "[" + i + "]." + p + "=" + encodeURIComponent(obj[p]));
-                        }
-                    }
-                }
-                return str.join("&");
-            };
-            var annotationTagTopics = serializeArrayForPlay(data.annotationTagTopics, "annotationTagTopics");
-            var annotationTagProblems = serializeArrayForPlay(data.annotationTagProblems, "annotationTagProblems");
-
-            var postedDataEncoded = $.param(postedData) + "&" + annotationTagTopics + "&" + annotationTagProblems;
 
             //todo: cancel any previous events
             $.ajax({
                 method: "POST",
                 url: url,
-                data: postedDataEncoded,
+                data: JSON.stringify(postedData),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
                 beforeSend: function beforeSend() {
                     instance.state.display = true;
                     instance.state.busy = true;
