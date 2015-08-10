@@ -171,13 +171,13 @@ scify.Annotator.prototype = (function(){
             attachAnnotationPrompts();
             attachAnnotationEvents();
 
-            $("#annotationTagProblemId").select2({
-                placeholder: "Υπόδειξη προβλήματος",
+            $("#annotationTagTopicId").select2({
+                placeholder:  "κλικ εδώ για να θέσετε το θέμα (πχ 'μισθος')",
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
-            $("#annotationTagTopicId").select2({
-                placeholder: "Υπόδειξη θέματος",
+            $("#annotationTagProblemId").select2({
+                placeholder: "πχ 'ασάφεια', 'μη κατανοητό κείμενο'",
                 tags: true,
                 tokenSeparators: [',', ' ']
             });

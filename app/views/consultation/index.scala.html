@@ -3,10 +3,10 @@
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
-      <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+      @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
     <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
     @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
-    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
@@ -29,9 +29,10 @@
 }
 
 @css = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
 @layout("DemocracIT", css, js,None) {
@@ -163,7 +164,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Αφήστε το σχόλιο σας:</h4>
+                    <h4 class="modal-title" id="myModalLabel">Παρατήρηση/Σχόλιο για το τμήμα κειμένου:</h4>
                 </div>
                 <div class="modal-body">
 
@@ -173,27 +174,43 @@
 
                             <div>
                                 <blockquote></blockquote>
+                                @if(vm.user.isDefined) {
+                                    <label>Σε ποιό θέμα αναφέρεται το κείμενο;&nbsp;
+                                        <i class="fa fa-info-circle"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου"></i>
+                                        </label>
+                                    @if(vm.annotationsRelatedToTopics.length>0) {
+                                        <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
+                                        @for(annotation <- vm.annotationsRelatedToTopics) {
+                                            <option value="@annotation.id">@annotation.description</option>
+                                        }
+                                        </select>
+                                    }
+                                }
+
                             </div>
                             <div>
                             @if(vm.user.isDefined){
-                                <hr>
+
+                                <label>Αναγνωρίζεται κάποιο πρόβλημα;
+                                    <i class="fa fa-info-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="βοηθήστε το νομοθέτη αναφέροντας προβλήματα"></i>
+                                </label>
                                 <select id="annotationTagProblemId" name="annotationTagProblemId" multiple>
                                 @for(annotation <- vm.annotationsRelatedToProblems){
                                     <option value="@annotation.id">@annotation.description</option>
                                 }
                                 </select>
-                                @if(vm.annotationsRelatedToTopics.length>0) {
-                                    <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
-                                    @for(annotation <- vm.annotationsRelatedToTopics) {
-                                        <option value="@annotation.id">@annotation.description</option>
-                                    }
-                                    </select>
-                                }
+
                             </div>
 
                             <div id="comment-wrap">
-                                Έχετε κάποια παρατήρηση:
-                                <textarea name="body"></textarea>
+                                Αφήστε την παρατήρησή/σχόλιο σας:
+                                <textarea name="body" placeholder="θα ήθελα να δηλώσω..."></textarea>
                             </div>
 
                             <input type="hidden" name="articleid" value=""/>

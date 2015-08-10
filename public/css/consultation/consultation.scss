@@ -1,7 +1,7 @@
 @import "../utilities/variables";
 
 $show-hide-width : 11px;
-$annotation-color: #f5d8db;
+$annotation-color: yellow;
 
 h2{
   font-size:16px;
@@ -108,12 +108,67 @@ h2{
 // </editor-fold>
 
 // <editor-fold descr="toolbar">
+
+.select2
+{
+  margin-bottom:10px;
+}
+
+.select2-container--default .select2-selection--multiple {
+  border: none !important;
+  border-bottom: 2px solid  darkgray!important;
+  padding: 0;
+  margin: 0;
+  min-height: inherit;
+  border-radius: 0;
+  height: 28px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered
+{
+  margin:0;
+  padding:0;
+}
+.select2-container .select2-search--inline .select2-search__field
+{
+  margin:0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice
+{
+  //background-color: #254254;
+  //color:white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  cursor: default;
+  float: left;
+  margin-right: 5px;
+  padding: 0 5px;
+  margin-top:0;
+}
+.select2-search__field
+{
+  min-width:330px !important;
+}
+
+.modal-body
+{
+  padding-bottom:0;
+}
+
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
-  padding:0;
   padding-left: 5px;
-  margin-top:5px;
+  margin-bottom: 5px;
+  background-color: $annotation-color;
+  border: 0;
+  padding: 16px;
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  max-height: 200px;
+  overflow-y: scroll;
 }
 #toolbar #comment-wrap {
   margin-top:10px;
@@ -133,6 +188,13 @@ h2{
   margin-top:10px;
   margin-bottom:10px;
   width:100%;
+  min-height: 150px;
+}
+#toolbar label
+{
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: 700;
 }
 #toolbar .mce-tinymce {
   margin-top:5px;
@@ -168,9 +230,8 @@ h2{
   margin:0;
 }
 
-
-::selection { background-color:$annotation-color; }
-::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
+.ann ::selection { background-color:$annotation-color; }
+.ann ::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
 
 .ann.hl{
   background-color:$annotation-color;
@@ -194,6 +255,7 @@ h2{
 }
 a.load {
   color:darkred;
+  font-size:12px;
 }
 #consultation-body li {
   list-style:none;
@@ -202,10 +264,7 @@ a.load {
 {
   width:550px;
 }
-.select2-search__field
-{
-  min-width:250px !important;
-}
+
 // </editor-fold >
 
 // <editor-fold descr="aside">
