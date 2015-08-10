@@ -119,10 +119,8 @@ scify.Annotator.prototype = (function(){
             var target = $(e.target),
                 toolbar = $("#toolbar");
 
-            if (target.hasClass("ann-icon")){
-                selectedText = target.parent().text();
-                selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
-                //  left =left - toolbar.width();
+            if (target.hasClass("ann-icon") || target.parent().hasClass("ann-icon")){
+                selectedText =  target.closest(".ann").text();
             }
 
             $("#toolbar-modal").modal("show");
