@@ -111,7 +111,7 @@ scify.Annotator.prototype = (function(){
 
         },
         attachAnnotationPrompts= function(){
-            $(".ann").append("<div class='ann-icon'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</div>");
+            $(".ann").append("<div class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου / εναλλακτικά επιλέξετε μέρος του κειμένου'><i class='fa fa-pencil-square-o'></i></div>");
         },
         displayToolBar = function(e,selectedText){
             //todo: Use react.js for this.
@@ -163,6 +163,11 @@ scify.Annotator.prototype = (function(){
         hideToolBar = function(){
             $("#toolbar-modal").modal("hide");
         },
+        displayAnnotationIcon = function(){
+            var current=$(this).find(".ann-icon");
+            current.addClass("on");
+             $(".ann-icon").not(current).removeClass("on");
+        },
         init = function(){
             createAnnotatableAreas();
             attachAnnotationPrompts();
@@ -178,6 +183,17 @@ scify.Annotator.prototype = (function(){
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
+
+            $("body").on("mouseenter",".ann",displayAnnotationIcon);
+
+            $("body").on("mouseenter",".ann-icon",function(){
+                $(this).parent(".ann").toggleClass("hl");
+            });
+
+            $("body").on("mouseleave",".ann-icon",function(){
+                $(this).parent(".ann").toggleClass("hl");
+            });
+
         };
 
     return {

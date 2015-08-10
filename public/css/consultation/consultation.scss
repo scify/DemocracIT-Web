@@ -1,6 +1,7 @@
 @import "../utilities/variables";
 
 $show-hide-width : 11px;
+$annotation-color: #f5d8db;
 
 h2{
   font-size:16px;
@@ -66,18 +67,19 @@ h2{
 
 // <editor-fold descr="articles">
 .show-hide {
-  border: medium none;
-  box-shadow: none;
-  color: gray;
-  display: inline;
-  font-size: 20px;
-  line-height: 20px;
-  padding: 0;
-  vertical-align: -1px;
+  display:none;
+  //border: medium none;
+  //box-shadow: none;
+  //color: gray;
+  //display: inline;
+  //font-size: 20px;
+  //line-height: 20px;
+  //padding: 0;
+  //vertical-align: -1px;
   width: $show-hide-width;
   position: absolute;
-  top: 5px;
-  z-index: 10;
+  //top: 5px;
+  //z-index: 10;
 }
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
@@ -100,7 +102,7 @@ h2{
   font-size: 13px;
   font-weight: normal;
   line-height: 1.6em;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
 // </editor-fold>
@@ -148,47 +150,47 @@ h2{
 .ann {
   display: inline-block;
   position: relative;
-  padding: 10px;
-  margin-top: 10px;
+  margin-top: 0;
   margin-bottom: 0px;
   padding-bottom: 0px;
-  padding-top: 3px;
+  padding-top: 0;
   width: 100%;
 }
-.title .ann {
-  width: 98%;
-  margin-left:$show-hide-width;
-  padding-left:5px;
-  margin-bottom:0;
-  padding-top:0;
-}
+
 .title .ann-icon {
-  padding-left:0;
+  top:-4px;
 }
-.ann:hover {
-  background-color:#fefbd1;
-}
+//.ann:hover {
+//  background-color:#fefbd1;
+//}
 .ann p {
   padding:0;
   margin:0;
 }
-.ann:hover .ann-icon {
+
+
+::selection { background-color:$annotation-color; }
+::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
+
+.ann.hl{
+  background-color:$annotation-color;
+}
+.ann-icon.on{
   display: block;
 }
 .ann-icon{
-  display:none;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  display: none;
   cursor: pointer;
   text-align: left;
-  padding: 5px 10px;
   position: absolute;
-  width: 100%;
-  top: -26px;
-  font-size: 12px;
-  left: 0;
-  background-color: #fefbd1;
-  color:blue;
+  top: 0;
+  font-size: 21px;
+  left: -25px;
+  color: gray;
+  bottom: 0;
+  padding: 0;
+  padding-top: 0;
+  margin: 0;
 }
 a.load {
   color:darkred;
