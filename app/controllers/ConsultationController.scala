@@ -3,19 +3,21 @@ package controllers
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Silhouette, Environment}
-import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import model.services._
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 import play.api.libs.json.{Json, JsValue, JsPath, Writes}
 
 
 
-//@Singleton
-//class ConsultationController @Inject() (searchManager: SearchManagerAbstract) extends Controller {
-class ConsultationController  @Inject()  (implicit val env: Environment[model.User, SessionAuthenticator])
-  extends Silhouette[model.User, SessionAuthenticator] {
+class ConsultationController  @Inject() (val messagesApi: MessagesApi,
+                                         val env: Environment[model.User, CookieAuthenticator],
+                                         socialProviderRegistry: SocialProviderRegistry)
+  extends Silhouette[model.User, CookieAuthenticator] {
 
   private val consultationManager = new ConsultationManager()
   private val commentManager = new CommentManager()

@@ -5,6 +5,7 @@ import java.util.UUID
 import com.mohiva.play.silhouette.api.LoginInfo
 import model.User
 import model.repositories.UserDAOImpl._
+
 import scala.collection.mutable
 import scala.concurrent.Future
 
@@ -51,5 +52,5 @@ object UserDAOImpl {
   /**
    * The list of users.
    */
-  val users: mutable.HashMap[UUID, model.User] = mutable.HashMap()
+  val users: mutable.HashMap[UUID, User] = mutable.HashMap()
 }

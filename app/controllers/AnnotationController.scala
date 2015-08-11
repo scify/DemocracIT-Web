@@ -3,16 +3,21 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import com.mohiva.play.silhouette.api.{Silhouette, Environment}
-import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import forms._
 import model.dtos._
 import model.services.CommentManager
 import model.viewmodels.forms.RateCommentForm
 import org.joda.time.DateTime
+import play.api.i18n.MessagesApi
 import play.api.libs.json.{Json, JsValue, JsPath, Writes}
 import utils.ImplicitWrites.FormErrorWrites
 
-class AnnotationController @Inject() (implicit val env: Environment[model.User, SessionAuthenticator]) extends Silhouette[model.User, SessionAuthenticator] {
+class AnnotationController @Inject() (val messagesApi: MessagesApi,
+                                      val env: Environment[model.User, CookieAuthenticator],
+                                      socialProviderRegistry: SocialProviderRegistry)
+              extends Silhouette[model.User, CookieAuthenticator] {
 
   var commentManager = new CommentManager()
 

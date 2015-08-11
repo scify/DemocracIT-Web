@@ -19,7 +19,7 @@ object ImplicitWrites {
   implicit object FormErrorWrites extends Writes[FormError] {
     override def writes(o: FormError): JsValue = Json.obj(
        "key" -> Json.toJson(o.key),
-      "message" -> Json.toJson(Messages(o.message))
+      "message" -> o.message//Json.toJson(Messages(o.message))
     )
   }
 

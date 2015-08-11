@@ -1,3 +1,4 @@
+import scalariform.formatter.preferences._
 
 name := """DemocracIT"""
 
@@ -14,6 +15,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 // http://www.ocpsoft.org/prettytime/ format hours/dates
 libraryDependencies ++= Seq(
   jdbc,
+  anorm,
   cache,
   ws,
   filters,
@@ -25,12 +27,19 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-testkit" % "3.0.0" % "test",
   "org.ocpsoft.prettytime" % "prettytime" % "3.2.7.Final",
   "org.postgresql" % "postgresql" % "9.3-1100-jdbc41",
-  "org.specs2" %% "specs2-core" % "3.0.1" % "test",
-  "com.typesafe.play" %% "anorm" % "2.4.0"
+  "org.specs2" %% "specs2-core" % "3.0.1" % "test"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
+
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 TwirlKeys.templateImports ++=Seq("model.dtos._")
+
+defaultScalariformSettings
+
+ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  .setPreference(FormatXml, false)
+  .setPreference(DoubleIndentClassDeclaration, false)
+  .setPreference(PreserveDanglingCloseParenthesis, true)

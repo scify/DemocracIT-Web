@@ -4,14 +4,16 @@ import java.util.UUID
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.services.{ AuthInfoService, AvatarService }
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.services.{ AvatarService }
 import com.mohiva.play.silhouette.api.util.PasswordHasher
-import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignUpForm
 import model.User
-import model.services.UserService
-import play.api.i18n.Messages
+import models.services.UserService
+
+import play.api.i18n.{MessagesApi, Messages}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Action
 
@@ -22,17 +24,18 @@ import scala.concurrent.Future
  *
  * @param env The Silhouette environment.
  * @param userService The user service implementation.
- * @param authInfoService The auth info service implementation.
  * @param avatarService The avatar service implementation.
  * @param passwordHasher The password hasher implementation.
  */
+
 class SignUpController @Inject() (
-  implicit val env: Environment[model.User, SessionAuthenticator],
-  val userService: UserService,
-  val authInfoService: AuthInfoService,
-  val avatarService: AvatarService,
-  val passwordHasher: PasswordHasher)
-  extends Silhouette[model.User, SessionAuthenticator] {
+                                   val messagesApi: MessagesApi,
+                                   val env: Environment[User, CookieAuthenticator],
+                                   userService: UserService,
+                                   authInfoRepository: AuthInfoRepository,
+                                   avatarService: AvatarService,
+                                   passwordHasher: PasswordHasher)
+  extends Silhouette[User, CookieAuthenticator] {
 
   /**
    * Registers a new user.
@@ -49,7 +52,7 @@ class SignUpController @Inject() (
             Future.successful(Redirect(routes.AccountController.signUp()).flashing("error" -> Messages("user.exists")))
           case None =>
             val authInfo = passwordHasher.hash(data.password)
-            val user = model.User(
+            val user = User(
               userID = UUID.randomUUID(),
               loginInfo = loginInfo,
               firstName = Some(data.firstName),
@@ -61,15 +64,13 @@ class SignUpController @Inject() (
             for {
               avatar <- avatarService.retrieveURL(data.email)
               user <- userService.save(user.copy(avatarURL = avatar))
-              authInfo <- authInfoService.save(loginInfo, authInfo)
-              authenticator <- env.authenticatorService.create(user.loginInfo)
+              authInfo <- authInfoRepository.add(loginInfo, authInfo)
+              authenticator <- env.authenticatorService.create(loginInfo)
               value <- env.authenticatorService.init(authenticator)
-              result <- env.authenticatorService.embed(value, Future.successful(
-                Redirect(routes.HomeController.index())
-              ))
+              result <- env.authenticatorService.embed(value, Redirect(routes.HomeController.index()))
             } yield {
-              env.eventBus.publish(SignUpEvent(user, request, request2lang))
-              env.eventBus.publish(LoginEvent(user, request, request2lang))
+              env.eventBus.publish(SignUpEvent(user, request, request2Messages))
+              env.eventBus.publish(LoginEvent(user, request, request2Messages))
               result
             }
         }

@@ -21,10 +21,10 @@ GET         /consultation/annotator/:consultationId @controllers.ConsultationCon
 GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="", ministryId:Option[Int] ?=None)
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
 GET         /comments/retrieve                   @controllers.ConsultationController.getComments(consultationId:Long, articleId:Long, source: String, discussionthreadid:Option[Int] ?= None, discussionthreadclientid:String, page:Option[Int] ?= None)
+GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                        controllers.Assets.at(path="/public", file)
 GET         /webjars/*file                       controllers.WebJarAssets.at(file)
-
 
