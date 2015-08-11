@@ -132,6 +132,7 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='articleid']").val(articleid);
             toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
             toolbar.find("blockquote").text(selectedText);
+            resetForm();
 
         },
         collectAnnotatorData = function(e){
@@ -165,6 +166,11 @@ scify.Annotator.prototype = (function(){
             var current=$(this).find(".ann-icon");
             current.addClass("on");
              $(".ann-icon").not(current).removeClass("on");
+        },
+        resetForm = function(){
+            $("#annotationTagTopicId").select2("val","");
+            $("#annotationTagProblemId").select2("val","");
+            $("#toolbar").find("textarea").val("");
         },
         init = function(){
             createAnnotatableAreas();
