@@ -111,7 +111,7 @@ scify.Annotator.prototype = (function(){
 
         },
         attachAnnotationPrompts= function(){
-            $(".ann").append("<div class='ann-icon'>κλικ εδώ για σχολιασμό (ή επιλέξτε μέρος του κειμένου)</div>");
+            $(".ann").append("<div class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου / εναλλακτικά επιλέξετε μέρος του κειμένου'><i class='fa fa-pencil-square-o'></i></div>");
         },
         displayToolBar = function(e,selectedText){
             //todo: Use react.js for this.
@@ -119,10 +119,8 @@ scify.Annotator.prototype = (function(){
             var target = $(e.target),
                 toolbar = $("#toolbar");
 
-            if (target.hasClass("ann-icon")){
-                selectedText = target.parent().text();
-                selectedText = selectedText.substr(0,selectedText.length-target.text().length); //remove ann-icon text
-                //  left =left - toolbar.width();
+            if (target.hasClass("ann-icon") || target.parent().hasClass("ann-icon")){
+                selectedText =  target.closest(".ann").text();
             }
 
             $("#toolbar-modal").modal("show");
@@ -163,21 +161,37 @@ scify.Annotator.prototype = (function(){
         hideToolBar = function(){
             $("#toolbar-modal").modal("hide");
         },
+        displayAnnotationIcon = function(){
+            var current=$(this).find(".ann-icon");
+            current.addClass("on");
+             $(".ann-icon").not(current).removeClass("on");
+        },
         init = function(){
             createAnnotatableAreas();
             attachAnnotationPrompts();
             attachAnnotationEvents();
 
-            $("#annotationTagProblemId").select2({
-                placeholder: "Υπόδειξη προβλήματος",
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
             $("#annotationTagTopicId").select2({
-                placeholder: "Υπόδειξη θέματος",
+                placeholder:  "κλικ εδώ για να θέσετε το θέμα (πχ 'μισθος')",
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
+            $("#annotationTagProblemId").select2({
+                placeholder: "πχ 'ασάφεια', 'μη κατανοητό κείμενο'",
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
+
+            $("body").on("mouseenter",".ann",displayAnnotationIcon);
+
+            $("body").on("mouseenter",".ann-icon",function(){
+                $(this).parent(".ann").toggleClass("hl");
+            });
+
+            $("body").on("mouseleave",".ann-icon",function(){
+                $(this).parent(".ann").toggleClass("hl");
+            });
+
         };
 
     return {
