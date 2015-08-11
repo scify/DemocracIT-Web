@@ -167,9 +167,6 @@
     var TotalCommentsLink = React.createClass({
         displayName: "TotalCommentsLink",
 
-        handleClick: function handleClick() {
-            this.props.onClick();
-        },
         render: function render() {
 
             var label = "σχόλια";
@@ -179,7 +176,7 @@
 
             if (this.props.count > 0) return React.createElement(
                 "a",
-                { className: "load", onClick: this.handleClick },
+                { className: "load", onClick: this.props.onClick },
                 this.props.count,
                 " ",
                 label,

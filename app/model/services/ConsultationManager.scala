@@ -47,6 +47,7 @@ class ConsultationManager {
     val repository = new ConsultationRepository()
     val commentsRepo = new CommentsRepository()
     val annotationTags = commentsRepo.loadAnnotationTags()
+
     ConsultationViewModel(consultation = repository.get(consultationId),
                           annotationsRelatedToProblems = annotationTags.filter(_.type_id==2),
                           annotationsRelatedToTopics= annotationTags.filter(_.type_id==1),
@@ -55,6 +56,7 @@ class ConsultationManager {
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
                           relevantLaws = repository.getRelevantLaws(consultationId))
   }
+
 
   def median(s: List[Int]):Int =
   {

@@ -30,6 +30,10 @@ class ConsultationController  @Inject()  (implicit val env: Environment[model.Us
         Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
+  def getAnnotatorPage(consultationId :Long) = UserAwareAction { implicit request =>
+        Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
+  }
+
   def getComments(consultationId:Long,
                    articleId:Long,
                    source: String ,

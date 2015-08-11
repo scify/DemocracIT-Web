@@ -160,9 +160,6 @@
         }
     });
     var TotalCommentsLink = React.createClass({
-        handleClick : function(){
-          this.props.onClick();
-        },
         render : function(){
 
             var label = "σχόλια";
@@ -174,7 +171,7 @@
 
             if (this.props.count>0)
                 return (
-                    <a className="load" onClick={this.handleClick}>{this.props.count} {label} </a>
+                    <a className="load" onClick={this.props.onClick}>{this.props.count} {label} </a>
                 )
             else //todo: how can i return an empty element?
                 return (<span></span>)

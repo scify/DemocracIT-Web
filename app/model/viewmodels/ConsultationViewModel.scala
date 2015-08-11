@@ -35,5 +35,11 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 
   }
 
+  def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
+
+    val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law).toList
+    results
+  }
+
 }
 

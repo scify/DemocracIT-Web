@@ -37,78 +37,13 @@
 
 @layout("DemocracIT", css, js,None) {
 
+        @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
 
-        <div id="header" class="@{if (vm.consultation.isActive) "active" else "inactive"}">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 id="consultation-title">@Html(vm.consultation.title)  <a href="@vm.consultation.opengov_url" title="η διαβούλευση στο open.gov" target="_blank">open.gov</a></h1>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10">
-                        <div id="intro-text" class="message">
-                            <h2>Εισαγωγή:</h2>
-                            @Html(vm.consultation.shortDescr)
-                        </div>
-                        @if(vm.consultation.report_text.isDefined) {
-                            <div id="report-text" class="message">
-                                <h2>Αναγγελία ολοκλήρωσης:</h2>
-                                @Html(vm.consultation.report_text.get)
-                            </div>
-                        }
-
-                    </div>
-                    <div class="col-md-2">
-                        <div id="duration">
-                            @if(vm.consultation.isActive) {
-                                <span class="consState activeCons">ενεργη</span>
-                            } else {
-                                <span class="consState inactiveCons">ολοκληρώθηκε</span>
-                            }
-                            <div class="dates">
-                                Αναρτήθηκε
-                                <br>
-                                @vm.consultation.prettyDateFormat(vm.consultation.startDate)<br>
-                                λήξη
-                                <br>
-                                @vm.consultation.prettyDateFormat(vm.consultation.endDate)
-                            </div>
-                            Διάρκεια @vm.consultation.totalDurationFormatted
-
-                        </div>
-                        <div id="aside">
-                        @for(
-                            relevantMaterial <- vm.relevantMaterials
-                            if (relevantMaterial.pdf_url != vm.consultation.report_url.getOrElse(""))
-                        ) {
-                            <div class="aside-button">
-                                <i class="fa fa-file-pdf-o"></i>
-                                <a href="@relevantMaterial.pdf_url" target="_blank"> @relevantMaterial.title</a>
-                            </div>
-                        }
-                        @if(vm.consultation.report_url.isDefined){
-                            <div id="final-doc" class="aside-button">
-                                <i class="fa fa-file-pdf-o"></i>
-                                <a href="@vm.consultation.report_url" target="_blank">Τελική εκθεση</a>
-                            </div>
-                            }
-
-
-                        </div>
-
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation"> <a href="/consultation/reporter/@vm.consultation.id" target="_blank">Ανάλυση σχολίων</a></li>
+                <li role="presentation"> <a href="@routes.ConsultationController.getAnnotatorPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
