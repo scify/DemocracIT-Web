@@ -101,12 +101,13 @@ scify.Annotator.prototype = (function(){
                 counter++;
             }
             $(".article-body,.article-title-text").each(function(i,el){
-                var html = $(el).html();
-                html = html.replace(/<br>/g,"#brNode#").replace(/<br\/>/g,"#brNode#");
-                $(el).html(html);
+               // discard the br nodes
+               // var html = $(el).html();
+               //  html = html.replace(/<br>/g,"#brNode#").replace(/<br\/>/g,"#brNode#");
+               //  $(el).html(html);
                 recurseAllTextNodesAndApply(el,action );
-                html= $(this).html().replace(/#brNode#/g,"<br>");
-                $(this).html(html);
+                //html= $(this).html().replace(/#brNode#/g,"<br>");
+                //$(this).html(html);
             });
 
         },
