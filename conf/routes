@@ -17,7 +17,7 @@ POST        /annotation/save                     @controllers.AnnotationControll
 POST        /comments/rate                       @controllers.AnnotationController.rateComment
 #GET         /search
 
-GET         /consultation/annotator/:consultationId @controllers.ConsultationController.getAnnotatorPage(consultationId :Long)
+GET         /consultation/reporter/:consultationId @controllers.ConsultationController.getReporterPage(consultationId :Long)
 GET         /consultation/search                 @controllers.ConsultationController.search(query:String ?="", ministryId:Option[Int] ?=None)
 GET         /consultation/:consultationId        @controllers.ConsultationController.getConsultation(consultationId :Long)
 GET         /comments/retrieve                   @controllers.ConsultationController.getComments(consultationId:Long, articleId:Long, source: String, discussionthreadid:Option[Int] ?= None, discussionthreadclientid:String, page:Option[Int] ?= None)

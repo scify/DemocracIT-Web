@@ -21,6 +21,7 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
 
   private val consultationManager = new ConsultationManager()
   private val commentManager = new CommentManager()
+  private val reporterManager = new ReporterManager()
 
   def search(query:String, ministryId:Option[Int] )= Action {
     val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,ministryId.getOrElse(-1).asInstanceOf[Byte]))
@@ -32,8 +33,8 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
         Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
-  def getAnnotatorPage(consultationId :Long) = UserAwareAction { implicit request =>
-        Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
+  def getReporterPage(consultationId :Long) = UserAwareAction { implicit request =>
+        Ok(views.html.consultation.reporter(reporterManager.get(consultationId, request.identity)))
   }
 
   def getComments(consultationId:Long,
