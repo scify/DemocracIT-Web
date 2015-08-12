@@ -1,4 +1,7 @@
-scify.Annotator = function(){}
+scify.Annotator = function(enableUserToAnnotateSubtext){
+
+    this.enableUserToAnnotateSubtext = enableUserToAnnotateSubtext;
+}
 scify.Annotator.prototype = (function(){
     var getSelection = function() {
             if (window.getSelection)
@@ -45,15 +48,19 @@ scify.Annotator.prototype = (function(){
         },
         attachAnnotationEvents = function(){
             var instance = this;
-            $("body").on("mouseup",".ann",function(e){
-                var selection= getSelection();
-                if (!selectionIsAllowed(selection)){
-                    clearSelection(selection);
-                    hideToolBar();
-                }
-                else
-                    displayToolBar.call(instance,e,getSelectionText(selection));
-            });
+
+            if (instance.enableUserToAnnotateSubtext) {
+                $("body").on("mouseup",".ann",function(e){
+                    var selection= getSelection();
+                    if (!selectionIsAllowed(selection)){
+                        clearSelection(selection);
+                        hideToolBar();
+                    }
+                    else
+                        displayToolBar.call(instance,e,getSelectionText(selection));
+                });
+            }
+
             $("body").on("click",".ann-icon",displayToolBar.bind(instance));
 
         },
@@ -85,7 +92,10 @@ scify.Annotator.prototype = (function(){
                 if ( element.childNodes[i].nodeName !="SUP" &&
                     element.childNodes[i].nodeName !="#text" &&
                     element.childNodes[i].nodeName !="STRONG" )
+                {
                     bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
+                    break;
+                }
             }
             if (bannedNodeFound || element.textContent.trim().length==0)
                 return false;
@@ -97,7 +107,11 @@ scify.Annotator.prototype = (function(){
             var counter=0;
             var action = function(element)
             {
-                $(element).wrap("<div data-id='ann-"+counter+"' class='ann'></div>");
+                if (element.nodeType == Node.TEXT_NODE)
+                    $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
+                else
+                    $(element).html("<div data-id='ann-"+counter+"' class='ann'>"+ $(element).html() +"</div>");
+
                 counter++;
             }
             $(".article-body,.article-title-text").each(function(i,el){
@@ -112,7 +126,10 @@ scify.Annotator.prototype = (function(){
 
         },
         attachAnnotationPrompts= function(){
-            $(".ann").append("<div class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου / εναλλακτικά επιλέξετε μέρος του κειμένου'><i class='fa fa-pencil-square-o'></i></div>");
+            $(".ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><i class='fa fa-pencil-square-o'></i></span>");
+            $(".title").find(".ann-icon").each(function(){
+                $(this).attr("title","κλικ εδώ για σχολιασμού όλου του άρθρου");
+            });
         },
         fetchTopicTagsForUserSelection = function(selectedText){
 
@@ -140,10 +157,25 @@ scify.Annotator.prototype = (function(){
             var target = $(e.target),
                 toolbar = $("#toolbar");
 
+
             resetForm();
 
             if (target.hasClass("ann-icon") || target.parent().hasClass("ann-icon")){
                 selectedText =  target.closest(".ann").text();
+            }
+
+            if (target.closest(".title").length>0)
+            {
+                $("#myModalLabel").text("Παρατήρηση/Σχόλιο για όλοκληρο το άρθρο:");
+                $("#tag-topics-label").find("span").text("Σε ποιό θέμα αναφέρεται το άρθρο;");
+                $("#tag-topics-label").find("i").attr("title","βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο 'αρθρο'");
+                toolbar.find("blockquote").hide();
+            }
+            else{
+                $("#myModalLabel").text("Παρατήρηση/Σχόλιο για το τμήμα κειμένου:");
+                $("#tag-topics-label").text("Σε ποιό θέμα αναφέρεται το κείμενο;");
+                $("#tag-topics-label").find("i").attr("title","βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου");
+                toolbar.find("blockquote").show();
             }
 
             $("#toolbar-modal").modal("show");

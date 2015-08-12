@@ -1,7 +1,7 @@
 @import "../utilities/variables";
 
 $show-hide-width : 11px;
-$annotation-color: yellow;
+$annotation-color: #fffcd6;
 $annotation-hover-color: #fffcd6;
 
 h2{
@@ -231,13 +231,17 @@ h2{
 .ann:hover {
   background-color:$annotation-hover-color;
 }
-.ann p {
+.article p, .article ol, .article ul {
   padding:0;
   margin:0;
 }
+.article br
+{
+  display:none;
+}
 
-.ann ::selection { background-color:$annotation-color; }
-.ann ::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
+//.ann ::selection { background-color:$annotation-color; }
+//.ann ::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
 
 .ann.hl{
   background-color:$annotation-color;

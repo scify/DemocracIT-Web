@@ -123,7 +123,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator();
+        this.annotator = new scify.Annotator(false);
         this.annotator.init();
 
         replaceRelevantLaws(this.relevantLaws);
