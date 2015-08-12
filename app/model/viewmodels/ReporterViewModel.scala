@@ -9,5 +9,12 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
                              relevantMaterials: Seq[RelevantMaterial])
 {
 
+  def totalConsultationComments():Int = {
+    var total = 0
+    for(article <- consultation.articles) {
+      total += article.commentsNum
+    }
+    total
+  }
 }
 
