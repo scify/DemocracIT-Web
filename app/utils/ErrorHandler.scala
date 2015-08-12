@@ -21,7 +21,8 @@ class ErrorHandler @Inject() (
                                env: play.api.Environment,
                                config: Configuration,
                                sourceMapper: OptionalSourceMapper,
-                               router: javax.inject.Provider[Router])
+                               router: javax.inject.Provider[Router],
+                               messagesApi: play.api.i18n.MessagesApi)
   extends DefaultHttpErrorHandler(env, config, sourceMapper, router)
   with SecuredErrorHandler {
 
@@ -41,6 +42,7 @@ class ErrorHandler @Inject() (
           Some(Future.successful(Unauthorized(play.api.libs.json.Json.toJson(routes.AccountController.signIn.url))))
         }
         else {
+
           Some(Future.successful(Redirect(routes.AccountController.signIn)))
         }
 
@@ -61,11 +63,11 @@ class ErrorHandler @Inject() (
 
         if (isAjax){
           //todo: move to resources
-          Some(Future.successful(Forbidden(play.api.libs.json.Json.toJson("access.denied"))))
+          Some(Future.successful(Forbidden(play.api.libs.json.Json.toJson(messagesApi("access.denied")))))
         }
         else {
           Some(Future.successful(Redirect(routes.AccountController.signIn)
-            .flashing("error" -> "access.denied")))
+            .flashing("error" -> messagesApi("access.denied"))))
         }
 
   }
