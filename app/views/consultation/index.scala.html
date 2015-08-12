@@ -116,26 +116,24 @@
 
                             <div>
                                 <blockquote></blockquote>
-                                @if(vm.user.isDefined) {
-                                    <label>Σε ποιό θέμα αναφέρεται το κείμενο;&nbsp;
-                                        <i class="fa fa-info-circle"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου"></i>
-                                        </label>
-                                    @if(vm.annotationsRelatedToTopics.length>0) {
-                                        <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
-                                        @for(annotation <- vm.annotationsRelatedToTopics) {
-                                            <option value="@annotation.id">@annotation.description</option>
-                                        }
-                                        </select>
-                                    }
-                                }
 
                             </div>
 
                             <div class="padding">
                             @if(vm.user.isDefined){
+
+                                <label>Σε ποιό θέμα αναφέρεται το κείμενο;&nbsp;
+                                    <i class="fa fa-info-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου"></i>
+                                </label>
+
+                                <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
+                                @for(annotation <- vm.annotationsRelatedToTopics) {
+                                    <option value="@annotation.id">@annotation.description</option>
+                                }
+                                </select>
 
                                 <label>Αναγνωρίζεται κάποιο πρόβλημα;
                                     <i class="fa fa-info-circle"

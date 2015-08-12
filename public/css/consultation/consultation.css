@@ -157,7 +157,9 @@ h2 {
   margin-bottom: 0px;
   padding-bottom: 0px;
   padding-top: 0;
-  width: 100%; }
+  width: 100%;
+  margin-left: -25px;
+  padding-left: 25px; }
 
 .title .ann-icon {
   top: -4px; }
@@ -189,12 +191,13 @@ h2 {
   position: absolute;
   top: 0;
   font-size: 21px;
-  left: -25px;
+  left: 0px;
   color: gray;
   bottom: 0;
   padding: 0;
   padding-top: 0;
-  margin: 0; }
+  margin: 0;
+  background-color: white; }
 
 a.load {
   color: darkred;
