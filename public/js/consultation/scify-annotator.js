@@ -115,7 +115,7 @@ scify.Annotator.prototype = (function(){
         },
         fetchTopicTagsForUserSelection = function(selectedText){
 
-            if (selectedText.length>20)
+            if (selectedText.length>20 &&  $("#toolbar").hasClass("logged-in"))
             {
                 $.ajax({
                     method: "POST",
