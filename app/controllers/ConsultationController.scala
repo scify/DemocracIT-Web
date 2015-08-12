@@ -20,7 +20,7 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
   extends Silhouette[model.User, CookieAuthenticator] {
 
   private val consultationManager = new ConsultationManager()
-  private val commentManager = new CommentManager()
+  private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
   def search(query:String, ministryId:Option[Int] )= Action {
@@ -33,6 +33,10 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
         Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
+  def getAnnotatorPage(consultationId :Long) = UserAwareAction { implicit request =>
+    Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
+  }
+  
   def getReporterPage(consultationId :Long) = UserAwareAction { implicit request =>
         Ok(views.html.consultation.reporter(reporterManager.get(consultationId, request.identity)))
   }

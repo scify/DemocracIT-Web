@@ -113,26 +113,49 @@ scify.Annotator.prototype = (function(){
         attachAnnotationPrompts= function(){
             $(".ann").append("<div class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου / εναλλακτικά επιλέξετε μέρος του κειμένου'><i class='fa fa-pencil-square-o'></i></div>");
         },
+        fetchTopicTagsForUserSelection = function(selectedText){
+
+            if (selectedText.length>20)
+            {
+                $.ajax({
+                    method: "POST",
+                    url: "/annotation/extractTags",
+                    contentType: 'text/plain',
+                    data: selectedText,
+                    success : function(tags){
+                        //add additional tags to the select | these are created based on the text use has selected from the ui
+                        var select =  $('#annotationTagTopicId')
+                        $.each(tags, function (i, tag) {
+                            select.prepend($("<option class='text-tag' value='-1'>"+tag+"</option>"));
+                        });
+                        destroyAnnotationTopicTagsSelect();
+                        initAnnotationTopicTagsSelect();
+                    }
+                });
+            }
+        },
         displayToolBar = function(e,selectedText){
-            //todo: Use react.js for this.
 
             var target = $(e.target),
                 toolbar = $("#toolbar");
+
+            resetForm();
 
             if (target.hasClass("ann-icon") || target.parent().hasClass("ann-icon")){
                 selectedText =  target.closest(".ann").text();
             }
 
             $("#toolbar-modal").modal("show");
-            toolbar.find("input[name='annText']").val(selectedText);
+            fetchTopicTagsForUserSelection(selectedText);
 
+            toolbar.find("input[name='annText']").val(selectedText);
             var parent = target.closest(".ann")
             var annid=parent.data("id");
             var articleid=target.closest(".article").data("id");
             toolbar.find("input[name='articleid']").val(articleid);
             toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
             toolbar.find("blockquote").text(selectedText);
-            resetForm();
+
 
         },
         collectAnnotatorData = function(e){
@@ -168,25 +191,38 @@ scify.Annotator.prototype = (function(){
              $(".ann-icon").not(current).removeClass("on");
         },
         resetForm = function(){
-            $("#annotationTagTopicId").select2("val","");
-            $("#annotationTagProblemId").select2("val","");
-            $("#toolbar").find("textarea").val("");
+            if ($("#toolbar").hasClass("logged-in"))
+            {
+                $("#annotationTagTopicId").select2("val","");
+                $("#annotationTagTopicId").find(".text-tag").remove(); //remove options related to the user's selected text
+                $("#annotationTagProblemId").select2("val","");
+                $("#toolbar").find("textarea").val("");
+            }
+        },
+        destroyAnnotationTopicTagsSelect = function(){
+            $("#annotationTagTopicId").select2("destroy");
+        },
+        initAnnotationTopicTagsSelect = function(){
+            var firstTag = $("#annotationTagTopicId").find("option").first()
+            var placeHolderExample = firstTag ? "πχ '"+ firstTag.text()+"'" : "";
+            $("#annotationTagTopicId").select2({
+                placeholder:  "κλικ εδώ για να θέσετε το θέμα "  + placeHolderExample,
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
         },
         init = function(){
             createAnnotatableAreas();
             attachAnnotationPrompts();
             attachAnnotationEvents();
 
-            $("#annotationTagTopicId").select2({
-                placeholder:  "κλικ εδώ για να θέσετε το θέμα (πχ 'μισθος')",
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
             $("#annotationTagProblemId").select2({
                 placeholder: "πχ 'ασάφεια', 'μη κατανοητό κείμενο'",
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
+
+            initAnnotationTopicTagsSelect();
 
             $("body").on("mouseenter",".ann",displayAnnotationIcon);
 

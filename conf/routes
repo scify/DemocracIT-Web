@@ -3,18 +3,19 @@
 # ~~~~
 
 
-GET         /                                    @controllers.HomeController.index
+GET         /                                              @controllers.HomeController.index
 
-GET         /signIn                              @controllers.AccountController.signIn
-GET         /signUp                              @controllers.AccountController.signUp
-GET         /signOut                             @controllers.AccountController.signOut
-GET         /authenticate/:provider              @controllers.SocialAuthController.authenticate(provider)
-POST        /authenticate/credentials            @controllers.CredentialsAuthController.authenticate
-POST        /signUp                              @controllers.SignUpController.signUp
+GET         /signIn                                        @controllers.AccountController.signIn
+GET         /signUp                                        @controllers.AccountController.signUp
+GET         /signOut                                       @controllers.AccountController.signOut
+GET         /authenticate/:provider                        @controllers.SocialAuthController.authenticate(provider)
+POST        /authenticate/credentials                      @controllers.CredentialsAuthController.authenticate
+POST        /signUp                                        @controllers.SignUpController.signUp
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
-POST        /annotation/save                     @controllers.AnnotationController.annotatePost
-POST        /comments/rate                       @controllers.AnnotationController.rateComment
+POST        /annotation/save                               @controllers.AnnotationController.annotatePost
+POST        /annotation/extractTags                         @controllers.AnnotationController.extractTags
+POST        /comments/rate                                 @controllers.AnnotationController.rateComment
 #GET         /search
 
 GET         /consultation/reporter/:consultationId @controllers.ConsultationController.getReporterPage(consultationId :Long)
@@ -25,6 +26,6 @@ GET         /consultation/:consultationId        @controllers.ConsultationContro
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                        controllers.Assets.at(path="/public", file)
-GET         /webjars/*file                       controllers.WebJarAssets.at(file)
+GET         /assets/*file                                  controllers.Assets.at(path="/public", file)
+GET         /webjars/*file                                 controllers.WebJarAssets.at(file)
 

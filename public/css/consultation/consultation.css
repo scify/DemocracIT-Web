@@ -93,7 +93,7 @@ h2 {
   margin-top: 0; }
 
 .select2-search__field {
-  min-width: 330px !important; }
+  min-width: 477px !important; }
 
 .modal-body {
   padding-bottom: 0; }
@@ -429,5 +429,8 @@ a.load {
 /*HIDE / UNHIDE LAWS*/
 .relevantLaw .childLaws {
   display: none; }
+
+.childLaw {
+  margin-right: 10px; }
 
 /*# sourceMappingURL=consultation.css.map */

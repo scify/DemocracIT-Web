@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, Sess
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import forms._
 import model.dtos._
-import model.services.CommentManager
+import model.services.AnnotationManager
 import model.viewmodels.forms.RateCommentForm
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
@@ -19,7 +19,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       socialProviderRegistry: SocialProviderRegistry)
               extends Silhouette[model.User, CookieAuthenticator] {
 
-  var commentManager = new CommentManager()
+  var annotationManager = new AnnotationManager()
 
   def rateComment() = SecuredAction { implicit request =>
 
@@ -28,7 +28,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
           UnprocessableEntity(Json.toJson(form.errors))
         },
         rating => {
-          commentManager.rateComment(request.identity.userID,rating.comment_id,rating.liked)
+          annotationManager.rateComment(request.identity.userID,rating.comment_id,rating.liked)
           Created("")
         }
       )
@@ -56,10 +56,15 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
                           annotation.annotationTagTopics.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,1)).toList,
                           Some(discussionthread),0,0,None)
 
-       val savedComment = commentManager.saveComment(comment)
+       val savedComment = annotationManager.saveComment(comment)
        Ok(Json.toJson(savedComment))
      }
     )
 
+  }
+  
+  def extractTags() = SecuredAction { implicit request =>
+        val text = request.request.body.asText.get
+        Ok(Json.toJson(annotationManager.extractTags(text)))
   }
 }

@@ -35,7 +35,7 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
-@layout("DemocracIT", css, js,None) {
+@layout("DemocracIT", css, js,vm.user) {
 
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
 
@@ -110,7 +110,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <div id="toolbar">
+                    <div id="toolbar" class='@{if (vm.user.isDefined) "logged-in" else "" }'>
 
                         <form action="@routes.AnnotationController.annotatePost()" method="post">
 

@@ -58,8 +58,9 @@ class ConsultationManager {
   }
 
 
-  def median(s: List[Int]):Int =
-  {
+
+
+  def median(s: List[Int]):Int = {
     val (lower, upper) = s.sortWith(_<_).splitAt(s.size / 2)
     if (s.size % 2 == 0) Math.ceil((lower.last + upper.head) / 2.0).asInstanceOf[Int]  else upper.head
   }
