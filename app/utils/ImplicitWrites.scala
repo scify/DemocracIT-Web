@@ -1,25 +1,26 @@
 package utils
 
 import model.dtos.CommentSource.CommentSource
-import model.dtos.CommentSource._
 import model.dtos._
 import play.api.data.FormError
-import play.api.i18n.Messages
+import play.api.i18n.{MessagesApi, I18nSupport, Messages}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+object ImplicitWrites  {
 
-object ImplicitWrites {
-
-//  implicit val annotationTypeWrites: Writes[AnnotationTags] = (
-//    (JsPath \ "id").write[Int] and
-//      (JsPath \ "description").write[String]
-//    )(unlift(AnnotationTags.unapply))
 
   implicit object FormErrorWrites extends Writes[FormError] {
+
+    implicit var messages:MessagesApi = null;
+
+    def apply(implicit messages:MessagesApi): Unit = {
+        this.messages = messages
+    }
+
     override def writes(o: FormError): JsValue = Json.obj(
        "key" -> Json.toJson(o.key),
-      "message" -> o.message//Json.toJson(Messages(o.message))
+      "message" -> Json.toJson(this.messages(o.message))
     )
   }
 
