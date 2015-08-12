@@ -96,6 +96,10 @@ h2 {
   min-width: 477px !important; }
 
 .modal-body {
+  padding: 0; }
+
+.modal-body .padding {
+  padding: 15px;
   padding-bottom: 0; }
 
 #toolbar blockquote {
@@ -106,9 +110,6 @@ h2 {
   background-color: yellow;
   border: 0;
   padding: 16px;
-  margin-top: -20px;
-  margin-left: -20px;
-  margin-right: -20px;
   max-height: 200px;
   overflow-y: scroll; }
 
@@ -160,6 +161,9 @@ h2 {
 
 .title .ann-icon {
   top: -4px; }
+
+.ann:hover {
+  background-color: #fffcd6; }
 
 .ann p {
   padding: 0;
