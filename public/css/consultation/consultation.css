@@ -247,7 +247,6 @@ a.load {
   background-color: lightgray; }
 
 .commentBox {
-  background-color: #f6f7f8;
   font-size: 12px; }
 
 .commentBox .commentForm {
@@ -257,10 +256,12 @@ a.load {
   font-weight: normal;
   padding: 10px 1em;
   padding-right: 40px;
-  position: relative; }
-
-.commentBox .comment:nth-child(2n) {
-  background-color: #fffff2; }
+  position: relative;
+  border: 1px solid lightgray;
+  background-color: white;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  margin-top: 5px; }
 
 .commentBox .comment .commentAuthor {
   color: #3b5998;

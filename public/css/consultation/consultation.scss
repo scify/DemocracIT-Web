@@ -342,7 +342,6 @@ a.load {
 // <editor-fold descr="comments">
 
 .commentBox {
-  background-color: #f6f7f8;
   font-size: 12px;
 
 }
@@ -354,14 +353,16 @@ a.load {
 .commentBox .comment {
   font-weight: normal;
   padding: 10px 1em;
-  padding-right:40px;
-  position:relative;
+  padding-right: 40px;
+  position: relative;
+  border: 1px solid lightgray;
+  background-color: white;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  margin-top: 5px;
 }
 
-.commentBox .comment:nth-child(2n)
-{
-  background-color: #fffff2;
-}
+
 
 .commentBox .comment .commentAuthor {
   color: #3b5998;
