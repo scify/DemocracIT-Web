@@ -274,13 +274,13 @@
 
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return (
-                    <span className="tag pr"><span>{tag.description }</span></span>
+                    <span className="tag pr"><span>{tag.description}</span></span>
                 );
             });
 
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return (
-                    <span className="tag topic"><span >{tag.description }</span></span>
+                    <span className="tag topic"><span >{"#"+tag.description }</span></span>
                 );
             });
 

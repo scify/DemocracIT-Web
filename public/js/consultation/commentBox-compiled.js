@@ -300,7 +300,7 @@
                     React.createElement(
                         "span",
                         null,
-                        tag.description
+                        "#" + tag.description
                     )
                 );
             });
