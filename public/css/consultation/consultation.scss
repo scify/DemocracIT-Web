@@ -430,9 +430,27 @@ a.load {
   font-size: 12px;
   cursor:pointer;
 }
+.commentBox .comment .tags
+{
+  clear:both;
+}
 .commentBox .comment .tag
 {
-  margin-top:10px;
+  margin-bottom:5px;
+  margin-right:5px;
+}
+.commentBox .comment .problem
+{
+  clear:both;
+}
+.commentBox .comment .tag.pr span
+{
+  background-color:lightcoral ;
+}
+
+.commentBox .comment .tag.topic span
+{
+  background-color:greenyellow;
 }
 .commentBox .comment .tag span
 {

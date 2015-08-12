@@ -274,13 +274,13 @@
 
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return (
-                    <div className="tag"><span >{tag.description }</span></div>
+                    <span className="tag pr"><span>{tag.description }</span></span>
                 );
             });
 
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return (
-                    <div className="tag"><span >{tag.description }</span></div>
+                    <span className="tag topic"><span >{tag.description }</span></span>
                 );
             });
 
@@ -301,7 +301,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        {taggedProblems} {taggedTopics}
+                        <div className="tags">{taggedProblems} {taggedTopics}</div>
                     </div>
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment}>

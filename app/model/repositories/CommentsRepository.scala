@@ -96,8 +96,8 @@ class CommentsRepository {
       relatedTags.groupBy( _._1).foreach {
         tuple =>
              val c= comments.filter(_.id.get == tuple._1).head
-             c.annotationTagProblems = tuple._2.filter(_._2.type_id==1).map(_._2)
-             c.annotationTagTopics = tuple._2.filter(_._2.type_id==2).map(_._2)
+             c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
+             c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
       }
       comments
     }

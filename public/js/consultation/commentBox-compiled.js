@@ -283,8 +283,8 @@
 
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return React.createElement(
-                    "div",
-                    { className: "tag" },
+                    "span",
+                    { className: "tag pr" },
                     React.createElement(
                         "span",
                         null,
@@ -295,8 +295,8 @@
 
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return React.createElement(
-                    "div",
-                    { className: "tag" },
+                    "span",
+                    { className: "tag topic" },
                     React.createElement(
                         "span",
                         null,
@@ -329,9 +329,13 @@
                         this.props.data.fullName
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
-                    taggedProblems,
-                    " ",
-                    taggedTopics
+                    React.createElement(
+                        "div",
+                        { className: "tags" },
+                        taggedProblems,
+                        " ",
+                        taggedTopics
+                    )
                 ),
                 React.createElement(
                     "div",
