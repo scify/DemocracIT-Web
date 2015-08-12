@@ -86,8 +86,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     addRelevantLawsHandler = function(){
         $(".relevantLawsBtn").on("click", function(){
             console.log($(this).context.id);
-            $(".relevantLaw #" + $(this).context.id).next().toggleClass("clicked");
-            if($(".relevantLaw #" + $(this).context.id).next().hasClass("clicked")) {
+            $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
+            if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
                 $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
                 $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-up");
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").show("slow");
@@ -95,7 +95,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             else {
                 $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-up");
                 $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-down");
-                $(".relevantLawsList .relevantLawsContainer").hide("fast");
+                $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
             }
         });
     },

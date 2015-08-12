@@ -80,13 +80,15 @@
 
                                 @for(i <- 0 until vm.groupLaws().length) {
                                     <tr>
-                                        <td> @{i+1}</td>
+                                        <td style="width: 5px"> @{i+1}</td>
                                         <td class="relevantLaw">
-                                            <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down"></i></a>
-                                            <div class="childLaws">
+                                            <div id="@i">
+                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
+                                                <div class="childLaws">
                                                 @for(law <- vm.groupLaws()(i)._2) {
                                                     <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
                                                 }
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
