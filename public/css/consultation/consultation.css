@@ -41,9 +41,9 @@ h2 {
   padding: 10px 0px; }
 
 .show-hide {
-  display: none;
-  width: 11px;
-  position: absolute; }
+  float: right;
+  box-shadow: none;
+  font-size: 12px; }
 
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
@@ -56,13 +56,6 @@ h2 {
   padding-top: 20px;
   border-bottom: 1px solid gray;
   padding-bottom: 20px; }
-
-.article .article-body {
-  color: #333333;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.6em;
-  margin-top: 10px; }
 
 .select2 {
   margin-bottom: 10px; }

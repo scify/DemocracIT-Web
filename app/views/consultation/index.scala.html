@@ -52,10 +52,10 @@
                         <div data-id="@article.id"  class="row article ">
                             <div class="col-md-12">
                                 <div class="title">
-                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>-</span><span>+</span></a>
+                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                     <span class="article-title-text">@article.title</span>
                                 </div>
-                                <div id="body-@article.id" class="collapse " style="height:0;" >
+                                <div id="body-@article.id" class="collapse article-body" style="height:0;" >
                                     <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                                     <div class="article-body">
                                     @Html(article.body)

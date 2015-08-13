@@ -1,6 +1,5 @@
 @import "../utilities/variables";
 
-$show-hide-width : 11px;
 $annotation-color: #fffcd6;
 $annotation-hover-color: #fffcd6;
 
@@ -68,19 +67,9 @@ h2{
 
 // <editor-fold descr="articles">
 .show-hide {
-  display:none;
-  //border: medium none;
-  //box-shadow: none;
-  //color: gray;
-  //display: inline;
-  //font-size: 20px;
-  //line-height: 20px;
-  //padding: 0;
-  //vertical-align: -1px;
-  width: $show-hide-width;
-  position: absolute;
-  //top: 5px;
-  //z-index: 10;
+  float: right;
+  box-shadow: none;
+  font-size: 12px;
 }
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
@@ -96,14 +85,6 @@ h2{
   padding-top: 20px;
   border-bottom: 1px solid gray;
   padding-bottom: 20px;
-}
-
-.article .article-body {
-  color: #333333;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.6em;
-  margin-top: 10px;
 }
 
 // </editor-fold>
