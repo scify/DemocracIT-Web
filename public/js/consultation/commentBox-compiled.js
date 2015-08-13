@@ -280,7 +280,6 @@
         },
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
-
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return React.createElement(
                     "span",
@@ -292,7 +291,6 @@
                     )
                 );
             });
-
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return React.createElement(
                     "span",
@@ -304,6 +302,20 @@
                     )
                 );
             });
+            var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Προβλήματα: ",
+                taggedProblems,
+                " "
+            ) : "";
+            var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Κατηγορία: ",
+                taggedTopics,
+                " "
+            ) : "";
 
             //todo: enable reply functionality, now its hidden
             var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
@@ -332,9 +344,10 @@
                     React.createElement(
                         "div",
                         { className: "tags" },
-                        taggedProblems,
                         " ",
-                        taggedTopics
+                        taggedProblemsContainer,
+                        " ",
+                        taggedTopicsContainer
                     )
                 ),
                 React.createElement(

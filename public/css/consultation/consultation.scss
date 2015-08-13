@@ -108,9 +108,8 @@ h2{
   border-bottom: 2px solid  darkgray!important;
   padding: 0;
   margin: 0;
-  min-height: inherit;
   border-radius: 0;
-  height: 28px;
+  min-height: 28px;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered
@@ -214,9 +213,7 @@ h2{
   padding-left: 25px;
 }
 
-.title .ann-icon {
-  top:-4px;
-}
+
 .ann:hover {
   background-color:$annotation-hover-color;
 }
@@ -243,7 +240,7 @@ h2{
   cursor: pointer;
   text-align: left;
   position: absolute;
-  top: 0;
+  top:-4px;
   font-size: 21px;
   left: 0px;
   color: gray;
@@ -345,7 +342,7 @@ a.load {
   padding-right: 40px;
   position: relative;
   border: 1px solid lightgray;
-  background-color: white;
+  background-color: #f4f7f7;
   margin-bottom: 2px;
   border-radius: 6px;
   margin-top: 5px;

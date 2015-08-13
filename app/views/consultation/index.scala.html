@@ -124,11 +124,13 @@
                             <div class="padding">
                             @if(vm.user.isDefined){
 
-                                <label id="tag-topics-label"><span></span>&nbsp;
+                                <label id="tag-topics-label"><span data-article="Σε ποιό θέμα αναφέρεται το άρθρο;" data-text="Σε ποιό θέμα αναφέρεται το κείμενο;"></span>&nbsp;
                                     <i class="fa fa-info-circle"
                                     data-toggle="tooltip"
                                     data-placement="top"
-                                    title=""></i>
+                                    data-article="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο αρθρο"
+                                    data-text="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου"
+                                    title="sd"></i>
                                 </label>
 
                                 <select id="annotationTagTopicId" name="annotationTagTopicId" multiple>
@@ -137,7 +139,7 @@
                                 }
                                 </select>
 
-                                <label>Αναγνωρίζεται κάποιο πρόβλημα;
+                                <label id="tag-problem-label"><span data-article="Αναγνωρίζεται κάποιο πρόβλημα στο άρθρο;" data-text="Αναγνωρίζεται κάποιο πρόβλημα;"></span>&nbsp;
                                     <i class="fa fa-info-circle"
                                     data-toggle="tooltip"
                                     data-placement="top"

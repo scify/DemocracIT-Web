@@ -164,17 +164,25 @@ scify.Annotator.prototype = (function(){
                 selectedText =  target.closest(".ann").text();
             }
 
+            var topicsLabel=  $("#tag-topics-label").find("span");
+            var topicsTagTooltip =$("#tag-topics-label").find("i");
+            var problemsLabel = $("#tag-problem-label").find("span");
+
             if (target.closest(".title").length>0)
             {
                 $("#myModalLabel").text("Παρατήρηση/Σχόλιο για όλοκληρο το άρθρο:");
-                $("#tag-topics-label").find("span").text("Σε ποιό θέμα αναφέρεται το άρθρο;");
-                $("#tag-topics-label").find("i").attr("title","βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο 'αρθρο'");
+                topicsLabel.text(topicsLabel.data("article"));
+                topicsTagTooltip.attr("title",topicsTagTooltip.data("article"));
+                topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("article"));
+                problemsLabel.text(problemsLabel.data("article"));
                 toolbar.find("blockquote").hide();
             }
             else{
                 $("#myModalLabel").text("Παρατήρηση/Σχόλιο για το τμήμα κειμένου:");
-                $("#tag-topics-label").text("Σε ποιό θέμα αναφέρεται το κείμενο;");
-                $("#tag-topics-label").find("i").attr("title","βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου");
+                topicsLabel.text(topicsLabel.data("text"));
+                topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
+                topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
+                problemsLabel.text(problemsLabel.data("text"));
                 toolbar.find("blockquote").show();
             }
 

@@ -271,18 +271,18 @@
         },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return (
                     <span className="tag pr"><span>{tag.description}</span></span>
                 );
             });
-
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return (
                     <span className="tag topic"><span >{"#"+tag.description }</span></span>
                 );
             });
+            var taggedProblemsContainer =  this.props.data.annotationTagProblems.length>0 ? <span>Προβλήματα: { taggedProblems} </span> : "";
+            var taggedTopicsContainer = this.props.data.annotationTagTopics.length>0?  <span>Κατηγορία: { taggedTopics} </span> : "";
 
             //todo: enable reply functionality, now its hidden
             var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
@@ -301,7 +301,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        <div className="tags">{taggedProblems} {taggedTopics}</div>
+                        <div className="tags"> {taggedProblemsContainer} {taggedTopicsContainer}</div>
                     </div>
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment}>
