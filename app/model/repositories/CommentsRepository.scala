@@ -107,38 +107,42 @@ class CommentsRepository {
 
   def getTags(consultation_id:Int):List[AnnotationTagWithComments] = {
 
-    //one way to do it
-    val tagsWithComments: List[(AnnotationTags,Int)]=  SQL"""
+    DB.withConnection { implicit c =>
+
+
+      //one way to do it
+      val tagsWithComments: List[(AnnotationTags, Int)] = SQL"""
                              select tag.*, comments_num from annotation_comment ac
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("comments_num")  map(flatten)) *)
+                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("comments_num") map (flatten)) *)
 
-    tagsWithComments.map( tuple => {
-       new AnnotationTagWithComments(tuple._1, tuple._2)
-    })
+      tagsWithComments.map(tuple => {
+        new AnnotationTagWithComments(tuple._1, tuple._2)
+      })
 
-//    //second way
-//    val tagsWithComments2: List[AnnotationTagWithComments]=  SQL"""
-//                             select tag.*, comments_num from annotation_comment ac
-//                            """.as(AnnotationTagWithCommentsParser.Parse *)
-
+      //    //second way
+      //    val tagsWithComments2: List[AnnotationTagWithComments]=  SQL"""
+      //                             select tag.*, comments_num from annotation_comment ac
+      //                            """.as(AnnotationTagWithCommentsParser.Parse *)
+    }
   }
 
   def getTagsPerArticle(consultation_id:Int):List[AnnotationTagPerArticleWithComments] = {
 
-    //one way to do it
-    val tagsWithComments: List[(AnnotationTags,Int,Int)]=  SQL"""
+    DB.withConnection { implicit c =>
+      //one way to do it
+      val tagsWithComments: List[(AnnotationTags, Int, Int)] = SQL"""
                              select tag.*, article_id, comments_num from annotation_comment ac
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("article_id") ~ SqlParser.int("comments_num")  map(flatten)) *)
+                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("article_id") ~ SqlParser.int("comments_num") map (flatten)) *)
 
-    tagsWithComments.map( tuple => {
-      new AnnotationTagPerArticleWithComments(tuple._1,tuple._2,tuple._3)
-    })
+      tagsWithComments.map(tuple => {
+        new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3)
+      })
 
-    //    //second wait
-    //    val tagsWithComments2: List[AnnotationTagWithComments]=  SQL"""
-    //                             select tag.*, comments_num from annotation_comment ac
-    //                            """.as(AnnotationTagWithCommentsParser.Parse *)
-
+      //    //second wait
+      //    val tagsWithComments2: List[AnnotationTagWithComments]=  SQL"""
+      //                             select tag.*, comments_num from annotation_comment ac
+      //                            """.as(AnnotationTagWithCommentsParser.Parse *)
+    }
   }
 
   def getOpenGovComments(consultationId:Long,
