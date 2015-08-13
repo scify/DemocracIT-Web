@@ -69,7 +69,8 @@ h2{
 .show-hide {
   float: right;
   box-shadow: none;
-  font-size: 12px;
+  font-size: 11px;
+  padding:0;
 }
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
@@ -85,6 +86,12 @@ h2{
   padding-top: 20px;
   border-bottom: 1px solid gray;
   padding-bottom: 20px;
+}
+
+.article-body
+{
+  font-size:12px;
+  padding-top:5px;
 }
 
 // </editor-fold>
@@ -192,8 +199,9 @@ h2{
   display:block;
 }
 .article-title-text .ann {
-  width:97%;
+  width:90%;
 }
+
 .ann {
   display: inline-block;
   position: relative;
