@@ -22,10 +22,12 @@ class ReporterManager {
 
   def get(consultationId: Long, user:Option[User]): ReporterViewModel= {
     val repository = new ConsultationRepository()
+    val commentsRepository = new CommentsRepository()
 
     ReporterViewModel(consultation = repository.get(consultationId),
                           user = user,
-                          relevantMaterials = repository.getRelevantMaterial(consultationId))
+                          relevantMaterials = repository.getRelevantMaterial(consultationId),
+                          commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId))
   }
 
 

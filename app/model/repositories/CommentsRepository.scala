@@ -126,6 +126,32 @@ class CommentsRepository {
     }
   }
 
+
+  def getCommentsPerArticle(consultationId:Long):List[Article] = {
+    DB.withConnection { implicit c =>
+      val commentsForArticles : List[Article] = SQL"""
+                                                     with ac as (
+                                                     select a.id, count(*) as comments_num
+                                                     			from comments c inner join public.articles a on a.id = c.article_id
+                                                     					inner join public.consultation con on con.id = a.consultation_id
+                                                     			where a.consultation_id = $consultationId
+                                                     			group by a.id
+                                                     )
+                                                     select a.id as article_id, a.consultation_id, a.title as article_title, a.body as article_body, a.art_order, ac.comments_num as comment_num
+                                                     from articles a
+                                                      inner join ac on a.id = ac.id
+                                                      where a.consultation_id =  $consultationId
+                            """.as(ArticleParser.Parse  *)
+        //as((ArticleParser.Parse ~ SqlParser.int("comments_num") map (flatten)) *)
+
+      commentsForArticles
+//      commentsForArticles.map(tuple => {
+//        new CommentsPerArticle(tuple._1, tuple._2)
+//      })
+
+    }
+  }
+
   def getTagsPerArticle(consultation_id:Int):List[AnnotationTagPerArticleWithComments] = {
 
     DB.withConnection { implicit c =>

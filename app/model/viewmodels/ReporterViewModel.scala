@@ -6,20 +6,17 @@ import utils.ImplicitWrites._
 
 case class ReporterViewModel(consultation:model.dtos.Consultation,
                                user: Option[model.User],
-                               relevantMaterials: Seq[RelevantMaterial]/*,
-                               commentsPerArticle:  Seq[CommentsPerArticle],
+                               relevantMaterials: Seq[RelevantMaterial],
+                               commentsPerArticle:  Seq[Article]/*,
                                annotationTagWithComments: Seq[AnnotationTagWithComments],
                                annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
                                userCommentStats: Seq[UserCommentStats]*/
                               )
 {
 
-  /*def totalComments:Int = {
-    ???
-  }*/
-  def totalConsultationComments():Int = {
+  def totalComments:Int = {
     var total = 0
-    for(article <- consultation.articles) {
+    for(article <- commentsPerArticle) {
       total += article.commentsNum
     }
     total
