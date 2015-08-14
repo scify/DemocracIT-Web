@@ -2,15 +2,17 @@ package controllers
 
 import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Silhouette, Environment, LogoutEvent}
-import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import forms._
-import play.api.mvc.Action
+import play.api.i18n.MessagesApi
 import scala.concurrent.Future
 
 
-class AccountController @Inject()
-      (implicit val env: Environment[model.User, SessionAuthenticator]) extends Silhouette[model.User, SessionAuthenticator] {
-
+class AccountController @Inject() (val messagesApi: MessagesApi,
+                                   val env: Environment[model.User, CookieAuthenticator],
+                                   socialProviderRegistry: SocialProviderRegistry)
+                        extends Silhouette[model.User, CookieAuthenticator] {
 //  def tokenRetrieve = Action { implicit request =>
 //
 //    import play.api.libs.json._
@@ -35,7 +37,7 @@ class AccountController @Inject()
   def signIn = UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
-      case None => Future.successful(Ok(views.html.account.signIn(SignInForm.form)))
+      case None => Future.successful(Ok(views.html.account.signIn(SignInForm.form, socialProviderRegistry)))
     }
   }
 
@@ -58,9 +60,10 @@ class AccountController @Inject()
    * @return The result to display.
    */
   def signOut = SecuredAction.async { implicit request =>
-    val result = Future.successful(Redirect(routes.HomeController.index()))
-    env.eventBus.publish(LogoutEvent(request.identity, request, request2lang))
+    val result = Redirect(routes.HomeController.index())
+    env.eventBus.publish(LogoutEvent(request.identity, request, request2Messages))
 
-    request.authenticator.discard(result)
+    env.authenticatorService.discard(request.authenticator, result)
   }
+
 }

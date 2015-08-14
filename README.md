@@ -19,7 +19,7 @@ $ democracit_db_user="db-username"
 $ democracit_db_pw="db-password"
 ```
 
-And 4 social login related fields
+Add 4 social login related fields
 
 ```
 $ FACEBOOK_CLIENT_ID=id goes here
@@ -28,11 +28,21 @@ $ TWITTER_CONSUMER_KEY=key goes here
 $ TWITTER_CONSUMER_SECRET=secret goes here
 ```
 
-And the play app secret (for production configuration - you can generate it by running activator playGenerateSecret command)
+Add the play app secret (for production configuration - you can generate it by running activator playGenerateSecret command)
 
 ```
 $ PLAY_APP_SECRET= secret goes here 
 ```
+
+Add the email server settings
+
+```
+$ SMTP_HOST= smtp host goes here
+$  SMTP_PORT= smtp port goes here
+$  SMTP_USERNAME= smtp username goes here
+$ SMTP_PASS=smtp password goes here
+```
+
 
 ### Set up the Sass/SCSS transpiler (webstorm and intellij)
 

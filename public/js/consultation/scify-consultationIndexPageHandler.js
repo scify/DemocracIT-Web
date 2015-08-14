@@ -70,7 +70,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.source="dm";
                 commentBoxProperties.userId = instance.userId;
                 commentBoxProperties.fullName = instance.fullName;
-                commentBoxProperties.discussionThreadText = $(this).html();
+                commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 $(ann).after('<div class="commentbox-wrap"></div>');
                 domElementToAddComponent = $(ann).next()[0];
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
@@ -84,17 +84,18 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         return articleid+(annId ? annId :"");
     },
     addRelevantLawsHandler = function(){
-        $("#relevantLawsBtn").on("click", function(){
-            $("#relevantLawsBtn").toggleClass("clicked");
-            if($("#relevantLawsBtn").hasClass("clicked")) {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-down");
-                $("#relevantLawsBtn i").addClass("fa-chevron-up");
-                $("#relevantLawsList .relevantMaterialContainer").show("slow");
+        $(".relevantLawsBtn").on("click", function(){
+            console.log($(this).context.id);
+            $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
+            if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
+                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
+                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-up");
+                $(".relevantLaw #" + $(this).context.id + " .childLaws").show("slow");
             }
             else {
-                $("#relevantLawsBtn i").removeClass("fa-chevron-up");
-                $("#relevantLawsBtn i").addClass("fa-chevron-down");
-                $("#relevantLawsList .relevantMaterialContainer").hide("fast");
+                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-up");
+                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-down");
+                $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
             }
         });
     },
@@ -122,7 +123,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator();
+        this.annotator = new scify.Annotator(false);
         this.annotator.init();
 
         replaceRelevantLaws(this.relevantLaws);
@@ -133,10 +134,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
-        // $("#toolbar").find(".close").click(hideToolBar);
         $("#save-annotation").click(handleAnnotationSave.bind(instance));
-
-
 
     };
 

@@ -1,48 +1,53 @@
-@(signInForm: Form[com.mohiva.play.silhouette.api.util.Credentials])(implicit env: com.mohiva.play.silhouette.api.Environment[model.User, _], request: RequestHeader)
+@(signInForm: Form[forms.SignInForm.Data], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
+@import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
+@import b3.inline.fieldConstructor
 
 @js ={}
 @css = {}
 
-@import com.mohiva.play.silhouette.impl.providers._
-@import views.html.common._
-@import play.api.Play
-@import play.api.Play.current
 
-@layout("Είσοδος",css,js,None) {
+
+
+@layout(messages("sign.in.title"),css,js,None) {
     @request.flash.get("error").map { msg =>
         <div class="col-md-6 col-md-offset-3 alert alert-danger alert-error">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Error!</strong> @msg
+            <strong>@messages("error")</strong> @msg
         </div>
     }
     <fieldset class="col-md-6 col-md-offset-3">
-        <legend>Είσοδος</legend>
+        <legend>@messages("sign.in.credentials")</legend>
         @helper.form(action = routes.CredentialsAuthController.authenticate()) {
-            @text(signInForm("identifier"), "To email σας", icon = "at")
-            @password(signInForm("password"), "Ο κωδικός σας", icon = "key")
+            @helper.CSRF.formField
+            @b3.email(signInForm("email"), '_hiddenLabel -> messages("email"), 'placeholder -> messages("email"), 'class -> "form-control input-lg")
+            @b3.password(signInForm("password"), '_hiddenLabel -> messages("password"), 'placeholder -> messages("password"), 'class -> "form-control input-lg")
+            @b3.checkbox(signInForm("rememberMe"), '_text -> messages("remember.me"), 'checked -> true)
             <div class="form-group">
                 <div>
-                    <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">Είσοδος</button>
+                    <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">@messages("sign.in")</button>
                 </div>
             </div>
         }
 
         <div>
-            <p class="not-a-member">Δεν είστε μέλος? <a href="@routes.AccountController.signUp">Κλικ εδώ</a></p>
+            <p class="not-a-member">@messages("not.a.member") <a href="@routes.AccountController.signUp">@messages("sign.up.now")</a></p>
         </div>
 
-        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider])) { providers =>
-            @if(!providers.isEmpty) {
-                <div class="social-providers">
-                    <p>ή πραγματοποιήστε είσοδο μέσω</p>
-                    <div>
-                    @for(p <- providers if p.id != "clef") {
-                        <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:64px;height:64px;"></a>
-                    }
-                    </div>
-                    @*<script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@Play.configuration.getString("silhouette.clef.clientID").getOrElse("")" data-color="blue" data-style="flat" data-redirect-url="@Play.configuration.getString("silhouette.clef.redirectURL").getOrElse("")" data-type="login"></script>*@
+        @if(socialProviders.providers.nonEmpty) {
+            <div class="social-providers">
+                <p>@messages("or.use.social")</p>
+                <div>
+                @for(p <- socialProviders.providers if p.id != "clef") {
+                    <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id" title="@messages(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" width="64px" height="64px" alt="@messages(p.id)"></a>
+                }
                 </div>
-            }
+                @defining(socialProviders.get[ClefProvider]) { clef =>
+                    @if(clef.isDefined) {
+                        <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
+                    }
+                }
+            </div>
         }
+
     </fieldset>
 }

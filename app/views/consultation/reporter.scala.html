@@ -1,0 +1,116 @@
+@import model.viewmodels.ReporterViewModel
+@(vm: ReporterViewModel)
+
+@js = {
+    @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
+      @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
+    <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
+    @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="@routes.Assets.at("js/underscore-min.js")"></script>
+    <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="@routes.Assets.at("js/classnames.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
+    <script  src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
+    <script  src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
+    <script>
+     $(function(){
+        var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
+                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                Date.parse('@vm.consultation.endDate')
+                                                                );
+        controller.init();
+     })
+    </script>
+}
+
+@css = {
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/reporter/reporter.css")">
+}
+
+@layout("DemocracIT", css, js,None) {
+
+        @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
+
+        <div  class="container">
+            <ul id="tabs" class="nav nav-tabs" role="tablist">
+                <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Συμμετοχή στη διαβούλευση</a></li>
+                <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Σχετικοί νόμοι</a></li>
+                <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="consultation-body" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
+                @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="annotatorContent">
+                    <div class="totalCommentsTitle">Συνολικός αριθμός σχολίων της διαβούλευσης: </div><div class="totalComments">@vm.totalComments</div>
+                    <table class="table table-striped table-condensed">
+                        <thead><tr>
+                            <th>Όνομα</th>
+                            <th>Αριθμός Σχολίων</th>
+                        </tr>
+                        </thead>
+                        @for(article <- vm.commentsPerArticle) {
+                            <tr>
+                                <td class="articleName">
+                                @article.title
+                                </td>
+                                <td class="commentsNum">
+                                @article.commentsNum
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                    <table class="table table-striped table-condensed">
+                        <thead><tr>
+                            <th>Όνομα Tag</th>
+                            <th>Αριθμός Σχολίων</th>
+                        </tr>
+                        </thead>
+                    @for(annotationTag <- vm.annotationTagWithComments) {
+                        <tr>
+                            <td class="articleName">
+                            @annotationTag.annotationTag.description
+                            </td>
+                            <td class="commentsNum">
+                            @annotationTag.numberOfComments
+                            </td>
+                        </tr>
+                    }
+                    </table>
+                    <table class="table table-striped table-condensed">
+                        <thead><tr>
+                            <th>Arthro</th>
+                            <th>Όνομα Tag</th>
+                            <th>Αριθμός Σχολίων</th>
+                        </tr>
+                        </thead>
+                        @for(annotationTagArticle <- vm.annotationTagPerArticleWithComments) {
+                            <tr>
+                                <td class="articleName">
+                                @annotationTagArticle.article_name
+                                </td>
+                                <td class="articleName">
+                                @annotationTagArticle.annotationTag.description
+                                </td>
+                                <td class="commentsNum">
+                                @annotationTagArticle.numberOfComments
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+}
+
+
+
+

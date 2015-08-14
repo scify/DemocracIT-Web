@@ -2,7 +2,7 @@ package model.viewmodels
 
 import play.api.libs.json._
 import model.dtos._
-import utils.ImplicitWrites._
+import utils.ImplicitReadWrites._
 
 case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  annotationsRelatedToProblems: Seq[AnnotationTags],
@@ -33,6 +33,12 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 
     _distinctLaws
 
+  }
+
+  def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
+
+    val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law).toList
+    results
   }
 
 }

@@ -59,21 +59,12 @@ class ConsultationRepository {
        //Retrieving values with string interpolation https://www.playframework.com/documentation/2.3.5/ScalaAnorm
         DB.withConnection { implicit c =>
           SQL"""
-                with relatedArticles as
-                (
-                     select distinct consultation_id
-                     from articles a
-                     where
-                           a.title like ${"%"+searchRequest.query+"%"} or
-                           a.body like  ${"%"+searchRequest.query+"%"}
-                )
                 select c.*, o.title as OrganizationTitle from public.consultation c
                 inner join public.organization_lkp o on c.organization_id = o.id
                 where
                       c.title like ${"%"+searchRequest.query+"%"} or
-                      c.short_description like ${"%"+searchRequest.query+"%"} or
-                      c.id in (select a.consultation_id from relatedArticles a)
-                order by id desc """.as(ConsultationParser.Parse *)
+                      o.title like ${"%"+searchRequest.query+"%"}
+                order by end_date desc """.as(ConsultationParser.Parse *)
         }
   }
 

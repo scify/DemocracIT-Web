@@ -127,16 +127,13 @@
              return  this.state.commentsCount > this.state.comments.length;
         },
         render: function() {
+
             if (this.state.busy)
             {
                 return (
                     <div>
                         <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} />
-                        <div className="loading-wrp">
-                            <div className="spinner-loader">
-                                ...
-                            </div>
-                        </div>
+                        <scify.ReactLoader display={this.state.busy} />
                     </div>
                 );
             }
@@ -160,9 +157,6 @@
         }
     });
     var TotalCommentsLink = React.createClass({
-        handleClick : function(){
-          this.props.onClick();
-        },
         render : function(){
 
             var label = "σχόλια";
@@ -174,7 +168,7 @@
 
             if (this.props.count>0)
                 return (
-                    <a className="load" onClick={this.handleClick}>{this.props.count} {label} </a>
+                    <a className="load" onClick={this.props.onClick}>{this.props.count} {label} </a>
                 )
             else //todo: how can i return an empty element?
                 return (<span></span>)
@@ -274,18 +268,18 @@
         },
         render: function() {
             var date =moment(this.props.data.dateAdded).format('llll');
-
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return (
-                    <div className="tag"><span >{tag.description }</span></div>
+                    <span className="tag pr"><span>{tag.description}</span></span>
                 );
             });
-
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return (
-                    <div className="tag"><span >{tag.description }</span></div>
+                    <span className="tag topic"><span >{"#"+tag.description }</span></span>
                 );
             });
+            var taggedProblemsContainer =  this.props.data.annotationTagProblems.length>0 ? <span>Προβλήματα: { taggedProblems} </span> : "";
+            var taggedTopicsContainer = this.props.data.annotationTagTopics.length>0?  <span>Κατηγορία: { taggedTopics} </span> : "";
 
             //todo: enable reply functionality, now its hidden
             var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
@@ -304,7 +298,7 @@
                     <div className='body'>
                         <span className="commentAuthor">{this.props.data.fullName}</span>
                         <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                        {taggedProblems} {taggedTopics}
+                        <div className="tags"> {taggedProblemsContainer} {taggedTopicsContainer}</div>
                     </div>
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment}>

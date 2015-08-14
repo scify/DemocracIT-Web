@@ -119,20 +119,13 @@
             return this.state.commentsCount > this.state.comments.length;
         },
         render: function render() {
+
             if (this.state.busy) {
                 return React.createElement(
                     "div",
                     null,
                     React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.commentsCount }),
-                    React.createElement(
-                        "div",
-                        { className: "loading-wrp" },
-                        React.createElement(
-                            "div",
-                            { className: "spinner-loader" },
-                            "..."
-                        )
-                    )
+                    React.createElement(scify.ReactLoader, { display: this.state.busy })
                 );
             }
             var topClasses = classNames({ hide: this.state.commentsCount == 0 });
@@ -167,9 +160,6 @@
     var TotalCommentsLink = React.createClass({
         displayName: "TotalCommentsLink",
 
-        handleClick: function handleClick() {
-            this.props.onClick();
-        },
         render: function render() {
 
             var label = "σχόλια";
@@ -179,7 +169,7 @@
 
             if (this.props.count > 0) return React.createElement(
                 "a",
-                { className: "load", onClick: this.handleClick },
+                { className: "load", onClick: this.props.onClick },
                 this.props.count,
                 " ",
                 label,
@@ -283,11 +273,10 @@
         },
         render: function render() {
             var date = moment(this.props.data.dateAdded).format("llll");
-
             var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
                 return React.createElement(
-                    "div",
-                    { className: "tag" },
+                    "span",
+                    { className: "tag pr" },
                     React.createElement(
                         "span",
                         null,
@@ -295,18 +284,31 @@
                     )
                 );
             });
-
             var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
                 return React.createElement(
-                    "div",
-                    { className: "tag" },
+                    "span",
+                    { className: "tag topic" },
                     React.createElement(
                         "span",
                         null,
-                        tag.description
+                        "#" + tag.description
                     )
                 );
             });
+            var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Προβλήματα: ",
+                taggedProblems,
+                " "
+            ) : "";
+            var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Κατηγορία: ",
+                taggedTopics,
+                " "
+            ) : "";
 
             //todo: enable reply functionality, now its hidden
             var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
@@ -332,9 +334,14 @@
                         this.props.data.fullName
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
-                    taggedProblems,
-                    " ",
-                    taggedTopics
+                    React.createElement(
+                        "div",
+                        { className: "tags" },
+                        " ",
+                        taggedProblemsContainer,
+                        " ",
+                        taggedTopicsContainer
+                    )
                 ),
                 React.createElement(
                     "div",

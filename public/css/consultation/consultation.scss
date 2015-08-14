@@ -1,6 +1,7 @@
 @import "../utilities/variables";
 
-$show-hide-width : 11px;
+$annotation-color: #fffcd6;
+$annotation-hover-color: #fffcd6;
 
 h2{
   font-size:16px;
@@ -12,12 +13,6 @@ h2{
 {
   font-size:12px;
 }
-#header.active
-{
-  background-color:#f4fef4;
-}
-
-
 #consultation-title {
   font-size: 18px;
   margin-top: 20px;
@@ -66,18 +61,10 @@ h2{
 
 // <editor-fold descr="articles">
 .show-hide {
-  border: medium none;
+  float: right;
   box-shadow: none;
-  color: gray;
-  display: inline;
-  font-size: 20px;
-  line-height: 20px;
-  padding: 0;
-  vertical-align: -1px;
-  width: $show-hide-width;
-  position: absolute;
-  top: 5px;
-  z-index: 10;
+  font-size: 11px;
+  padding:0;
 }
 .show-hide.collapsed span:first-child,
 .show-hide span:last-child {
@@ -95,23 +82,78 @@ h2{
   padding-bottom: 20px;
 }
 
-.article .article-body {
-  color: #333333;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.6em;
-  margin-top:10px;
+.article-body
+{
+  font-size:12px;
+  padding-top:5px;
 }
 
 // </editor-fold>
 
 // <editor-fold descr="toolbar">
+
+.select2
+{
+  margin-bottom:10px;
+}
+
+.select2-container--default .select2-selection--multiple {
+  border: none !important;
+  border-bottom: 2px solid  darkgray!important;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  min-height: 28px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered
+{
+  margin:0;
+  padding:0;
+}
+.select2-container .select2-search--inline .select2-search__field
+{
+  margin:0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice
+{
+  //background-color: #254254;
+  //color:white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  cursor: default;
+  float: left;
+  margin-right: 5px;
+  padding: 0 5px;
+  margin-top:0;
+}
+.select2-search__field
+{
+  min-width:477px !important;
+}
+
+.modal-body
+{
+  padding:0;
+}
+
+.modal-body .padding
+{
+  padding:15px;
+  padding-bottom: 0;
+}
+
 #toolbar blockquote {
   font-size: 11px;
   line-height: 1.1em;
-  padding:0;
   padding-left: 5px;
-  margin-top:5px;
+  margin-bottom: 5px;
+  background-color: $annotation-color;
+  border: 0;
+  padding: 16px;
+  max-height: 200px;
+  overflow-y: scroll;
 }
 #toolbar #comment-wrap {
   margin-top:10px;
@@ -131,6 +173,13 @@ h2{
   margin-top:10px;
   margin-bottom:10px;
   width:100%;
+  min-height: 150px;
+}
+#toolbar label
+{
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: 700;
 }
 #toolbar .mce-tinymce {
   margin-top:5px;
@@ -143,55 +192,62 @@ h2{
   display:block;
 }
 .article-title-text .ann {
-  width:97%;
+  width:90%;
 }
+
 .ann {
   display: inline-block;
   position: relative;
-  padding: 10px;
-  margin-top: 10px;
+  margin-top: 0;
   margin-bottom: 0px;
   padding-bottom: 0px;
-  padding-top: 3px;
+  padding-top: 0;
   width: 100%;
+  margin-left: -25px;
+  padding-left: 25px;
 }
-.title .ann {
-  width: 98%;
-  margin-left:$show-hide-width;
-  padding-left:5px;
-  margin-bottom:0;
-  padding-top:0;
-}
-.title .ann-icon {
-  padding-left:0;
-}
+
+
 .ann:hover {
-  background-color:#fefbd1;
+  background-color:$annotation-hover-color;
 }
-.ann p {
+.article p, .article ol, .article ul {
   padding:0;
   margin:0;
 }
-.ann:hover .ann-icon {
+.article br
+{
+  display:none;
+}
+
+//.ann ::selection { background-color:$annotation-color; }
+//.ann ::-moz-selection { background-color:$annotation-color; } /* firefox 19+ */
+
+.ann.hl{
+  background-color:$annotation-color;
+}
+.ann-icon.on{
   display: block;
 }
 .ann-icon{
-  display:none;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  display: none;
   cursor: pointer;
   text-align: left;
-  padding: 5px 10px;
   position: absolute;
-  width: 100%;
-  top: -26px;
-  font-size: 12px;
-  left: 0;
-  background-color: #fefbd1;
-  color:blue;
+  top:-4px;
+  font-size: 21px;
+  left: 0px;
+  color: gray;
+  bottom: 0;
+  padding: 0;
+  padding-top: 0;
+  margin: 0;
+  background-color: white;
+
 }
 a.load {
   color:darkred;
+  font-size:12px;
 }
 #consultation-body li {
   list-style:none;
@@ -200,10 +256,7 @@ a.load {
 {
   width:550px;
 }
-.select2-search__field
-{
-  min-width:250px !important;
-}
+
 // </editor-fold >
 
 // <editor-fold descr="aside">
@@ -269,7 +322,6 @@ a.load {
 // <editor-fold descr="comments">
 
 .commentBox {
-  background-color: #f6f7f8;
   font-size: 12px;
 
 }
@@ -281,14 +333,16 @@ a.load {
 .commentBox .comment {
   font-weight: normal;
   padding: 10px 1em;
-  padding-right:40px;
-  position:relative;
+  padding-right: 40px;
+  position: relative;
+  border: 1px solid lightgray;
+  background-color: #f4f7f7;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  margin-top: 5px;
 }
 
-.commentBox .comment:nth-child(2n)
-{
-  background-color: #fffff2;
-}
+
 
 .commentBox .comment .commentAuthor {
   color: #3b5998;
@@ -356,9 +410,27 @@ a.load {
   font-size: 12px;
   cursor:pointer;
 }
+.commentBox .comment .tags
+{
+  clear:both;
+}
 .commentBox .comment .tag
 {
-  margin-top:10px;
+  margin-bottom:5px;
+  margin-right:5px;
+}
+.commentBox .comment .problem
+{
+  clear:both;
+}
+.commentBox .comment .tag.pr span
+{
+  background-color:lightcoral ;
+}
+
+.commentBox .comment .tag.topic span
+{
+  background-color:greenyellow;
 }
 .commentBox .comment .tag span
 {
@@ -498,4 +570,14 @@ a.load {
   float: left;
   margin-right: 10px;
   margin-top: 3px;
+}
+
+
+/*HIDE / UNHIDE LAWS*/
+.relevantLaw .childLaws {
+  display: none;
+}
+
+.childLaw {
+  margin-right: 10px;
 }

@@ -9,10 +9,15 @@ import model.viewmodels._
 import org.scify.democracit.solr.DitSorlQuery
 
 
-class CommentManager {
+class AnnotationManager {
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
+
+  def extractTags(input:String):Seq[String] = {
+    //todo: Integrate with paulopoulos library
+    "extracted-topic-from-paulopoulos"::Nil
+  }
 
   def saveComment(comment:Comment): Comment = {
 

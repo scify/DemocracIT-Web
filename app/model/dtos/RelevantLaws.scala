@@ -8,6 +8,13 @@ case class RelevantLaws (id: Long,
                              pdf_url:String,
                              entity_type:String,
                              entity_text:String,
+                             entity_law:String,
                              consultation_id: Long
-                             );
+                             )
+
+
+
+case class RelevantLawsViewModel(law:RelevantLaws , entity_texts:Seq[String])
+
+
 
