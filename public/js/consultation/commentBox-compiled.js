@@ -119,20 +119,13 @@
             return this.state.commentsCount > this.state.comments.length;
         },
         render: function render() {
+
             if (this.state.busy) {
                 return React.createElement(
                     "div",
                     null,
                     React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.commentsCount }),
-                    React.createElement(
-                        "div",
-                        { className: "loading-wrp" },
-                        React.createElement(
-                            "div",
-                            { className: "spinner-loader" },
-                            "..."
-                        )
-                    )
+                    React.createElement(scify.ReactLoader, { display: this.state.busy })
                 );
             }
             var topClasses = classNames({ hide: this.state.commentsCount == 0 });

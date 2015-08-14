@@ -1,8 +1,13 @@
 @(viewmodel:model.viewmodels.HomeViewModel)
 @js ={
+    <script src="@routes.Assets.at("js/home/consultation-search-compiled.js")" ></script>
+    <script>
+       React.render(React.createElement(scify.SearchContainer, { url: "@routes.ConsultationController.search()"}),document.getElementById("search-wrapper") );
+    </script>
 }
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/home/index.css")">
+
 }
 
 @layout("Αρχική",css,js, viewmodel.user){
@@ -105,8 +110,9 @@
                 </div>
 
             </div>
+    @* common.searchbox() *@
+    <div id="search-wrapper"></div>
 
-    @common.searchbox()
 
     <div id="consultations">
         <div class="container">

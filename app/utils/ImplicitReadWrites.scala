@@ -28,7 +28,7 @@ object ImplicitReadWrites  {
         "title" -> Json.toJson(c.title),
         "isActive" -> Json.toJson(c.isActive),
         "totalDurationFormatted" -> Json.toJson(c.totalDurationFormatted),
-        "shortDescr" -> Json.toJson(c.shortDescr),
+        "endDateFormatted" -> Json.toJson(c.endDateFormatted),
         "articlesNum" -> Json.toJson(c.articlesNum)
     )
   }

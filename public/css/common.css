@@ -219,9 +219,10 @@ legend {
 /*</editor-fold>*/
 /*<editor-fold desc="search box">*/
 #search-box {
-  background-color: #eeeeee;
-  padding-bottom: 60px;
-  padding-top: 60px; }
+    background-color: #eeeeee;
+    padding-bottom: 60px;
+    padding-top: 60px;
+}
 
 #search-box .wrapper {
   margin: auto;
@@ -265,7 +266,7 @@ legend {
   color: #65737e; }
 
 #search-box .form-group {
-  width: 380px; }
+  width: 490px; }
 
 #search-box .box .icon {
   position: absolute;
@@ -282,6 +283,22 @@ legend {
 
 #search-box .box {
   margin-right: 5px; }
+
+
+.loading-wrp {
+  text-align: center;
+}
+
+#search-wrapper .loading-wrp
+{
+    margin-top:50px;
+}
+
+#search-wrapper .consultation-list.container
+{
+    margin-top:30px;
+}
+
 
 /*</editor-fold>*/
 .btn.blue {

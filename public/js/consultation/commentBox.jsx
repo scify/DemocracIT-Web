@@ -127,16 +127,13 @@
              return  this.state.commentsCount > this.state.comments.length;
         },
         render: function() {
+
             if (this.state.busy)
             {
                 return (
                     <div>
                         <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} />
-                        <div className="loading-wrp">
-                            <div className="spinner-loader">
-                                ...
-                            </div>
-                        </div>
+                        <scify.ReactLoader display={this.state.busy} />
                     </div>
                 );
             }

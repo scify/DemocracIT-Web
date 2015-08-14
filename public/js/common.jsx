@@ -1,5 +1,21 @@
 window.scify = window.scify || {}; //define global namespace
 
+scify.ReactLoader = React.createClass({
+    render:function(){
+
+        if (this.props.display)
+            return (
+                <div className="loading-wrp">
+                    <div className="spinner-loader">
+                        ...
+                    </div>
+                </div>
+            );
+            else
+                return (<div></div>);
+    }
+});
+
 (function(){
 
 var handleAjaxLoginErrors = function(event, request, settings){
