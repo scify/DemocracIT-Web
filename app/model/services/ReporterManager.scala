@@ -27,7 +27,9 @@ class ReporterManager {
     ReporterViewModel(consultation = repository.get(consultationId),
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
-                          commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId))
+                          commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId),
+                          annotationTagWithComments = commentsRepository.getTagsForConsultation(consultationId),
+                          annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId))
   }
 
 

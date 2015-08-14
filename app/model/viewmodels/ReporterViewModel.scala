@@ -7,9 +7,9 @@ import utils.ImplicitWrites._
 case class ReporterViewModel(consultation:model.dtos.Consultation,
                                user: Option[model.User],
                                relevantMaterials: Seq[RelevantMaterial],
-                               commentsPerArticle:  Seq[Article]/*,
+                               commentsPerArticle:  Seq[Article],
                                annotationTagWithComments: Seq[AnnotationTagWithComments],
-                               annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
+                               annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments]/*,
                                userCommentStats: Seq[UserCommentStats]*/
                               )
 {

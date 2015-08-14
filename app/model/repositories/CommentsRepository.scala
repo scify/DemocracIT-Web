@@ -105,19 +105,25 @@ class CommentsRepository {
     }
   }
 
-  def getTags(consultation_id:Int):List[AnnotationTagWithComments] = {
+  def getTagsForConsultation(consultation_id:Long):List[AnnotationTagWithComments] = {
 
     DB.withConnection { implicit c =>
-
-
       //one way to do it
-      val tagsWithComments: List[(AnnotationTags, Int)] = SQL"""
-                             select tag.*, comments_num from annotation_comment ac
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("comments_num") map (flatten)) *)
+      val tagsWithComments: List[(AnnotationTagWithComments)] = SQL"""
+                      with comm as (
+                            select c.*
+                                      from comments c inner join public.articles a on a.id = c.article_id
+                                      inner join public.consultation con on con.id = a.consultation_id
+                                      where a.consultation_id = $consultation_id
+                            )
+                            select ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
+                              from annotation_comment ann_comm
+                              inner join comm on ann_comm.public_comment_id = comm.id
+                              inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
+                              group by ann_comm.annotation_tag_id,annotation_tag.id
+                            """.as(AnnotationTagWithCommentsParser.Parse  *)
 
-      tagsWithComments.map(tuple => {
-        new AnnotationTagWithComments(tuple._1, tuple._2)
-      })
+      tagsWithComments
 
       //    //second way
       //    val tagsWithComments2: List[AnnotationTagWithComments]=  SQL"""
@@ -152,13 +158,24 @@ class CommentsRepository {
     }
   }
 
-  def getTagsPerArticle(consultation_id:Int):List[AnnotationTagPerArticleWithComments] = {
+  def getTagsPerArticle(consultation_id:Long):List[AnnotationTagPerArticleWithComments] = {
 
     DB.withConnection { implicit c =>
       //one way to do it
-      val tagsWithComments: List[(AnnotationTags, Int, Int)] = SQL"""
-                             select tag.*, article_id, comments_num from annotation_comment ac
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.int("article_id") ~ SqlParser.int("comments_num") map (flatten)) *)
+      val tagsWithComments: List[(AnnotationTags, String, Int)] = SQL"""
+                             with comm as (
+                                            select c.*
+                                            from comments c inner join public.articles a on a.id = c.article_id
+                                            inner join public.consultation con on con.id = a.consultation_id
+                                            where a.consultation_id = 3594
+                                          )
+                                        select articles.title as article_title, ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
+                                        from annotation_comment ann_comm
+                                        inner join comm on ann_comm.public_comment_id = comm.id
+                                        inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
+                                        inner join articles on articles.id = comm.article_id
+                                        group by ann_comm.annotation_tag_id,annotation_tag.id, articles.id
+                            """.as((AnnotationTypesParser.Parse ~ SqlParser.str("article_title") ~ SqlParser.int("comments_num") map (flatten)) *)
 
       tagsWithComments.map(tuple => {
         new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3)
