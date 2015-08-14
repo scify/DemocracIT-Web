@@ -49,7 +49,7 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
                    page:Option[Int]
                    ) = UserAwareAction {  implicit request =>
 
-    import utils.ImplicitWrites._
+    import utils.ImplicitReadWrites._
 
     val comments = commentManager.getComments(consultationId,articleId,
                                               source,

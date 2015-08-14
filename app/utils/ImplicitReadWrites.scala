@@ -7,8 +7,7 @@ import play.api.i18n.{MessagesApi, I18nSupport, Messages}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-object ImplicitWrites  {
-
+object ImplicitReadWrites  {
 
   implicit object FormErrorWrites extends Writes[FormError] {
 
@@ -23,19 +22,26 @@ object ImplicitWrites  {
       "message" -> Json.toJson(this.messages(o.message))
     )
   }
-
-  implicit val ByteRead = new Reads[Byte] {
-    override def reads(json: JsValue): JsResult[Byte] = JsSuccess(json.as[Int].toByte)
+  implicit object ConsultationWrites extends Writes[Consultation] {
+    override def writes(c:Consultation):JsValue = Json.obj(
+        "id" -> Json.toJson(c.id),
+        "title" -> Json.toJson(c.title),
+        "isActive" -> Json.toJson(c.isActive),
+        "totalDurationFormatted" -> Json.toJson(c.totalDurationFormatted),
+        "shortDescr" -> Json.toJson(c.shortDescr),
+        "articlesNum" -> Json.toJson(c.articlesNum)
+    )
   }
-  implicit object byteWrites extends Writes[Byte]
-  {
+  implicit val ByteRead = new Reads[Byte] {
+     override def reads(json: JsValue): JsResult[Byte] = JsSuccess(json.as[Int].toByte)
+  }
+  implicit object byteWrites extends Writes[Byte] {
     def writes(b:Byte) = Json.toJson(b.toInt)
   }
   implicit val annotationWrites = Json.writes[AnnotationTags]
   implicit val relevantLawsWrites = Json.writes[RelevantLaws]
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
-  implicit object commentSourcesWrites extends Writes[CommentSource]
-  {
+  implicit object commentSourcesWrites extends Writes[CommentSource] {
     def writes(c:CommentSource) = Json.obj(
       "commentSource" -> Json.toJson(c.id)
 

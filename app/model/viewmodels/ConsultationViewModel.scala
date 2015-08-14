@@ -2,7 +2,7 @@ package model.viewmodels
 
 import play.api.libs.json._
 import model.dtos._
-import utils.ImplicitWrites._
+import utils.ImplicitReadWrites._
 
 case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  annotationsRelatedToProblems: Seq[AnnotationTags],
