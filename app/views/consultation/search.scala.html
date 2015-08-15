@@ -1,7 +1,13 @@
 @import play.api.libs.json.JsValue
 @(query: String, consultationsJson: JsValue)
 
-@js = {}
+@js = {
+    <script src="@routes.Assets.at("js/consultation/scify-consultationSearchPageHandler.js")" ></script>
+    <script>
+        var c= new scify.ConsultationSearchPageHandler('@consultationsJson')
+        c.init();
+    </script>
+}
 
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
@@ -9,7 +15,9 @@
 
 @layout("DemocracIT", css, js,None) {
 
-@consultationsJson
+    <div id="search-container">
+
+    </div>
 }
 
 
