@@ -10,6 +10,7 @@ scify.SearchContainer = React.createClass({
             this.searchRequest.abort();
     },
     loadConsultations: function(query, serializedData) {
+
         var instance = this;
         instance.state.searchQuery = query;
         instance.abortAnyPendingAjaxRequest();
@@ -17,14 +18,15 @@ scify.SearchContainer = React.createClass({
         if (query.length==0)
         {
             instance.handleReset();
-            instanse.setState(instance.state);
+            instance.setState(instance.state);
         }
-        else
+        else if (query.length>2)
         {
             instance.searchRequest=  $.ajax({
                 method: "GET",
                 url: instance.props.url,
-                data:  serializedData,
+                data:  serializedData+"&datatype=json",
+                dataType: "json", //expected data type returned from the server
                 beforeSend: function(){
                     instance.state.isBusy = true;
                     instance.state.consultations =[];

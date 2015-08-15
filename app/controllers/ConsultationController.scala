@@ -23,14 +23,18 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
   private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
-  def search(query:String, ministryId:Option[Int] )= Action {
+  def search(query:String,datatype:Option[String], ministryId:Option[Int] )= Action {  implicit request =>
+    {
+      import utils.ImplicitReadWrites._
 
+      val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,ministryId.getOrElse(-1).asInstanceOf[Byte]))
+      val jsonResults = Json.toJson(results)
 
-    val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,ministryId.getOrElse(-1).asInstanceOf[Byte]))
-
-    import utils.ImplicitReadWrites._
-    Ok(Json.toJson(results))
-    // Ok(views.html.consultation.search(query,results))
+      datatype match {
+        case Some("json") =>  Ok(Json.toJson(jsonResults))
+        case _ => Ok(views.html.consultation.search(query,jsonResults))
+      }
+    }
   }
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>

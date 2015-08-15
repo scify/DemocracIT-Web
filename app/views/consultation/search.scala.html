@@ -1,4 +1,5 @@
-@(query: String, consultations: List[model.dtos.Consultation])
+@import play.api.libs.json.JsValue
+@(query: String, consultationsJson: JsValue)
 
 @js = {}
 
@@ -8,26 +9,7 @@
 
 @layout("DemocracIT", css, js,None) {
 
-    @common.searchbox()
-
-    <div id="results">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    Βρέθηκαν @consultations.length διαβουλεύσεις
-                </div>
-            </div>
-            <table>
-            @for(cons <- consultations) {
-                <tr>
-                    <td><a href="@routes.ConsultationController.getConsultation(cons.id)">@cons.title </a></td>
-                    <td>(@cons.articlesNum άρθρα)<td>
-                </tr>
-            }
-            </table>
-        </div>
-    </div>
-
+@consultationsJson
 }
 
 
