@@ -1,12 +1,22 @@
 scify.ConsultationSearchPageHandler = function(consultations ){
-    this.consultations = consulations;
+    this.consultations = consultations;
 }
 
 scify.ConsultationSearchPageHandler.prototype = function(){
 
     var init = function(){
+        var instance = this;
 
-        React.render(React.createElement(scify.SearchContainer, { url: this.searchUrl}),document.getElementById("search-wrapper") );
+        $('#consultations').DataTable( {
+            data: instance.consultations,
+            columns: [
+                { title: 'Λήξη' },
+                { title: 'Τίτλος' },
+                { title: "άρθρα" },
+                //{ title: "Διάρκεια" },
+                //{ title: "Λήξη" }
+            ]
+        } );
     }
 
     return {

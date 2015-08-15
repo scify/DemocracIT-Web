@@ -2,21 +2,24 @@
 @(query: String, consultationsJson: JsValue)
 
 @js = {
+    <script src="http://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
     <script src="@routes.Assets.at("js/consultation/scify-consultationSearchPageHandler.js")" ></script>
     <script>
-        var c= new scify.ConsultationSearchPageHandler('@consultationsJson')
+        var c= new scify.ConsultationSearchPageHandler(@Html(consultationsJson.toString()));
         c.init();
     </script>
 }
 
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link  rel="stylesheet" media="screen" href="http://cdn.datatables.net/1.10.8/css/jquery.dataTables.min.css">
+
 }
 
 @layout("DemocracIT", css, js,None) {
 
-    <div id="search-container">
-
+    <div class="container">
+        <table id="consultations" class="display" width="100%"></table>
     </div>
 }
 
