@@ -45,7 +45,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
 
   def search(query:String,ministryId:Option[Int] )= Action {  implicit request =>
     {
-      val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,"",-1))
+      val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,-1))
       import utils.ImplicitReadWrites._
       Ok(Json.toJson(results))
     }

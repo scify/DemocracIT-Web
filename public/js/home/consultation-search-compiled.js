@@ -86,9 +86,14 @@ var SearchBox = React.createClass({
                                 { className: "icon" },
                                 React.createElement("i", { className: "fa fa-search" })
                             ),
-                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "Αναζήτηση...", onKeyUp: this.handleKeyUp })
+                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "αναζητήστε στο τίτλο, πχ 'συντάξεις'", onKeyUp: this.handleKeyUp })
                         )
                     )
+                ),
+                React.createElement(
+                    "a",
+                    { href: "/consultation/display-all" },
+                    "κλικ εδώ για να δείτε όλες τις διαβουλεύσεις"
                 )
             )
         );
