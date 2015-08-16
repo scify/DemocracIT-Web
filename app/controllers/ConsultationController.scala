@@ -24,7 +24,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
-  def displayAll()= //cached("displayall",10) {
+  def displayAll()= //cached("displayall") {
       Action { implicit request =>
       {
         val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,"",-1))
