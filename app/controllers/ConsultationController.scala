@@ -6,6 +6,7 @@ import com.mohiva.play.silhouette.api.{Silhouette, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos.CommentSource.CommentSource
+import play.api.cache.Cached
 import model.dtos._
 import model.services._
 import play.api.i18n.MessagesApi
@@ -14,7 +15,7 @@ import play.api.libs.json.{Json, JsValue, JsPath, Writes}
 
 
 
-class ConsultationController  @Inject() (val messagesApi: MessagesApi,
+class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: MessagesApi,
                                          val env: Environment[model.User, CookieAuthenticator],
                                          socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[model.User, CookieAuthenticator] {
@@ -23,14 +24,31 @@ class ConsultationController  @Inject() (val messagesApi: MessagesApi,
   private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
-  def search(query:String, ministryId:Option[Int] )= Action {
+  def displayAll()= //cached("displayall") {
+      Action { implicit request =>
+      {
+        val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,"",-1))
+
+        implicit object Consultatites extends Writes[Consultation] {
+          override def writes(c:Consultation):JsValue = Json.arr(
+            (if (c.isActive) "λήξη σε:" else "έληξε: ")  + c.endDateFormatted,
+            "<a href='/consultation/"+c.id+"'>"+c.title+"</a>" ,
+            c.articlesNum.toString + (if (c.articlesNum==1) " άρθρo" else " άρθρα")
+          )
+        }
+        Ok(views.html.consultation.search("",Json.toJson(results),results.length))
+      }
+    }
+  //}
 
 
-    val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,ministryId.getOrElse(-1).asInstanceOf[Byte]))
 
-    import utils.ImplicitReadWrites._
-    Ok(Json.toJson(results))
-    // Ok(views.html.consultation.search(query,results))
+  def search(query:String,ministryId:Option[Int] )= Action {  implicit request =>
+    {
+      val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,query,-1))
+      import utils.ImplicitReadWrites._
+      Ok(Json.toJson(results))
+    }
   }
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>

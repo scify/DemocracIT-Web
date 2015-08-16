@@ -22,6 +22,8 @@ object ImplicitReadWrites  {
       "message" -> Json.toJson(this.messages(o.message))
     )
   }
+
+
   implicit object ConsultationWrites extends Writes[Consultation] {
     override def writes(c:Consultation):JsValue = Json.obj(
         "id" -> Json.toJson(c.id),

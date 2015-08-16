@@ -1,13 +1,14 @@
 @(viewmodel:model.viewmodels.HomeViewModel)
 @js ={
     <script src="@routes.Assets.at("js/home/consultation-search-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/home/scify-homePageHandler.js")" ></script>
     <script>
-       React.render(React.createElement(scify.SearchContainer, { url: "@routes.ConsultationController.search()"}),document.getElementById("search-wrapper") );
+        var c = new scify.HomePageHandler('@routes.ConsultationController.search()');
+        c.init();
     </script>
 }
 @css = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/home/index.css")">
-
 }
 
 @layout("Αρχική",css,js, viewmodel.user){
