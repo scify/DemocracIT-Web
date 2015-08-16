@@ -32,11 +32,11 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
         implicit object Consultatites extends Writes[Consultation] {
           override def writes(c:Consultation):JsValue = Json.arr(
             (if (c.isActive) "λήξη σε:" else "έληξε: ")  + c.endDateFormatted,
-            c.title,
+            "<a href='/consultation/"+c.id+"'>"+c.title+"</a>" ,
             c.articlesNum.toString + (if (c.articlesNum==1) " άρθρo" else " άρθρα")
           )
         }
-        Ok(views.html.consultation.search("",Json.toJson(results)))
+        Ok(views.html.consultation.search("",Json.toJson(results),results.length))
       }
     }
   //}

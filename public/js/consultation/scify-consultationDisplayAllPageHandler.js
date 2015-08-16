@@ -1,8 +1,8 @@
-scify.ConsultationSearchPageHandler = function(consultations ){
+scify.ConsultationDisplayAllPageHandler = function(consultations ){
     this.consultations = consultations;
 }
 
-scify.ConsultationSearchPageHandler.prototype = function(){
+scify.ConsultationDisplayAllPageHandler.prototype = function(){
 
     var init = function(){
         var instance = this;
@@ -16,9 +16,10 @@ scify.ConsultationSearchPageHandler.prototype = function(){
                 //{ title: "Διάρκεια" },
                 //{ title: "Λήξη" }
             ],
+            "lengthMenu": [[25, 50,100, -1], [25, 50,100, "Όλες"]],
             language: {
                 "sProcessing":   "Επεξεργασία...",
-                "sLengthMenu":   "Δείξε _MENU_ εγγραφές",
+                "sLengthMenu":   "_MENU_ ανα σελίδα",
                 "sZeroRecords":  "Δεν βρέθηκαν εγγραφές που να ταιριάζουν",
                 "sInfo":         "Δείχνοντας _START_ εως _END_ από _TOTAL_ εγγραφές",
                 "sInfoEmpty":    "Δείχνοντας 0 εως 0 από 0 εγγραφές",
