@@ -7,9 +7,15 @@ scify.ConsultationDisplayAllPageHandler.prototype = function(){
     var init = function(){
         var instance = this;
 
+        for (var i=0; i<instance.consultations.length; i ++)
+        {
+            instance.consultations[i].unshift((i+1)+'.');
+        }
+
         $('#consultations').DataTable( {
             data: instance.consultations,
             columns: [
+                { title: '#' },
                 { title: 'Λήξη' },
                 { title: 'Τίτλος' },
                 { title: "άρθρα" },
