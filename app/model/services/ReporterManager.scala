@@ -29,7 +29,8 @@ class ReporterManager {
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
                           commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId),
                           annotationTagWithComments = commentsRepository.getTagsForConsultation(consultationId),
-                          annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId))
+                          annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId),
+                          relevantLaws = repository.getRelevantLaws(consultationId))
   }
 
 

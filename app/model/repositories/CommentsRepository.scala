@@ -167,7 +167,7 @@ class CommentsRepository {
                                             select c.*
                                             from comments c inner join public.articles a on a.id = c.article_id
                                             inner join public.consultation con on con.id = a.consultation_id
-                                            where a.consultation_id = 3594
+                                            where a.consultation_id = $consultation_id
                                           )
                                         select articles.title as article_title, ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
                                         from annotation_comment ann_comm
