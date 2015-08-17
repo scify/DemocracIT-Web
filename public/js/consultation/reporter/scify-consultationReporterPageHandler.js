@@ -1,17 +1,16 @@
-scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
-                                               relevantLaws,
+scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,commentsPerArticle,
                                                consultationEndDate){
     this.consultationid= consultationid;
     this.userId = userId;
     this.fullName = fullName;
 
-    this.relevantLaws = [];
-    console.log(relevantLaws.length);
-    for (var i=0; i<relevantLaws.length; i++) {
-        this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
-    }
-
     this.consultationEndDate = consultationEndDate;
+
+    this.commentsPerArticle =[];
+    for (var i=0; i<commentsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    {
+        this.commentsPerArticle.push({ title: commentsPerArticle[i].title, num:commentsPerArticle[i].commentsNum })
+    }
 
 };
 
@@ -32,12 +31,23 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
                 }
             });
+        },
+        createCommentsPerArticleChart = function(commentsPerArticle) {
+            console.log(commentsPerArticle);
+            var data = [{key:1, value:10}, {key:2, value:20}, {key:3, value: 30}];
+            console.log(data);
+            d3.select(".chart")
+                .selectAll("div")
+                .data(commentsPerArticle)
+                .enter().append("div")
+                .style("width", function(d) { console.log(d);return d.num * 100 + "px"; })
+                .text(function(d) { return d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });
         }
     init = function(){
         var instance= this;
         moment.locale('el');
         addRelevantLawsHandler();
-
+        createCommentsPerArticleChart(this.commentsPerArticle);
     };
 
     return {

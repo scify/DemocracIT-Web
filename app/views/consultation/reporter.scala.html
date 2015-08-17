@@ -18,6 +18,7 @@
         var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                @Html(vm.commentsPerArticleToJson()),
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();

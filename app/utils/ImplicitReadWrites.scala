@@ -42,6 +42,8 @@ object ImplicitReadWrites  {
   }
   implicit val annotationWrites = Json.writes[AnnotationTags]
   implicit val relevantLawsWrites = Json.writes[RelevantLaws]
+  implicit val articleWrites = Json.writes[Article]
+
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource] {
     def writes(c:CommentSource) = Json.obj(

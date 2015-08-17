@@ -17,6 +17,8 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
                               )
 {
 
+  def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()
+
   def totalComments:Int = {
     var total = 0
     for(article <- commentsPerArticle) {
