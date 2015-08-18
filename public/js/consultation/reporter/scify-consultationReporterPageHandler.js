@@ -66,6 +66,8 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
 
 scify.ConsultationReporterPageHandler.prototype = function(){
 
+    var width = document.getElementById("statsDiv").offsetWidth;
+
     var addRelevantLawsHandler = function(){
             $(".relevantLawsBtn").on("click", function(){
                 console.log($(this).context.id);
@@ -83,49 +85,66 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             });
         },
         createCommentsPerArticleChart = function(commentsPerArticle) {
-            //console.log(commentsPerArticle);
-            var data = [{key:1, value:10}, {key:2, value:20}, {key:3, value: 30}];
-            //console.log(data);
+            var x = d3.scale.linear()
+                .domain([0, commentsPerArticle[commentsPerArticle.length -1].num])
+                .range([0, width]);
+
             d3.select(".commentsPerArticleChart")
                 .selectAll("div")
                 .data(commentsPerArticle)
                 .enter().append("div")
-                .style("width", function(d) { return d.num * 100 + "px"; })
+                .style("width", function(d) { console.log(x(d.num));return x(d.num)  + "px"; })
                 .text(function(d) { return d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });
         },
 
         createAnnotationTagsForConsultationChart = function(annotationsForConsultation) {
+            var x = d3.scale.linear()
+                .domain([0, annotationsForConsultation[annotationsForConsultation.length -1].num])
+                .range([0, width]);
+
             d3.select(".annotationsForConsultationChart")
                 .selectAll("div")
                 .data(annotationsForConsultation)
                 .enter().append("div")
-                .style("width", function(d) { return d.num * 100 + "px"; })
+                .style("width", function(d) { console.log(x(d.num));return x(d.num)  + "px"; })
                 .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
         },
         createAnnotationTagsProblemsForConsultationChart = function(annotationProblemsForConsultation) {
+            var x = d3.scale.linear()
+                .domain([0, annotationProblemsForConsultation[annotationProblemsForConsultation.length -1].num])
+                .range([0, width]);
+
             d3.select(".annotationProblemsForConsultationChart")
                 .selectAll("div")
                 .data(annotationProblemsForConsultation)
                 .enter().append("div")
-                .style("width", function(d) { return d.num * 100 + "px"; })
+                .style("width", function(d) { console.log(x(d.num));return x(d.num)  + "px"; })
                 .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
         },
         createAnnotationsPerArticleChart = function(annotationsPerArticle) {
             console.log(annotationsPerArticle);
+
+            var x = d3.scale.linear()
+                .domain([0, annotationsPerArticle[annotationsPerArticle.length -1].num])
+                .range([0, width]);
+
             d3.select(".annotationsPerArticleChart")
                 .selectAll("div")
                 .data(annotationsPerArticle)
                 .enter().append("div")
-                .style("width", function(d) { return d.num * 100 + "px"; })
+                .style("width", function(d) { console.log(x(d.num));return x(d.num)  + "px"; })
                 .text(function(d) { return d.annotation.description + ' | ' + d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });
         },
         createAnnotationProblemsPerArticleChart = function(annotationProblemsPerArticle) {
-            console.log(annotationProblemsPerArticle);
+            var x = d3.scale.linear()
+                .domain([0, annotationProblemsPerArticle[annotationProblemsPerArticle.length -1].num])
+                .range([0, width]);
+
             d3.select(".annotationProblemsPerArticleChart")
                 .selectAll("div")
                 .data(annotationProblemsPerArticle)
                 .enter().append("div")
-                .style("width", function(d) { return d.num * 100 + "px"; })
+                .style("width", function(d) { console.log(x(d.num));return x(d.num)  + "px"; })
                 .text(function(d) { return d.annotation.description + ' | ' + d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });
         }
 
