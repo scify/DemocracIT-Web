@@ -18,6 +18,8 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
 {
 
   def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()
+  def annotationsForConsultationToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsForConsultation(type_of_ann)).toString()
+  def annotationsPerArticleToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsPerArticle(type_of_ann)).toString()
 
   def totalComments:Int = {
     var total = 0

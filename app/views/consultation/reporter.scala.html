@@ -19,6 +19,10 @@
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.commentsPerArticleToJson()),
+                                                                @Html(vm.annotationsForConsultationToJson(1)),
+                                                                @Html(vm.annotationsForConsultationToJson(2)),
+                                                                @Html(vm.annotationsPerArticleToJson(1)),
+                                                                @Html(vm.annotationsPerArticleToJson(2)),
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -144,8 +148,23 @@
                         }
                     </table>
 
-                    <div class="chart"></div>
 
+
+
+                    <ul id="tabs" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"> <a href="#commentsPerArticleChart" aria-controls="commentsPerArticleChart" role="tab" data-toggle="tab">Κατανομή σχολίων ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Κατανομή σχολίων ανά Tag Αναφοράς</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsForConsultationChart" aria-controls="annotationProblemsForConsultationChart" role="tab" data-toggle="tab">Κατανομή σχολίων ανά Tag Προβλήματος</a></li>
+                        <li role="presentation"> <a href="#annotationsPerArticleChart" aria-controls="annotationsPerArticleChart" role="tab" data-toggle="tab">Κατανομή Tag Αναφοράς ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Κατανομή Tag Προβλήματος ανά άρθρο</a></li>
+                    </ul>
+                    <div class="tab-content stats">
+                        <div role="tabpanel" class="tab-pane active commentsPerArticleChart chart" id="commentsPerArticleChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationsForConsultationChart chart" id="annotationsForConsultationChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsForConsultationChart chart" id="annotationProblemsForConsultationChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart"></div>
+                    </div>
 
                 </div>
                 <div role="tabpanel" class="tab-pane" id="relevantLawsList">

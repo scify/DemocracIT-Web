@@ -41,6 +41,8 @@ object ImplicitReadWrites  {
     def writes(b:Byte) = Json.toJson(b.toInt)
   }
   implicit val annotationWrites = Json.writes[AnnotationTags]
+  implicit val annotationWithCommentsWrites = Json.writes[AnnotationTagWithComments]
+  implicit val annotationPerArticlesWrites = Json.writes[AnnotationTagPerArticleWithComments]
   implicit val relevantLawsWrites = Json.writes[RelevantLaws]
   implicit val articleWrites = Json.writes[Article]
 
