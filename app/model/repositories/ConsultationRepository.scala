@@ -13,6 +13,7 @@ import repositories.anorm.{ArticleParser, ConsultationParser}
 
 class ConsultationRepository {
 
+
   def getConsultationStats():List[ConsultationStats]  = {
     DB.withConnection { implicit c =>
 

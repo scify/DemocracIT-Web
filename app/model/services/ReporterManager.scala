@@ -30,7 +30,8 @@ class ReporterManager {
                           commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId),
                           annotationTagWithComments = commentsRepository.getTagsForConsultation(consultationId),
                           annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId),
-                          relevantLaws = repository.getRelevantLaws(consultationId))
+                          relevantLaws = repository.getRelevantLaws(consultationId),
+                          userCommentStats = repository.getCommentersForConsultation(consultationId))
   }
 
 

@@ -132,6 +132,26 @@ class CommentsRepository {
     }
   }
 
+  def getCommentersForConsultation(consultation_id:Long):List[UserCommentStats] = {
+
+    DB.withConnection { implicit c =>
+      val userCommentStats: List[(UserCommentStats)] = SQL"""
+          with comm as (
+              select c.*
+              from comments c inner join public.articles a on a.id = c.article_id
+              inner join public.consultation con on con.id = a.consultation_id
+              where a.consultation_id = 3594
+          )
+          select users.id as user_id, users.first_name, users.last_name, users.email, users.role, count(users.id) as number_of_comments
+          from users_temp users
+          inner join comm on users.id = comm.user_id
+          group by users.id""".as(UserCommentsStatsParser.Parse  *)
+
+      userCommentStats
+
+    }
+  }
+
 
   def getCommentsPerArticle(consultationId:Long):List[Article] = {
     DB.withConnection { implicit c =>

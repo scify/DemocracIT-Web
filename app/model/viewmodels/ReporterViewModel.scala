@@ -12,8 +12,8 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
                                commentsPerArticle:  Seq[Article],
                                annotationTagWithComments: Seq[AnnotationTagWithComments],
                                annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
-                               relevantLaws: Seq[RelevantLaws]/*,
-                               userCommentStats: Seq[UserCommentStats]*/
+                               relevantLaws: Seq[RelevantLaws],
+                               userCommentStats: Seq[UserCommentStats]
                               )
 {
 

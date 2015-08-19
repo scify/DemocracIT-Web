@@ -12,7 +12,8 @@
   text-align: right;
   padding: 3px;
   margin: 1px;
-  color: white; }
+  color: white;
+  margin-bottom: 3px; }
 
 .stats {
   margin-top: 10px; }
