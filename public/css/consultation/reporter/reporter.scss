@@ -8,7 +8,7 @@
   float: left;
 }
 
-.chart div {
+/*.chart div {
   font: 12px sans-serif;
   background-color: steelblue;
   text-align: right;
@@ -17,7 +17,23 @@
   color: white;
   margin-bottom: 3px;
 }
+*/
+
+.chart {
+  margin: 20px;
+}
 
 .stats {
   margin-top: 10px;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
