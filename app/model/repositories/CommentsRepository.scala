@@ -1,16 +1,19 @@
 package model.repositories
 
-import java.util.{UUID, Date}
-import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
-import anorm._
-import anorm.SqlParser._
-import model.dtos.CommentSource.CommentSource
+import java.util.UUID
+import _root_.anorm.SqlParser
+import _root_.anorm._
+import _root_.anorm.SqlParser._
 import model.dtos._
 import repositories.anorm._
-import org.joda.time.DateTime
 import play.api.db.DB
+import model.repositories.anorm.AnnotationTagWithCommentsParser
+import model.repositories.anorm.AnnotationTypesParser
+import model.repositories.anorm.CommentsParser
+import model.repositories.anorm.DiscussionThreadWithCommentsCountParser
+import model.repositories.anorm.UserCommentsStatsParser
 import play.api.Play.current
-import repositories.anorm.{ArticleParser, ConsultationParser}
+import anorm.ArticleParser
 
 
 class CommentsRepository {
