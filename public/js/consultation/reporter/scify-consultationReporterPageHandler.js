@@ -15,7 +15,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     //this.commentsPerArticle.push(['Article', 'Comments', { role: 'annotation' }]);
     for (var i=0; i<commentsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
-        this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, commentsPerArticle[i].title ])
+        this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:100%">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>' ])
     }
 
     this.annotationsForConsultation = [];
@@ -33,13 +33,13 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     this.annotationsPerArticle = [];
     for (var i=0; i<annotationsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
-        this.annotationsPerArticle.push([annotationsPerArticle[i].article_name.substr(0, annotationsPerArticle[i].article_name.indexOf(':')) + ": " + annotationsPerArticle[i].annotationTag.description,  annotationsPerArticle[i].numberOfComments, annotationsPerArticle[i].article_name + annotationsPerArticle[i].annotationTag.description ])
+        this.annotationsPerArticle.push([annotationsPerArticle[i].article_name.substr(0, annotationsPerArticle[i].article_name.indexOf(':')) + ": " + annotationsPerArticle[i].annotationTag.description,  annotationsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationsPerArticle[i].article_name + '<div>Tag: ' + annotationsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationsPerArticle[i].numberOfComments + '</h5></div>' ])
     }
 
     this.annotationProblemsPerArticle = [];
     for (var i=0; i<annotationProblemsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
-        this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, annotationProblemsPerArticle[i].article_name + annotationProblemsPerArticle[i].annotationTag.description ])
+        this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>' ])
     }
 };
 
@@ -71,7 +71,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
                 data.addColumn('string', strName);
                 data.addColumn('number', numName);
-                data.addColumn({type:'string', role:'annotationText'});
+                data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
                 data.addRows(dataForChart);
                 var numRows = dataForChart.length;
                 var expectedHeight = numRows * 30;
@@ -80,6 +80,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 }
                 console.log(expectedHeight);
                 var options = {
+                    tooltip: {isHtml: true},
                     'displayAnnotations': true,
                     'title': chartName,
                     'height': expectedHeight,
