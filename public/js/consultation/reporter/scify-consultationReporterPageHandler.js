@@ -41,28 +41,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     {
         this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, annotationProblemsPerArticle[i].article_name + annotationProblemsPerArticle[i].annotationTag.description ])
     }
-
-    this.commentsPerArticle.sort(function(a,b) {
-        return a.num - b.num;
-    });
-
-    this.annotationsForConsultation.sort(function(a,b) {
-        return a.num - b.num;
-    });
-
-    this.annotationProblemsForConsultation.sort(function(a,b) {
-        return a.num - b.num;
-    });
-
-    this.annotationsPerArticle.sort(function(a,b) {
-        return a.num - b.num;
-    });
-
-    this.annotationProblemsPerArticle.sort(function(a,b) {
-        return a.num - b.num;
-    });
-
-
 };
 
 scify.ConsultationReporterPageHandler.prototype = function(){
@@ -87,27 +65,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
 
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType) {
-            /*var data = dataForChart;
-            var linearColorScale = d3.scale.linear()
-                .domain([0, data.length])
-                .range(["#A2C0DA", "#2A4E6C"])
-            var x = d3.scale.linear()
-                .domain([0, d3.max(data, function(d) { return d.num})])
-                .range([0, width])
-            var y = d3.scale.linear()
-                .domain([0, data[data.length -1]])
-                .range([0, 450]);
-            d3.select("." + chartClass)
-                .selectAll("div")
-                .data(data)
-                .enter()
-                .append("div")
-                .style("width", function(d) { return x(d.num)  + "px"; })
-                .style("background-color", function(d,i) { return linearColorScale(i)})
-                    .text(function(d) { return d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });*/
             console.log(dataForChart);
             function drawMultSeries() {
-                //var data  = new google.visualization.arrayToDataTable(dataForChart, true);
                 var data = new google.visualization.DataTable();
 
                 data.addColumn('string', strName);
@@ -116,15 +75,16 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 data.addRows(dataForChart);
                 var numRows = dataForChart.length;
                 var expectedHeight = numRows * 30;
-                if(expectedHeight < 250) {
-                    expectedHeight = 450;
+                if(expectedHeight < 400) {
+                    expectedHeight = 600;
                 }
                 console.log(expectedHeight);
                 var options = {
                     'displayAnnotations': true,
                     'title': chartName,
                     'height': expectedHeight,
-                    'chartArea': {width: chartWidth,'height': '450' },
+                    'width':'1000',
+                    'chartArea': {width: chartWidth,'height': '400',left:'300'},
                     'hAxis': {
                         title: xName,
                         minValue: 0
@@ -133,8 +93,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     'vAxis': {
                         title: yName
                     },
-                    legend: {position: 'left',alignment:'start'},
-                    'chartArea.left': '300',
+                    legend: {position: 'right',alignment:'start'},
                     'fontSize' : 15
                 };
 
@@ -156,7 +115,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
         },
 
-        createAnnotationTagsForConsultationChart = function(annotationsForConsultation, chartClass) {
+        createChartD3 = function(annotationsForConsultation, chartClass) {
             var data = annotationsForConsultation;
             var linearColorScale = d3.scale.linear()
                 .domain([0, data.length])
@@ -175,26 +134,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     .style("width", function(d) { return x(d.num)  + "px"; })
                     .style("background-color", function(d,i) { return linearColorScale(i)})
                     .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
-        },
-        createAnnotationsPerArticleChart = function(annotationsPerArticle, chartClass) {
-            var data = annotationsPerArticle;
-            var linearColorScale = d3.scale.linear()
-                .domain([0, data.length])
-                .range(["#A2C0DA", "#2A4E6C"])
-            var x = d3.scale.linear()
-                .domain([0, d3.max(data, function(d) { return d.num})])
-                .range([0, width])
-            var y = d3.scale.linear()
-                .domain([0, data[data.length -1]])
-                .range([0, 450]);
-            d3.select("." + chartClass)
-                .selectAll("div")
-                .data(data)
-                .enter()
-                .append("div")
-                    .style("width", function(d) { return x(d.num)  + "px"; })
-                    .style("background-color", function(d,i) { return linearColorScale(i)})
-                    .text(function(d) { return d.annotation.description + ' | ' + d.title.substr(0, d.title.indexOf(':')) + ' | ' + d.num + ' σχόλια'; });
         }
 
     init = function(){
@@ -204,8 +143,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createChart(this.commentsPerArticle, "commentsPerArticleChart", "Σχόλια ανά άρθρο", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
         createChart(this.annotationsForConsultation, "annotationsForConsultationChart", "Σχόλια ανά Tag Αναφοράς", "Αριθμός σχολίων", "Tag", "Tag Αναφοράς", "Σχόλια", '90%', 'pie');
         createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationChart", "Σχόλια ανά Tag Προβλήματος", "Αριθμός σχολίων", "Tag", "Tag Προβλήματος", "Σχόλια", '90%', 'pie');
-        createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Tag Αναφοράς ανά άρθρο", "Αριθμός σχολίων", "Tag", "Tag Αναφοράς", "Σχόλια", '90%', 'pie');
-        createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Tag Προβλήματος ανά άρθρο", "Αριθμός σχολίων", "Tag", "Tag Προβλήματος", "Σχόλια", '90%', 'pie');
+        createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Tag Αναφοράς ανά άρθρο", "Αριθμός σχολίων", "", "Tag Αναφοράς", "Σχόλια", '75%', 'bar');
+        createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Tag Προβλήματος ανά άρθρο", "Αριθμός σχολίων", "", "Tag Προβλήματος", "Σχόλια", '75%', 'bar');
 
     };
 
