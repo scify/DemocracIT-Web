@@ -65,7 +65,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
 
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType) {
-            console.log(dataForChart);
+            //console.log(dataForChart);
             function drawMultSeries() {
                 var data = new google.visualization.DataTable();
 
@@ -78,7 +78,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 if(expectedHeight < 400) {
                     expectedHeight = 600;
                 }
-                console.log(expectedHeight);
+                //console.log(expectedHeight);
                 var options = {
                     tooltip: {isHtml: true},
                     'displayAnnotations': true,
@@ -135,6 +135,25 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     .style("width", function(d) { return x(d.num)  + "px"; })
                     .style("background-color", function(d,i) { return linearColorScale(i)})
                     .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
+        },
+
+        createUserBox = function () {
+            var instance = this;
+            scify.userBoxes = {};
+            $(".statsForUser").each(function(index,userDiv) {
+                //console.log(index);
+                //console.log(userDiv);
+                var userId = $(userDiv).data("id");
+
+                var userBoxProperties = {
+                    consultationid          : instance.consultationid,
+                    userId                  : userId
+                };
+                var domElementToAddComponent = document.getElementById("user_" + userId);
+                console.log(domElementToAddComponent);
+                console.log(React.createElement(scify.UserBox, userBoxProperties));
+                scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
+            });
         }
 
     init = function(){
@@ -147,6 +166,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Tag Αναφοράς ανά άρθρο", "Αριθμός σχολίων", "", "Tag Αναφοράς", "Σχόλια", '75%', 'bar');
         createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Tag Προβλήματος ανά άρθρο", "Αριθμός σχολίων", "", "Tag Προβλήματος", "Σχόλια", '75%', 'bar');
 
+        createUserBox();
     };
 
     return {
