@@ -134,8 +134,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
-        $("#save-annotation").click(handleAnnotationSave.bind(instance));
 
+        $( "#tutorial" ).on( "click", function() {
+            introJs().start();
+        });
     };
 
     return {

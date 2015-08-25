@@ -11,6 +11,7 @@
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
 
+    <script src="@routes.Assets.at("js/consultation/intro.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
@@ -32,17 +33,18 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/introjs.css")">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
-
+        <div id="tutorial" class="aside-button">Δείξε μου πώς λειτουργεί</div>
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
 
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
-                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+                <li role="presentation" class="active" data-step="1" data-intro="Μπορείτε να δείτε το περιεχόμενο ενός άρθρου πατώντας πάνω του και να σχολιάσετε τα άρθρα της διαβούλευσης κάνοντας mouseover στο άρθρο"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
+                <li role="presentation" data-step="2" data-intro="Πατώντας σε αυτή την καρτέλα βλέπετε τους σχετικούς νόμους"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
+                <li role="presentation" data-step="3" data-intro="Πατώντας εδω μπορείτε να δείτε τη σελίδα με τα στατιστικά της διαβούλευσης"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">

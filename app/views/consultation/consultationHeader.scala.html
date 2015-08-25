@@ -41,7 +41,7 @@
                     Διάρκεια @cons.totalDurationFormatted
 
                 </div>
-                <div id="aside">
+                <div id="aside" data-step="4" data-intro="Πατώντας εδω μπορείτε να δείτε το σχετικό υλικό">
                     @for(
                         relevantMaterial <- relevantMaterials
                         if (relevantMaterial.pdf_url != cons.report_url.getOrElse(""))
