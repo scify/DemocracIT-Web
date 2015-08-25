@@ -18,7 +18,6 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Action
 
 import scala.concurrent.Future
-
 /**
  * The sign up controller.
  *
