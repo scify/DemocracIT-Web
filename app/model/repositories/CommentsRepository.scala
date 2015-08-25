@@ -5,13 +5,13 @@ import _root_.anorm.SqlParser
 import _root_.anorm._
 import _root_.anorm.SqlParser._
 import model.dtos._
-import repositories.anorm._
+import anorm._
 import play.api.db.DB
-import model.repositories.anorm.AnnotationTagWithCommentsParser
-import model.repositories.anorm.AnnotationTypesParser
-import model.repositories.anorm.CommentsParser
-import model.repositories.anorm.DiscussionThreadWithCommentsCountParser
-import model.repositories.anorm.UserCommentsStatsParser
+import anorm.AnnotationTagWithCommentsParser
+import anorm.AnnotationTypesParser
+import anorm.CommentsParser
+import anorm.DiscussionThreadWithCommentsCountParser
+import anorm.UserCommentsStatsParser
 import play.api.Play.current
 import anorm.ArticleParser
 
