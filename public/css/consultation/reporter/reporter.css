@@ -31,4 +31,7 @@
   stroke: #000;
   shape-rendering: crispEdges; }
 
+.notClicked {
+  display: none; }
+
 /*# sourceMappingURL=reporter.css.map */

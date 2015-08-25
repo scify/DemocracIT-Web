@@ -1,6 +1,6 @@
 'use strict';
 
-scify.ConsultationReporterPageHandler = function (consultationid, userId, fullName, commentsPerArticle, annotationsForConsultation, annotationProblemsForConsultation, annotationsPerArticle, annotationProblemsPerArticle, consultationEndDate) {
+scify.ConsultationReporterPageHandler = function (consultationid, userId, fullName, commentsPerArticle, annotationsForConsultation, annotationProblemsForConsultation, annotationsPerArticle, annotationProblemsPerArticle, commenters, consultationEndDate) {
     this.consultationid = consultationid;
     this.userId = userId;
     this.fullName = fullName;
@@ -37,6 +37,16 @@ scify.ConsultationReporterPageHandler = function (consultationid, userId, fullNa
     {
         this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ': ' + annotationProblemsPerArticle[i].annotationTag.description, annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>']);
     }
+
+    console.log(commenters);
+
+    getUserById = function (userId) {
+        for (var i = 0; i < commenters.length; i++) {
+            if (userId == commenters[i].user_id) {
+                return commenters[i];
+            }
+        }
+    };
 };
 
 scify.ConsultationReporterPageHandler.prototype = (function () {
@@ -123,21 +133,21 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
             return d.annotation.description + ' | ' + d.num + ' σχόλια';
         });
     },
-        createUserBox = function createUserBox() {
-        var instance = this;
+        createUserBox = function createUserBox(instance) {
+
         scify.userBoxes = {};
         $('.statsForUser').each(function (index, userDiv) {
-            //console.log(index);
-            //console.log(userDiv);
             var userId = $(userDiv).data('id');
-
+            var userObj = getUserById(userId);
             var userBoxProperties = {
                 consultationid: instance.consultationid,
-                userId: userId
+                userId: userId,
+                user: userObj
             };
-            var domElementToAddComponent = document.getElementById('user_' + userId);
-            console.log(domElementToAddComponent);
-            console.log(React.createElement(scify.UserBox, userBoxProperties));
+            var domElementToAddComponent = document.getElementById('box_' + userId);
+            //var domElementToAddComponent = $(userDiv).find(".userBoxDiv");
+            //console.log(domElementToAddComponent);
+            //console.log(React.createElement(scify.UserBox, userBoxProperties));
             scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
         });
     };
@@ -151,8 +161,7 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
         createChart(this.annotationProblemsForConsultation, 'annotationProblemsForConsultationChart', 'Σχόλια ανά Tag Προβλήματος', 'Αριθμός σχολίων', 'Tag', 'Tag Προβλήματος', 'Σχόλια', '90%', 'pie');
         createChart(this.annotationsPerArticle, 'annotationsPerArticleChart', 'Tag Αναφοράς ανά άρθρο', 'Αριθμός σχολίων', '', 'Tag Αναφοράς', 'Σχόλια', '75%', 'bar');
         createChart(this.annotationProblemsPerArticle, 'annotationProblemsPerArticleChart', 'Tag Προβλήματος ανά άρθρο', 'Αριθμός σχολίων', '', 'Tag Προβλήματος', 'Σχόλια', '75%', 'bar');
-
-        createUserBox();
+        createUserBox(this);
     };
 
     return {

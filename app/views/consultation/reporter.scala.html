@@ -25,7 +25,7 @@
                                                                 @Html(vm.annotationsForConsultationToJson(1)),
                                                                 @Html(vm.annotationsForConsultationToJson(2)),
                                                                 @Html(vm.annotationsPerArticleToJson(1)),
-                                                                @Html(vm.annotationsPerArticleToJson(2)),
+                                                                @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -134,12 +134,12 @@
                     <div data-id="@userComments.user_id" class="statsForUser">
                         <tr>
                             <td class="articleName">
-                            @userComments.first_name  @userComments.last_name (@userComments.role)
+                            @*<div>@userComments.first_name  @userComments.last_name (@userComments.role)<div class="userBoxDiv" id="box_@userComments.user_id"></div></div>*@
+                            <div id="box_@userComments.user_id"></div>
                             </td>
                             <td class="commentsNum">
                             @userComments.number_of_comments
                             </td>
-                            <div class="userBoxDiv" id="user_@userComments.user_id"></div>
                         </tr>
 
                     </div>
