@@ -2,9 +2,9 @@ package controllers
 
 import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Silhouette, Environment, LogoutEvent}
-import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import forms._
+import model.viewmodels.forms._
 import play.api.i18n.MessagesApi
 import scala.concurrent.Future
 

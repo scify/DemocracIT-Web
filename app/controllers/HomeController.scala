@@ -2,15 +2,12 @@ package controllers
 
 
 import javax.inject.Inject
-import com.mohiva.play.silhouette.api.{Silhouette, Environment, LogoutEvent}
-import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.api.{Silhouette, Environment}
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import model.dtos.CommentSource
-import model.services.{AnnotationManager, ConsultationManager}
-import forms._
-import org.joda.time.DateTime
+import model.services.ConsultationManager
+import model.viewmodels.forms._
 import play.api.i18n.MessagesApi
-import scala.concurrent.Future
 
 
 
