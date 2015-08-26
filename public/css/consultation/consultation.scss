@@ -588,3 +588,8 @@ a.load {
   margin-top: 20px;
   margin-left: 20px;
 }
+
+#tutorial a:hover {
+  text-decoration: none !important;
+  cursor: pointer; cursor: hand;
+}

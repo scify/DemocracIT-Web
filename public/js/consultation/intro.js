@@ -31,13 +31,13 @@
 
     this._options = {
       /* Next button label in tooltip box */
-      nextLabel: 'Next &rarr;',
+      nextLabel: 'Επόμενο &rarr;',
       /* Previous button label in tooltip box */
-      prevLabel: '&larr; Back',
+      prevLabel: '&larr; Πίοω',
       /* Skip button label in tooltip box */
-      skipLabel: 'Skip',
+      skipLabel: 'Τέλος',
       /* Done button label in tooltip box */
-      doneLabel: 'Done',
+      doneLabel: 'Εντάξει',
       /* Default tooltip box position */
       tooltipPosition: 'bottom',
       /* Next CSS class for tooltip boxes */

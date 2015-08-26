@@ -12,7 +12,6 @@ scify.ConsultationIndexPageHandler = function (consultationid, userId, fullName,
     }
 
     this.relevantLaws = [];
-    console.log(relevantLaws);
     for (var i = 0; i < relevantLaws.length; i++) {
         this.relevantLaws[i] = { article_id: relevantLaws[i].article_id, entity_text: relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url };
     }
@@ -127,6 +126,7 @@ scify.ConsultationIndexPageHandler.prototype = (function () {
         //tinymce.init({selector:'textarea'})
 
         $("#tutorial").on("click", function () {
+            $("[data-id=\"ann-0\"]").trigger("mouseover");
             introJs().start();
         });
     };
