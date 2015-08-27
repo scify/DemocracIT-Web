@@ -12,32 +12,31 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     this.consultationEndDate = consultationEndDate;
 
     this.commentsPerArticle =[];
-    //this.commentsPerArticle.push(['Article', 'Comments', { role: 'annotation' }]);
-    for (var i=0; i<commentsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    for (var i=0; i<commentsPerArticle.length; i++)
     {
         this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:100%">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>' ])
     }
 
     this.annotationsForConsultation = [];
-    for (var i=0; i<annotationsForConsultation.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    for (var i=0; i<annotationsForConsultation.length; i++)
     {
         this.annotationsForConsultation.push([annotationsForConsultation[i].annotationTag.description, annotationsForConsultation[i].numberOfComments, annotationsForConsultation[i].annotationTag.description ])
     }
 
     this.annotationProblemsForConsultation = [];
-    for (var i=0; i<annotationProblemsForConsultation.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    for (var i=0; i<annotationProblemsForConsultation.length; i++)
     {
         this.annotationProblemsForConsultation.push([ annotationProblemsForConsultation[i].annotationTag.description, annotationProblemsForConsultation[i].numberOfComments, annotationProblemsForConsultation[i].annotationTag.description ])
     }
 
     this.annotationsPerArticle = [];
-    for (var i=0; i<annotationsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    for (var i=0; i<annotationsPerArticle.length; i++)
     {
         this.annotationsPerArticle.push([annotationsPerArticle[i].article_name.substr(0, annotationsPerArticle[i].article_name.indexOf(':')) + ": " + annotationsPerArticle[i].annotationTag.description,  annotationsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationsPerArticle[i].article_name + '<div>Tag: ' + annotationsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationsPerArticle[i].numberOfComments + '</h5></div>' ])
     }
 
     this.annotationProblemsPerArticle = [];
-    for (var i=0; i<annotationProblemsPerArticle.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
+    for (var i=0; i<annotationProblemsPerArticle.length; i++)
     {
         this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>' ])
     }
@@ -54,8 +53,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
 };
 
 scify.ConsultationReporterPageHandler.prototype = function(){
-
-    var width = document.getElementById("statsDiv").offsetWidth;
 
     var addRelevantLawsHandler = function(){
             $(".relevantLawsBtn").on("click", function(){
@@ -75,7 +72,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
 
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType) {
-            //console.log(dataForChart);
             function drawMultSeries() {
                 var data = new google.visualization.DataTable();
 
@@ -88,7 +84,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 if(expectedHeight < 400) {
                     expectedHeight = 600;
                 }
-                //console.log(expectedHeight);
                 var options = {
                     tooltip: {isHtml: true},
                     'displayAnnotations': true,
@@ -126,7 +121,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
         },
 
-        createChartD3 = function(annotationsForConsultation, chartClass) {
+        /*createChartD3 = function(annotationsForConsultation, chartClass) {
+            var width = document.getElementById("statsDiv").offsetWidth;
             var data = annotationsForConsultation;
             var linearColorScale = d3.scale.linear()
                 .domain([0, data.length])
@@ -145,7 +141,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     .style("width", function(d) { return x(d.num)  + "px"; })
                     .style("background-color", function(d,i) { return linearColorScale(i)})
                     .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
-        },
+        },*/
 
         createUserBox = function (instance) {
 
@@ -159,9 +155,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     user                    : userObj
                 };
                 var domElementToAddComponent = document.getElementById("box_" + userId);
-                //var domElementToAddComponent = $(userDiv).find(".userBoxDiv");
-                //console.log(domElementToAddComponent);
-                //console.log(React.createElement(scify.UserBox, userBoxProperties));
                 scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
             });
         }

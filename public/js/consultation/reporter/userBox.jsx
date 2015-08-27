@@ -65,6 +65,7 @@
         }
     });
 
+
     scify.InfoBox = React.createClass({
         getInitialState: function() {
             return {
