@@ -21,43 +21,8 @@
             };
             React.render(React.createElement(scify.InfoBox, infoBoxProperties), domElementToAddComponent);
         },
-        getCommentsFromServer: function getCommentsFromServer() {
-            var instance = this;
-
-            var promise = $.ajax({
-                method: "GET",
-                url: "/comments/retrieve",
-                cache: false,
-                data: {
-                    consultationId: this.props.consultationid,
-                    userId: this.props.userId
-                },
-                beforeSend: function beforeSend() {
-                    instance.state.busy = true;
-                    instance.setState(instance.state);
-                },
-                success: function success(data) {
-                    instance.state.allComments = data;
-                    instance.state.busy = false;
-                    instance.state.display = true;
-                    instance.setState(instance.state);
-                },
-                error: function error(x, z, y) {
-                    alert(x);
-                }
-            });
-
-            return promise;
-        },
         render: function render() {
-            /*if (this.state.busy)
-            {
-                return (
-                    <div>
-                        <scify.ReactLoader display={this.state.busy} />
-                    </div>
-                );
-            }*/
+
             var infoBoxClasses = classNames("infoBox", { hide: !this.state.display });
             return React.createElement(
                 "div",
@@ -84,10 +49,51 @@
             return {
                 consultationid: this.props.consultationid,
                 userId: this.props.userId,
-                user: this.props.user
+                user: this.props.user,
+                busy: false
             };
         },
+        componentWillMount: function componentWillMount() {
+            console.log(this.props.userId);
+            this.getCommentsFromServer();
+        },
+        getCommentsFromServer: function getCommentsFromServer() {
+            var instance = this;
+
+            var promise = $.ajax({
+                method: "GET",
+                url: "/comments/cons/retrieve",
+                cache: false,
+                data: {
+                    consultationId: this.props.consultationid,
+                    userId: this.props.userId
+                },
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    instance.state.allComments = data;
+                    instance.state.busy = false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
+            });
+
+            return promise;
+        },
         render: function render() {
+
+            if (this.state.busy) {
+                return React.createElement(
+                    "div",
+                    null,
+                    React.createElement(scify.ReactLoader, { display: this.state.busy })
+                );
+            }
             return React.createElement(
                 "div",
                 { className: "info" },

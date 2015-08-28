@@ -1,11 +1,12 @@
 package model.repositories
 
 import java.util.{UUID, Date}
-import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
+import _root_.anorm._
 import anorm._
 import anorm.SqlParser._
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
+import org.postgresql.util.PGobject
 import repositories.anorm._
 import org.joda.time.DateTime
 import play.api.db.DB
@@ -44,6 +45,21 @@ class CommentsRepository {
 
     }
 
+  }
+
+  def getCommentsForConsultationByUserId (consultation_id:Long,user_id:UUID):List[Comment]  = {
+
+    DB.withConnection { implicit c =>
+      val comments:List[Comment]=
+        SQL"""
+              select c.*, CAST(c.user_id  AS varchar) as fullName
+                from comments c inner join public.articles a on a.id = c.article_id
+                inner join public.consultation con on con.id = a.consultation_id
+                where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
+           """.as(CommentsParser.Parse *)
+
+      comments
+    }
   }
 
   def getComments(discussionthreadclientid:String,

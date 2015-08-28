@@ -23,6 +23,7 @@ GET         /consultation/search                          @controllers.Consultat
 GET         /consultation/display-all                     @controllers.ConsultationController.displayAll()
 GET         /consultation/:consultationId                 @controllers.ConsultationController.getConsultation(consultationId :Long)
 GET         /comments/retrieve                            @controllers.ConsultationController.getComments(consultationId:Long, articleId:Long, source: String, discussionthreadid:Option[Int] ?= None, discussionthreadclientid:String, page:Option[Int] ?= None)
+GET         /comments/cons/retrieve                       @controllers.ReporterController.getCommentsForConsultationByUserId(consultationId:Long, userId:java.util.UUID)
 GET         /consultation/:consultationId                 @controllers.ConsultationController.getConsultation(consultationId :Long)
 
 
