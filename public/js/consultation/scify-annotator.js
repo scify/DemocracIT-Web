@@ -127,17 +127,6 @@ scify.Annotator.prototype = (function(){
         },
         attachAnnotationPrompts= function(){
             $(".ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><i class='fa fa-pencil-square-o'></i></span>");
-            $(".title").find(".ann-icon").each(function(index){
-                console.log(index);
-                //Added this block of code for creating the final step of the tutorial
-                if(index == 0) {
-                    $(this).attr( "data-step", "5" );
-                    $(this).attr( "data-intro", "Πατώντας επάνω στο μολυβάκι μπορείτε να σχολιάσετε το περιεχόμενο του άρθρου" );
-                }
-                //
-                
-                $(this).attr("title","κλικ εδώ για σχολιασμού όλου του άρθρου");
-            });
         },
         fetchTopicTagsForUserSelection = function(selectedText){
 

@@ -5,25 +5,22 @@
           return {
               consultationid: this.props.consultationid,
               userId: this.props.userId,
-              user: this.props.user
+              user: this.props.user,
+              comments: null
           };
         },
-        fetchInfo: function() {
-            var domElementToAddComponent = document.getElementById("info_" + this.props.userId);
-            var infoBoxProperties = {
-                consultationid          : this.props.consultationid,
-                userId                  : this.props.userId,
-                user                    : this.props.user
-            };
-            React.render(React.createElement(scify.InfoBox, infoBoxProperties), domElementToAddComponent);
+        getCommentsFromServer: function(){
+            //retrives with ajax
+
+            this.state.comments = []; //the comments from server
+            this.replaceState(this.state);
         },
         render: function() {
 
-            var infoBoxClasses = classNames("infoBox",{ hide :!this.state.display});
             return (
-                <div className="" onClick={this.fetchInfo}>
+                <div className="" onClick={this.getCommentsFromServer}>
                     <a>{this.props.user.first_name} {this.props.user.last_name} ({this.props.user.role})</a>
-                    <div className="infoBox" id={"info_" + this.props.user.user_id}></div>
+                    <scify.InfoBox data={this.state.comments}/>
                 </div>
             );
         }
@@ -38,10 +35,6 @@
                 user: this.props.user,
                 busy: false
             };
-        },
-        componentWillMount: function() {
-            console.log(this.props.userId);
-            this.getCommentsFromServer();
         },
         getCommentsFromServer : function(){
             var instance = this;

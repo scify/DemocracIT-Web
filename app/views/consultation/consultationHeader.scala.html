@@ -41,27 +41,27 @@
                     Διάρκεια @cons.totalDurationFormatted
 
                 </div>
-                <div id="aside" data-step="4" data-intro="Πατώντας εδω μπορείτε να δείτε το σχετικό υλικό">
-                    @for(
-                        relevantMaterial <- relevantMaterials
-                        if (relevantMaterial.pdf_url != cons.report_url.getOrElse(""))
-                    ) {
-                        <div class="aside-button">
-                            <i class="fa fa-file-pdf-o"></i>
-                            <a href="@relevantMaterial.pdf_url" target="_blank"> @relevantMaterial.title</a>
-                        </div>
-                    }
-                    @if(cons.report_url.isDefined){
-                        <div id="final-doc" class="aside-button">
-                            <i class="fa fa-file-pdf-o"></i>
-                            <a href="@cons.report_url" target="_blank">Τελική εκθεση</a>
-                        </div>
-                    }
+                <div id="step4">
+                    <div id="aside">
+                        @for(
+                            relevantMaterial <- relevantMaterials
+                            if (relevantMaterial.pdf_url != cons.report_url.getOrElse(""))
+                        ) {
+                            <div class="aside-button">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="@relevantMaterial.pdf_url" target="_blank"> @relevantMaterial.title</a>
+                            </div>
+                        }
+                        @if(cons.report_url.isDefined){
+                            <div id="final-doc" class="aside-button">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="@cons.report_url" target="_blank">Τελική εκθεση</a>
+                            </div>
+                        }
 
 
+                    </div>
                 </div>
-
-
 
             </div>
         </div>

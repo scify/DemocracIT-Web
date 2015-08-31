@@ -9,24 +9,21 @@
             return {
                 consultationid: this.props.consultationid,
                 userId: this.props.userId,
-                user: this.props.user
+                user: this.props.user,
+                comments: null
             };
         },
-        fetchInfo: function fetchInfo() {
-            var domElementToAddComponent = document.getElementById("info_" + this.props.userId);
-            var infoBoxProperties = {
-                consultationid: this.props.consultationid,
-                userId: this.props.userId,
-                user: this.props.user
-            };
-            React.render(React.createElement(scify.InfoBox, infoBoxProperties), domElementToAddComponent);
+        getCommentsFromServer: function getCommentsFromServer() {
+            //retrives with ajax
+
+            this.state.comments = []; //the comments from server
+            this.replaceState(this.state);
         },
         render: function render() {
 
-            var infoBoxClasses = classNames("infoBox", { hide: !this.state.display });
             return React.createElement(
                 "div",
-                { className: "", onClick: this.fetchInfo },
+                { className: "", onClick: this.getCommentsFromServer },
                 React.createElement(
                     "a",
                     null,
@@ -37,7 +34,7 @@
                     this.props.user.role,
                     ")"
                 ),
-                React.createElement("div", { className: "infoBox", id: "info_" + this.props.user.user_id })
+                React.createElement(scify.InfoBox, { data: this.state.comments })
             );
         }
     });
@@ -52,10 +49,6 @@
                 user: this.props.user,
                 busy: false
             };
-        },
-        componentWillMount: function componentWillMount() {
-            console.log(this.props.userId);
-            this.getCommentsFromServer();
         },
         getCommentsFromServer: function getCommentsFromServer() {
             var instance = this;

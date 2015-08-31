@@ -20,6 +20,8 @@ scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
 
     this.consultationEndDate = consultationEndDate;
 
+    this.tutorialAnnotator = null;
+
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -134,10 +136,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
 
-        $( "#tutorial" ).on( "click", function() {
-            $('[data-id="ann-0"]').trigger("mouseover");
-            introJs().start();
-        });
+        this.tutorialAnnotator = new scify.TutorialAnnotator();
+        this.tutorialAnnotator.init();
     };
 
     return {
