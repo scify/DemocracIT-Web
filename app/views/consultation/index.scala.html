@@ -1,7 +1,5 @@
 @import model.viewmodels.ConsultationViewModel
-@import play.api.Play
 @(vm: ConsultationViewModel)
-
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
@@ -42,9 +40,12 @@
 
 @layout("DemocracIT", css, js,vm.user) {
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
+
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
+                @defining(if (vm.consultation.isActive) "Συμμετοχή στη διαβούλευση" else "Άρθρα της διαβούλευσης") { consultationArticlesTab=>
+                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTab</a></li>
+                }
                 <li role="presentation" id="step2"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
 
                 @if(play.Play.application().configuration().getString("application.state") == "development") {
@@ -52,7 +53,6 @@
                 } else {
                     <li role="presentation" id="step3"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
                 }
-
 
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
