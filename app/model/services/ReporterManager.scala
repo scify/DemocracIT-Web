@@ -33,10 +33,11 @@ class ReporterManager {
   }
 
 
-  def getCommentsForConsultationByUserId(consultationId: Long, user_id:UUID): List[Comment] = {
+  def getCommentsForConsultationByUserId(consultationId: Long, user_id:UUID, loggedInUser:Option[User]): List[Comment] = {
     val commentsRepository = new CommentsRepository()
     var comments:List[Comment] = Nil
-    comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id);
+    val loggedInUserId = if (loggedInUser.isDefined) Some(loggedInUser.get.userID) else None
+    comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id,loggedInUserId);
     comments
   }
 

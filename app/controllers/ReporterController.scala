@@ -26,7 +26,7 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
 
     import utils.ImplicitReadWrites._
     println("Hello, world")
-    val comments = reporterManager.getCommentsForConsultationByUserId(consultationId, userId)
+    val comments = reporterManager.getCommentsForConsultationByUserId(consultationId, userId, request.identity)
     Ok(Json.toJson(comments))
   }
 
