@@ -1,4 +1,5 @@
 @import model.viewmodels.ConsultationViewModel
+@import play.api.Play
 @(vm: ConsultationViewModel)
 
 @js = {
@@ -41,12 +42,18 @@
 
 @layout("DemocracIT", css, js,vm.user) {
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
-
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
                 <li role="presentation" id="step2"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation" id="step3"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+
+                @if(play.Play.application().configuration().getString("application.state") == "development") {
+                    <li role="presentation" id="step3"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+                } else {
+                    <li role="presentation" id="step3"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
+                }
+
+
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
