@@ -7,6 +7,21 @@ scify.ConsultationReporterPageHandler = function (consultationid, userId, fullNa
 
     this.consultationEndDate = consultationEndDate;
 
+    commentsPerArticle.sort(compare);
+    function compare(a, b) {
+        if (a.order < b.order) return -1;
+        if (a.order > b.order) return 1;
+        return 0;
+    }
+
+    annotationsPerArticle.sort(compareNames);
+    annotationProblemsPerArticle.sort(compareNames);
+    function compareNames(a, b) {
+        if (a.article_name < b.article_name) return -1;
+        if (a.article_name > b.article_name) return 1;
+        return 0;
+    }
+
     this.commentsPerArticle = [];
     for (var i = 0; i < commentsPerArticle.length; i++) {
         this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:100%">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>']);
@@ -31,8 +46,6 @@ scify.ConsultationReporterPageHandler = function (consultationid, userId, fullNa
     for (var i = 0; i < annotationProblemsPerArticle.length; i++) {
         this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ': ' + annotationProblemsPerArticle[i].annotationTag.description, annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>']);
     }
-
-    console.log(commenters);
 
     getUserById = function (userId) {
         for (var i = 0; i < commenters.length; i++) {

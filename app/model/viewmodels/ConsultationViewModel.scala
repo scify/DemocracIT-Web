@@ -41,5 +41,17 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
     results
   }
 
+  def findOccurances(lawName:String):Int = {
+    var i = 0
+    for(law <- this.relevantLaws) {
+      println(law.entity_law.toLowerCase().replace(" ","").replace(".",""))
+      println("lawName: " + lawName.toLowerCase().replace(" ","").replace(".",""))
+      if(law.entity_law.toLowerCase().replace(" ","").replace(".","") == lawName.toLowerCase().replace(" ","").replace(".","")) {
+        i += 1
+      }
+    }
+    i
+  }
+
 }
 
