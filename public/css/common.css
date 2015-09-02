@@ -82,7 +82,9 @@ img, .btn, i, a {
 #footer h2 {
   color: white;
   font-size: 20px;
-  margin-bottom: 18px; }
+  margin-bottom: 18px;
+  margin-top:20px;
+}
 
 #footer li {
   margin-bottom: 7px;
@@ -111,6 +113,7 @@ img, .btn, i, a {
 
 #full-footer a, #full-footer a:hover {
   color: white; }
+
 
 #footer ul {
   list-style: none;
