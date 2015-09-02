@@ -581,3 +581,18 @@ a.load {
 .childLaw {
   margin-right: 10px;
 }
+
+#tutorial {
+  float: left;
+  margin-top: 12px;
+  margin-bottom: 18px;
+}
+
+#tutorial a:hover {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.relevantLaw a:hover {
+  cursor: pointer;
+}

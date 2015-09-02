@@ -4,21 +4,28 @@
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
-    <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
     @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
-    <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
-    <script  src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
-    <script  src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/userBox-compiled.js")" ></script>
+    <script  src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
+    <script src="http://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+{'modules':[{'name':'visualization','version':'1.1','packages':
+['corechart']}]}"></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
+        var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                                                                @Html(vm.commentsPerArticleToJson()),
+                                                                @Html(vm.annotationsForConsultationToJson(1)),
+                                                                @Html(vm.annotationsForConsultationToJson(2)),
+                                                                @Html(vm.annotationsPerArticleToJson(1)),
+                                                                @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -41,13 +48,13 @@
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
                 <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Συμμετοχή στη διαβούλευση</a></li>
-                <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Σχετικοί νόμοι</a></li>
-                <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="consultation-body" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
+                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
+                <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="annotatorContent">
-                    <div class="totalCommentsTitle">Συνολικός αριθμός σχολίων της διαβούλευσης: </div><div class="totalComments">@vm.totalComments</div>
+                    @*<div class="totalCommentsTitle">Συνολικός αριθμός σχολίων της διαβούλευσης: </div><div class="totalComments">@vm.totalComments</div>
                     <table class="table table-striped table-condensed">
                         <thead><tr>
                             <th>Όνομα</th>
@@ -65,47 +72,80 @@
                             </tr>
                         }
 
-                    </table>
-                    <table class="table table-striped table-condensed">
-                        <thead><tr>
-                            <th>Όνομα Tag</th>
-                            <th>Αριθμός Σχολίων</th>
-                        </tr>
-                        </thead>
-                    @for(annotationTag <- vm.annotationTagWithComments) {
-                        <tr>
-                            <td class="articleName">
-                            @annotationTag.annotationTag.description
-                            </td>
-                            <td class="commentsNum">
-                            @annotationTag.numberOfComments
-                            </td>
-                        </tr>
-                    }
-                    </table>
-                    <table class="table table-striped table-condensed">
-                        <thead><tr>
-                            <th>Arthro</th>
-                            <th>Όνομα Tag</th>
-                            <th>Αριθμός Σχολίων</th>
-                        </tr>
-                        </thead>
-                        @for(annotationTagArticle <- vm.annotationTagPerArticleWithComments) {
-                            <tr>
-                                <td class="articleName">
-                                @annotationTagArticle.article_name
-                                </td>
-                                <td class="articleName">
-                                @annotationTagArticle.annotationTag.description
-                                </td>
-                                <td class="commentsNum">
-                                @annotationTagArticle.numberOfComments
-                                </td>
-                            </tr>
+                    </table>*@
+
+                    <ul style="margin-top: 100px" id="tabs" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"> <a href="#commentsPerArticleChart" aria-controls="commentsPerArticleChart" role="tab" data-toggle="tab">Σχόλια ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Θέματα που θίγονται</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsForConsultationChart" aria-controls="annotationProblemsForConsultationChart" role="tab" data-toggle="tab">Προβλήματα</a></li>
+                        <li role="presentation"> <a href="#annotationsPerArticleChart" aria-controls="annotationsPerArticleChart" role="tab" data-toggle="tab">Θέματα ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
+                    </ul>
+                    <div class="tab-content stats" id="statsDiv">
+                        <div role="tabpanel" class="tab-pane active commentsPerArticleChart chart" id="commentsPerArticleChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationsForConsultationChart chart" id="annotationsForConsultationChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsForConsultationChart chart" id="annotationProblemsForConsultationChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart"></div>
+                    </div>
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="relevantLawsList">
+                    <div class="row">
+                        <div class="col-md-12">
+                        @if(vm.groupLaws().length>0) {
+                            <h2>@vm.groupLaws().length αναφορές σε νόμους</h2>
+                            <table class="table table-striped table-condensed">
+                                <thead><tr>
+                                    <th>#</th>
+                                    <th>Αναφορά</th>
+                                </tr>
+                                </thead>
+
+                                @for(i <- 0 until vm.groupLaws().length) {
+                                    <tr>
+                                        <td style="width: 5px"> @{i+1}</td>
+                                        <td class="relevantLaw">
+                                            <div id="@i">
+                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
+                                                <div class="childLaws">
+                                                @for(law <- vm.groupLaws()(i)._2) {
+                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
+                                                }
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
                         }
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <h2 style="margin-top: 15px">Στατιστικά χρηστών:</h2>
+            <table class="table table-striped table-condensed">
+                <thead><tr>
+                    <th>Πληροφορίες Χρήστη</th>
+                    <th>Αριθμός Σχολίων</th>
+                </tr>
+                </thead>
+                @for(userComments <- vm.userCommentStats) {
+                    <div data-id="@userComments.user_id" class="statsForUser">
+                        <tr>
+                            <td class="articleName">
+                            @*<div>@userComments.first_name  @userComments.last_name (@userComments.role)<div class="userBoxDiv" id="box_@userComments.user_id"></div></div>*@
+                            <div id="box_@userComments.user_id"></div>
+                            </td>
+                            <td class="commentsNum">
+                            @userComments.number_of_comments
+                            </td>
+                        </tr>
+
+                    </div>
+                }
+
+            </table>
         </div>
 
 

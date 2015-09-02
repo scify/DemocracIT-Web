@@ -3,8 +3,7 @@ package utils
 import model.dtos.CommentSource.CommentSource
 import model.dtos._
 import play.api.data.FormError
-import play.api.i18n.{MessagesApi, I18nSupport, Messages}
-import play.api.libs.functional.syntax._
+import play.api.i18n.MessagesApi
 import play.api.libs.json._
 
 object ImplicitReadWrites  {
@@ -40,8 +39,13 @@ object ImplicitReadWrites  {
   implicit object byteWrites extends Writes[Byte] {
     def writes(b:Byte) = Json.toJson(b.toInt)
   }
+  implicit val userCommentsWrites = Json.writes[UserCommentStats]
   implicit val annotationWrites = Json.writes[AnnotationTags]
+  implicit val annotationWithCommentsWrites = Json.writes[AnnotationTagWithComments]
+  implicit val annotationPerArticlesWrites = Json.writes[AnnotationTagPerArticleWithComments]
   implicit val relevantLawsWrites = Json.writes[RelevantLaws]
+  implicit val articleWrites = Json.writes[Article]
+
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource] {
     def writes(c:CommentSource) = Json.obj(
