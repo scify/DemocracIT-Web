@@ -26,8 +26,14 @@ class HomeController  @Inject()  ( val messagesApi: MessagesApi,
     Ok(views.html.home.index(consultationManager.getConsultationsForHomePage(request.identity)))
   }
 
+  //used from the CMS in order to retrieve the footer's html and attach it inside the CMS
   def footer = Action {
     Ok(views.html.common.footer())
+  }
+
+  //used from the CMS in order to retrieve the header's html and attach it inside the CMS
+  def header = UserAwareAction { implicit  request =>
+    Ok(views.html.common.navbar(request.identity))
   }
 
 }

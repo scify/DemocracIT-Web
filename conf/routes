@@ -5,6 +5,7 @@
 
 GET         /                                             @controllers.HomeController.index
 GET         /footer                                       @controllers.HomeController.footer
+GET         /header                                       @controllers.HomeController.header
 
 GET         /signIn                                       @controllers.AccountController.signIn
 GET         /signUp                                       @controllers.AccountController.signUp
