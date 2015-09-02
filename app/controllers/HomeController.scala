@@ -27,13 +27,14 @@ class HomeController  @Inject()  ( val messagesApi: MessagesApi,
   }
 
   //used from the CMS in order to retrieve the footer's html and attach it inside the CMS
-  def footer = Action {
-    Ok(views.html.common.footer())
+  def footer = Action { implicit  request =>
+
+    Ok(views.html.common.footer()).withHeaders(("Access-Control-Allow-Origin","*"))
   }
 
   //used from the CMS in order to retrieve the header's html and attach it inside the CMS
   def header = UserAwareAction { implicit  request =>
-    Ok(views.html.common.navbar(request.identity))
+    Ok(views.html.common.navbar(request.identity)).withHeaders(("Access-Control-Allow-Origin","*"))
   }
 
 }
