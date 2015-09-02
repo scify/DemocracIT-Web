@@ -10,43 +10,7 @@
                 consultationid: this.props.consultationid,
                 userId: this.props.userId,
                 user: this.props.user,
-                comments: null
-            };
-        },
-        getCommentsFromServer: function getCommentsFromServer() {
-            //retrives with ajax
-
-            this.state.comments = []; //the comments from server
-            this.replaceState(this.state);
-        },
-        render: function render() {
-
-            return React.createElement(
-                "div",
-                { className: "", onClick: this.getCommentsFromServer },
-                React.createElement(
-                    "a",
-                    null,
-                    this.props.user.first_name,
-                    " ",
-                    this.props.user.last_name,
-                    " (",
-                    this.props.user.role,
-                    ")"
-                ),
-                React.createElement(scify.InfoBox, { data: this.state.comments })
-            );
-        }
-    });
-
-    scify.InfoBox = React.createClass({
-        displayName: "InfoBox",
-
-        getInitialState: function getInitialState() {
-            return {
-                consultationid: this.props.consultationid,
-                userId: this.props.userId,
-                user: this.props.user,
+                comments: [],
                 busy: false
             };
         },
@@ -66,9 +30,10 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    instance.state.allComments = data;
+                    instance.state.comments = data;
+                },
+                complete: function complete() {
                     instance.state.busy = false;
-                    instance.state.display = true;
                     instance.setState(instance.state);
                 },
                 error: function error(x, z, y) {
@@ -80,13 +45,44 @@
         },
         render: function render() {
 
+            return React.createElement(
+                "div",
+                { className: "", onClick: this.getCommentsFromServer },
+                React.createElement(
+                    "a",
+                    null,
+                    this.props.user.first_name,
+                    " ",
+                    this.props.user.last_name,
+                    " (",
+                    this.props.user.role,
+                    ")"
+                ),
+                React.createElement(scify.InfoBox, { busy: this.state.busy, data: this.state.comments })
+            );
+        }
+    });
+
+    scify.InfoBox = React.createClass({
+        displayName: "InfoBox",
+
+        getInitialState: function getInitialState() {
+            return {
+                consultationid: this.props.consultationid,
+                userId: this.props.userId,
+                user: this.props.user
+            };
+        },
+        render: function render() {
+
             if (this.state.busy) {
                 return React.createElement(
                     "div",
                     null,
-                    React.createElement(scify.ReactLoader, { display: this.state.busy })
+                    React.createElement(scify.ReactLoader, { display: this.props.busy })
                 );
             }
+            //todo: iterate to data and display
             return React.createElement(
                 "div",
                 { className: "info" },
