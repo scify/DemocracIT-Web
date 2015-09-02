@@ -34,7 +34,8 @@ class SignUpController @Inject() (
                                    userService: UserService,
                                    authInfoRepository: AuthInfoRepository,
                                    avatarService: AvatarService,
-                                   passwordHasher: PasswordHasher)
+                                   passwordHasher: PasswordHasher,
+                                   socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[User, CookieAuthenticator] {
 
   /**
@@ -44,7 +45,7 @@ class SignUpController @Inject() (
    */
   def signUp = Action.async { implicit request =>
     SignUpForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.account.signUp(form))),
+      form => Future.successful(BadRequest(views.html.account.signUp(form,socialProviderRegistry ))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
