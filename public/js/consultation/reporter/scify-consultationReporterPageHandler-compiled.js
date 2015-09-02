@@ -165,10 +165,10 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
         moment.locale('el');
         addRelevantLawsHandler();
         createChart(this.commentsPerArticle, 'commentsPerArticleChart', 'Σχόλια ανά άρθρο', 'Αριθμός σχολίων', 'Άρθρα', 'Άρθρο', 'Σχόλια', '75%', 'bar');
-        createChart(this.annotationsForConsultation, 'annotationsForConsultationChart', 'Σχόλια ανά Tag Αναφοράς', 'Αριθμός σχολίων', 'Tag', 'Tag Αναφοράς', 'Σχόλια', '90%', 'pie');
-        createChart(this.annotationProblemsForConsultation, 'annotationProblemsForConsultationChart', 'Σχόλια ανά Tag Προβλήματος', 'Αριθμός σχολίων', 'Tag', 'Tag Προβλήματος', 'Σχόλια', '90%', 'pie');
-        createChart(this.annotationsPerArticle, 'annotationsPerArticleChart', 'Tag Αναφοράς ανά άρθρο', 'Αριθμός σχολίων', '', 'Tag Αναφοράς', 'Σχόλια', '75%', 'bar');
-        createChart(this.annotationProblemsPerArticle, 'annotationProblemsPerArticleChart', 'Tag Προβλήματος ανά άρθρο', 'Αριθμός σχολίων', '', 'Tag Προβλήματος', 'Σχόλια', '75%', 'bar');
+        createChart(this.annotationsForConsultation, 'annotationsForConsultationChart', 'Θέματα που θίγονται', 'Αριθμός σχολίων', 'Θέμα', 'Θέμα', 'Σχόλια', '90%', 'pie');
+        createChart(this.annotationProblemsForConsultation, 'annotationProblemsForConsultationChart', 'Προβλήματα', 'Πρόβηλμα', 'Πρόβλημα', 'Πρόβλημα', 'Σχόλια', '90%', 'pie');
+        createChart(this.annotationsPerArticle, 'annotationsPerArticleChart', 'Θέματα ανά άρθρο', 'Αριθμός σχολίων', '', 'Θέμα', 'Σχόλια', '75%', 'bar');
+        createChart(this.annotationProblemsPerArticle, 'annotationProblemsPerArticleChart', 'Προβλήματα ανά άρθρο', 'Αριθμός σχολίων', '', 'Πρόβλημα', 'Σχόλια', '75%', 'bar');
         createUserBox(this);
     };
 

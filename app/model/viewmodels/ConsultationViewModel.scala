@@ -57,7 +57,6 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
   }
 
   def articlesOccurances(lawName:String):Int = {
-    println(lawName)
     var articles = ArrayBuffer[String]()
     for(law <- this.relevantLaws) {
 
@@ -65,7 +64,6 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
         articles += law.article_title
       }
     }
-    println(articles)
     articles.length
   }
 
