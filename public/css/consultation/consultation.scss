@@ -590,5 +590,9 @@ a.load {
 
 #tutorial a:hover {
   text-decoration: none !important;
-  cursor: pointer; cursor: hand;
+  cursor: pointer;
+}
+
+.relevantLaw a:hover {
+  cursor: pointer;
 }

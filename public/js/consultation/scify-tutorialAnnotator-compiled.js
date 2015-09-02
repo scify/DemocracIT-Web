@@ -7,19 +7,24 @@ scify.TutorialAnnotator.prototype = (function () {
         $(".title").find(".ann-icon").each(function (index) {
             //Added this block of code for creating the final step of the tutorial
             if (index == 0) {
-                $(this).attr("id", "step5");
+                $(this).attr("id", "step4");
+
+                $("[data-reactid='.1']").find(".load").attr("id", "step5");
             }
             //
             $(this).attr("title", "κλικ εδώ για σχολιασμού όλου του άρθρου");
         });
 
+        $("[data-id='ann-1']").find(".ann-icon").attr("id", "step3");
         if (checkAndReadCookie()) {
-            $("[data-id=\"ann-0\"]").trigger("mouseover");
+            $("[data-id=\"ann-0\"]").find(".ann-icon").addClass("on");
+            $("[data-id='ann-1']").find(".ann-icon").addClass("on");
             startIntro();
         }
 
         $("#tutorial").on("click", function () {
-            $("[data-id=\"ann-0\"]").trigger("mouseover");
+            $("[data-id=\"ann-0\"]").find(".ann-icon").addClass("on");
+            $("[data-id='ann-1']").find(".ann-icon").addClass("on");
             startIntro();
         });
     },
@@ -55,20 +60,23 @@ scify.TutorialAnnotator.prototype = (function () {
         intro.setOptions({
             steps: [{
                 element: "#step1",
-                intro: "Μπορείτε να δείτε το περιεχόμενο ενός άρθρου πατώντας πάνω του και να σχολιάσετε τα άρθρα της διαβούλευσης κάνοντας mouseover στο άρθρο"
+                intro: "Εδώ εκφράζεστε! Δείτε το κείμενο της διαβούλευσης, τα σχόλια άλλων πολιτών και υποβάλετε τα δικά σας."
             }, {
                 element: "#step2",
-                intro: "Πατώντας σε αυτή την καρτέλα βλέπετε τους σχετικούς νόμους",
+                intro: "Μάθετε καλύτερα το θέμα πριν εκφραστείτε. Βρείτε εδώ το απαραίτητο σχετικό υλικό π.χ. την αιτιολογική έκθεση του νομοσχεδίου.",
                 position: "bottom"
             }, {
                 element: "#step3",
-                intro: "Πατώντας εδω μπορείτε να δείτε τη σελίδα με τα στατιστικά της διαβούλευσης"
+                intro: "Θέλετε να σχολιάσετε μία συγκεκριμένη φράση; Πατήστε το μολυβάκι δίπλα της.",
+                position: "right"
             }, {
                 element: "#step4",
-                intro: "Πατώντας εδω μπορείτε να δείτε το σχετικό υλικό"
+                intro: "Θέλετε να σχολιάσετε ένα άρθρο συνολικά; Πατήστε το μολυβάκι δίπλα στον τίτλο του.",
+                position: "right"
             }, {
                 element: "#step5",
-                intro: "Πατώντας επάνω στο μολυβάκι μπορείτε να σχολιάσετε το περιεχόμενο του άρθρου"
+                intro: "Θέλετε να δείτε τα σχόλια άλλων πολιτών; Δείτε τα εδώ και εκφράστε τη γνώμη σας.",
+                position: "right"
             }]
         });
         intro.start();

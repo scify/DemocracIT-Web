@@ -1,8 +1,11 @@
 package model.viewmodels
 
+import org.apache.commons.lang3.StringUtils
 import play.api.libs.json._
 import model.dtos._
 import utils.ImplicitReadWrites._
+
+import scala.collection.mutable.ArrayBuffer
 
 case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  annotationsRelatedToProblems: Seq[AnnotationTags],
@@ -37,20 +40,38 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 
   def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
 
-    val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law).toList
+    val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law.replace(" ","").replace(".","")).toList
     results
   }
 
   def findOccurances(lawName:String):Int = {
     var i = 0
+    val lawNameStripped = lawName.toLowerCase().replace(" ","").replace(".","")
     for(law <- this.relevantLaws) {
-      println(law.entity_law.toLowerCase().replace(" ","").replace(".",""))
-      println("lawName: " + lawName.toLowerCase().replace(" ","").replace(".",""))
-      if(law.entity_law.toLowerCase().replace(" ","").replace(".","") == lawName.toLowerCase().replace(" ","").replace(".","")) {
+      val lawStripped = law.entity_law.toLowerCase().replace(" ","").replace(".","")
+      if(lawStripped == lawNameStripped) {
         i += 1
       }
     }
     i
+  }
+
+  def articlesOccurances(lawName:String):Int = {
+    println(lawName)
+    var articles = ArrayBuffer[String]()
+    for(law <- this.relevantLaws) {
+
+      if(!articles.contains(law.article_title) && lawName == law.entity_law.replace(" ","").replace(".","")) {
+        articles += law.article_title
+      }
+    }
+    println(articles)
+    articles.length
+  }
+
+  def articleNameTrimmed(articleName:String):String = {
+    val trimmed = StringUtils.substringBefore(articleName, ":");
+    trimmed
   }
 
 }

@@ -82,12 +82,8 @@ scify.ConsultationIndexPageHandler.prototype = (function () {
             console.log($(this).context.id);
             $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
             if ($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
-                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
-                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-up");
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").show("slow");
             } else {
-                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-up");
-                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-down");
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
             }
         });

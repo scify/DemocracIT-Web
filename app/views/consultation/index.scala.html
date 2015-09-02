@@ -46,12 +46,12 @@
                 @defining(if (vm.consultation.isActive) "Συμμετοχή στη διαβούλευση" else "Άρθρα της διαβούλευσης") { consultationArticlesTab=>
                     <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTab</a></li>
                 }
-                <li role="presentation" id="step2"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
+                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
 
                 @if(play.Play.application().configuration().getString("application.state") == "development") {
-                    <li role="presentation" id="step3"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+                    <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
                 } else {
-                    <li role="presentation" id="step3"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
+                    <li role="presentation"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
                 }
 
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
@@ -93,19 +93,19 @@
 
                                 @for(i <- 0 until vm.groupLaws().length) {
                                     <tr>
-                                        <td style="width: 5px"> @{i+1}</td>
+                                        <td style="width: 10px"> @{i+1}</td>
+                                        <td style="width: 150px">
+                                                <a href="@vm.groupLaws()(i)._2">@vm.groupLaws()(i)._1</a>
+                                        </td>
                                         <td class="relevantLaw">
                                             <div id="@i">
-                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
-                                                <div class="childLaws">
-                                                @for(law <- vm.groupLaws()(i)._2) {
-                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
-                                                }
-                                                </div>
+                                            Βρέθηκαν <a class="relevantLawsBtn" id="@i">@vm.findOccurances(vm.groupLaws()(i)._1)</a> αναφορες σε @vm.articlesOccurances(vm.groupLaws()(i)._1) άρθρα
+                                            <div class="childLaws">
+                                            @for(law <- vm.groupLaws()(i)._2) {
+                                                <a class="childLaw" href="@law.pdf_url">@law.entity_text</a> (@vm.articleNameTrimmed(law.article_title))
+                                            }
                                             </div>
-                                        </td>
-                                        <td>
-                                            Βρέθηκαν @vm.findOccurances(vm.groupLaws()(i)._1)
+                                            </div>
                                         </td>
                                     </tr>
                                 }
