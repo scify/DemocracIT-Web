@@ -4,6 +4,7 @@
 
 
 GET         /                                             @controllers.HomeController.index
+GET         /footer                                       @controllers.HomeController.footer
 
 GET         /signIn                                       @controllers.AccountController.signIn
 GET         /signUp                                       @controllers.AccountController.signUp

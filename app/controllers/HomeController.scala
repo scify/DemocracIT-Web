@@ -10,6 +10,7 @@ import model.services.{AnnotationManager, ConsultationManager}
 import forms._
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
+import play.api.mvc.Action
 import scala.concurrent.Future
 
 
@@ -23,6 +24,10 @@ class HomeController  @Inject()  ( val messagesApi: MessagesApi,
 
   def index = UserAwareAction { implicit  request =>
     Ok(views.html.home.index(consultationManager.getConsultationsForHomePage(request.identity)))
+  }
+
+  def footer = Action {
+    Ok(views.html.common.footer())
   }
 
 }
