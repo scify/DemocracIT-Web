@@ -54,6 +54,7 @@ object ImplicitReadWrites  {
     )
   }
   implicit val commentsWrites = Json.writes[model.dtos.Comment]
+  implicit val commentWithArticleNameWrites = Json.writes[model.dtos.CommentWithArticleName]
 
 }
 

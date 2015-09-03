@@ -49,10 +49,10 @@ class CommentsRepository {
 
   def getCommentsForConsultationByUserId (consultation_id:Long,
                                           user_id:UUID,
-                                          loggedInUserId:Option[UUID]):List[Comment]  = {
+                                          loggedInUserId:Option[UUID]):List[CommentWithArticleName]  = {
 
     DB.withConnection { implicit c =>
-      val comments:List[Comment]=
+      val comments:List[(String,Comment)]=
         SQL"""
                with ratingCounter as
                                    (
@@ -65,7 +65,7 @@ class CommentsRepository {
                                      where a.consultation_id = $consultation_id
                                   group by cr.comment_id
                                  )
-              select  c.*, CAST(c.user_id  AS varchar) as fullName,
+              select  c.*, CAST(c.user_id  AS varchar) as fullName, a.title as article_name,
                       cr.liked as userrating,
                       counter.likes,
                       counter.dislikes
@@ -74,9 +74,11 @@ class CommentsRepository {
                    left outer join public.comment_rating cr on cr.user_id = CAST($loggedInUserId as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
-           """.as(CommentsParser.Parse *)
+           """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
-      comments
+      comments.map(tuple => {
+        new CommentWithArticleName(tuple._1, tuple._2)
+      })
     }
   }
 

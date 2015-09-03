@@ -3,7 +3,7 @@ package model.services
 import java.util.UUID
 
 import model.User
-import model.dtos.Comment
+import model.dtos.CommentWithArticleName
 import model.repositories._
 import model.viewmodels._
 
@@ -33,9 +33,9 @@ class ReporterManager {
   }
 
 
-  def getCommentsForConsultationByUserId(consultationId: Long, user_id:UUID, loggedInUser:Option[User]): List[Comment] = {
+  def getCommentsForConsultationByUserId(consultationId: Long, user_id:UUID, loggedInUser:Option[User]): List[CommentWithArticleName] = {
     val commentsRepository = new CommentsRepository()
-    var comments:List[Comment] = Nil
+    var comments:List[CommentWithArticleName] = Nil
     val loggedInUserId = if (loggedInUser.isDefined) Some(loggedInUser.get.userID) else None
     comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id,loggedInUserId);
     comments

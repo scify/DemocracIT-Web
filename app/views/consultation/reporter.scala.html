@@ -10,6 +10,7 @@
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/userBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
     <script src="http://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
@@ -93,31 +94,39 @@
                 <div role="tabpanel" class="tab-pane" id="relevantLawsList">
                     <div class="row">
                         <div class="col-md-12">
-                        @if(vm.groupLaws().length>0) {
-                            <h2>@vm.groupLaws().length αναφορές σε νόμους</h2>
-                            <table class="table table-striped table-condensed">
-                                <thead><tr>
-                                    <th>#</th>
-                                    <th>Αναφορά</th>
-                                </tr>
-                                </thead>
+                        @defining(vm.groupLaws()) { groupLaws =>
+                            @if(groupLaws.length>0) {
 
-                                @for(i <- 0 until vm.groupLaws().length) {
-                                    <tr>
-                                        <td style="width: 5px"> @{i+1}</td>
-                                        <td class="relevantLaw">
-                                            <div id="@i">
-                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
+
+                                <h2>@groupLaws.length αναφορές σε νόμους</h2>
+                                <table class="table table-striped table-condensed">
+                                    <thead><tr>
+                                        <th>#</th>
+                                        <th>Αναφορά</th>
+                                        <th>Περιγραφή</th>
+                                    </tr>
+                                    </thead>
+
+                                    @for(i <- 0 until groupLaws.length) {
+                                        <tr>
+                                            <td style="width: 10px"> @{i+1}</td>
+                                            <td style="width: 150px">
+                                                <a href="@groupLaws(i)._2.head.pdf_url">@groupLaws(i)._1</a>
+                                            </td>
+                                            <td class="relevantLaw">
+                                                <div id="@i">
+                                                    @if(vm.findOccurances(groupLaws(i)._1) == 1){Βρέθηκε}else {Βρέθηκαν} <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1),"αναφορά","αναφορές")</a> σε @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {άρθρο}else{άρθρα}
                                                 <div class="childLaws">
-                                                @for(law <- vm.groupLaws()(i)._2) {
-                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
+                                                @for(law <-groupLaws(i)._2) {
+                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a> (@vm.articleNameTrimmed(law.article_title))
                                                 }
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            }
                         }
                         </div>
                     </div>

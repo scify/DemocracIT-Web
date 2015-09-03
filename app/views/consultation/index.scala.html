@@ -104,7 +104,7 @@
                                                 </td>
                                                 <td class="relevantLaw">
                                                     <div id="@i">
-                                            Βρέθηκαν <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1),"αναφορά","αναφορές")</a> σε @vm.articlesOccurances(groupLaws(i)._1) άρθρα
+                                                        @if(vm.findOccurances(groupLaws(i)._1) == 1){Βρέθηκε}else {Βρέθηκαν} <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1),"αναφορά","αναφορές")</a> σε @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {άρθρο}else{άρθρα}
                                                         <div class="childLaws">
                                                         @for(law <-groupLaws(i)._2) {
                                                             <a class="childLaw" href="@law.pdf_url">@law.entity_text</a> (@vm.articleNameTrimmed(law.article_title))

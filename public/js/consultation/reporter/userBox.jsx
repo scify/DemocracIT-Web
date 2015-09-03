@@ -7,12 +7,12 @@
               userId: this.props.userId,
               user: this.props.user,
               comments: [],
-              busy: false
+              busy: false,
+              display: false
           };
         },
         getCommentsFromServer : function(){
             var instance = this;
-
             var promise = $.ajax({
                 method: "GET",
                 url: "/comments/cons/retrieve",
@@ -23,13 +23,16 @@
                 },
                 beforeSend: function(){
                     instance.state.busy=true;
+                    instance.state.display = true;
                     instance.setState(instance.state);
                 },
                 success : function(data){
                     instance.state.comments = data;
+                    console.log(data);
                 },
                 complete: function(){
                     instance.state.busy=false;
+                    instance.state.display = true;
                     instance.setState(instance.state);
                 },
                 error: function(x,z,y){
@@ -44,7 +47,7 @@
             return (
                 <div className="" onClick={this.getCommentsFromServer}>
                     <a>{this.props.user.first_name} {this.props.user.last_name} ({this.props.user.role})</a>
-                    <scify.InfoBox busy={this.state.busy} data={this.state.comments}/>
+                    <scify.InfoBox display={this.state.display} busy={this.state.busy} data={this.state.comments}/>
                 </div>
             );
         }
@@ -56,25 +59,28 @@
             return {
                 consultationid: this.props.consultationid,
                 userId: this.props.userId,
-                user: this.props.user
+                user: this.props.user,
+                display: this.props.display
             };
         },
         render: function() {
-
-            if (this.state.busy)
-            {
+            if(this.props.display) {
+                if (this.props.busy) {
+                    return (
+                        <div>
+                            <scify.ReactLoader display={this.props.busy}/>
+                        </div>
+                    );
+                }
+                //todo: iterate to data and display
                 return (
-                    <div>
-                        <scify.ReactLoader display={this.props.busy} />
-                    </div>
+                    <CommentList data={this.props.data} />
+                );
+            } else {
+                return (
+                    <div></div>
                 );
             }
-            //todo: iterate to data and display
-            return (
-                <div className="info">
-                    Hello
-                </div>
-            );
         }
     });
 
