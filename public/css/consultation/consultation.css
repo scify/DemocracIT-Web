@@ -453,4 +453,7 @@ a.load {
 .relevantLaw a:hover {
   cursor: pointer; }
 
+.tutGif img {
+  margin-top: 15px; }
+
 /*# sourceMappingURL=consultation.css.map */

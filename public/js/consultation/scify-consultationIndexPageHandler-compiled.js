@@ -1,9 +1,11 @@
 "use strict";
 
-scify.ConsultationIndexPageHandler = function (consultationid, userId, fullName, discussionThreads, relevantLaws, consultationEndDate) {
+scify.ConsultationIndexPageHandler = function (consultationid, userId, fullName, discussionThreads, relevantLaws, consultationIsActive, imagesPath, consultationEndDate) {
     this.consultationid = consultationid;
+    this.consultationIsActive = consultationIsActive;
     this.userId = userId;
     this.fullName = fullName;
+    this.imagesPath = imagesPath;
 
     this.discussionThreads = {};
     for (var i = 0; i < discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
@@ -123,7 +125,7 @@ scify.ConsultationIndexPageHandler.prototype = (function () {
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
 
-        this.tutorialAnnotator = new scify.TutorialAnnotator();
+        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
         this.tutorialAnnotator.init();
     };
 

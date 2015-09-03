@@ -23,6 +23,8 @@
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.discussionThreadsToJson()),
                                                                 @Html(vm.relevantLawsToJson()),
+                                                                @Html(vm.consultation.isActive.toString),
+                                                                '@routes.Assets.at("images")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -36,7 +38,6 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/introjs.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/themes/introjs-nassim.css")">
-    <link href="../../themes/introjs-nazanin.css" rel="stylesheet">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
