@@ -1,16 +1,10 @@
 package model.repositories
 
-import java.util.UUID
 import _root_.anorm.SqlParser
-import _root_.anorm._
 import _root_.anorm.SqlParser._
 import java.util.{UUID, Date}
 import _root_.anorm._
-import anorm._
 import model.dtos._
-import org.postgresql.util.PGobject
-import repositories.anorm._
-import org.joda.time.DateTime
 import play.api.db.DB
 import anorm.AnnotationTagWithCommentsParser
 import anorm.AnnotationTypesParser
@@ -52,41 +46,6 @@ class CommentsRepository {
 
     }
 
-  }
-
-  def getCommentsForConsultationByUserId (consultation_id:Long,
-                                          user_id:UUID,
-                                          loggedInUserId:Option[UUID]):List[CommentWithArticleName]  = {
-
-    DB.withConnection { implicit c =>
-      val comments:List[(String,Comment)]=
-        SQL"""
-               with ratingCounter as
-                                   (
-                                    select cr.comment_id,
-                                   	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
-                                   	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
-                                    from comment_rating cr
-                                        inner join comments c on cr.comment_id  = c.id
-                                        inner join public.articles a on a.id = c.article_id
-                                     where a.consultation_id = $consultation_id
-                                  group by cr.comment_id
-                                 )
-              select  c.*, CAST(c.user_id  AS varchar) as fullName, a.title as article_name,
-                      cr.liked as userrating,
-                      counter.likes,
-                      counter.dislikes
-              from comments c
-                   inner join public.articles a on a.id = c.article_id
-                   left outer join public.comment_rating cr on cr.user_id = CAST($loggedInUserId as UUID)  and cr.comment_id = c.id
-                   left outer join ratingCounter counter on counter.comment_id = c.id
-              where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
-           """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
-
-      comments.map(tuple => {
-        new CommentWithArticleName(tuple._1, tuple._2)
-      })
-    }
   }
 
   def getCommentsForConsultationByUserId (consultation_id:Long,
