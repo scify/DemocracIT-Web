@@ -53,7 +53,8 @@ scify.ConsultationIndexPageHandler.prototype = (function () {
                 discussionthreadid: -1,
                 discussionthreadclientid: getDiscussionThreadClientId(articleid),
                 source: "opengov",
-                commentsCount: $(articleDiv).find(".open-gov").data("count") //for open gov we retrieve the counter from
+                commentsCount: $(articleDiv).find(".open-gov").data("count"), //for open gov we retrieve the counter from
+                parent: "consultation"
             };
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
             scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
@@ -67,6 +68,7 @@ scify.ConsultationIndexPageHandler.prototype = (function () {
                 commentBoxProperties.userId = instance.userId;
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(), "");
+
                 $(ann).after("<div class=\"commentbox-wrap\"></div>");
                 domElementToAddComponent = $(ann).next()[0];
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
