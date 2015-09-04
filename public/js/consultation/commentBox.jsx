@@ -185,7 +185,7 @@
     });
     window.scify.CommentList = React.createClass({
         render: function() {
-
+            console.log(this.props);
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (
@@ -212,40 +212,73 @@
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
         },
         render: function() {
+            console.log(this.props.data.comment);
+            if(this.props.parent == "reporter") {
+                var taggedProblems = this.props.data.comment.annotationTagProblems.map(function (tag) {
+                    return (
+                        <span className="tag pr"><span>{tag.description}</span></span>
+                    );
+                });
+                var taggedTopics = this.props.data.comment.annotationTagTopics.map(function (tag) {
+                    return (
+                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
+                    );
+                });
+                var taggedProblemsContainer = this.props.data.comment.annotationTagProblems.length > 0 ?
+                    <span>Προβλήματα: { taggedProblems} </span> : "";
+                var taggedTopicsContainer = this.props.data.comment.annotationTagTopics.length > 0 ?
+                    <span>Κατηγορία: { taggedTopics} </span> : "";
 
-            var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
-                return (
-                    <span className="tag pr"><span>{tag.description}</span></span>
-                );
-            });
-            var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
-                return (
-                    <span className="tag topic"><span >{"#"+tag.description }</span></span>
-                );
-            });
-            var taggedProblemsContainer =  this.props.data.annotationTagProblems.length>0 ? <span>Προβλήματα: { taggedProblems} </span> : "";
-            var taggedTopicsContainer = this.props.data.annotationTagTopics.length>0?  <span>Κατηγορία: { taggedTopics} </span> : "";
+                //todo: enable reply functionality, now its hidden
 
-            //todo: enable reply functionality, now its hidden
+                //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+                var iconsClasses = classNames("icons",
+                    {
+                        hide: this.props.data.comment.source.commentSource == 2 ||
+                        this.props.data.comment.dateAdded < this.props.consultationEndDate
+                    });
+            } else {
+                var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
+                    return (
+                        <span className="tag pr"><span>{tag.description}</span></span>
+                    );
+                });
+                var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
+                    return (
+                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
+                    );
+                });
+                var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ?
+                    <span>Προβλήματα: { taggedProblems} </span> : "";
+                var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ?
+                    <span>Κατηγορία: { taggedTopics} </span> : "";
 
-            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
-            var iconsClasses = classNames("icons",
-                                          { hide: this.props.data.source.commentSource ==2 ||
-                                                  this.props.data.dateAdded < this.props.consultationEndDate
-                                          });
-            var options;
+                //todo: enable reply functionality, now its hidden
+
+                //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+                var iconsClasses = classNames("icons",
+                    {
+                        hide: this.props.data.source.commentSource == 2 ||
+                        this.props.data.dateAdded < this.props.consultationEndDate
+                    });
+            }
+            var options,avatarDiv,commenterName,commentBody;
             console.log(this.props);
             if(this.props.parent == "consultation") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                avatarDiv =<div className='avatar'><img src="/assets/images/profile_default.jpg" /></div>;
+                commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+                commentBody = <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>;
+            } else if(this.props.parent == "reporter") {
+                options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                commentBody = <span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span>
             }
             return (
                 <div className="comment">
-                    <div className='avatar'>
-                        <img src="/assets/images/profile_default.jpg" />
-                    </div>
+                    {avatarDiv}
                     <div className='body'>
-                        <span className="commentAuthor">{this.props.data.fullName}</span>
-                        <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                        {commenterName}
+                        {commentBody}
                         <div className="tags"> {taggedProblemsContainer} {taggedTopicsContainer}</div>
                     </div>
                     {options}
@@ -335,6 +368,33 @@
                         Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
                     </a> <span className="c"> ({this.state.dislikeCounter})</span>
                     <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
+                    <span className="date">{date}</span>
+                </div>
+            );
+        }
+    });
+
+    var DisplayForReporter = React.createClass({
+        getInitialState: function(){
+            return {
+                likeCounter: this.props.likeCounter,
+                dislikeCounter: this.props.dislikeCounter,
+                liked : this.props.loggedInUserRating  //if not null it means has liked/disliked this comment
+            };
+        },
+        render: function() {
+            var agreeClasses = classNames("agree", {active: this.state.liked===true});
+            var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
+            var date =moment(this.props.dateAdded).format('llll');
+            return (
+                <div className="options">
+                    <div className={agreeClasses} onClick={this.handleLikeComment}>
+                        Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
+
+                    </div><span className="c"> ({this.state.likeCounter})</span>
+                    <div className={disagreeClasses}>
+                        Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
+                    </div> <span className="c"> ({this.state.dislikeCounter})</span>
                     <span className="date">{date}</span>
                 </div>
             );

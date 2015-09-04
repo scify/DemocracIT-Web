@@ -32,7 +32,6 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -87,7 +86,8 @@
                     );
                 }
                 //todo: iterate to data and display
-                return React.createElement(CommentList, { data: this.props.data });
+                console.log(this.props.data);
+                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporter" });
             } else {
                 return React.createElement("div", null);
             }

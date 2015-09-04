@@ -28,7 +28,6 @@
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    console.log(data);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -73,8 +72,9 @@
                     );
                 }
                 //todo: iterate to data and display
+                console.log(this.props.data);
                 return (
-                    <CommentList data={this.props.data} />
+                    <scify.CommentList data={this.props.data} parent="reporter"/>
                 );
             } else {
                 return (
