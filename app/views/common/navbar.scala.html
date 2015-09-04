@@ -1,0 +1,61 @@
+@(user: Option[model.User])
+
+    <nav class="navbar navbar-default ">
+        <div class="container">
+            <div class="navbar-header ">
+                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                @if(play.Play.application().configuration().getString("application.state") == "development") {
+                    <a href="/" class="navbar-brand"> <img id="logo" alt="Brand" src="@routes.Assets.at("images/logo.png")"/></a>
+                } else {
+                    <a href="http://beta.democracit.org" class="navbar-brand"> <img id="logo" alt="Brand" src="http://beta.democracit.org@routes.Assets.at("images/logo.png")"/> </a>
+                }
+
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" >
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΣΧΕΤΙΚΑ <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://about.democracit.org/h-anagki//">H ΑΝΑΓKH</a></li>
+                            <li><a href="http://about.democracit.org/to-ergo/">ΤΟ ΕΡΓΟ</a></li>
+                            <li><a href="http://about.democracit.org/h-omada/">H ΟΜΑΔΑ</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="http://about.democracit.org/category/e-democracy/">ΒLOG</a></li>
+
+
+                    @user.map { u =>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <img src="@u.avatarURL.getOrElse(routes.Assets.at("images/profile_default.jpg"))" class="avatar"/>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                             @if(play.Play.application().configuration().getString("application.state") == "development") {
+                                    <li><a href="@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                             } else {
+                                <li><a href="http://beta.democracit.org@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                             }
+                        </ul>
+                    </li>
+                    }.getOrElse {
+                        @if(play.Play.application().configuration().getString("application.state") == "development") {
+                            <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
+                            <li id="login"><a href="@routes.AccountController.signIn">ΕΙΣΟΔΟΣ</a></li>
+                        } else {
+                            <li id="register"><a href="http://beta.democracit.org@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
+                            <li id="login"><a href="http://beta.democracit.org@routes.AccountController.signIn">ΕΙΣΟΔΟΣ</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+

@@ -10,11 +10,11 @@ import play.api.libs.json._
 
 object Pluralizer {
 
-  def get(x:Number, singleResource:String, pluralResource:String) = {
+  def get(x:Number, singleResource:String, pluralResource:String):String = {
     if (x==1)
-     x + " " + singleResource
-
-    x + " " + pluralResource
+      x + " " + singleResource
+    else
+     x + " " + pluralResource
   }
 }
 

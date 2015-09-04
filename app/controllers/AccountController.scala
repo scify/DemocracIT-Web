@@ -50,7 +50,7 @@ class AccountController @Inject() (val messagesApi: MessagesApi,
   def signUp = UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
-      case None => Future.successful(Ok(views.html.account.signUp(SignUpForm.form)))
+      case None => Future.successful(Ok(views.html.account.signUp(SignUpForm.form,socialProviderRegistry)))
     }
   }
 

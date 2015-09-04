@@ -1,6 +1,6 @@
 @import model.viewmodels.ConsultationViewModel
+@import model.dtos.RelevantLaws
 @(vm: ConsultationViewModel)
-
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
@@ -11,7 +11,9 @@
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
 
+    <script src="@routes.Assets.at("js/consultation/intro.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
+    <script  src="@routes.Assets.at("js/consultation/scify-tutorialAnnotator.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
     <script>
@@ -21,6 +23,8 @@
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.discussionThreadsToJson()),
                                                                 @Html(vm.relevantLawsToJson()),
+                                                                @Html(vm.consultation.isActive.toString),
+                                                                '@routes.Assets.at("images")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -32,23 +36,33 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/introjs.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/themes/introjs-nassim.css")">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
-
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
 
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">Συμμετοχή στη διαβούλευση</a></li>
+                @defining(if (vm.consultation.isActive) "Συμμετοχή στη διαβούλευση" else "Άρθρα της διαβούλευσης") { consultationArticlesTab=>
+                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTab</a></li>
+                }
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+
+                @if(play.Play.application().configuration().getString("application.state") == "development") {
+                    <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
+                } else {
+                    <li role="presentation"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
+                }
+
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
+                    <div id="tutorial" class="aside-button"><a>Δείξε μου πώς λειτουργεί</a></div>
                     @for(article <- vm.consultation.articles) {
-                        <div data-id="@article.id"  class="row article ">
+                        <div data-id="@article.id"  class="row article">
                             <div class="col-md-12">
                                 <div class="title">
                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
@@ -69,32 +83,40 @@
                 <div role="tabpanel" class="tab-pane" id="relevantLawsList">
                     <div class="row">
                         <div class="col-md-12">
-                        @if(vm.groupLaws().length>0) {
-                           <h2>@vm.groupLaws().length αναφορές σε νόμους</h2>
-                            <table class="table table-striped table-condensed">
-                                <thead><tr>
-                                    <th>#</th>
-                                    <th>Αναφορά</th>
-                                </tr>
-                                </thead>
+                            @defining(vm.groupLaws()) { groupLaws =>
+                                @if(groupLaws.length>0) {
 
-                                @for(i <- 0 until vm.groupLaws().length) {
-                                    <tr>
-                                        <td style="width: 5px"> @{i+1}</td>
-                                        <td class="relevantLaw">
-                                            <div id="@i">
-                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
-                                                <div class="childLaws">
-                                                @for(law <- vm.groupLaws()(i)._2) {
-                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
-                                                }
-                                                </div>
+
+                                    <h2>@groupLaws.length αναφορές σε νόμους</h2>
+                                    <table class="table table-striped table-condensed">
+                                        <thead><tr>
+                                            <th>#</th>
+                                            <th>Αναφορά</th>
+                                            <th>Περιγραφή</th>
+                                        </tr>
+                                        </thead>
+
+                                        @for(i <- 0 until groupLaws.length) {
+                                            <tr>
+                                                <td style="width: 10px"> @{i+1}</td>
+                                                <td style="width: 150px">
+                                                    <a href="@groupLaws(i)._2.head.pdf_url">@groupLaws(i)._1</a>
+                                                </td>
+                                                <td class="relevantLaw">
+                                                    <div id="@i">
+                                                        @if(vm.findOccurances(groupLaws(i)._1) == 1){Βρέθηκε}else {Βρέθηκαν} <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1),"αναφορά","αναφορές")</a> σε @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {άρθρο}else{άρθρα}
+                                                        <div class="childLaws">
+                                                        @for(law <-groupLaws(i)._2) {
+                                                            <a class="childLaw" href="@law.pdf_url">@law.entity_text</a> (@vm.articleNameTrimmed(law.article_title))
+                                                        }
+                                                        </div>
                                             </div>
-                                        </td>
-                                    </tr>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
                                 }
-                            </table>
-                        }
+                            }
                         </div>
                     </div>
                 </div>

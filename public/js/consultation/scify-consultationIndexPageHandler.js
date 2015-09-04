@@ -1,11 +1,15 @@
 
 scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
-                                              discussionThreads,
-                                              relevantLaws,
-                                              consultationEndDate){
+                                               discussionThreads,
+                                               relevantLaws,
+                                               consultationIsActive,
+                                               imagesPath,
+                                               consultationEndDate){
     this.consultationid= consultationid;
+    this.consultationIsActive = consultationIsActive;
     this.userId = userId;
     this.fullName = fullName;
+    this.imagesPath = imagesPath;
 
     this.discussionThreads ={};
     for (var i=0; i<discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
@@ -14,12 +18,13 @@ scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
     }
 
     this.relevantLaws = [];
-    console.log(relevantLaws);
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
     }
 
     this.consultationEndDate = consultationEndDate;
+
+    this.tutorialAnnotator = null;
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -57,7 +62,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 discussionthreadid      : -1,
                 discussionthreadclientid: getDiscussionThreadClientId(articleid),
                 source :"opengov",
-                commentsCount : $(articleDiv).find(".open-gov").data("count")  //for open gov we retrieve the counter from
+                commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
+                parent: "consultation"
             };
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
             scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
@@ -71,6 +77,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.userId = instance.userId;
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
+
                 $(ann).after('<div class="commentbox-wrap"></div>');
                 domElementToAddComponent = $(ann).next()[0];
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
@@ -88,13 +95,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             console.log($(this).context.id);
             $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
             if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
-                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
-                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-up");
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").show("slow");
             }
             else {
-                $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-up");
-                $(".relevantLaw #" + $(this).context.id + " i").addClass("fa-chevron-down");
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
             }
         });
@@ -134,8 +137,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
         //tinymce.init({selector:'textarea'})
-        $("#save-annotation").click(handleAnnotationSave.bind(instance));
 
+        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
+        this.tutorialAnnotator.init();
     };
 
     return {

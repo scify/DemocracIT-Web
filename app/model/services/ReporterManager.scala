@@ -1,13 +1,11 @@
 package model.services
 
-import java.util
-import java.util.Date
+import java.util.UUID
 
 import model.User
-import model.dtos.{PlatformStats, _}
+import model.dtos.CommentWithArticleName
 import model.repositories._
 import model.viewmodels._
-import org.scify.democracit.solr.DitSorlQuery
 
 //case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
 //{
@@ -32,6 +30,15 @@ class ReporterManager {
                           annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId),
                           relevantLaws = repository.getRelevantLaws(consultationId),
                           userCommentStats = commentsRepository.getCommentersForConsultation(consultationId))
+  }
+
+
+  def getCommentsForConsultationByUserId(consultationId: Long, user_id:UUID, loggedInUser:Option[User]): List[CommentWithArticleName] = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[CommentWithArticleName] = Nil
+    val loggedInUserId = if (loggedInUser.isDefined) Some(loggedInUser.get.userID) else None
+    comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id,loggedInUserId);
+    comments
   }
 
 

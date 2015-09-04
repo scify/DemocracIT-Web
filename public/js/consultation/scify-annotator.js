@@ -127,9 +127,6 @@ scify.Annotator.prototype = (function(){
         },
         attachAnnotationPrompts= function(){
             $(".ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><i class='fa fa-pencil-square-o'></i></span>");
-            $(".title").find(".ann-icon").each(function(){
-                $(this).attr("title","κλικ εδώ για σχολιασμού όλου του άρθρου");
-            });
         },
         fetchTopicTagsForUserSelection = function(selectedText){
 

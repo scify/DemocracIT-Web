@@ -16,10 +16,11 @@ object RelevantLawsParser {
       str("entity_type") ~
       str("entity_text") ~
       str("entity_law") ~
+      str("title") ~
       long("consultation_id") map
       {
-        case id ~ article_id ~ pdf_url ~ entity_type ~ entity_text ~ entity_law ~ consultation_id =>
-          new RelevantLaws(id, article_id, pdf_url, entity_type, entity_text, entity_law, consultation_id)
+        case id ~ article_id ~ pdf_url ~ entity_type ~ entity_text ~ entity_law ~ article_title ~ consultation_id =>
+          new RelevantLaws(id, article_id, pdf_url, entity_type, entity_text, entity_law, article_title, consultation_id)
       }
 
   }

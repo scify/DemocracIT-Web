@@ -9,6 +9,7 @@ case class RelevantLaws (id: Long,
                              entity_type:String,
                              entity_text:String,
                              entity_law:String,
+                             article_title:String,
                              consultation_id: Long
                              )
 

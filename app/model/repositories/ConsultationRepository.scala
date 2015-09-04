@@ -89,7 +89,9 @@ class ConsultationRepository {
   def getRelevantLaws (consultationId: Long):Seq[RelevantLaws] = {
     DB.withConnection { implicit c =>
       val results = SQL"""
-        select c.* from public.article_entities c where c.consultation_id = $consultationId
+        select c.*, ar.title from public.article_entities c
+            inner join articles ar on c.article_id = ar.id
+            where c.consultation_id =  $consultationId
         """.as(RelevantLawsParser.Parse *)
       results
     }

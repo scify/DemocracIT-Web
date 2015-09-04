@@ -4,13 +4,14 @@
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
-    <script src="@routes.Assets.at("js/react-with-addons.js")"></script>
     @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/userBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
     <script src="http://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
@@ -25,7 +26,7 @@
                                                                 @Html(vm.annotationsForConsultationToJson(1)),
                                                                 @Html(vm.annotationsForConsultationToJson(2)),
                                                                 @Html(vm.annotationsPerArticleToJson(1)),
-                                                                @Html(vm.annotationsPerArticleToJson(2)),
+                                                                @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -37,8 +38,9 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/reporter/reporter.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
 @layout("DemocracIT", css, js,None) {
@@ -54,7 +56,7 @@
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="annotatorContent">
-                    <div class="totalCommentsTitle">Συνολικός αριθμός σχολίων της διαβούλευσης: </div><div class="totalComments">@vm.totalComments</div>
+                    @*<div class="totalCommentsTitle">Συνολικός αριθμός σχολίων της διαβούλευσης: </div><div class="totalComments">@vm.totalComments</div>
                     <table class="table table-striped table-condensed">
                         <thead><tr>
                             <th>Όνομα</th>
@@ -72,14 +74,14 @@
                             </tr>
                         }
 
-                    </table>
+                    </table>*@
 
-                    <ul id="tabs" class="nav nav-tabs" role="tablist">
+                    <ul style="margin-top: 100px" class="statsBar nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"> <a href="#commentsPerArticleChart" aria-controls="commentsPerArticleChart" role="tab" data-toggle="tab">Σχόλια ανά άρθρο</a></li>
-                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Σχόλια ανά Tag Αναφοράς</a></li>
-                        <li role="presentation"> <a href="#annotationProblemsForConsultationChart" aria-controls="annotationProblemsForConsultationChart" role="tab" data-toggle="tab">Σχόλια ανά Tag Προβλήματος</a></li>
-                        <li role="presentation"> <a href="#annotationsPerArticleChart" aria-controls="annotationsPerArticleChart" role="tab" data-toggle="tab">Tag Αναφοράς ανά άρθρο</a></li>
-                        <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Tag Προβλήματος ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Θέματα που θίγονται</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsForConsultationChart" aria-controls="annotationProblemsForConsultationChart" role="tab" data-toggle="tab">Προβλήματα</a></li>
+                        <li role="presentation"> <a href="#annotationsPerArticleChart" aria-controls="annotationsPerArticleChart" role="tab" data-toggle="tab">Θέματα ανά άρθρο</a></li>
+                        <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active commentsPerArticleChart chart" id="commentsPerArticleChart"></div>
@@ -93,31 +95,39 @@
                 <div role="tabpanel" class="tab-pane" id="relevantLawsList">
                     <div class="row">
                         <div class="col-md-12">
-                        @if(vm.groupLaws().length>0) {
-                            <h2>@vm.groupLaws().length αναφορές σε νόμους</h2>
-                            <table class="table table-striped table-condensed">
-                                <thead><tr>
-                                    <th>#</th>
-                                    <th>Αναφορά</th>
-                                </tr>
-                                </thead>
+                        @defining(vm.groupLaws()) { groupLaws =>
+                            @if(groupLaws.length>0) {
 
-                                @for(i <- 0 until vm.groupLaws().length) {
-                                    <tr>
-                                        <td style="width: 5px"> @{i+1}</td>
-                                        <td class="relevantLaw">
-                                            <div id="@i">
-                                                <a class="relevantLawsBtn" id="@i">@vm.groupLaws()(i)._1 <i class="fa fa-chevron-down" style="margin-left: 5px"></i></a>
+
+                                <h2>@groupLaws.length αναφορές σε νόμους</h2>
+                                <table class="table table-striped table-condensed">
+                                    <thead><tr>
+                                        <th>#</th>
+                                        <th>Αναφορά</th>
+                                        <th>Περιγραφή</th>
+                                    </tr>
+                                    </thead>
+
+                                    @for(i <- 0 until groupLaws.length) {
+                                        <tr>
+                                            <td style="width: 10px"> @{i+1}</td>
+                                            <td style="width: 150px">
+                                                <a href="@groupLaws(i)._2.head.pdf_url">@groupLaws(i)._1</a>
+                                            </td>
+                                            <td class="relevantLaw">
+                                                <div id="@i">
+                                                    @if(vm.findOccurances(groupLaws(i)._1) == 1){Βρέθηκε}else {Βρέθηκαν} <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1),"αναφορά","αναφορές")</a> σε @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {άρθρο}else{άρθρα}
                                                 <div class="childLaws">
-                                                @for(law <- vm.groupLaws()(i)._2) {
-                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
+                                                @for(law <-groupLaws(i)._2) {
+                                                    <a class="childLaw" href="@law.pdf_url">@law.entity_text</a> (@vm.articleNameTrimmed(law.article_title))
                                                 }
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            }
                         }
                         </div>
                     </div>
@@ -131,14 +141,18 @@
                 </tr>
                 </thead>
                 @for(userComments <- vm.userCommentStats) {
-                    <tr>
-                        <td class="articleName">
-                        @userComments.first_name  @userComments.last_name (@userComments.role)
-                        </td>
-                        <td class="commentsNum">
-                        @userComments.number_of_comments
-                        </td>
-                    </tr>
+                    <div data-id="@userComments.user_id" class="statsForUser" data-count="@userComments.number_of_comments">
+                        <tr>
+                            <td class="articleName">
+                            @*<div>@userComments.first_name  @userComments.last_name (@userComments.role)<div class="userBoxDiv" id="box_@userComments.user_id"></div></div>*@
+                            <div id="box_@userComments.user_id" class="comment-wrp commentBox"></div>
+                            </td>
+                            <td class="commentsNum">
+                            @userComments.number_of_comments
+                            </td>
+                        </tr>
+
+                    </div>
                 }
 
             </table>

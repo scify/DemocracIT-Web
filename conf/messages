@@ -1,5 +1,7 @@
 error.email = Valid email required
 sign.in.credentials =Είσοδος
+sign.in =Είσοδος
+sign.in.title=Είσοδος
 not.a.member=Δεν είστε μέλος;
 sign.up.now=Κλίκ εδώ
 or.use.social=ή πραγματοποιήστε είσοδο μέσω
