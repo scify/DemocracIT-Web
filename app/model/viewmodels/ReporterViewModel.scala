@@ -50,7 +50,7 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
     val annotationProblemsArr = new ListBuffer[AnnotationTagPerArticleWithComments]()
     for(annTag <- annotationTagPerArticleWithComments) {
       if(annTag.annotationTag.type_id == type_of_ann) {
-        val annTagWithCommentsTemp = AnnotationTagPerArticleWithComments(annTag.annotationTag,annTag.article_name,annTag.numberOfComments)
+        val annTagWithCommentsTemp = AnnotationTagPerArticleWithComments(annTag.annotationTag,annTag.article_name,annTag.id,annTag.numberOfComments)
         annotationProblemsArr += (annTagWithCommentsTemp)
       }
     }

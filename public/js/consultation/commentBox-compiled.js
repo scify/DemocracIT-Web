@@ -265,7 +265,6 @@
             });
 
             var options, avatarDiv, commenterName, commentBody, annotatedText;
-            console.log(this.props);
             if (this.props.parent == "consultation") {
                 options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(

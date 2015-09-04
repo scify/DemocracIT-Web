@@ -35,7 +35,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     this.commentsPerArticle =[];
     for (var i=0; i<commentsPerArticle.length; i++)
     {
-        this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:100%">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>' ])
+        this.commentsPerArticle.push([commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':')), commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:100%">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>', commentsPerArticle[i].id ])
     }
 
     this.annotationsForConsultation = [];
@@ -97,6 +97,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 data.addColumn('string', strName);
                 data.addColumn('number', numName);
                 data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
+                if(chartType == "bar") {
+                    data.addColumn({type:'number', role:'scope'});
+                }
                 data.addRows(dataForChart);
                 var numRows = dataForChart.length;
                 var expectedHeight = numRows * 30;
@@ -122,23 +125,31 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     'fontSize' : 15
                 };
 
+                var chart;
                 switch(chartType) {
                     case 'bar':
-                        var chart = new google.visualization.BarChart(document.getElementById(chartId));
+                        chart = new google.visualization.BarChart(document.getElementById(chartId));
                         break;
                     case 'pie':
-                        var chart = new google.visualization.PieChart(document.getElementById(chartId));
+                        chart = new google.visualization.PieChart(document.getElementById(chartId));
                         break;
                     default:
                         break
                 }
 
                 chart.draw(data, options);
+                // When the table is selected, update the orgchart.
+                google.visualization.events.addListener(chart, 'select', function() {
+                    var selection = chart.getSelection();
+                    console.log(dataForChart[selection[0].row]);
+                });
             }
 
             google.setOnLoadCallback(drawMultSeries);
 
         },
+
+
 
         /*createChartD3 = function(annotationsForConsultation, chartClass) {
             var width = document.getElementById("statsDiv").offsetWidth;

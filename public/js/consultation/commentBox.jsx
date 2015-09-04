@@ -241,7 +241,6 @@
                 });
 
             var options,avatarDiv,commenterName,commentBody,annotatedText;
-            console.log(this.props);
             if(this.props.parent == "consultation") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src="/assets/images/profile_default.jpg" /></div>;
