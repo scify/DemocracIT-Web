@@ -212,56 +212,35 @@
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
         },
         render: function() {
-            console.log(this.props.data.comment);
-            if(this.props.parent == "reporter") {
-                var taggedProblems = this.props.data.comment.annotationTagProblems.map(function (tag) {
-                    return (
-                        <span className="tag pr"><span>{tag.description}</span></span>
-                    );
-                });
-                var taggedTopics = this.props.data.comment.annotationTagTopics.map(function (tag) {
-                    return (
-                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
-                    );
-                });
-                var taggedProblemsContainer = this.props.data.comment.annotationTagProblems.length > 0 ?
-                    <span>Προβλήματα: { taggedProblems} </span> : "";
-                var taggedTopicsContainer = this.props.data.comment.annotationTagTopics.length > 0 ?
-                    <span>Κατηγορία: { taggedTopics} </span> : "";
-
-                //todo: enable reply functionality, now its hidden
-
-                //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
-                var iconsClasses = classNames("icons",
-                    {
-                        hide: this.props.data.comment.source.commentSource == 2 ||
-                        this.props.data.comment.dateAdded < this.props.consultationEndDate
-                    });
+            if(this.props.parent == "consultation") {
+                var commentFromDB = this.props.data;
             } else {
-                var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
-                    return (
-                        <span className="tag pr"><span>{tag.description}</span></span>
-                    );
-                });
-                var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
-                    return (
-                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
-                    );
-                });
-                var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ?
-                    <span>Προβλήματα: { taggedProblems} </span> : "";
-                var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ?
-                    <span>Κατηγορία: { taggedTopics} </span> : "";
-
-                //todo: enable reply functionality, now its hidden
-
-                //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
-                var iconsClasses = classNames("icons",
-                    {
-                        hide: this.props.data.source.commentSource == 2 ||
-                        this.props.data.dateAdded < this.props.consultationEndDate
-                    });
+                var commentFromDB = this.props.data.comment;
             }
+            var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
+                return (
+                    <span className="tag pr"><span>{tag.description}</span></span>
+                );
+            });
+            var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
+                return (
+                    <span className="tag topic"><span >{"#" + tag.description }</span></span>
+                );
+            });
+            var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ?
+                <span>Προβλήματα: { taggedProblems} </span> : "";
+            var taggedTopicsContainer = commentFromDB.annotationTagTopics.length > 0 ?
+                <span>Κατηγορία: { taggedTopics} </span> : "";
+
+            //todo: enable reply functionality, now its hidden
+
+            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+            var iconsClasses = classNames("icons",
+                {
+                    hide: commentFromDB.source.commentSource == 2 ||
+                    commentFromDB.dateAdded < this.props.consultationEndDate
+                });
+
             var options,avatarDiv,commenterName,commentBody,annotatedText;
             console.log(this.props);
             if(this.props.parent == "consultation") {
