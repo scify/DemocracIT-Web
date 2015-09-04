@@ -262,16 +262,17 @@
                         this.props.data.dateAdded < this.props.consultationEndDate
                     });
             }
-            var options,avatarDiv,commenterName,commentBody;
+            var options,avatarDiv,commenterName,commentBody,annotatedText;
             console.log(this.props);
             if(this.props.parent == "consultation") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src="/assets/images/profile_default.jpg" /></div>;
                 commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-                commentBody = <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>;
+                commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
             } else if(this.props.parent == "reporter") {
                 options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
-                commentBody = <span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span>
+                commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
+                annotatedText = <div className="htmlText">Τμήμα κειμένου: <span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
             }
             return (
                 <div className="comment">
@@ -279,6 +280,7 @@
                     <div className='body'>
                         {commenterName}
                         {commentBody}
+                        {annotatedText}
                         <div className="tags"> {taggedProblemsContainer} {taggedTopicsContainer}</div>
                     </div>
                     {options}

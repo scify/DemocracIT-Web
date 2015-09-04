@@ -306,7 +306,7 @@
                     hide: this.props.data.source.commentSource == 2 || this.props.data.dateAdded < this.props.consultationEndDate
                 });
             }
-            var options, avatarDiv, commenterName, commentBody;
+            var options, avatarDiv, commenterName, commentBody, annotatedText;
             console.log(this.props);
             if (this.props.parent == "consultation") {
                 options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
@@ -320,10 +320,26 @@
                     { className: "commentAuthor" },
                     this.props.data.fullName
                 );
-                commentBody = React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } });
+                commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Σχόλιο: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
+                );
             } else if (this.props.parent == "reporter") {
                 options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
-                commentBody = React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } });
+                commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Σχόλιο: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
+                );
+                annotatedText = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Τμήμα κειμένου: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
+                );
             }
             return React.createElement(
                 "div",
@@ -334,6 +350,7 @@
                     { className: "body" },
                     commenterName,
                     commentBody,
+                    annotatedText,
                     React.createElement(
                         "div",
                         { className: "tags" },

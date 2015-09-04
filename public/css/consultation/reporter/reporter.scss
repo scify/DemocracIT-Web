@@ -41,3 +41,19 @@
 .notClicked {
   display: none;
 }
+
+
+.commentBox .comment .options div{
+  float: left;
+  margin-right: 5px;
+}
+
+.commentBox .comment .options span{
+  float: left;
+}
+
+
+.commentBox .comment .options {
+  margin-top: 10px;
+  height: 20px;
+}
