@@ -1,17 +1,18 @@
 package model.repositories
 
+import _root_.anorm.SqlParser
+import _root_.anorm.SqlParser._
 import java.util.{UUID, Date}
 import _root_.anorm._
-import anorm._
-import anorm.SqlParser._
-import model.dtos.CommentSource.CommentSource
 import model.dtos._
-import org.postgresql.util.PGobject
-import repositories.anorm._
-import org.joda.time.DateTime
 import play.api.db.DB
+import anorm.AnnotationTagWithCommentsParser
+import anorm.AnnotationTypesParser
+import anorm.CommentsParser
+import anorm.DiscussionThreadWithCommentsCountParser
+import anorm.UserCommentsStatsParser
 import play.api.Play.current
-import repositories.anorm.{ArticleParser, ConsultationParser}
+import anorm.ArticleParser
 
 
 class CommentsRepository {

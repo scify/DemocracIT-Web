@@ -1,14 +1,12 @@
 package model.repositories
 
-import java.util.Date
-import anorm._
-import anorm.SqlParser._
+import _root_.anorm._
+import _root_.anorm.SqlParser._
 import model.dtos._
-import repositories.anorm._
-import org.joda.time.DateTime
+import model.repositories.anorm._
 import play.api.db.DB
 import play.api.Play.current
-import repositories.anorm.{ArticleParser, ConsultationParser}
+import model.repositories.anorm.{ArticleParser, ConsultationParser}
 
 
 class ConsultationRepository {

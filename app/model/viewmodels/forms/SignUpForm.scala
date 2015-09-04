@@ -1,4 +1,4 @@
-package forms
+package model.viewmodels.forms
 
 import play.api.data.Form
 import play.api.data.Forms._

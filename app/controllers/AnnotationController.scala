@@ -1,17 +1,17 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Silhouette, Environment}
-import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import forms._
+import model.viewmodels.forms._
 import model.dtos._
 import model.services.AnnotationManager
 import model.viewmodels.forms.RateCommentForm
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
-import play.api.libs.json.{Json, JsValue, JsPath, Writes}
+import play.api.libs.json.Json
 import utils.ImplicitReadWrites.FormErrorWrites
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
