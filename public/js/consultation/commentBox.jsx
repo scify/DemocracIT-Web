@@ -185,7 +185,6 @@
     });
     window.scify.CommentList = React.createClass({
         render: function() {
-            console.log(this.props);
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (

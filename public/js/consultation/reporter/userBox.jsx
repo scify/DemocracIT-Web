@@ -8,8 +8,22 @@
               user: this.props.user,
               comments: [],
               busy: false,
-              display: false
+              display: false,
+              commentsCount: this.props.commentsCount
           };
+        },
+        setVisibibility : function(display){
+            this.state.display=display;
+            this.setState(this.state);
+        },
+        refreshComments : function(){
+            var instance = this;
+            if (instance.state.commentsCount > instance.state.comments.length )
+                instance.getCommentsFromServer.call(instance);
+            else if (instance.state.display)
+                instance.setVisibibility.call(instance,false);
+            else
+                instance.setVisibibility.call(instance,true);
         },
         getCommentsFromServer : function(){
             var instance = this;
@@ -44,7 +58,7 @@
         render: function() {
 
             return (
-                <div className="" onClick={this.getCommentsFromServer}>
+                <div className="" onClick={this.refreshComments}>
                     <a>{this.props.user.first_name} {this.props.user.last_name} ({this.props.user.role})</a>
                     <scify.InfoBox display={this.state.display} busy={this.state.busy} data={this.state.comments}/>
                 </div>
@@ -71,8 +85,6 @@
                         </div>
                     );
                 }
-                //todo: iterate to data and display
-                console.log(this.props.data);
                 return (
                     <scify.CommentList data={this.props.data} parent="reporter"/>
                 );

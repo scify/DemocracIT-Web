@@ -171,7 +171,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 var userBoxProperties = {
                     consultationid          : instance.consultationid,
                     userId                  : userId,
-                    user                    : userObj
+                    user                    : userObj,
+                    commentsCount : $(userDiv).data("count")
                 };
                 var domElementToAddComponent = document.getElementById("box_" + userId);
                 scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);

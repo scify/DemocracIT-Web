@@ -141,7 +141,7 @@
                 </tr>
                 </thead>
                 @for(userComments <- vm.userCommentStats) {
-                    <div data-id="@userComments.user_id" class="statsForUser">
+                    <div data-id="@userComments.user_id" class="statsForUser" data-count="@userComments.number_of_comments">
                         <tr>
                             <td class="articleName">
                             @*<div>@userComments.first_name  @userComments.last_name (@userComments.role)<div class="userBoxDiv" id="box_@userComments.user_id"></div></div>*@

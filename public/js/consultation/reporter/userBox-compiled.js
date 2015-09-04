@@ -12,8 +12,17 @@
                 user: this.props.user,
                 comments: [],
                 busy: false,
-                display: false
+                display: false,
+                commentsCount: this.props.commentsCount
             };
+        },
+        setVisibibility: function setVisibibility(display) {
+            this.state.display = display;
+            this.setState(this.state);
+        },
+        refreshComments: function refreshComments() {
+            var instance = this;
+            if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         getCommentsFromServer: function getCommentsFromServer() {
             var instance = this;
@@ -49,7 +58,7 @@
 
             return React.createElement(
                 "div",
-                { className: "", onClick: this.getCommentsFromServer },
+                { className: "", onClick: this.refreshComments },
                 React.createElement(
                     "a",
                     null,
@@ -85,8 +94,6 @@
                         React.createElement(scify.ReactLoader, { display: this.props.busy })
                     );
                 }
-                //todo: iterate to data and display
-                console.log(this.props.data);
                 return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporter" });
             } else {
                 return React.createElement("div", null);
