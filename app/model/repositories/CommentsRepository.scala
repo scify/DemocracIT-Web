@@ -218,23 +218,28 @@ class CommentsRepository {
 
     DB.withConnection { implicit c =>
       //one way to do it
-      val tagsWithComments: List[(AnnotationTags, String, Int)] = SQL"""
+      val tagsWithComments: List[(AnnotationTags, String,Int, Int)] = SQL"""
                              with comm as (
                                             select c.*
                                             from comments c inner join public.articles a on a.id = c.article_id
                                             inner join public.consultation con on con.id = a.consultation_id
                                             where a.consultation_id = $consultation_id
                                           )
-                                        select articles.title as article_title, ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
+                                        select articles.title as article_title,
+                                              articles.id as article_id,
+                                              ann_comm.annotation_tag_id as id,
+                                              annotation_tag.description,
+                                              annotation_tag.type_id,
+                                              count(ann_comm.annotation_tag_id) as comments_num
                                         from annotation_comment ann_comm
                                         inner join comm on ann_comm.public_comment_id = comm.id
                                         inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                                         inner join articles on articles.id = comm.article_id
                                         group by ann_comm.annotation_tag_id,annotation_tag.id, articles.id
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.str("article_title") ~ SqlParser.int("comments_num") map (flatten)) *)
+                            """.as((AnnotationTypesParser.Parse ~ SqlParser.str("article_title") ~ SqlParser.int("article_id") ~ SqlParser.int("comments_num") map (flatten)) *)
 
       tagsWithComments.map(tuple => {
-        new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3)
+        new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3,tuple._4)
       })
 
       //    //second wait
