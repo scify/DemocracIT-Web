@@ -1,7 +1,6 @@
 package model.repositories
 
 import java.util.UUID
-import UserDAOImpl._
 import com.mohiva.play.silhouette.api.LoginInfo
 import model.User
 import model.dtos.DBLoginInfo
