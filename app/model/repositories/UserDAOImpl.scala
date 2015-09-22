@@ -4,11 +4,14 @@ import java.util.UUID
 import com.mohiva.play.silhouette.api.LoginInfo
 import model.User
 import model.dtos.DBLoginInfo
-
 import model.repositories.anorm._
 import play.api.db.DB
 import scala.collection.mutable
 import scala.concurrent.Future
+import play.api.Play.current
+import _root_.anorm._
+import _root_.anorm.SqlParser._
+import play.api.db.DB
 
 /**
  * Give access to the user object.
@@ -42,30 +45,21 @@ class UserDAOImpl extends UserDAO {
    * @return The saved user.
    */
   def save(user: model.User) = Future.successful{
-    SaveUser(user)
+    SaveUser(user,1) //todo: make role_ids enum
   }
 
-  private def SaveUser(user:User): User ={
+  private def SaveUser(user:User, roleId:Int): User ={
 
-    val dBLoginInfo = this.findUserLoginInfo(user.loginInfo) //get from database
+    var dBLoginInfo = this.findLoginInfo(user.loginInfo) //get from database
 
-    if (dBLoginInfo.isDefined) //login info is like facebook with user's email address, twitter with user
-      {
-        //we have the id
-      }
-    else
-      {
-        //save login info and get id
-      }
-
-    //now we can use the login info
-
-    //do these two transactionally
-
-    //save or update user
-    // insert db user login info row //todo: add a date stamp there
-
+    if (!dBLoginInfo.isDefined) {
+      //login info is like facebook with user's email address, twitter with user
+      dBLoginInfo = Some(this.saveLoginInfo(user.loginInfo))
+    }
+    this.saveUserAndUpdateLoginInfo(user,dBLoginInfo.get,roleId)
   }
+
+
 
   private def findUserById(userId: UUID):Option[User] = {
     DB.withConnection { implicit c =>
@@ -81,7 +75,7 @@ class UserDAOImpl extends UserDAO {
                   inner join ul on u.id = ul.userid
                   inner join account.logininfo l on l.id = ul.logininfoid
                   where u.id = CAST($userId as UUID)
-        """.as(UserParser.Parse  *)
+        """.as(UserParser.Parse  *).headOption
     }
   }
 
@@ -95,11 +89,11 @@ class UserDAOImpl extends UserDAO {
         where
             providerid = ${loginInfo.providerID} and
             providerkey = ${loginInfo.providerKey}
-        """.as(UserParser.Parse  *)
+        """.as(UserParser.Parse  *).headOption
     }
   }
 
-    private def findLoginInfo(loginInfo:LoginInfo):Option[DBLoginInfo] = {
+  private def findLoginInfo(loginInfo:LoginInfo):Option[DBLoginInfo] = {
       DB.withConnection { implicit c =>
 
         SQL"""
@@ -107,9 +101,44 @@ class UserDAOImpl extends UserDAO {
             from account.logininfo
             where providerid = ${loginInfo.providerID} and
                 providerkey = ${loginInfo.providerKey}
-          """.as(DBLoginInfoParser.Parse  *)
+          """.as(DBLoginInfoParser.Parse  *).headOption
 
       }
     }
+
+  private def saveLoginInfo(loginInfo:LoginInfo):DBLoginInfo = {
+
+    DB.withConnection { implicit c =>
+      val id =SQL"""
+                INSERT INTO account.logininfo (providerid, providerkey)
+                VALUES (${loginInfo.providerID}, ${loginInfo.providerKey})
+              """.executeInsert(scalar[Long].single)
+
+      new DBLoginInfo(id,loginInfo.providerID,loginInfo.providerKey)
+    }
+
+  }
+
+  private def saveUserAndUpdateLoginInfo(user:model.User, dbloginInfo:DBLoginInfo, roleid:Int):User= {
+    DB.withTransaction(){ implicit c =>
+
+          SQL"""
+                INSERT INTO account."user"
+                  (id, "firstName", "lastName", "fullName", "role", email, avatarurl)
+              VALUES
+                  (${user.userID}::uuid , ${user.firstName}, ${user.lastName},${user.fullName}, $roleid,${user.email}, ${user.avatarURL})
+              """.execute()
+
+      //todo: insert time stamp
+          SQL"""
+              INSERT INTO account.userlogininfo
+                   (userid, logininfoid)
+               VALUES
+                   (${user.userID}::uuid , ${dbloginInfo.id})
+              """.execute()
+
+      user
+    }
+  }
 }
 

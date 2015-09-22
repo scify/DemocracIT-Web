@@ -24,9 +24,9 @@ class CommentsRepository {
       //todo: insert if not exists , else update
       if (liked.isDefined)
       {
-          val likedBit = if (liked.get) 1 else 0
+        val likedBit = if (liked.get) 1 else 0
 
-            SQL"""
+        SQL"""
                 UPDATE comment_rating
                         set liked = CAST($likedBit AS BIT)
                         where user_id = CAST($user_id AS UUID)  and comment_id = $comment_id;
@@ -95,7 +95,7 @@ class CommentsRepository {
 
       //todo: get the user fields when login/register related tasks are completed. After this change left outer join to inner join on table users.
       //currently we allow only one annotation tag per comment ( public.annotation_items  contains maximum one annotation per comment)
-     val comments:List[Comment]= SQL"""
+      val comments:List[Comment]= SQL"""
           with ratingCounter as
           (
            select cr.comment_id,
@@ -134,9 +134,9 @@ class CommentsRepository {
       //                                the tuple consists of List(Long,AnnotationTags))
       relatedTags.groupBy( _._1).foreach {
         tuple =>
-             val c= comments.filter(_.id.get == tuple._1).head
-             c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
-             c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
+          val c= comments.filter(_.id.get == tuple._1).head
+          c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
+          c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
       }
       comments
     }
@@ -205,12 +205,12 @@ class CommentsRepository {
                                                       inner join ac on a.id = ac.id
                                                       where a.consultation_id =  $consultationId
                             """.as(ArticleParser.Parse  *)
-        //as((ArticleParser.Parse ~ SqlParser.int("comments_num") map (flatten)) *)
+      //as((ArticleParser.Parse ~ SqlParser.int("comments_num") map (flatten)) *)
 
       commentsForArticles
-//      commentsForArticles.map(tuple => {
-//        new CommentsPerArticle(tuple._1, tuple._2)
-//      })
+      //      commentsForArticles.map(tuple => {
+      //        new CommentsPerArticle(tuple._1, tuple._2)
+      //      })
 
     }
   }
@@ -254,13 +254,13 @@ class CommentsRepository {
                          articleId:Long,
                          pageSize:Int,
                          user_id:Option[java.util.UUID]
-                        ):List[Comment]  = {
+                          ):List[Comment]  = {
     DB.withConnection { implicit c =>
 
       val useridParam = if (user_id.isDefined) user_id.get else new java.util.UUID( 0L, 0L )
 
       //todo: add paging
-       SQL"""
+      SQL"""
           with ratingCounter as
                       (
                        select cr.comment_id,
@@ -288,39 +288,39 @@ class CommentsRepository {
     }
   }
 
-    private def getDiscussionThreadId(discussionThreadTagId:String):Long = {
-      DB.withConnection { implicit c =>
-        SQL"""
+  private def getDiscussionThreadId(discussionThreadTagId:String):Long = {
+    DB.withConnection { implicit c =>
+      SQL"""
            select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
               """.as(SqlParser.long("id").single)
 
-      }
     }
+  }
 
-    /* Saves a discussion thread only if does not exist already.
-    * In case a new discussion thread is created then the id is returned
-    * */
-    def saveDiscussionThread(discussionThreadTagId:String,discussionThreadWholeText:String): Option[Long] =
-    {
-      DB.withConnection { implicit c =>
-        val result = SQL"""
+  /* Saves a discussion thread only if does not exist already.
+  * In case a new discussion thread is created then the id is returned
+  * */
+  def saveDiscussionThread(discussionThreadTagId:String,discussionThreadWholeText:String): Option[Long] =
+  {
+    DB.withConnection { implicit c =>
+      val result = SQL"""
            insert into public.discussion_thread (tagid,relatedText)
             select $discussionThreadTagId,$discussionThreadWholeText
             where not exists (select 1 from public.discussion_thread where tagid = $discussionThreadTagId)
               """.executeInsert()
 
-        if (result.asInstanceOf[Option[Long]].isDefined)
-            result
-        else
-        {
-         val id=  SQL"""
+      if (result.asInstanceOf[Option[Long]].isDefined)
+        result
+      else
+      {
+        val id=  SQL"""
              select id from public.discussion_thread t where t.tagid = $discussionThreadTagId
                 """.as(SqlParser.long("id").single)
 
-          Some(id)
-        }
+        Some(id)
       }
     }
+  }
 
   def loadDiscussionThreadsWithCommentsCount(consultationId:Long): Seq[DiscussionThread] =
   {
@@ -342,20 +342,20 @@ class CommentsRepository {
       val sql = SQL("select * from public.annotation_tag where status_id not in (4,5)") //hide rejected or deleted comments
 
       sql().map( row =>
-                    AnnotationTags(row[Long]("id"), row[String]("description"), row[Int]("type_id"))
-                ).toList
+        AnnotationTags(row[Long]("id"), row[String]("description"), row[Int]("type_id"))
+      ).toList
 
     }
 
   }
 
-    def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
-      DB.withTransaction() { implicit c =>
+  def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
+    DB.withTransaction() { implicit c =>
 
-       import utils.ImplicitAnormHelperMethods._
+      import utils.ImplicitAnormHelperMethods._
 
 
-       val commentId = SQL"""
+      val commentId = SQL"""
           INSERT INTO public.comments
                       (
                       url_source,
@@ -385,14 +385,14 @@ class CommentsRepository {
                   """.executeInsert()
 
 
-        val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
+      val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
 
-        for (annotation <- annotationTags )
+      for (annotation <- annotationTags )
+      {
+        if (annotation.id == -1)
         {
-          if (annotation.id == -1)
-            {
-              //if it already exists we request the id, else save and retrieve it
-              val annotationid: Long= SQL"""
+          //if it already exists we request the id, else save and retrieve it
+          val annotationid: Long= SQL"""
                                      with existing as (
                                           SELECT id FROM annotation_tag WHERE description = ${annotation.description}
                                      ),
@@ -411,21 +411,21 @@ class CommentsRepository {
 
                                 """.as(SqlParser.long("id").single) // .executeInsert()
 
-              annotation.id = annotationid
-            }
+          annotation.id = annotationid
+        }
 
-          SQL"""
+        SQL"""
               INSERT INTO public.annotation_comment
                           (public_comment_id,annotation_tag_id)
               VALUES
               ($commentId,${annotation.id})
             """.execute()
 
-        }
-
-        commentId
       }
+
+      commentId
     }
+  }
 
 
 }
