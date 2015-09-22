@@ -1,16 +1,18 @@
 package model.repositories
 
+import _root_.anorm.SqlParser
+import _root_.anorm.SqlParser._
 import java.util.{UUID, Date}
-import _root_.anorm.{TypeDoesNotMatch, ToStatement, Column, SqlParser}
-import anorm._
-import anorm.SqlParser._
-import model.dtos.CommentSource.CommentSource
+import _root_.anorm._
 import model.dtos._
-import repositories.anorm._
-import org.joda.time.DateTime
 import play.api.db.DB
+import anorm.AnnotationTagWithCommentsParser
+import anorm.AnnotationTypesParser
+import anorm.CommentsParser
+import anorm.DiscussionThreadWithCommentsCountParser
+import anorm.UserCommentsStatsParser
 import play.api.Play.current
-import repositories.anorm.{ArticleParser, ConsultationParser}
+import anorm.ArticleParser
 
 
 class CommentsRepository {
@@ -44,6 +46,41 @@ class CommentsRepository {
 
     }
 
+  }
+
+  def getCommentsForConsultationByUserId (consultation_id:Long,
+                                          user_id:UUID,
+                                          loggedInUserId:Option[UUID]):List[CommentWithArticleName]  = {
+
+    DB.withConnection { implicit c =>
+      val comments:List[(String,Comment)]=
+        SQL"""
+               with ratingCounter as
+                                   (
+                                    select cr.comment_id,
+                                   	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                                   	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                                    from comment_rating cr
+                                        inner join comments c on cr.comment_id  = c.id
+                                        inner join public.articles a on a.id = c.article_id
+                                     where a.consultation_id = $consultation_id
+                                  group by cr.comment_id
+                                 )
+              select  c.*, CAST(c.user_id  AS varchar) as fullName, a.title as article_name,
+                      cr.liked as userrating,
+                      counter.likes,
+                      counter.dislikes
+              from comments c
+                   inner join public.articles a on a.id = c.article_id
+                   left outer join public.comment_rating cr on cr.user_id = CAST($loggedInUserId as UUID)  and cr.comment_id = c.id
+                   left outer join ratingCounter counter on counter.comment_id = c.id
+              where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
+           """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
+
+      comments.map(tuple => {
+        new CommentWithArticleName(tuple._1, tuple._2)
+      })
+    }
   }
 
   def getComments(discussionthreadclientid:String,
@@ -132,6 +169,26 @@ class CommentsRepository {
     }
   }
 
+  def getCommentersForConsultation(consultation_id:Long):List[UserCommentStats] = {
+
+    DB.withConnection { implicit c =>
+      val userCommentStats: List[(UserCommentStats)] = SQL"""
+          with comm as (
+              select c.*
+              from comments c inner join public.articles a on a.id = c.article_id
+              inner join public.consultation con on con.id = a.consultation_id
+              where a.consultation_id = 3594
+          )
+          select users.id as user_id, users.first_name, users.last_name, users.email, users.role, count(users.id) as number_of_comments
+          from users_temp users
+          inner join comm on users.id = comm.user_id
+          group by users.id""".as(UserCommentsStatsParser.Parse  *)
+
+      userCommentStats
+
+    }
+  }
+
 
   def getCommentsPerArticle(consultationId:Long):List[Article] = {
     DB.withConnection { implicit c =>
@@ -162,23 +219,28 @@ class CommentsRepository {
 
     DB.withConnection { implicit c =>
       //one way to do it
-      val tagsWithComments: List[(AnnotationTags, String, Int)] = SQL"""
+      val tagsWithComments: List[(AnnotationTags, String,Int, Int)] = SQL"""
                              with comm as (
                                             select c.*
                                             from comments c inner join public.articles a on a.id = c.article_id
                                             inner join public.consultation con on con.id = a.consultation_id
-                                            where a.consultation_id = 3594
+                                            where a.consultation_id = $consultation_id
                                           )
-                                        select articles.title as article_title, ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
+                                        select articles.title as article_title,
+                                              articles.id as article_id,
+                                              ann_comm.annotation_tag_id as id,
+                                              annotation_tag.description,
+                                              annotation_tag.type_id,
+                                              count(ann_comm.annotation_tag_id) as comments_num
                                         from annotation_comment ann_comm
                                         inner join comm on ann_comm.public_comment_id = comm.id
                                         inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                                         inner join articles on articles.id = comm.article_id
                                         group by ann_comm.annotation_tag_id,annotation_tag.id, articles.id
-                            """.as((AnnotationTypesParser.Parse ~ SqlParser.str("article_title") ~ SqlParser.int("comments_num") map (flatten)) *)
+                            """.as((AnnotationTypesParser.Parse ~ SqlParser.str("article_title") ~ SqlParser.int("article_id") ~ SqlParser.int("comments_num") map (flatten)) *)
 
       tagsWithComments.map(tuple => {
-        new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3)
+        new AnnotationTagPerArticleWithComments(tuple._1, tuple._2, tuple._3,tuple._4)
       })
 
       //    //second wait

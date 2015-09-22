@@ -151,7 +151,7 @@
                             "κλικ εδώ για να τα δείτε όλα"
                         )
                     ),
-                    React.createElement(CommentList, { consultationEndDate: this.props.consultationEndDate, data: this.state.comments }),
+                    React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate, data: this.state.comments, parent: this.props.parent }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -185,14 +185,13 @@
             return React.createElement("div", { className: "commentForm" });
         }
     });
-    var CommentList = React.createClass({
+    window.scify.CommentList = React.createClass({
         displayName: "CommentList",
 
         render: function render() {
-
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(Comment, { consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
+                return React.createElement(scify.Comment, { parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
 
             return React.createElement(
@@ -202,7 +201,7 @@
             );
         }
     });
-    var Comment = React.createClass({
+    window.scify.Comment = React.createClass({
         displayName: "Comment",
 
         getInitialState: function getInitialState() {
@@ -212,6 +211,136 @@
                 liked: this.props.data.loggedInUserRating //if not null it means has liked/disliked this comment
             };
         },
+        componentDidMount: function componentDidMount() {
+            $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
+        },
+        render: function render() {
+            if (this.props.parent == "consultation") {
+                var commentFromDB = this.props.data;
+            } else {
+                var commentFromDB = this.props.data.comment;
+            }
+            var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
+                return React.createElement(
+                    "span",
+                    { className: "tag pr" },
+                    React.createElement(
+                        "span",
+                        null,
+                        tag.description
+                    )
+                );
+            });
+            var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
+                return React.createElement(
+                    "span",
+                    { className: "tag topic" },
+                    React.createElement(
+                        "span",
+                        null,
+                        "#" + tag.description
+                    )
+                );
+            });
+            var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Προβλήματα: ",
+                taggedProblems,
+                " "
+            ) : "";
+            var taggedTopicsContainer = commentFromDB.annotationTagTopics.length > 0 ? React.createElement(
+                "span",
+                null,
+                "Κατηγορία: ",
+                taggedTopics,
+                " "
+            ) : "";
+
+            //todo: enable reply functionality, now its hidden
+
+            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
+            var iconsClasses = classNames("icons", {
+                hide: commentFromDB.source.commentSource == 2 || commentFromDB.dateAdded < this.props.consultationEndDate
+            });
+
+            var options, avatarDiv, commenterName, commentBody, annotatedText;
+            if (this.props.parent == "consultation") {
+                options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                avatarDiv = React.createElement(
+                    "div",
+                    { className: "avatar" },
+                    React.createElement("img", { src: "/assets/images/profile_default.jpg" })
+                );
+                commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    this.props.data.fullName
+                );
+                commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Σχόλιο: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
+                );
+            } else if (this.props.parent == "reporter") {
+                options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Σχόλιο: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
+                );
+                annotatedText = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Τμήμα κειμένου: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
+                );
+            }
+            return React.createElement(
+                "div",
+                { className: "comment" },
+                avatarDiv,
+                React.createElement(
+                    "div",
+                    { className: "body" },
+                    commenterName,
+                    commentBody,
+                    annotatedText,
+                    React.createElement(
+                        "div",
+                        { className: "tags" },
+                        " ",
+                        taggedProblemsContainer,
+                        " ",
+                        taggedTopicsContainer
+                    )
+                ),
+                options,
+                React.createElement(
+                    "div",
+                    { className: iconsClasses },
+                    React.createElement(
+                        "a",
+                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
+                        React.createElement("img", { src: "/assets/images/closed.gif" })
+                    )
+                )
+            );
+        }
+    });
+
+    var DisplayForConsultation = React.createClass({
+        displayName: "DisplayForConsultation",
+
+        getInitialState: function getInitialState() {
+            return {
+                likeCounter: this.props.likeCounter,
+                dislikeCounter: this.props.dislikeCounter,
+                liked: this.props.loggedInUserRating //if not null it means has liked/disliked this comment
+            };
+        },
         postRateCommentAndRefresh: function postRateCommentAndRefresh() {
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
@@ -219,7 +348,7 @@
             $.ajax({
                 method: "POST",
                 url: "/comments/rate",
-                data: { comment_id: this.props.data.id, liked: instance.state.liked },
+                data: { comment_id: this.props.id, liked: instance.state.liked },
                 beforeSend: function beforeSend() {
                     instance.setState(instance.state);
                 },
@@ -268,131 +397,104 @@
             this.state.liked = newLikeStatus;
             this.postRateCommentAndRefresh();
         },
-        componentDidMount: function componentDidMount() {
-            $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
-        },
         render: function render() {
-            var date = moment(this.props.data.dateAdded).format("llll");
-            var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
-                return React.createElement(
-                    "span",
-                    { className: "tag pr" },
-                    React.createElement(
-                        "span",
-                        null,
-                        tag.description
-                    )
-                );
-            });
-            var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
-                return React.createElement(
-                    "span",
-                    { className: "tag topic" },
-                    React.createElement(
-                        "span",
-                        null,
-                        "#" + tag.description
-                    )
-                );
-            });
-            var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ? React.createElement(
-                "span",
-                null,
-                "Προβλήματα: ",
-                taggedProblems,
-                " "
-            ) : "";
-            var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ? React.createElement(
-                "span",
-                null,
-                "Κατηγορία: ",
-                taggedTopics,
-                " "
-            ) : "";
-
-            //todo: enable reply functionality, now its hidden
             var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
-            //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
-            var iconsClasses = classNames("icons", { hide: this.props.data.source.commentSource == 2 || this.props.data.dateAdded < this.props.consultationEndDate
-            });
+            var date = moment(this.props.dateAdded).format("llll");
             return React.createElement(
                 "div",
-                { className: "comment" },
+                { className: "options" },
+                React.createElement(
+                    "a",
+                    { className: agreeClasses, onClick: this.handleLikeComment },
+                    "Συμφωνώ",
+                    React.createElement("i", { className: "fa fa-thumbs-o-up" })
+                ),
+                React.createElement(
+                    "span",
+                    { className: "c" },
+                    " (",
+                    this.state.likeCounter,
+                    ")"
+                ),
+                React.createElement(
+                    "a",
+                    { className: disagreeClasses, onClick: this.handleDislikeComment },
+                    "Διαφωνώ",
+                    React.createElement("i", { className: "fa fa-thumbs-o-down" })
+                ),
+                " ",
+                React.createElement(
+                    "span",
+                    { className: "c" },
+                    " (",
+                    this.state.dislikeCounter,
+                    ")"
+                ),
+                React.createElement(
+                    "a",
+                    { className: replyClasses, href: "#" },
+                    "Απάντηση ",
+                    React.createElement("i", { className: "fa fa-reply" })
+                ),
+                React.createElement(
+                    "span",
+                    { className: "date" },
+                    date
+                )
+            );
+        }
+    });
+
+    var DisplayForReporter = React.createClass({
+        displayName: "DisplayForReporter",
+
+        getInitialState: function getInitialState() {
+            return {
+                likeCounter: this.props.likeCounter,
+                dislikeCounter: this.props.dislikeCounter,
+                liked: this.props.loggedInUserRating //if not null it means has liked/disliked this comment
+            };
+        },
+        render: function render() {
+            var agreeClasses = classNames("agree", { active: this.state.liked === true });
+            var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
+            var date = moment(this.props.dateAdded).format("llll");
+            return React.createElement(
+                "div",
+                { className: "options" },
                 React.createElement(
                     "div",
-                    { className: "avatar" },
-                    React.createElement("img", { src: "/assets/images/profile_default.jpg" })
+                    { className: agreeClasses, onClick: this.handleLikeComment },
+                    "Χρήστες που συμφωνούν",
+                    React.createElement("i", { className: "fa fa-thumbs-o-up" })
+                ),
+                React.createElement(
+                    "span",
+                    { className: "c" },
+                    " (",
+                    this.state.likeCounter,
+                    ")"
                 ),
                 React.createElement(
                     "div",
-                    { className: "body" },
-                    React.createElement(
-                        "span",
-                        { className: "commentAuthor" },
-                        this.props.data.fullName
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } }),
-                    React.createElement(
-                        "div",
-                        { className: "tags" },
-                        " ",
-                        taggedProblemsContainer,
-                        " ",
-                        taggedTopicsContainer
-                    )
+                    { className: disagreeClasses },
+                    "Χρήστες που διαφωνούν",
+                    React.createElement("i", { className: "fa fa-thumbs-o-down" })
+                ),
+                " ",
+                React.createElement(
+                    "span",
+                    { className: "c" },
+                    " (",
+                    this.state.dislikeCounter,
+                    ")"
                 ),
                 React.createElement(
-                    "div",
-                    { className: "options" },
-                    React.createElement(
-                        "a",
-                        { className: agreeClasses, onClick: this.handleLikeComment },
-                        "Συμφωνώ",
-                        React.createElement("i", { className: "fa fa-thumbs-o-up" })
-                    ),
-                    React.createElement(
-                        "span",
-                        { className: "c" },
-                        " (",
-                        this.state.likeCounter,
-                        ")"
-                    ),
-                    React.createElement(
-                        "a",
-                        { className: disagreeClasses, onClick: this.handleDislikeComment },
-                        "Διαφωνώ",
-                        React.createElement("i", { className: "fa fa-thumbs-o-down" })
-                    ),
-                    " ",
-                    React.createElement(
-                        "span",
-                        { className: "c" },
-                        " (",
-                        this.state.dislikeCounter,
-                        ")"
-                    ),
-                    React.createElement(
-                        "a",
-                        { className: replyClasses, href: "#" },
-                        "Απάντηση ",
-                        React.createElement("i", { className: "fa fa-reply" })
-                    ),
-                    React.createElement(
-                        "span",
-                        { className: "date" },
-                        date
-                    )
-                ),
-                React.createElement(
-                    "div",
-                    { className: iconsClasses },
-                    React.createElement(
-                        "a",
-                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
-                        React.createElement("img", { src: "/assets/images/closed.gif" })
-                    )
+                    "span",
+                    { className: "date" },
+                    date
                 )
             );
         }

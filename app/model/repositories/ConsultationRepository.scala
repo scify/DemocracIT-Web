@@ -1,17 +1,16 @@
 package model.repositories
 
-import java.util.Date
-import anorm._
-import anorm.SqlParser._
+import _root_.anorm._
+import _root_.anorm.SqlParser._
 import model.dtos._
-import repositories.anorm._
-import org.joda.time.DateTime
+import model.repositories.anorm._
 import play.api.db.DB
 import play.api.Play.current
-import repositories.anorm.{ArticleParser, ConsultationParser}
+import model.repositories.anorm.{ArticleParser, ConsultationParser}
 
 
 class ConsultationRepository {
+
 
   def getConsultationStats():List[ConsultationStats]  = {
     DB.withConnection { implicit c =>
@@ -90,7 +89,9 @@ class ConsultationRepository {
   def getRelevantLaws (consultationId: Long):Seq[RelevantLaws] = {
     DB.withConnection { implicit c =>
       val results = SQL"""
-        select c.* from public.article_entities c where c.consultation_id = $consultationId
+        select c.*, ar.title from public.article_entities c
+            inner join articles ar on c.article_id = ar.id
+            where c.consultation_id =  $consultationId
         """.as(RelevantLawsParser.Parse *)
       results
     }

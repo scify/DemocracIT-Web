@@ -7,3 +7,53 @@
   color: #428bca;
   float: left;
 }
+
+/*.chart div {
+  font: 12px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+  margin-bottom: 3px;
+}
+*/
+
+.chart {
+  margin: 20px;
+}
+
+.stats {
+  margin-top: 10px;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.notClicked {
+  display: none;
+}
+
+
+.commentBox .comment .options div{
+  float: left;
+  margin-right: 5px;
+}
+
+.commentBox .comment .options span{
+  float: left;
+}
+
+
+.commentBox .comment .options {
+  margin-top: 10px;
+  height: 20px;
+}

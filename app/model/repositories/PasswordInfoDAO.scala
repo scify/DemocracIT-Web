@@ -21,6 +21,8 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    * @return The retrieved auth info or None if no auth info could be retrieved for the given login info.
    */
   def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
+
+    //for this user login info (facebook and email/phonenumber/username of user), retrieve the linked password info
     Future.successful(data.get(loginInfo))
   }
 

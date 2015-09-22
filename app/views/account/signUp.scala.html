@@ -1,6 +1,8 @@
-@(signInForm: play.api.data.Form[forms.SignUpForm.Data])(implicit request: RequestHeader, messages: Messages)
+@(signInForm: play.api.data.Form[model.viewmodels.forms.SignUpForm.Data], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
 
 @import b3.inline.fieldConstructor
+@import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
+
 
 @js ={}
 @css = {}
@@ -31,4 +33,26 @@
             </div>
         }
     </fieldset>
+
+    <div class="col-md-6 col-md-offset-3">
+
+    @if(socialProviders.providers.nonEmpty) {
+        <div class="social-providers">
+            <p>@messages("or.use.social")</p>
+            <div>
+            @for(p <- socialProviders.providers if p.id != "clef") {
+                <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id" title="@messages(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" width="64px" height="64px" alt="@messages(p.id)"></a>
+            }
+            </div>
+            @defining(socialProviders.get[ClefProvider]) { clef =>
+                @if(clef.isDefined) {
+                    <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
+                }
+            }
+        </div>
+    }
+        <br><br>
+    </div>
+
+
 }

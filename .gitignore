@@ -83,4 +83,6 @@ server.pid
 /worksheet.sc
 
 
-
+.classpath_nb
+project/activator-sbt-eclipse-shim.sbt
+project/activator-sbt-idea-shim.sbt

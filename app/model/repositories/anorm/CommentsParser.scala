@@ -1,4 +1,4 @@
-package repositories.anorm
+package model.repositories.anorm
 
 import java.util.Date
 
@@ -7,19 +7,6 @@ import anorm._
 
 import model.dtos._
 
-object AnnotationTypesParser {
-
-  val Parse: RowParser[AnnotationTags] = {
-    get[Long]("id") ~
-    get[String]("description") ~
-    get[Int]("type_id") map
-    {
-      case id ~ description ~ type_id =>
-       AnnotationTags(id, description, type_id)
-
-    }
-  }
-}
 object CommentsParser{
 
   val Parse: RowParser[Comment] = {
