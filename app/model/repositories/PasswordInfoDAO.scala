@@ -4,7 +4,21 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import model.repositories.PasswordInfoDAO._
+import model.repositories.anorm.{DBPasswordInfoParser, UserParser}
+import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
+import java.util.UUID
+import com.mohiva.play.silhouette.api.LoginInfo
+import model.User
+import model.dtos.{DBPasswordInfo, DBLoginInfo}
+import model.repositories.anorm._
+import play.api.db.DB
+import scala.collection.mutable
+import scala.concurrent.Future
+import play.api.Play.current
+import _root_.anorm._
+import _root_.anorm.SqlParser._
+import play.api.db.DB
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -21,9 +35,7 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    * @return The retrieved auth info or None if no auth info could be retrieved for the given login info.
    */
   def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
-
-    //for this user login info (facebook and email/phonenumber/username of user), retrieve the linked password info
-    Future.successful(data.get(loginInfo))
+    Future.successful(findPassWordInfo(loginInfo))
   }
 
   /**
@@ -76,6 +88,20 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
   def remove(loginInfo: LoginInfo): Future[Unit] = {
     data -= loginInfo
     Future.successful(())
+  }
+
+  private def findPassWordInfo(loginInfo:LoginInfo):Option[PasswordInfo] = {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+          select * from account.passwordinfo p
+            inner join account.logininfo li on p.logininfoid = p.id
+          where
+            li.providerid = ${loginInfo.providerID} and
+            li.providerkey = ${loginInfo.providerKey}
+        """.as(PasswordInfoParser.Parse *).headOption
+    }
+
   }
 }
 
