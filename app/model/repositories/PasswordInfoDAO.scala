@@ -143,7 +143,7 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
     DB.withConnection { implicit c =>
       SQL"""
           select * from account.passwordinfo p
-            inner join account.logininfo li on p.logininfoid = p.id
+            inner join account.logininfo li on p.logininfoid = li.id
           where
             li.providerid = ${loginInfo.providerID} and
             li.providerkey = ${loginInfo.providerKey}
