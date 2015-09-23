@@ -50,7 +50,7 @@ class UserDAOImpl extends UserDAO {
 
   private def SaveUser(user:User, roleId:Int): User ={
 
-    var dBLoginInfo = this.findLoginInfo(user.loginInfo) //get from database
+    var dBLoginInfo = AccountRepository.findLoginInfo(user.loginInfo) //get from database
 
     if (!dBLoginInfo.isDefined) {
       //login info is like facebook with user's email address, twitter with user

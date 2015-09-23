@@ -3,8 +3,7 @@ package model.repositories
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
-import model.repositories.PasswordInfoDAO._
-import model.repositories.anorm.{DBPasswordInfoParser, UserParser}
+import model.repositories.anorm.{UserParser}
 import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
 import java.util.UUID
@@ -49,8 +48,8 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    */
   def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
     Future.successful {
-      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
-      this.savePasswordInfo(authInfo,loginInfo.get.id)
+      val dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.savePasswordInfo(authInfo,dbloginInfo.get.id)
     }
   }
 
@@ -63,8 +62,8 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    */
   def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
     Future.successful {
-      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
-      this.updatePasswordInfo(authInfo,loginInfo.get.id)
+      val dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.updatePasswordInfo(authInfo,dbloginInfo.get.id)
     }
   }
   /**
@@ -75,8 +74,8 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    */
   def remove(loginInfo: LoginInfo): Future[Unit] = {
     Future.successful {
-      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
-      this.deletePassWordInfo(loginInfo.get.id)
+      val dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.deletePassWordInfo(dbloginInfo.get.id)
     }
   }
 
