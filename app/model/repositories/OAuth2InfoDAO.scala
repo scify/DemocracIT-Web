@@ -4,7 +4,6 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
-import model.repositories.OAuth2InfoDAO._
 import model.repositories.anorm.{OAuth2InfoParser, PasswordInfoParser}
 import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
@@ -96,7 +95,7 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
   }
 
 
-  def removeAuth2Info(loginInfoId:Long):Unit= {
+  private def removeAuth2Info(loginInfoId:Long):Unit= {
 
     DB.withConnection { implicit c =>
       SQL"""

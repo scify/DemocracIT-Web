@@ -2,9 +2,25 @@ package model.repositories
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
-import com.mohiva.play.silhouette.impl.providers.OAuth1Info
-import model.repositories.OAuth1InfoDAO._
+import com.mohiva.play.silhouette.impl.providers.{OAuth2Info, OAuth1Info}
+import model.repositories.anorm.{OAuth1InfoParser, OAuth2InfoParser}
+import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
+import model.repositories.anorm.{OAuth2InfoParser, PasswordInfoParser}
+import play.api.db.DB
+import play.api.libs.concurrent.Execution.Implicits._
+import model.dtos.{DBPasswordInfo, DBLoginInfo}
+import model.repositories.anorm._
+import play.api.db.DB
+import scala.collection.mutable
+import scala.concurrent.Future
+import play.api.Play.current
+import _root_.anorm._
+import _root_.anorm.SqlParser._
+import play.api.db.DB
+import scala.collection.mutable
+import scala.concurrent.Future
+
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -23,7 +39,7 @@ class OAuth1InfoDAO extends DelegableAuthInfoDAO[OAuth1Info] {
    * @return The retrieved auth info or None if no auth info could be retrieved for the given login info.
    */
   def find(loginInfo: LoginInfo): Future[Option[OAuth1Info]] = {
-    Future.successful(data.get(loginInfo))
+    Future.successful(this.findAuth1Info(loginInfo))
   }
 
   /**
@@ -34,8 +50,11 @@ class OAuth1InfoDAO extends DelegableAuthInfoDAO[OAuth1Info] {
    * @return The added auth info.
    */
   def add(loginInfo: LoginInfo, authInfo: OAuth1Info): Future[OAuth1Info] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+
+    Future.successful{
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.addAuth1Info(authInfo,dblogininfo.get.id)
+    }
   }
 
   /**
@@ -46,8 +65,23 @@ class OAuth1InfoDAO extends DelegableAuthInfoDAO[OAuth1Info] {
    * @return The updated auth info.
    */
   def update(loginInfo: LoginInfo, authInfo: OAuth1Info): Future[OAuth1Info] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+    Future.successful {
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.updateAuth1Info(authInfo, dblogininfo.get.id)
+    }
+  }
+
+  /**
+   * Removes the auth info for the given login info.
+   *
+   * @param loginInfo The login info for which the auth info should be removed.
+   * @return A future to wait for the process to be completed.
+   */
+  def remove(loginInfo: LoginInfo): Future[Unit] = {
+    Future.successful {
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.removeAuth1Info(dblogininfo.get.id)
+    }
   }
 
   /**
@@ -67,24 +101,63 @@ class OAuth1InfoDAO extends DelegableAuthInfoDAO[OAuth1Info] {
     }
   }
 
-  /**
-   * Removes the auth info for the given login info.
-   *
-   * @param loginInfo The login info for which the auth info should be removed.
-   * @return A future to wait for the process to be completed.
-   */
-  def remove(loginInfo: LoginInfo): Future[Unit] = {
-    data -= loginInfo
-    Future.successful(())
-  }
-}
 
-/**
- * The companion object.
- */
-object OAuth1InfoDAO {
-  /**
-   * The data store for the OAuth1 info.
-   */
-  var data: mutable.HashMap[LoginInfo, OAuth1Info] = mutable.HashMap()
+  private def removeAuth1Info(loginInfoId:Long):Unit= {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+        DELETE FROM
+          account.oauth1info
+        WHERE
+         logininfoid = $loginInfoId
+        """.execute()
+    }
+  }
+
+  private def updateAuth1Info(authInfo: OAuth1Info, loginInfoId:Long):OAuth1Info = {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+        UPDATE
+          account.oauth1info
+        SET
+          token = ${authInfo.token},
+          secret = ${authInfo.secret}
+        WHERE
+         logininfoid = $loginInfoId
+        """.execute()
+
+      authInfo
+    }
+
+
+  }
+
+  private def addAuth1Info(authInfo: OAuth1Info, loginInfoId:Long):OAuth1Info = {
+    DB.withConnection { implicit c =>
+      SQL"""
+        INSERT INTO account.oauth1info
+            (token, secret, logininfoid)
+        VALUES
+            ( ${authInfo.token}, ${authInfo.secret}, $loginInfoId )
+        """.execute()
+
+      authInfo
+    }
+  }
+
+  private def findAuth1Info(loginInfo:LoginInfo):Option[OAuth1Info] = {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+          select a.* from account.auth1info a
+            inner join account.logininfo li on a.logininfoid = li.id
+          where
+            li.providerid = ${loginInfo.providerID} and
+            li.providerkey = ${loginInfo.providerKey}
+        """.as(OAuth1InfoParser.Parse *).headOption
+    }
+  }
+
+
 }
