@@ -28,6 +28,8 @@ import scala.concurrent.Future
  */
 class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
 
+
+
   /**
    * Finds the auth info which is linked with the specified login info.
    *
@@ -46,8 +48,10 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    * @return The added auth info.
    */
   def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+    Future.successful {
+      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.savePasswordInfo(authInfo,loginInfo.get.id)
+    }
   }
 
   /**
@@ -58,8 +62,22 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    * @return The updated auth info.
    */
   def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+    Future.successful {
+      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.updatePasswordInfo(authInfo,loginInfo.get.id)
+    }
+  }
+  /**
+   * Removes the auth info for the given login info.
+   *
+   * @param loginInfo The login info for which the auth info should be removed.
+   * @return A future to wait for the process to be completed.
+   */
+  def remove(loginInfo: LoginInfo): Future[Unit] = {
+    Future.successful {
+      val loginInfo = AccountRepository.findLoginInfo(loginInfo)
+      this.deletePassWordInfo(loginInfo.get.id)
+    }
   }
 
   /**
@@ -79,15 +97,46 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
     }
   }
 
-  /**
-   * Removes the auth info for the given login info.
-   *
-   * @param loginInfo The login info for which the auth info should be removed.
-   * @return A future to wait for the process to be completed.
-   */
-  def remove(loginInfo: LoginInfo): Future[Unit] = {
-    data -= loginInfo
-    Future.successful(())
+  def deletePassWordInfo(id: Long): Unit =
+  {
+    DB.withConnection { implicit c =>
+      SQL"""
+                    DELETE
+                      account.passwordinfo
+                    WHERE
+                        logininfoid = $id
+            """.execute()
+    }
+  }
+
+  private def updatePasswordInfo(authInfo: PasswordInfo, id: Long): PasswordInfo = {
+    DB.withConnection { implicit c =>
+           SQL"""
+              UPDATE
+                account.passwordinfo
+              SET
+                hasher = ${authInfo.hasher},
+                "password" = ${authInfo.password},
+                salt = ${authInfo.salt}
+              WHERE
+                  logininfoid = $id
+            """.execute()
+
+      authInfo
+    }
+  }
+
+  private def savePasswordInfo(passwordInfo:PasswordInfo, loginInfoId:Long): PasswordInfo = {
+    DB.withConnection { implicit c =>
+      SQL"""
+             INSERT INTO account.passwordinfo
+              (hasher, "password", salt, logininfoid)
+              VALUES
+              (${passwordInfo.hasher}, ${passwordInfo.password}, ${passwordInfo.salt}, $loginInfoId)
+            """.execute()
+
+      passwordInfo
+    }
   }
 
   private def findPassWordInfo(loginInfo:LoginInfo):Option[PasswordInfo] = {
@@ -103,15 +152,4 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
     }
 
   }
-}
-
-/**
- * The companion object.
- */
-object PasswordInfoDAO {
-
-  /**
-   * The data store for the password info.
-   */
-  var data: mutable.HashMap[LoginInfo, PasswordInfo] = mutable.HashMap()
 }

@@ -59,8 +59,6 @@ class UserDAOImpl extends UserDAO {
     this.saveUserAndUpdateLoginInfo(user,dBLoginInfo.get,roleId)
   }
 
-
-
   private def findUserById(userId: UUID):Option[User] = {
     DB.withConnection { implicit c =>
       //get from the login history the last recorded logininfo (facebook,email address) that was entered when user was logged in. Now retrieve the user with the login info
@@ -92,19 +90,6 @@ class UserDAOImpl extends UserDAO {
         """.as(UserParser.Parse  *).headOption
     }
   }
-
-  private def findLoginInfo(loginInfo:LoginInfo):Option[DBLoginInfo] = {
-      DB.withConnection { implicit c =>
-
-        SQL"""
-           select *
-            from account.logininfo
-            where providerid = ${loginInfo.providerID} and
-                providerkey = ${loginInfo.providerKey}
-          """.as(DBLoginInfoParser.Parse  *).headOption
-
-      }
-    }
 
   private def saveLoginInfo(loginInfo:LoginInfo):DBLoginInfo = {
 
@@ -141,4 +126,6 @@ class UserDAOImpl extends UserDAO {
     }
   }
 }
+
+
 
