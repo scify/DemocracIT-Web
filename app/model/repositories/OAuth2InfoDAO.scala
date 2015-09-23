@@ -1,11 +1,22 @@
 package model.repositories
 
 import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import model.repositories.OAuth2InfoDAO._
+import model.repositories.anorm.{OAuth2InfoParser, PasswordInfoParser}
+import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
-
+import model.dtos.{DBPasswordInfo, DBLoginInfo}
+import model.repositories.anorm._
+import play.api.db.DB
+import scala.collection.mutable
+import scala.concurrent.Future
+import play.api.Play.current
+import _root_.anorm._
+import _root_.anorm.SqlParser._
+import play.api.db.DB
 import scala.collection.mutable
 import scala.concurrent.Future
 
@@ -23,7 +34,7 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
    * @return The retrieved auth info or None if no auth info could be retrieved for the given login info.
    */
   def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = {
-    Future.successful(data.get(loginInfo))
+    Future.successful(findAuth2Info(loginInfo))
   }
 
   /**
@@ -34,8 +45,10 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
    * @return The added auth info.
    */
   def add(loginInfo: LoginInfo, authInfo: OAuth2Info): Future[OAuth2Info] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+    Future.successful{
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.addAuth2Info(authInfo,dblogininfo.get.id)
+    }
   }
 
   /**
@@ -46,8 +59,23 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
    * @return The updated auth info.
    */
   def update(loginInfo: LoginInfo, authInfo: OAuth2Info): Future[OAuth2Info] = {
-    data += (loginInfo -> authInfo)
-    Future.successful(authInfo)
+    Future.successful{
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.updateAuth2Info(authInfo,dblogininfo.get.id)
+    }
+  }
+
+  /**
+   * Removes the auth info for the given login info.
+   *
+   * @param loginInfo The login info for which the auth info should be removed.
+   * @return A future to wait for the process to be completed.
+   */
+  def remove(loginInfo: LoginInfo): Future[Unit] = {
+    Future.successful{
+      val dblogininfo = AccountRepository.findLoginInfo(loginInfo)
+      this.removeAuth2Info(dblogininfo.get.id)
+    }
   }
 
   /**
@@ -67,25 +95,63 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
     }
   }
 
-  /**
-   * Removes the auth info for the given login info.
-   *
-   * @param loginInfo The login info for which the auth info should be removed.
-   * @return A future to wait for the process to be completed.
-   */
-  def remove(loginInfo: LoginInfo): Future[Unit] = {
-    data -= loginInfo
-    Future.successful(())
+
+  def removeAuth2Info(loginInfoId:Long):Unit= {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+        DELETE FROM
+          account.oauth2info
+        WHERE
+         logininfoid = $loginInfoId
+        """.execute()
+    }
   }
-}
 
-/**
- * The companion object.
- */
-object OAuth2InfoDAO {
+  private def updateAuth2Info(authInfo: OAuth2Info, loginInfoId:Long):OAuth2Info = {
 
-  /**
-   * The data store for the OAuth2 info.
-   */
-  var data: mutable.HashMap[LoginInfo, OAuth2Info] = mutable.HashMap()
+    DB.withConnection { implicit c =>
+      SQL"""
+          UPDATE
+              account.oauth2info
+              SET
+              accesstoken = ${authInfo.accessToken},
+              tokentype = ${authInfo.tokenType},
+              expiresin = ${authInfo.expiresIn},
+              refreshtoken = ${authInfo.refreshToken}
+              WHERE
+            logininfoid = $loginInfoId
+        """.execute()
+
+      authInfo
+    }
+
+
+  }
+
+  private def addAuth2Info(authInfo: OAuth2Info, loginInfoId:Long):OAuth2Info = {
+    DB.withConnection { implicit c =>
+      SQL"""
+         INSERT INTO account.oauth2info
+          (accesstoken, tokentype, expiresin, refreshtoken, logininfoid)
+         VALUES
+          (${authInfo.accessToken}, ${authInfo.tokenType}, ${authInfo.expiresIn}, ${authInfo.refreshToken}, $loginInfoId)
+        """.execute()
+
+      authInfo
+    }
+  }
+
+  private def findAuth2Info(loginInfo:LoginInfo):Option[OAuth2Info] = {
+
+    DB.withConnection { implicit c =>
+      SQL"""
+          select a.* from account.auth2info a
+            inner join account.logininfo li on a.logininfoid = li.id
+          where
+            li.providerid = ${loginInfo.providerID} and
+            li.providerkey = ${loginInfo.providerKey}
+        """.as(OAuth2InfoParser.Parse *).headOption
+    }
+  }
 }

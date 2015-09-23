@@ -149,6 +149,5 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
             li.providerkey = ${loginInfo.providerKey}
         """.as(PasswordInfoParser.Parse *).headOption
     }
-
   }
 }
