@@ -4,24 +4,16 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.{OAuth2Info, OAuth1Info}
 import model.repositories.anorm.{OAuth1InfoParser, OAuth2InfoParser}
-import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
 import model.repositories.anorm.{OAuth2InfoParser, PasswordInfoParser}
 import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
 import model.dtos.{DBPasswordInfo, DBLoginInfo}
 import model.repositories.anorm._
-import play.api.db.DB
-import scala.collection.mutable
-import scala.concurrent.Future
 import play.api.Play.current
 import _root_.anorm._
 import _root_.anorm.SqlParser._
 import play.api.db.DB
-import scala.collection.mutable
-import scala.concurrent.Future
-
-
 import scala.collection.mutable
 import scala.concurrent.Future
 
