@@ -126,7 +126,6 @@ class OpenIDInfoDAO extends DelegableAuthInfoDAO[OpenIDInfo] {
     }
   }
 
-
   private def insertIdAttributesStatement(openIdInfoId:String, attributes: Map[String,String]) =
   {
     val values = new StringBuilder()

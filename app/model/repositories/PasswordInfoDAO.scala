@@ -96,7 +96,7 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
     }
   }
 
-  def deletePassWordInfo(id: Long): Unit =
+  private def deletePassWordInfo(id: Long): Unit =
   {
     DB.withConnection { implicit c =>
       SQL"""
