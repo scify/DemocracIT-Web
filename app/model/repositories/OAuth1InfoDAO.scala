@@ -142,7 +142,7 @@ class OAuth1InfoDAO extends DelegableAuthInfoDAO[OAuth1Info] {
 
     DB.withConnection { implicit c =>
       SQL"""
-          select a.* from account.auth1info a
+          select a.* from account.oauth1info a
             inner join account.logininfo li on a.logininfoid = li.id
           where
             li.providerid = ${loginInfo.providerID} and
