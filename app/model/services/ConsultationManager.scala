@@ -9,22 +9,15 @@ import model.viewmodels._
 import model.dtos.PlatformStats
 import org.scify.democracit.solr.{DitSorlQuery}
 
-//case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
-//{
-//  val totalResults = consultations.length
-//  val activeConsultations = consultations.filter(_.a)
-//  def calculateStats = {
-//    //do stuff with the consultations
-//  }
-//}
-
 class ConsultationManager {
 
   private val commentsPageSize = 50
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
-    val q= new DitSorlQuery()
+    val url = play.api.Play.current.configuration.getString("application.solrBaseUrl")
+
+    val q= new DitSorlQuery(url.get)
 
     val ministryIds = new util.HashSet[java.lang.Long]()
     if (searchRequest.ministryId>0)
@@ -33,14 +26,26 @@ class ConsultationManager {
     val res = q.queryConsultations(searchRequest.query,false,ministryIds)
     val i =res.iterator()
 
+    var consultations = List[Consultation]()
     while(i.hasNext()) {
-      val each = i.next()
-      System.out.println(each + " : " + each.getTitle());
-    }
+      val c= i.next()
+      val organization = c.getOrganizationId()
 
-    //todo: define the view model and drop the List[Consultation]. What should we display to the user? We probably need total number found of consultations and comments.
-    val repository = new ConsultationRepository()
-    repository.search(searchRequest)
+      consultations = Consultation(c.getId(),
+        c.getStartDate(),
+        c.getEndDate(),
+        c.getTitle(),c.getShortDescription,
+        Organization(organization.getId().toInt,organization.getTitle()),
+        1,
+        Some(c.getReportText()),
+        Some(c.getReportUrl()),
+        Some(c.getCompletedText()),
+        c.getNumOfArticles(),
+        c.getConsultationUrl()) :: consultations
+
+
+    }
+    consultations
   }
 
   def get(consultationId: Long, user:Option[User]): ConsultationViewModel= {
