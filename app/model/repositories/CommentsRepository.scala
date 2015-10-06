@@ -1,18 +1,13 @@
 package model.repositories
 
-import _root_.anorm.SqlParser
+import java.util.UUID
+
 import _root_.anorm.SqlParser._
-import java.util.{UUID, Date}
-import _root_.anorm._
+import _root_.anorm.{SqlParser, _}
 import model.dtos._
-import play.api.db.DB
-import anorm.AnnotationTagWithCommentsParser
-import anorm.AnnotationTypesParser
-import anorm.CommentsParser
-import anorm.DiscussionThreadWithCommentsCountParser
-import anorm.UserCommentsStatsParser
+import model.repositories.anorm.{AnnotationTagWithCommentsParser, AnnotationTypesParser, ArticleParser, CommentsParser, DiscussionThreadWithCommentsCountParser, UserCommentsStatsParser}
 import play.api.Play.current
-import anorm.ArticleParser
+import play.api.db.DB
 
 
 class CommentsRepository {
@@ -136,6 +131,37 @@ class CommentsRepository {
           c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
           c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
       }
+      comments
+    }
+  }
+
+  def getCommentsForArticle(articleId: Long):List[Comment] = {
+    DB.withConnection { implicit c =>
+
+      val comments: List[Comment] =
+        SQL"""with ratingCounter as
+                      (
+                       select cr.comment_id,
+                      	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                      	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                       from comment_rating cr
+                           full outer join comments c on cr.comment_id  = c.id
+                        where c.article_id = $articleId
+                     group by cr.comment_id
+                    )
+                      select c.*, o.fullname,
+                             counter.likes,
+                             counter.dislikes, false as userrating
+                       from public.comments c
+                         full outer join public.comment_opengov o on o.id =c.id
+                         full outer join ratingCounter counter on counter.comment_id = c.id
+                         where c.article_id = $articleId
+
+                         order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
+
+      // group result List [Long,(tuple)]
+      //
+      //                           the tuple consists of List(Long,AnnotationTags))
       comments
     }
   }
@@ -349,8 +375,6 @@ class CommentsRepository {
 
   def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
     DB.withTransaction() { implicit c =>
-
-      import utils.ImplicitAnormHelperMethods._
 
 
       val commentId = SQL"""

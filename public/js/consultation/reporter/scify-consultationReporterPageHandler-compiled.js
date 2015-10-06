@@ -47,6 +47,7 @@ scify.ConsultationReporterPageHandler = function (consultationid, userId, fullNa
         this.annotationProblemsPerArticle.push([annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':')) + ': ' + annotationProblemsPerArticle[i].annotationTag.description, annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>']);
     }
 
+    console.log(this.annotationProblemsPerArticle);
     getUserById = function (userId) {
         for (var i = 0; i < commenters.length; i++) {
             if (userId == commenters[i].user_id) {
@@ -72,6 +73,41 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
                 $('.relevantLaw #' + $(this).context.id + ' .childLaws').hide('fast');
             }
         });
+    },
+
+    /*getCommentsByArticleId = function(articleId){
+    var instance = this;
+     var promise = $.ajax({
+        method: "GET",
+        url: "/comments/retrieve/forarticle",
+        cache:false,
+        data:{
+            articleId :articleId
+        },
+        beforeSend: function(){
+        },
+        success : function(data){
+            console.log(data)
+            createListOfComments(data);
+        },
+        error: function(x,z,y){
+            console.log(x)
+        }
+    });
+     return promise;
+    },*/
+    loadListOfComments = function loadListOfComments(articleId) {
+        console.log('article id: ' + articleId);
+        window.CommentsPerArticleComponent.getCommentsByArticleId(articleId);
+    },
+        createListOfComments = function createListOfComments() {
+        var domElementToAddComponent = document.getElementById('articleCommentsTemp');
+        //var commentListProperties = {
+        //    articleId          : articleId,
+        //    commentsCount      : numOfComments
+        //};
+        window.CommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementToAddComponent);
+        console.log('hi');
     },
         createChart = function createChart(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType) {
         function drawMultSeries() {
@@ -121,39 +157,18 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
             }
 
             chart.draw(data, options);
-            // When the table is selected, update the orgchart.
+            // When a row is selected, the listener is triggered.
             google.visualization.events.addListener(chart, 'select', function () {
                 var selection = chart.getSelection();
-                console.log(dataForChart[selection[0].row]);
+                var articleId = dataForChart[selection[0].row][3];
+                var numOfComments = dataForChart[selection[0].row][4];
+                loadListOfComments(articleId);
             });
         }
 
         google.setOnLoadCallback(drawMultSeries);
     },
-
-    /*createChartD3 = function(annotationsForConsultation, chartClass) {
-        var width = document.getElementById("statsDiv").offsetWidth;
-        var data = annotationsForConsultation;
-        var linearColorScale = d3.scale.linear()
-            .domain([0, data.length])
-            .range(["#A2C0DA", "#2A4E6C"])
-        var x = d3.scale.linear()
-            .domain([0, d3.max(data, function(d) { return d.num})])
-            .range([0, width])
-        var y = d3.scale.linear()
-            .domain([0, data[data.length -1]])
-            .range([0, 450]);
-        d3.select("." + chartClass)
-            .selectAll("div")
-            .data(data)
-            .enter()
-                .append("div")
-                .style("width", function(d) { return x(d.num)  + "px"; })
-                .style("background-color", function(d,i) { return linearColorScale(i)})
-                .text(function(d) { return d.annotation.description + ' | ' + d.num + ' σχόλια'; });
-    },*/
-
-    createUserBox = function createUserBox(instance) {
+        createUserBox = function createUserBox(instance) {
 
         scify.userBoxes = {};
         $('.statsForUser').each(function (index, userDiv) {
@@ -180,6 +195,7 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
         createChart(this.annotationsPerArticle, 'annotationsPerArticleChart', 'Θέματα ανά άρθρο', 'Αριθμός σχολίων', '', 'Θέμα', 'Σχόλια', '75%', 'bar');
         createChart(this.annotationProblemsPerArticle, 'annotationProblemsPerArticleChart', 'Προβλήματα ανά άρθρο', 'Αριθμός σχολίων', '', 'Πρόβλημα', 'Σχόλια', '75%', 'bar');
         createUserBox(this);
+        createListOfComments();
     };
 
     return {

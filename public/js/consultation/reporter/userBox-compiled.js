@@ -100,6 +100,30 @@
             }
         }
     });
+
+    scify.CommentsForArticle = React.createClass({
+        displayName: "CommentsForArticle",
+
+        getInitialState: function getInitialState() {
+            return {
+                display: this.props.display
+            };
+        },
+        render: function render() {
+            if (this.props.display) {
+                if (this.props.busy) {
+                    return React.createElement(
+                        "div",
+                        null,
+                        React.createElement(scify.ReactLoader, { display: this.props.busy })
+                    );
+                }
+                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporter" });
+            } else {
+                return React.createElement("div", null);
+            }
+        }
+    });
 })();
 
 //# sourceMappingURL=userBox-compiled.js.map

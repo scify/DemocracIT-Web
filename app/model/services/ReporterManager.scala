@@ -41,5 +41,10 @@ class ReporterManager {
     comments
   }
 
-
+  def getCommentsByArticleId(articleId: Long): List[model.dtos.Comment] = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getCommentsForArticle(articleId)
+    comments
+  }
 }

@@ -190,6 +190,7 @@
 
         render: function render() {
             var instance = this;
+            console.log(this.props.data);
             var commentNodes = this.props.data.map(function (comment) {
                 return React.createElement(scify.Comment, { parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
