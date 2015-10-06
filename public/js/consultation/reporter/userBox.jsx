@@ -96,6 +96,32 @@
         }
     });
 
+    scify.CommentsForArticle = React.createClass({
+        getInitialState: function() {
+            return {
+                display: this.props.display
+            };
+        },
+        render: function() {
+            if(this.props.display) {
+                if (this.props.busy) {
+                    return (
+                        <div>
+                            <scify.ReactLoader display={this.props.busy}/>
+                        </div>
+                    );
+                }
+                return (
+                    <scify.CommentList data={this.props.data} parent="reporter"/>
+                );
+            } else {
+                return (
+                    <div></div>
+                );
+            }
+        }
+    });
+
 })()
 
 

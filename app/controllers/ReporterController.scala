@@ -30,4 +30,10 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
     Ok(Json.toJson(comments))
   }
 
+  def getCommentsByArticleId(articleId: Long) = UserAwareAction { implicit request =>
+    val comments = reporterManager.getCommentsByArticleId(articleId)
+    import utils.ImplicitReadWrites._
+    Ok(Json.toJson(comments))
+  }
+
 }

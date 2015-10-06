@@ -186,9 +186,10 @@
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
+            console.log(this.props.data);
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <scify.Comment parent={instance.props.parent} consultationEndDate={instance .props.consultationEndDate} key={comment.id} data={comment} />
+                    <scify.Comment parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
                 );
             });
 
