@@ -47,6 +47,9 @@ class UserDAOImpl extends UserDAO {
   def save(user: model.User) = Future.successful{
     SaveUser(user,1) //todo: make role_ids enum
   }
+  def update(user:model.User) = Future.successful{
+    updateUser(user)
+  }
 
   private def SaveUser(user:User, roleId:Int): User ={
 
@@ -56,6 +59,7 @@ class UserDAOImpl extends UserDAO {
       //login info is like facebook with user's email address, twitter with user
       dBLoginInfo = Some(this.saveLoginInfo(user.loginInfo))
     }
+
     this.saveUserAndUpdateLoginInfo(user,dBLoginInfo.get,roleId)
   }
 
@@ -104,6 +108,25 @@ class UserDAOImpl extends UserDAO {
 
   }
 
+  private def updateUser(user:model.User): model.User =
+  {
+    DB.withConnection() { implicit c =>
+      SQL"""
+               UPDATE
+             account.user
+           SET
+             "firstName" = ${user.firstName},
+             "lastName" =${user.lastName},
+             "fullName" = ${user.fullName},
+             "email" = ${user.email},
+             "avatarurl" = ${user.avatarURL}
+           WHERE
+             id = ${user.userID}::uuid
+            """.execute()
+
+      user
+    }
+  }
   private def saveUserAndUpdateLoginInfo(user:model.User, dbloginInfo:DBLoginInfo, roleid:Int):User= {
     DB.withTransaction(){ implicit c =>
 

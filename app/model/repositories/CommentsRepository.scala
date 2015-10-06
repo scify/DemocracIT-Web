@@ -93,8 +93,6 @@ class CommentsRepository {
       //      val paramMaxCommentId:Long = maxCommentId.getOrElse(-9999)
       val useridParam = if (user_id.isDefined) user_id.get else new java.util.UUID( 0L, 0L )
 
-      //todo: get the user fields when login/register related tasks are completed. After this change left outer join to inner join on table users.
-      //currently we allow only one annotation tag per comment ( public.annotation_items  contains maximum one annotation per comment)
       val comments:List[Comment]= SQL"""
           with ratingCounter as
           (
@@ -107,13 +105,13 @@ class CommentsRepository {
            where t.tagid =$discussionthreadclientid
           group by cr.comment_id
          )
-          select c.*, CAST(c.user_id  AS varchar) as fullName,
+          select c.*, u.fullName,
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating
                        from public.comments c
                                              inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                                             left outer join public.users u on u.id = c.user_id
+                                             inner join account.user u on u.id = c.user_id
                                              left outer join public.comment_rating cr on cr.user_id = CAST($useridParam as UUID)  and cr.comment_id = c.id
                                              left outer join ratingCounter counter on counter.comment_id = c.id
                     where t.tagid =$discussionthreadclientid
