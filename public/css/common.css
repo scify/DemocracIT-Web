@@ -22,31 +22,6 @@ img, .btn, i, a {
 #logo {
   height: 55px; }
 
-.avatar {
-  border-radius: 20px;
-  float: left;
-  margin-right: 10px;
-  margin-top: -9px;
-  max-height: 40px;
-}
-
-.navbar-nav > li > .dropdown-menu
-{
-  padding:0;
-}
-#navbar a
-{
-  background-image:none;
-}
-.navbar-nav > li > .dropdown-menu a
-{
-  padding:14px 30px;
-}
-.navbar-nav > li > .dropdown-menu a:hover,.navbar-nav > li > .dropdown-menu a:focus,.navbar-nav > li > .dropdown-menu a:active
-{
-    background-color:#42addc;
-  color:white;
-}
 .navbar-nav > li > a {
   padding-bottom: 30px;
   padding-top: 30px;
@@ -77,16 +52,12 @@ img, .btn, i, a {
   margin-top: 40px;
   position: relative;
   z-index: 0;
-  font-size: 16px;
-  clear:both;
-}
+  font-size: 16px; }
 
 #footer h2 {
   color: white;
   font-size: 20px;
-  margin-bottom: 18px;
-  margin-top:20px;
-}
+  margin-bottom: 18px; }
 
 #footer li {
   margin-bottom: 7px;
@@ -115,7 +86,6 @@ img, .btn, i, a {
 
 #full-footer a, #full-footer a:hover {
   color: white; }
-
 
 #footer ul {
   list-style: none;
@@ -158,6 +128,15 @@ img, .btn, i, a {
   background: none repeat scroll 0 0 #4b6e98; }
 
 /*</editor-fold>*/
+.avatar {
+  border-radius: 20px;
+  float: left;
+  margin-right: 10px;
+  margin-top: -5px; }
+
+.avatar img {
+  height: 30px; }
+
 #content {
   min-height: 600px;
   /*todo:implement sticky footer*/ }
@@ -249,10 +228,9 @@ legend {
 /*</editor-fold>*/
 /*<editor-fold desc="search box">*/
 #search-box {
-    background-color: #eeeeee;
-    padding-bottom: 60px;
-    padding-top: 60px;
-}
+  background-color: #eeeeee;
+  padding-bottom: 60px;
+  padding-top: 60px; }
 
 #search-box .wrapper {
   margin: auto;
@@ -296,7 +274,7 @@ legend {
   color: #65737e; }
 
 #search-box .form-group {
-  width: 490px; }
+  width: 380px; }
 
 #search-box .box .icon {
   position: absolute;
@@ -313,22 +291,6 @@ legend {
 
 #search-box .box {
   margin-right: 5px; }
-
-
-.loading-wrp {
-  text-align: center;
-}
-
-#search-wrapper .loading-wrp
-{
-    margin-top:50px;
-}
-
-#search-wrapper .consultation-list.container
-{
-    margin-top:30px;
-}
-
 
 /*</editor-fold>*/
 .btn.blue {

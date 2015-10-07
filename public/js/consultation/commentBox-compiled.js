@@ -274,7 +274,7 @@
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
-                    React.createElement("img", { src: "/assets/images/profile_default.jpg" })
+                    React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
                 );
                 commenterName = React.createElement(
                     "span",

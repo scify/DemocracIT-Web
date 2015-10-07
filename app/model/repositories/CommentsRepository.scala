@@ -61,12 +61,13 @@ class CommentsRepository {
                                      where a.consultation_id = $consultation_id
                                   group by cr.comment_id
                                  )
-              select  c.*, CAST(c.user_id  AS varchar) as fullName, a.title as article_name,
+              select  c.*,u.fullName,u.avatarurl, a.title as article_name,
                       cr.liked as userrating,
                       counter.likes,
                       counter.dislikes
               from comments c
                    inner join public.articles a on a.id = c.article_id
+                   inner join account.user u on u.id = c.user_id
                    left outer join public.comment_rating cr on cr.user_id = CAST($loggedInUserId as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
@@ -100,7 +101,7 @@ class CommentsRepository {
            where t.tagid =$discussionthreadclientid
           group by cr.comment_id
          )
-          select c.*, u.fullName,
+          select c.*, u.fullName,u.avatarurl,
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating
@@ -296,7 +297,7 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname,
+                      select c.*, o.fullName, null as avatarurl,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes

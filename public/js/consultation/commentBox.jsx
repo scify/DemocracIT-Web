@@ -247,7 +247,7 @@
             var options,avatarDiv,commenterName,commentBody,annotatedText;
             if(this.props.parent == "consultation") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
-                avatarDiv =<div className='avatar'><img src="/assets/images/profile_default.jpg" /></div>;
+                avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
                 commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
                 commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
             } else if(this.props.parent == "reporter") {

@@ -258,17 +258,9 @@ a.load {
   margin-top: 5px; }
 
 .commentBox .comment .commentAuthor {
-  color: #3b5998;
   font-weight: bold;
-  text-decoration: underline;
-  cursor: pointer;
   display: inline-block;
   margin-right: 3px; }
-
-.commentBox .comment .avatar {
-  float: left;
-  margin-right: 10px;
-  margin-bottom: 10px; }
 
 .commentBox .comment .avatar img {
   height: 30px; }
