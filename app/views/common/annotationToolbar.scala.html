@@ -9,11 +9,12 @@
                         Παρατήρηση/Σχόλιο για το τμήμα κειμένου:
                 </h4>
             </div>
+            <form action="@routes.AnnotationController.annotatePost()" method="post">
             <div class="modal-body">
 
                 <div id="toolbar" class='@{if (user.isDefined) "logged-in" else "" }'>
 
-                    <form action="@routes.AnnotationController.annotatePost()" method="post">
+
 
                         <div>
                             <blockquote></blockquote>
@@ -67,7 +68,7 @@
                         }
                         </div>
 
-                    </form>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -76,6 +77,7 @@
                 }
             <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

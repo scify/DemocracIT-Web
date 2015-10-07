@@ -102,12 +102,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
         });
     },
-    handleAnnotationSave = function(e){
-        var instance = this;
-        var form = $("#toolbar-modal").find("form");
-        var data = instance.annotator.collectAnnotatorData(e);
-        getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(form.attr("action"),data);
-        instance.annotator.hideToolBar();
+    handleAnnotationSave = function(data){
+        getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
      },
     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
@@ -126,7 +122,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator(false);
+        this.annotator = new scify.Annotator(false, handleAnnotationSave);
         this.annotator.init();
 
         replaceRelevantLaws(this.relevantLaws);

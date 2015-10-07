@@ -399,7 +399,7 @@ class CommentsRepository {
                       ${comment.body},
                       1,
                       ${discussionThreadId},
-                      ${comment.userId},
+                      ${comment.userId}::uuid,
                       now(),
                       ${comment.revision},
                       ${comment.depth},

@@ -1,6 +1,7 @@
-scify.Annotator = function(enableUserToAnnotateSubtext){
+scify.Annotator = function(enableUserToAnnotateSubtext, onCommentSubmitHandler){
 
     this.enableUserToAnnotateSubtext = enableUserToAnnotateSubtext;
+    this.onCommentSubmitHandler  =onCommentSubmitHandler;
 }
 scify.Annotator.prototype = (function(){
     var getSelection = function() {
@@ -152,7 +153,7 @@ scify.Annotator.prototype = (function(){
         displayToolBar = function(e,selectedText){
 
             var target = $(e.target),
-                toolbar = $("#toolbar");
+                toolbar = $("#toolbar-modal");
 
 
             resetForm();
@@ -193,8 +194,6 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='articleid']").val(articleid);
             toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
             toolbar.find("blockquote").text(selectedText);
-
-
         },
         collectAnnotatorData = function(e){
             e.preventDefault();
@@ -249,6 +248,13 @@ scify.Annotator.prototype = (function(){
                 tokenSeparators: [',', ' ']
             });
         },
+        handleAnnotationSave = function(e){
+            var form = $("#toolbar-modal").find("form");
+            var data = collectAnnotatorData(e);
+            data.action = form.attr("action");
+            hideToolBar();
+            this.onCommentSubmitHandler(data);
+        },
         init = function(){
             createAnnotatableAreas();
             attachAnnotationPrompts();
@@ -271,6 +277,8 @@ scify.Annotator.prototype = (function(){
             $("body").on("mouseleave",".ann-icon",function(){
                 $(this).parent(".ann").toggleClass("hl");
             });
+
+            $("#toolbar-modal").find("form").submit(handleAnnotationSave.bind(this));
 
         };
 
