@@ -52,10 +52,15 @@ img, .btn, i, a {
   color:#777;
 }
 
-.navbar-brand{
+.navbar-brand {
   padding-left: 30px;
   padding-top: 12px;}
 
+.navbar .avatar
+{
+  border-radius: 30px;
+  margin-top:-13px;
+}
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
 #footer {

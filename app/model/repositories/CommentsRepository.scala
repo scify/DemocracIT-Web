@@ -61,7 +61,7 @@ class CommentsRepository {
                                      where a.consultation_id = $consultation_id
                                   group by cr.comment_id
                                  )
-              select  c.*,u.fullName,u.avatarurl, a.title as article_name,
+              select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name,
                       cr.liked as userrating,
                       counter.likes,
                       counter.dislikes
@@ -101,7 +101,7 @@ class CommentsRepository {
            where t.tagid =$discussionthreadclientid
           group by cr.comment_id
          )
-          select c.*, u.fullName,u.avatarurl,
+          select c.*, u.fullName,u.avatarurl,null as profileUrl,
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating
@@ -297,7 +297,7 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullName, null as avatarurl,
+                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes

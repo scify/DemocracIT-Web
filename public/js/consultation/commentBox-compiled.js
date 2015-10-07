@@ -276,11 +276,21 @@
                     { className: "avatar" },
                     React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
                 );
-                commenterName = React.createElement(
+
+                if (this.props.data.profileUrl) commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    React.createElement(
+                        "a",
+                        { target: "_blank", href: this.props.data.profileUrl },
+                        this.props.data.fullName
+                    )
+                );else commenterName = React.createElement(
                     "span",
                     { className: "commentAuthor" },
                     this.props.data.fullName
                 );
+
                 commentBody = React.createElement(
                     "div",
                     { className: "htmlText" },

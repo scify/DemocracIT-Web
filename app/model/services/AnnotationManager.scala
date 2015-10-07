@@ -43,8 +43,13 @@ class AnnotationManager {
     val pageSize=10;
     var comments:List[Comment] = Nil
 
-    if (source=="opengov")
-       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize,user_id )
+    if (source=="opengov"){
+       comments =commentsRepository.getOpenGovComments(consultationId,articleId ,pageSize,user_id ).map{ c =>
+         if (c.profileUrl.isDefined && c.profileUrl.get.startsWith("http://www.opengov.gr"))
+           c.profileUrl = None // don't display the open gov comment url in the user's profile url //todo: this should be fixed in the crawler in the db
+         c
+       }
+    }
     else
       comments =commentsRepository.getComments(discussionthreadclientid,pageSize,user_id)
 

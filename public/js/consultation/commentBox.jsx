@@ -248,7 +248,13 @@
             if(this.props.parent == "consultation") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-                commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+
+                if (this.props.data.profileUrl)
+                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
+                else
+                    commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+
+
                 commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
             } else if(this.props.parent == "reporter") {
                 options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
