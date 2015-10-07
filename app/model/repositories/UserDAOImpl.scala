@@ -115,11 +115,11 @@ class UserDAOImpl extends UserDAO {
                UPDATE
              account.user
            SET
-             "firstName" = ${user.firstName},
-             "lastName" =${user.lastName},
-             "fullName" = ${user.fullName},
-             "email" = ${user.email},
-             "avatarurl" = ${user.avatarURL}
+             firstName = ${user.firstName},
+             lastName =${user.lastName},
+             fullName = ${user.fullName},
+             email = ${user.email},
+             avatarurl = ${user.avatarURL}
            WHERE
              id = ${user.userID}::uuid
             """.execute()
@@ -132,7 +132,7 @@ class UserDAOImpl extends UserDAO {
 
           SQL"""
                 INSERT INTO account."user"
-                  (id, "firstName", "lastName", "fullName", "role", email, avatarurl)
+                  (id, firstName, lastName, fullName, role, email, avatarurl)
               VALUES
                   (${user.userID}::uuid , ${user.firstName}, ${user.lastName},${user.fullName}, $roleid,${user.email}, ${user.avatarURL})
               """.execute()
