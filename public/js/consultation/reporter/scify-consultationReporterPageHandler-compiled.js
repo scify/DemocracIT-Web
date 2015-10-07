@@ -97,11 +97,12 @@ scify.ConsultationReporterPageHandler.prototype = (function () {
      return promise;
     },*/
     loadListOfComments = function loadListOfComments(articleId) {
+        $('.commentsTabs').css('display', 'block');
         console.log('article id: ' + articleId);
         window.CommentsPerArticleComponent.getCommentsByArticleId(articleId);
     },
         createListOfComments = function createListOfComments() {
-        var domElementToAddComponent = document.getElementById('articleCommentsTemp');
+        var domElementToAddComponent = document.getElementById('commentsOpenGov');
         //var commentListProperties = {
         //    articleId          : articleId,
         //    commentsCount      : numOfComments
