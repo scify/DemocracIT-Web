@@ -186,7 +186,6 @@
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
-            console.log(this.props.data);
             var commentNodes = this.props.data.map(function (comment) {
                 return (
                     <scify.Comment parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
@@ -218,14 +217,18 @@
                 var commentFromDB = this.props.data.comment;
             }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
+                if (tag != undefined) {
                 return (
                     <span className="tag pr"><span>{tag.description}</span></span>
                 );
+                }
             });
             var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
-                return (
-                    <span className="tag topic"><span >{"#" + tag.description }</span></span>
-                );
+                if (tag != undefined) {
+                    return (
+                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
+                    );
+                }
             });
             var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ?
                 <span>Προβλήματα: { taggedProblems} </span> : "";

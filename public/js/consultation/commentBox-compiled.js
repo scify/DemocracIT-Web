@@ -190,7 +190,6 @@
 
         render: function render() {
             var instance = this;
-            console.log(this.props.data);
             var commentNodes = this.props.data.map(function (comment) {
                 return React.createElement(scify.Comment, { parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
@@ -222,26 +221,30 @@
                 var commentFromDB = this.props.data.comment;
             }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
-                return React.createElement(
-                    "span",
-                    { className: "tag pr" },
-                    React.createElement(
+                if (tag != undefined) {
+                    return React.createElement(
                         "span",
-                        null,
-                        tag.description
-                    )
-                );
+                        { className: "tag pr" },
+                        React.createElement(
+                            "span",
+                            null,
+                            tag.description
+                        )
+                    );
+                }
             });
             var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
-                return React.createElement(
-                    "span",
-                    { className: "tag topic" },
-                    React.createElement(
+                if (tag != undefined) {
+                    return React.createElement(
                         "span",
-                        null,
-                        "#" + tag.description
-                    )
-                );
+                        { className: "tag topic" },
+                        React.createElement(
+                            "span",
+                            null,
+                            "#" + tag.description
+                        )
+                    );
+                }
             });
             var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ? React.createElement(
                 "span",

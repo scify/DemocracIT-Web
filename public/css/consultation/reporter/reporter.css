@@ -34,15 +34,74 @@
 .notClicked {
   display: none; }
 
-.commentBox .comment .options div {
+.comment .options div {
   float: left;
   margin-right: 5px; }
 
-.commentBox .comment .options span {
+.comment .options span {
   float: left; }
 
-.commentBox .comment .options {
+.comment .options {
   margin-top: 10px;
   height: 20px; }
+
+.comment {
+  font-weight: normal;
+  padding: 10px 1em;
+  padding-right: 40px;
+  position: relative;
+  border: 1px solid lightgray;
+  background-color: #f4f7f7;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  margin-top: 5px; }
+
+/*.comment .avatar {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+*/
+.avatar {
+  border-radius: 20px;
+  float: left;
+  margin-right: 10px;
+  margin-top: -9px;
+  max-height: 40px; }
+
+.comment {
+  font-size: 12px; }
+
+.comment .icons {
+  position: absolute;
+  right: 14px;
+  top: 5px;
+  opacity: 0.8; }
+
+.comment .commentAuthor {
+  color: #3b5998;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 3px; }
+
+.comment .avatar img {
+  height: 30px; }
+
+.comment .date {
+  color: gray; }
+
+.comment .options .fa {
+  margin-left: 5px; }
+
+.comment .options a {
+  cursor: pointer;
+  float: left; }
+
+.comment .options .c {
+  margin-right: 20px;
+  margin-left: 5px;
+  display: inline-block; }
 
 /*# sourceMappingURL=reporter.css.map */

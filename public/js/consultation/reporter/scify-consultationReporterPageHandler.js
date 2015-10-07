@@ -209,7 +209,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
         addRelevantLawsHandler();
-        createChart(this.commentsPerArticle, "commentsPerArticleChart", "Σχόλια ανά άρθρο", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
+        createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
         createChart(this.annotationsForConsultation, "annotationsForConsultationChart", "Θέματα που θίγονται", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '90%', 'pie');
         createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationChart", "Προβλήματα", "Πρόβηλμα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '90%', 'pie');
         createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Θέματα ανά άρθρο", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar');
