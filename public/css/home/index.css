@@ -21,11 +21,20 @@
 .total .wrp, .total .wrp.collapsed:hover {
   background-color: #355163;
   font-size: 20px;
-  padding-bottom: 40px;
-  padding-top: 40px; }
+  padding-bottom: 80px;
+  padding-top: 80px; }
 
 .total .wrp.collapsed {
   background-color: lightblue; }
+
+.total .wrp.collapsed#consultation-stats {
+  background-color: #f39797; }
+
+.total .wrp.collapsed#comments-stats {
+  background-color: #3ca1fc; }
+
+.total .wrp.collapsed#duration-stats {
+  background-color: #a4a4f4; }
 
 .organization-group hr {
   margin: 5px 0; }

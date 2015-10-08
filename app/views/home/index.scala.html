@@ -13,24 +13,35 @@
 
 @layout("Αρχική",css,js, viewmodel.user){
 
+    <div id="slider">
+        Βελτιώνουμε τη διαδικασία της ανοικτής διαβούλευσης.
+        <br>
+        Σύγχρονα εργαλεία στην υπηρεσία των πολιτών
+    </div>
+    <div id="faq">
+        <a href="#">Τί είναι το DemocracIT;</a>
+       <a href="#">Τί σημαίνει ανοικτή διαβούλευση;</a>
+        <a href="#">Πώς μπορώ να συνεισφέρω;</a>
+        <a href="#">Σε τι διαφέρει το democracit απο το http://www.opengov.gr</a>
+    </div>
     <div id="platform-stats" class="container">
                 <div class="row">
                     <div class="total col-md-4">
-                        <div class="wrp collapsed" data-target="#consultation-distr" data-parent="#platform-stats" data-toggle="collapse">
+                        <div id="consultation-stats" class="wrp collapsed" data-target="#consultation-distr" data-parent="#platform-stats" data-toggle="collapse">
                         @viewmodel.stats.totalConsultations
                         <br>
                         διαβουλεύσεις
                         </div>
                     </div>
                     <div class="total col-md-4">
-                        <div class="wrp collapsed"  data-target="#comments-distr" data-parent="#platform-stats" data-toggle="collapse">
+                        <div id="comments-stats" class="wrp collapsed"  data-target="#comments-distr" data-parent="#platform-stats" data-toggle="collapse">
                             Μέσος αριθμός σχολίων
                             <br>
                                 @viewmodel.stats.medianAverageCommentsPerConsultations
                         </div>
                     </div>
                     <div class=" total col-md-4">
-                        <div class="wrp collapsed"  data-target="#duration-distr" data-parent="#platform-stats" data-toggle="collapse">
+                        <div id="duration-stats" class="wrp collapsed"  data-target="#duration-distr" data-parent="#platform-stats" data-toggle="collapse">
                             Μέση διάρκεια διαβούλευσης
                             <br>
                             @viewmodel.stats.medianAverageDaysPerConsultation ημερες
