@@ -1,15 +1,32 @@
-#consultations {
-  padding-top: 50px;
-  padding-bottom: 40px; }
+.navbar {
+  margin-bottom: 0; }
 
-#consultations h2 {
+#democracit {
+  background-attachment: fixed;
+  background-repeat: repeat;
+  background-position: left top;
+  background-image: url(../../images/home/democracit-people.jpg);
+  text-align: center; }
+
+#democracit .mask {
+  background-color: rgba(73, 192, 244, 0.8);
+  color: #f2f2f2;
+  padding-top: 130px;
+  padding-bottom: 130px; }
+
+#democracit h1 {
+  font-size: 33px; }
+
+#democracit h1, #democracit h2 {
   margin: 0; }
 
-.consultation {
-  margin: 15px 0; }
+#democracit h2 {
+  margin-top: 15px; }
 
-.consultation .duration {
-  font-size: 13px; }
+#faq {
+  height: 60px;
+  background-color: lightgray;
+  text-align: center; }
 
 .total {
   cursor: pointer;
@@ -21,11 +38,20 @@
 .total .wrp, .total .wrp.collapsed:hover {
   background-color: #355163;
   font-size: 20px;
-  padding-bottom: 40px;
-  padding-top: 40px; }
+  padding-bottom: 80px;
+  padding-top: 80px; }
 
 .total .wrp.collapsed {
   background-color: lightblue; }
+
+.total .wrp.collapsed#consultation-stats {
+  background-color: #f39797; }
+
+.total .wrp.collapsed#comments-stats {
+  background-color: #3ca1fc; }
+
+.total .wrp.collapsed#duration-stats {
+  background-color: #a4a4f4; }
 
 .organization-group hr {
   margin: 5px 0; }
@@ -60,5 +86,18 @@
   box-shadow: none;
   margin: 0;
   border: none; }
+
+#consultations {
+  padding-top: 50px;
+  padding-bottom: 40px; }
+
+#consultations h2 {
+  margin: 0; }
+
+.consultation {
+  margin: 15px 0; }
+
+.consultation .duration {
+  font-size: 13px; }
 
 /*# sourceMappingURL=index.css.map */
