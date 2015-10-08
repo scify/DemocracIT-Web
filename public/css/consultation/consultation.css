@@ -122,7 +122,14 @@ h2 {
   margin-top: 10px; }
 
 .modal-footer {
-  border-top: none; }
+  border-top: none;
+  padding-top: 5px; }
+
+.modal-footer .warning {
+  float: left;
+  width: 50%;
+  font-size: 11px;
+  text-align: left; }
 
 .highlight {
   color: red; }
