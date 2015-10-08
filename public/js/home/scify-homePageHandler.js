@@ -7,7 +7,7 @@ scify.HomePageHandler .prototype = function(){
     var init = function(){
 
         $('.carousel').carousel({
-            interval: 7000
+            interval: 5000
         });
 
         React.render(React.createElement(scify.SearchContainer, { url: this.searchUrl}),document.getElementById("search-wrapper") );
