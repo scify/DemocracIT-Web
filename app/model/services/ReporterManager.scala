@@ -41,10 +41,17 @@ class ReporterManager {
     comments
   }
 
-  def getCommentsByArticleId(articleId: Long): List[model.dtos.Comment] = {
+  def getOpenGovCommentsByArticleId(articleId: Long): List[model.dtos.Comment] = {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
-    comments = commentsRepository.getCommentsForArticle(articleId)
+    comments = commentsRepository.getOPenGovCommentsForArticle(articleId)
+    comments
+  }
+
+  def getDITCommentsByArticleId(articleId: Long): List[model.dtos.Comment] = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getDITCommentsForArticle(articleId)
     comments
   }
 }

@@ -91,7 +91,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             });
         },
 
-        /*getCommentsByArticleId = function(articleId){
+        /*getOpenGovCommentsByArticleId = function(articleId){
         var instance = this;
 
         var promise = $.ajax({
@@ -117,16 +117,18 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         loadListOfComments = function(articleId) {
             $(".commentsTabs").css("display","block");
             console.log("article id: " + articleId);
-            window.CommentsPerArticleComponent.getCommentsByArticleId(articleId);
+            window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
+            window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
         },
         createListOfComments = function(){
-            var domElementToAddComponent = document.getElementById("commentsOpenGov");
+            var domElementOpenGovComments = document.getElementById("commentsOpenGov");
+            var domElementDITComments = document.getElementById("commentsDIT");
             //var commentListProperties = {
             //    articleId          : articleId,
             //    commentsCount      : numOfComments
             //};
-            window.CommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementToAddComponent);
-            console.log("hi");
+            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementOpenGovComments);
+            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementDITComments);
         },
 
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType) {
@@ -210,7 +212,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
         addRelevantLawsHandler();
-        createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
+        createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το άρθρο)", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
         createChart(this.annotationsForConsultation, "annotationsForConsultationChart", "Θέματα που θίγονται", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '90%', 'pie');
         createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationChart", "Προβλήματα", "Πρόβηλμα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '90%', 'pie');
         createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Θέματα ανά άρθρο", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar');

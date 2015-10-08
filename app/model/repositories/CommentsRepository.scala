@@ -136,7 +136,7 @@ class CommentsRepository {
     }
   }
 
-  def getCommentsForArticle(articleId: Long):List[Comment] = {
+  def getOPenGovCommentsForArticle(articleId: Long):List[Comment] = {
     DB.withConnection { implicit c =>
 
       val comments: List[Comment] =
@@ -150,19 +150,64 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname,
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl,
                              counter.likes,
                              counter.dislikes, false as userrating
                        from public.comments c
                          full outer join public.comment_opengov o on o.id =c.id
                          full outer join ratingCounter counter on counter.comment_id = c.id
-                         where c.article_id = $articleId
+                         where c.article_id = $articleId  and c.source_type_id = 2
 
                          order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
 
       // group result List [Long,(tuple)]
       //
       //                           the tuple consists of List(Long,AnnotationTags))
+      comments
+    }
+  }
+
+  def getDITCommentsForArticle(articleId: Long):List[Comment] = {
+    DB.withConnection { implicit c =>
+
+      val comments: List[Comment] =
+        SQL"""with ratingCounter as
+                      (
+                       select cr.comment_id,
+                      	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                      	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                       from comment_rating cr
+                           full outer join comments c on cr.comment_id  = c.id
+                        where c.article_id = $articleId
+                     group by cr.comment_id
+                    )
+                    select c.*, u.fullname, u.avatarurl, null as profileUrl,
+                            counter.likes,
+                            counter.dislikes,
+                            cr.liked as userrating from comments c
+           				  inner join account.user u on u.id = c.user_id
+           				  left outer join public.comment_rating cr on cr.user_id = CAST(c.user_id as UUID)  and cr.comment_id = c.id
+           				  left outer join ratingCounter counter on counter.comment_id = c.id
+                    where c.article_id = $articleId
+
+                    order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
+
+      val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
+                             select ac.public_comment_id, tag.* from annotation_comment ac
+                                    inner join annotation_tag tag on ac.annotation_tag_id = tag.id
+                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                    where c.article_id = $articleId
+                            """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
+
+      // group result List [Long,(tuple)]
+      //                                the tuple consists of List(Long,AnnotationTags))
+      relatedTags.groupBy( _._1).foreach {
+        tuple =>
+          val c= comments.filter(_.id.get == tuple._1).head
+          c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
+          c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
+      }
       comments
     }
   }
