@@ -47,11 +47,11 @@
 @layout("DemocracIT", css, js,None) {
 
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
-
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
                 <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Συμμετοχή στη διαβούλευση</a></li>
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
+
                 <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>

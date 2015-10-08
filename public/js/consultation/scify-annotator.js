@@ -201,7 +201,7 @@ scify.Annotator.prototype = (function(){
             var data = {};
             form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
             var extractSelectedTags = function($select){
-                var tags = [];
+                var tags = [];ψ
                 $select.find("option:selected").each(function(index,el){
                   tags.push({
                         text :$(el).text(),
@@ -216,7 +216,7 @@ scify.Annotator.prototype = (function(){
             data.annotationTagTopics = extractSelectedTags($("#annotationTagTopicId"));
 
             data.userAnnotatedText = form.find("blockquote").html();  // the text in the document user annotated
-
+            console.log(data);
             return data;
         },
         hideToolBar = function(){
