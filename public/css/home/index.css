@@ -24,22 +24,32 @@
   margin-top: 15px; }
 
 #faq {
-  height: 60px;
-  background-color: lightgray;
+  background-color: gray;
   text-align: center; }
+
+#faq .carousel-caption {
+  position: static;
+  color: inherit;
+  text-shadow: none;
+  padding-bottom: 25px;
+  padding-top: 25px;
+  font-size: 20px; }
+
+#faq .carousel-caption a {
+  color: white; }
 
 .total {
   cursor: pointer;
   color: white;
   padding-bottom: 40px;
-  padding-top: 20px;
+  padding-top: 40px;
   text-align: center; }
 
 .total .wrp, .total .wrp.collapsed:hover {
-  background-color: #355163;
   font-size: 20px;
   padding-bottom: 80px;
-  padding-top: 80px; }
+  padding-top: 80px;
+  border-radius: 8px; }
 
 .total .wrp.collapsed {
   background-color: lightblue; }
@@ -52,6 +62,9 @@
 
 .total .wrp.collapsed#duration-stats {
   background-color: #a4a4f4; }
+
+.total .wrp.collapsed:hover {
+  background-color: #355163 !important; }
 
 .organization-group hr {
   margin: 5px 0; }
