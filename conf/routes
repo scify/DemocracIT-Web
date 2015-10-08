@@ -27,8 +27,8 @@ GET         /consultation/:consultationId                 @controllers.Consultat
 GET         /comments/retrieve                            @controllers.ConsultationController.getComments(consultationId:Long, articleId:Long, source: String, discussionthreadid:Option[Int] ?= None, discussionthreadclientid:String, page:Option[Int] ?= None)
 GET         /comments/cons/retrieve                       @controllers.ReporterController.getCommentsForConsultationByUserId(consultationId:Long, userId:java.util.UUID)
 GET         /consultation/:consultationId                 @controllers.ConsultationController.getConsultation(consultationId :Long)
-GET         /comments/retrieve/forarticle                 @controllers.ReporterController.getCommentsByArticleId(articleId:Long)
-
+GET         /comments/retrieve/forarticle/opengov         @controllers.ReporterController.getOpenGovCommentsByArticleId(articleId:Long)
+GET         /comments/retrieve/forarticle/dit             @controllers.ReporterController.getDITCommentsByArticleId(articleId:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)
