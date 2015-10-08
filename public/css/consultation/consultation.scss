@@ -84,8 +84,22 @@ h2{
 
 .article-body
 {
-  font-size:12px;
-  padding-top:5px;
+  font-size: 14px;
+  padding-top: 5px;
+  line-height: 190%;
+}
+
+.article-title-text {
+  font-weight: bold;
+}
+
+#intro-text {
+  font-size: 14px;
+}
+
+.commentbox-wrap {
+  margin-bottom: 8px;
+  margin-top: -3px;
 }
 
 // </editor-fold>

@@ -56,8 +56,19 @@ h2 {
   padding-bottom: 20px; }
 
 .article-body {
-  font-size: 12px;
-  padding-top: 5px; }
+  font-size: 14px;
+  padding-top: 5px;
+  line-height: 190%; }
+
+.article-title-text {
+  font-weight: bold; }
+
+#intro-text {
+  font-size: 14px; }
+
+.commentbox-wrap {
+  margin-bottom: 8px;
+  margin-top: -3px; }
 
 .select2 {
   margin-bottom: 10px; }
@@ -258,7 +269,10 @@ a.load {
   margin-top: 5px; }
 
 .commentBox .comment .commentAuthor {
+  color: #3b5998;
   font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
   display: inline-block;
   margin-right: 3px; }
 
