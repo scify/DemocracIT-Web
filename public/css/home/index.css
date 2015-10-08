@@ -1,15 +1,32 @@
-#consultations {
-  padding-top: 50px;
-  padding-bottom: 40px; }
+.navbar {
+  margin-bottom: 0; }
 
-#consultations h2 {
+#democracit {
+  background-attachment: fixed;
+  background-repeat: repeat;
+  background-position: left top;
+  background-image: url(../../images/home/democracit-people.jpg);
+  text-align: center; }
+
+#democracit .mask {
+  background-color: rgba(73, 192, 244, 0.8);
+  color: #f2f2f2;
+  padding-top: 130px;
+  padding-bottom: 130px; }
+
+#democracit h1 {
+  font-size: 33px; }
+
+#democracit h1, #democracit h2 {
   margin: 0; }
 
-.consultation {
-  margin: 15px 0; }
+#democracit h2 {
+  margin-top: 15px; }
 
-.consultation .duration {
-  font-size: 13px; }
+#faq {
+  height: 60px;
+  background-color: lightgray;
+  text-align: center; }
 
 .total {
   cursor: pointer;
@@ -69,5 +86,18 @@
   box-shadow: none;
   margin: 0;
   border: none; }
+
+#consultations {
+  padding-top: 50px;
+  padding-bottom: 40px; }
+
+#consultations h2 {
+  margin: 0; }
+
+.consultation {
+  margin: 15px 0; }
+
+.consultation .duration {
+  font-size: 13px; }
 
 /*# sourceMappingURL=index.css.map */
