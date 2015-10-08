@@ -51,8 +51,8 @@
   padding-top: 80px;
   border-radius: 8px; }
 
-.total .wrp.collapsed {
-  background-color: lightblue; }
+.total .wrp {
+  background-color: #355163; }
 
 .total .wrp.collapsed#consultation-stats {
   background-color: #f39797; }

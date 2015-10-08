@@ -88,9 +88,10 @@
   border-radius:8px;
 }
 
-.total .wrp.collapsed {
-  background-color: lightblue;
+.total .wrp{
+  background-color: #355163 ;
 }
+
 .total .wrp.collapsed#consultation-stats
 {
   background-color:#f39797;
@@ -104,7 +105,7 @@
   background-color:#a4a4f4;
 }
 
-.total .wrp.collapsed:hover {
+.total .wrp.collapsed:hover,{
   background-color: #355163 !important;
 }
 
