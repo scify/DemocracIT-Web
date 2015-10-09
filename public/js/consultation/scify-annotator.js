@@ -201,7 +201,7 @@ scify.Annotator.prototype = (function(){
             var data = {};
             form.serializeArray().map(function(x){data[x.name] = x.value;}); //convert to object
             var extractSelectedTags = function($select){
-                var tags = [];ψ
+                var tags = [];
                 $select.find("option:selected").each(function(index,el){
                   tags.push({
                         text :$(el).text(),
