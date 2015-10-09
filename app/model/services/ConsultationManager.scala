@@ -15,37 +15,43 @@ class ConsultationManager {
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
-    val url = play.api.Play.current.configuration.getString("application.solrBaseUrl")
-
-    val q= new DitSorlQuery(url.get)
-
-    val ministryIds = new util.HashSet[java.lang.Long]()
-    if (searchRequest.ministryId>0)
-      ministryIds.add(searchRequest.ministryId.asInstanceOf[Long])
-
-    val res = q.queryConsultations(searchRequest.query,false,ministryIds)
-    val i =res.iterator()
-
-    var consultations = List[Consultation]()
-    while(i.hasNext()) {
-      val c= i.next()
-      val organization = c.getOrganizationId()
-
-      consultations = Consultation(c.getId(),
-        c.getStartDate(),
-        c.getEndDate(),
-        c.getTitle(),c.getShortDescription,
-        Organization(organization.getId().toInt,organization.getTitle()),
-        1,
-        Some(c.getReportText()),
-        Some(c.getReportUrl()),
-        Some(c.getCompletedText()),
-        c.getNumOfArticles(),
-        c.getConsultationUrl()) :: consultations
-
-
+    if (searchRequest.query.length==0)
+    {
+      //todo: discuss with George how we can do a solr query with wildcards.
+       val repository = new ConsultationRepository()
+        repository.search(searchRequest)
     }
-    consultations
+    else
+    {
+      val url = play.api.Play.current.configuration.getString("application.solrBaseUrl")
+      val q= new DitSorlQuery(url.get)
+      val ministryIds = new util.HashSet[java.lang.Long]()
+
+      if (searchRequest.ministryId>0)
+        ministryIds.add(searchRequest.ministryId.asInstanceOf[Long])
+
+      val res = q.queryConsultations(searchRequest.query,false,ministryIds)
+      val i =res.iterator()
+      var consultations = List[Consultation]()
+      while(i.hasNext()) {
+        val c= i.next()
+        val organization = c.getOrganizationId()
+        consultations = Consultation(c.getId(),
+          c.getStartDate(),
+          c.getEndDate(),
+          c.getTitle(),c.getShortDescription,
+          Organization(organization.getId().toInt,organization.getTitle()),
+          1,
+          Some(c.getReportText()),
+          Some(c.getReportUrl()),
+          Some(c.getCompletedText()),
+          c.getNumOfArticles(),
+          c.getConsultationUrl()) :: consultations
+      }
+      consultations
+    }
+
+
   }
 
   def get(consultationId: Long, user:Option[User]): ConsultationViewModel= {

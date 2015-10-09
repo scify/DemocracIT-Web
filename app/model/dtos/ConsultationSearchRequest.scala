@@ -1,5 +1,5 @@
 package model.dtos
 
 case  class ConsultationSearchRequest(statusId: Byte,
-                                query: String,
+                               var query: String,
                                 ministryId: Byte)
