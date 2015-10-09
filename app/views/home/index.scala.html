@@ -85,7 +85,7 @@
                             <tr>
                                 <td>@stat.title</td>
                                 <td>
-                                    <a href="@routes.ConsultationController.search()?ministryId=@stat.id">
+                                    @*<a href="@routes.ConsultationController.search()?ministryId=@stat.id">*@
                                         @stat.consultationCount
 
                                         @if(stat.activeConsultations > 0) {
@@ -95,7 +95,7 @@
                                                 ενεργή } else { ενεργές }
                                             </span>
                                         }
-                                    </a>
+                                    @*</a>*@
                                 </td>
                             </tr>
                         }
