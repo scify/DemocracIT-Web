@@ -135,7 +135,10 @@
             return React.createElement(
                 "div",
                 { className: topClasses },
-                React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.commentsCount, source: this.props.source }),
+                React.createElement(TotalCommentsLink, { onClick: this.refreshComments,
+                    count: this.state.commentsCount,
+                    ource: this.props.source,
+                    isdiscussionForTheWholeArticle: this.props.isdiscussionForTheWholeArticle }),
                 React.createElement(
                     "div",
                     { className: commendBoxclasses },
@@ -165,7 +168,9 @@
             var label = "σχόλια";
             if (this.props.count == 1) label = "σχόλιο";
 
-            if (this.props.source && this.props.source == "opengov") label += " απο το opengov";
+            if (this.props.source && this.props.source == "opengov") label += " απο το opengov ";
+
+            if (this.props.isdiscussionForTheWholeArticle) label += " για ολόκληρο το άρθρο";else label += " για το τμήμα κειμένου";
 
             if (this.props.count > 0) return React.createElement(
                 "a",

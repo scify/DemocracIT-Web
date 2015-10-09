@@ -143,7 +143,10 @@
 
             return (
                 <div className={topClasses}>
-                    <TotalCommentsLink onClick={this.refreshComments} count={this.state.commentsCount} source={this.props.source} />
+                    <TotalCommentsLink onClick={this.refreshComments}
+                                       count={this.state.commentsCount}
+                                       ource={this.props.source}
+                                       isdiscussionForTheWholeArticle={this.props.isdiscussionForTheWholeArticle} />
                     <div className={commendBoxclasses }>
                         <div className={loadAllClasses} >
                             βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
@@ -163,8 +166,14 @@
             if (this.props.count==1)
                 label="σχόλιο";
 
+
             if (this.props.source && this.props.source =="opengov")
-                label +=" απο το opengov";
+                label +=" απο το opengov ";
+
+            if (this.props.isdiscussionForTheWholeArticle)
+                label +=" για ολόκληρο το άρθρο";
+            else
+                label +=" για το τμήμα κειμένου";
 
             if (this.props.count>0)
                 return (

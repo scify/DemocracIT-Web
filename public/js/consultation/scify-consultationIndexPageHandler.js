@@ -62,6 +62,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 discussionthreadid      : -1,
                 discussionthreadclientid: getDiscussionThreadClientId(articleid),
                 source :"opengov",
+                isdiscussionForTheWholeArticle:true,
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
                 parent: "consultation"
             };
@@ -77,10 +78,20 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.userId = instance.userId;
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
+                commentBoxProperties.isdiscussionForTheWholeArticle = false;
 
-                $(ann).after('<div class="commentbox-wrap"></div>');
-                domElementToAddComponent = $(ann).next()[0];
-                scify.discussionRooms[commentBoxProperties.discussionthreadclientid] =React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
+                var commentBox = $('<div class="commentbox-wrap"></div>')
+                if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
+                {
+                    commentBoxProperties.isdiscussionForTheWholeArticle=true;
+                    $(ann).parents(".article").find(".open-gov").before(commentBox );
+                }
+                else
+                    $(ann).after(commentBox );
+
+                domElementToAddComponent = commentBox[0];
+                scify.discussionRooms[commentBoxProperties.discussionthreadclientid]=
+                       React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
             });
         });
     },
