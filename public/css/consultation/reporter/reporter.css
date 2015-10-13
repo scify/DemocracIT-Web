@@ -121,4 +121,9 @@
   border-radius: 4px;
   padding: 1px 4px; }
 
+.noStats {
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10%; }
+
 /*# sourceMappingURL=reporter.css.map */

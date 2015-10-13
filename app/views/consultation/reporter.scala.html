@@ -86,21 +86,43 @@
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active" id="commentsPerArticleChart"><div class="commentsPerArticleChart chart" id="commentsPerArticleInnerChart"></div>
-                            <ul class="commentsTabs nav nav-tabs" role="tablist" style="display: none">
-                                <li role="presentation" class="active"><a href="#commentsOpenGov" aria-controls="commentsOpenGov" role="tab" data-toggle="tab">Σχόλια OpenGov</a></li>
-                                <li role="presentation"><a href="#commentsDIT" aria-controls="commentsDIT" role="tab" data-toggle="tab">Σχόλια Democracit</a></li>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="commentsOpenGov">
+                            @if(vm.commentsPerArticle.isEmpty) {
+                                <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            } else {
+                                <ul class="commentsTabs nav nav-tabs" role="tablist" style="display : none">
+                                    <li role="presentation" class="active"><a href="#commentsOpenGov" aria-controls="commentsOpenGov" role="tab" data-toggle="tab">
+                                        Σχόλια OpenGov</a></li>
+                                    <li role="presentation"><a href="#commentsDIT" aria-controls="commentsDIT" role="tab" data-toggle="tab">
+                                        Σχόλια Democracit</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="commentsOpenGov">
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="commentsDIT">
+                                    </div>
                                 </div>
-                                <div role="tabpanel" class="tab-pane"  id="commentsDIT">
-                                </div>
-                            </div>
+                            }
                         </div>
-                        <div role="tabpanel" class="tab-pane annotationsForConsultationChart chart" id="annotationsForConsultationChart"></div>
-                        <div role="tabpanel" class="tab-pane annotationProblemsForConsultationChart chart" id="annotationProblemsForConsultationChart"></div>
-                        <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart"></div>
-                        <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart"></div>
+                        <div role="tabpanel" class="tab-pane annotationsForConsultationChart chart" id="annotationsForConsultationChart">
+                        @if(vm.getAnnotationsForConsultation(1).isEmpty) {
+                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                        }
+                        </div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsForConsultationChart chart" id="annotationProblemsForConsultationChart">
+                        @if(vm.getAnnotationsForConsultation(2).isEmpty) {
+                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                        }
+                        </div>
+                        <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart">
+                        @if(vm.getAnnotationsPerArticle(1).isEmpty) {
+                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                        }
+                        </div>
+                        <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart">
+                        @if(vm.getAnnotationsPerArticle(1).isEmpty) {
+                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                        }
+                        </div>
 
                     </div>
 

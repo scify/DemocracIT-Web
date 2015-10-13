@@ -202,11 +202,21 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
         addRelevantLawsHandler();
-        createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το άρθρο)", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
-        createChart(this.annotationsForConsultation, "annotationsForConsultationChart", "Θέματα που θίγονται", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '75%', 'bar');
-        createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationChart", "Προβλήματα", "Πρόβηλμα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '75%', 'bar');
-        createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Θέματα ανά άρθρο", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar');
-        createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Προβλήματα ανά άρθρο", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar');
+        if(this.commentsPerArticle.length > 0) {
+            createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το άρθρο)", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar');
+        }
+        if(this.annotationsForConsultation.length > 0) {
+            createChart(this.annotationsForConsultation, "annotationsForConsultationChart", "Θέματα που θίγονται", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '75%', 'bar');
+        }
+        if(this.annotationProblemsForConsultation.length > 0) {
+            createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationChart", "Προβλήματα", "Πρόβηλμα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '75%', 'bar');
+        }
+        if(this.annotationsPerArticle.length > 0) {
+            createChart(this.annotationsPerArticle, "annotationsPerArticleChart", "Θέματα ανά άρθρο", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar');
+        }
+        if(this.annotationProblemsPerArticle.length > 0) {
+            createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Προβλήματα ανά άρθρο", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar');
+        }
         createUserBox(this);
         createListOfComments();
     };
