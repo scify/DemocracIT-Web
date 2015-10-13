@@ -69,7 +69,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     }
 
     this.annotationProblemsPerArticle = [];
-    console.log(annotationProblemsPerArticle);
     for (var i=0; i<annotationProblemsPerArticle.length; i++)
     {
         var articleTitle = "";
@@ -80,10 +79,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
         }
         this.annotationProblemsPerArticle.push([articleTitle + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:100%">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>', annotationProblemsPerArticle[i].article_id ])
     }
-
-    console.log(this.commentsPerArticle);
-    console.log(this.annotationsPerArticle);
-    console.log(this.annotationProblemsPerArticle);
 
     getUserById = function(userId) {
         for(var i=0; i<commenters.length; i++) {
@@ -113,29 +108,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             });
         },
 
-        /*getOpenGovCommentsByArticleId = function(articleId){
-        var instance = this;
-
-        var promise = $.ajax({
-            method: "GET",
-            url: "/comments/retrieve/forarticle",
-            cache:false,
-            data:{
-                articleId :articleId
-            },
-            beforeSend: function(){
-            },
-            success : function(data){
-                console.log(data)
-                createListOfComments(data);
-            },
-            error: function(x,z,y){
-                console.log(x)
-            }
-        });
-
-        return promise;
-    },*/
         loadListOfComments = function(articleId) {
             $(".commentsTabs").css("display","block");
             console.log("article id: " + articleId);
