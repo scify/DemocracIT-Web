@@ -1,11 +1,10 @@
 package model.dtos
 
 
-import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-import java.util.{ResourceBundle, Locale, Calendar, Date}
+import java.util.{Calendar, Date, Locale}
 
-import org.joda.time.{Period,Days, DateTime}
+import org.joda.time.DateTime
 import org.ocpsoft.prettytime.PrettyTime
 import utils.Pluralizer
 
@@ -48,7 +47,7 @@ case class Consultation( id:Long,
        // val lang = play.api.Play.current.configuration.getString("application.langs").get
       //  val locale = new Locale("el");
       // val stats = ResourceBundle.getBundle("org.ocpsoft.prettytime.i18n.Resources", locale);
-        val t = new PrettyTime(Calendar.getInstance().getTime(),new Locale("el"))
+        val t = new PrettyTime(Calendar.getInstance().getTime(), new Locale("el"))
         t.format(endDate)
 
     }

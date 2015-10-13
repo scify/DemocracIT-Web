@@ -156,7 +156,8 @@ class CommentsRepository {
                        from public.comments c
                          full outer join public.comment_opengov o on o.id =c.id
                          full outer join ratingCounter counter on counter.comment_id = c.id
-                         where c.article_id = $articleId  and c.source_type_id = 2
+                         where c.article_id = $articleId
+                            and c.source_type_id = 2
 
                          order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
 
