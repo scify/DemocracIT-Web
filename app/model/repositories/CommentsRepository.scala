@@ -43,6 +43,41 @@ class CommentsRepository {
 
   }
 
+  def getCommentsByAnnId (annId:Long,
+                          consultationId :Long):List[Comment]  = {
+
+    DB.withConnection { implicit c =>
+      val comments:List[Comment]=
+        SQL"""
+               with ratingCounter as
+                                   (
+                                    select cr.comment_id,
+                                   	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                                   	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                                    from comment_rating cr
+                                        inner join comments c on cr.comment_id  = c.id
+                                        inner join public.articles a on a.id = c.article_id
+                                     where a.consultation_id = $consultationId
+                                  group by cr.comment_id
+                                 )
+              select  c.*,ann.description,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name,
+                      cr.liked as userrating,
+                      counter.likes,
+                      counter.dislikes
+              from comments c
+                   inner join public.articles a on a.id = c.article_id
+                   inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
+                   inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
+                   inner join account.user u on u.id = c.user_id
+                   left outer join public.comment_rating cr on cr.comment_id = c.id
+                   left outer join ratingCounter counter on counter.comment_id = c.id
+              where a.consultation_id = $consultationId and ann.id = $annId""".as(CommentsParser.Parse *)
+
+
+      comments
+    }
+  }
+
   def getCommentsForConsultationByUserId (consultation_id:Long,
                                           user_id:UUID,
                                           loggedInUserId:Option[UUID]):List[CommentWithArticleName]  = {

@@ -196,7 +196,6 @@
         render: function() {
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
-                console.log(comment);
                 return (
                     <scify.Comment parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
                 );

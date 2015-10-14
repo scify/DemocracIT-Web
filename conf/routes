@@ -29,6 +29,7 @@ GET         /comments/cons/retrieve                       @controllers.ReporterC
 GET         /consultation/:consultationId                 @controllers.ConsultationController.getConsultation(consultationId :Long)
 GET         /comments/retrieve/forarticle/opengov         @controllers.ReporterController.getOpenGovCommentsByArticleId(articleId:Long)
 GET         /comments/retrieve/forarticle/dit             @controllers.ReporterController.getDITCommentsByArticleId(articleId:Long)
+GET         /comments/retrieve/byannid                    @controllers.ReporterController.getCommentsByAnnId(annId:Long, consultationId:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

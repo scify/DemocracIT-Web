@@ -104,24 +104,30 @@
                             }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationsForConsultationChart chart" id="annotationsForConsultationChart">
-                        @if(vm.getAnnotationsForConsultation(1).isEmpty) {
-                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
-                        }
+                            <div id="annotationsForConsultationInnerChart"></div>
+                            @if(vm.getAnnotationsForConsultation(1).isEmpty) {
+                                <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            } else {
+                                <div id="commentsPerAnnId"></div>
+                            }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationProblemsForConsultationChart chart" id="annotationProblemsForConsultationChart">
-                        @if(vm.getAnnotationsForConsultation(2).isEmpty) {
-                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
-                        }
+                            <div id="annotationProblemsForConsultationInnerChart"></div>
+                            @if(vm.getAnnotationsForConsultation(2).isEmpty) {
+                                <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            } else {
+                                <div id="commentsPerProblemId"></div>
+                            }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart">
-                        @if(vm.getAnnotationsPerArticle(1).isEmpty) {
-                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
-                        }
+                            @if(vm.getAnnotationsPerArticle(1).isEmpty) {
+                                <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart">
-                        @if(vm.getAnnotationsPerArticle(1).isEmpty) {
-                            <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
-                        }
+                            @if(vm.getAnnotationsPerArticle(1).isEmpty) {
+                                <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            }
                         </div>
 
                     </div>

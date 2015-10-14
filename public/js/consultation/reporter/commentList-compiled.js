@@ -76,6 +76,36 @@
             });
             //return promise;
         },
+        getCommentsByAnnId: function getCommentsByAnnId(annId, consultationId) {
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: "/comments/retrieve/byannid",
+                cache: false,
+                data: {
+                    annId: annId,
+                    consultationId: consultationId
+                },
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    instance.state.comments = data;
+                    //console.log(data);
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
+            });
+            //return promise;
+        },
         render: function render() {
             if (this.state.display) {
                 if (this.state.busy) {
