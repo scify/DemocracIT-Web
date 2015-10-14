@@ -43,7 +43,8 @@ img, .btn, i, a {
 
 .navbar .avatar {
   border-radius: 30px;
-  margin-top: -13px; }
+  margin-top: -13px;
+  max-height: 50px; }
 
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
