@@ -59,7 +59,7 @@
 
             return (
                 <div className="" onClick={this.refreshComments}>
-                    <a>{this.props.user.first_name} {this.props.user.last_name} ({this.props.user.role})</a>
+                    <a>{this.props.user.first_name} {this.props.user.last_name}</a>
                     <scify.InfoBox display={this.state.display} busy={this.state.busy} data={this.state.comments}/>
                 </div>
             );

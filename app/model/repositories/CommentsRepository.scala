@@ -250,10 +250,10 @@ class CommentsRepository {
               inner join public.consultation con on con.id = a.consultation_id
               where a.consultation_id = 3594
           )
-          select users.id as user_id, users.first_name, users.last_name, users.email, users.role, count(users.id) as number_of_comments
-          from users_temp users
-          inner join comm on users.id = comm.user_id
-          group by users.id""".as(UserCommentsStatsParser.Parse  *)
+          select account.user.id as user_id, account.user.firstname as first_name, account.user.lastname as last_name, account.user.email, account.user.role, count(account.user.id) as number_of_comments
+          from account.user
+          inner join comm on account.user.id = comm.user_id
+          group by account.user.id""".as(UserCommentsStatsParser.Parse  *)
 
       userCommentStats
 

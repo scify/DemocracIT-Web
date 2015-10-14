@@ -64,10 +64,7 @@
                     null,
                     this.props.user.first_name,
                     " ",
-                    this.props.user.last_name,
-                    " (",
-                    this.props.user.role,
-                    ")"
+                    this.props.user.last_name
                 ),
                 React.createElement(scify.InfoBox, { display: this.state.display, busy: this.state.busy, data: this.state.comments })
             );
