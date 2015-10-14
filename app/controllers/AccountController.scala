@@ -6,6 +6,7 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.viewmodels.forms._
 import play.api.i18n.MessagesApi
+import play.api.mvc.Cookie
 import scala.concurrent.Future
 
 
@@ -22,13 +23,15 @@ class AccountController @Inject() (val messagesApi: MessagesApi,
   //todo: handle returnUrl from query string and redirect there
   def signIn(returnUrl:Option[String]) = UserAwareAction.async { implicit request =>
     request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
+      case Some(user) => {
+        Future.successful(Redirect(routes.HomeController.index()))
+      }
       case None => {
         val view = views.html.account.signIn(SignInForm.form,returnUrl, socialProviderRegistry)
         //there is no easy way to redirect user to the return url after a facebook/twitter login.
         //For this reason we the page is about to open we save to a cookie the returnUrl parameter
-        val result =if (returnUrl.isDefined) Ok(view).withSession("returnUrl"-> returnUrl.get)
-                    else Ok(view)
+        val result =   if (returnUrl.isDefined) Ok(view).withCookies(Cookie("returnUrl", returnUrl.get))
+                     else Ok(view)
 
         Future.successful(result)
       }

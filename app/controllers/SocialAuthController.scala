@@ -11,7 +11,7 @@ import model.User
 import model.services.UserService
 import play.api.i18n.{ MessagesApi, Messages }
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.Action
+import play.api.mvc.{DiscardingCookie, Action}
 
 import scala.concurrent.Future
 
@@ -41,7 +41,8 @@ class SocialAuthController @Inject() (
   def authenticate(provider: String) = Action.async { implicit request =>
     {
       //retrieve the return url if it exists in the cookie. This is the easiest way to redirect the user after a social login
-      var returnUrl = request.session.get("returnUrl")
+      var cookie = request.cookies.get("returnUrl")
+      var returnUrl = if (cookie.isDefined) Some(cookie.get.value) else None
 
       (socialProviderRegistry.get[SocialProvider](provider) match {
         case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
@@ -59,7 +60,7 @@ class SocialAuthController @Inject() (
                   result <- env.authenticatorService.embed(value, authResult )
                 } yield {
                   env.eventBus.publish(LoginEvent(user, request, request2Messages))
-                  result.removingFromSession("returnUrl") //return url not needed any more
+                  result.discardingCookies(DiscardingCookie("returnUrl")) //return url not needed any more
                 }
               }
             }
