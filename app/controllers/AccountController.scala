@@ -23,7 +23,15 @@ class AccountController @Inject() (val messagesApi: MessagesApi,
   def signIn(returnUrl:Option[String]) = UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
-      case None => Future.successful(Ok(views.html.account.signIn(SignInForm.form,returnUrl, socialProviderRegistry)))
+      case None => {
+        val view = views.html.account.signIn(SignInForm.form,returnUrl, socialProviderRegistry)
+        //there is no easy way to redirect user to the return url after a facebook/twitter login.
+        //For this reason we the page is about to open we save to a cookie the returnUrl parameter
+        val result =if (returnUrl.isDefined) Ok(view).withSession("returnUrl"-> returnUrl.get)
+                    else Ok(view)
+
+        Future.successful(result)
+      }
     }
   }
 

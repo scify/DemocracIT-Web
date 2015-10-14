@@ -38,32 +38,37 @@ class SocialAuthController @Inject() (
    * @param provider The ID of the provider to authenticate against.
    * @return The result to display.
    */
-  def authenticate(provider: String, returnUrl:Option[String]) = Action.async { implicit request =>
+  def authenticate(provider: String) = Action.async { implicit request =>
+    {
+      //retrieve the return url if it exists in the cookie. This is the easiest way to redirect the user after a social login
+      var returnUrl = request.session.get("returnUrl")
 
-    var returnUrl = request.getQueryString("returnUrl")
-    (socialProviderRegistry.get[SocialProvider](provider) match {
-
-
-      case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
-        p.authenticate().flatMap {
-          case Left(result) => Future.successful(result)
-          case Right(authInfo) => for {
-            profile <- p.retrieveProfile(authInfo)
-            user <- userService.save(profile)
-            authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
-            authenticator <- env.authenticatorService.create(profile.loginInfo)
-            value <- env.authenticatorService.init(authenticator)
-            result <- env.authenticatorService.embed(value, Redirect(routes.HomeController.index()))
-          } yield {
-              env.eventBus.publish(LoginEvent(user, request, request2Messages))
-              result
+      (socialProviderRegistry.get[SocialProvider](provider) match {
+        case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
+            p.authenticate().flatMap {
+              case Left(result) =>Future.successful( result)
+              case Right(authInfo) =>{
+                val authResult =if (returnUrl.isDefined) Redirect(returnUrl.get,303)
+                                else Redirect(routes.HomeController.index())
+                for {
+                  profile <- p.retrieveProfile(authInfo)
+                  user <- userService.save(profile)
+                  authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
+                  authenticator <- env.authenticatorService.create(profile.loginInfo)
+                  value <- env.authenticatorService.init(authenticator)
+                  result <- env.authenticatorService.embed(value, authResult )
+                } yield {
+                  env.eventBus.publish(LoginEvent(user, request, request2Messages))
+                  result.removingFromSession("returnUrl") //return url not needed any more
+                }
+              }
             }
-        }
-      case _ => Future.failed(new ProviderException(s"Cannot authenticate with unexpected social provider $provider"))
-    }).recover {
-      case e: ProviderException =>
-        logger.error("Unexpected provider error", e)
-        Redirect(routes.AccountController.signIn(Some("asd"))).flashing("error" -> Messages("could.not.authenticate"))
+        case _ => Future.failed(new ProviderException(s"Cannot authenticate with unexpected social provider $provider"))
+      }).recover {
+        case e: ProviderException =>
+          logger.error("Unexpected provider error", e)
+          Redirect(routes.AccountController.signIn(returnUrl)).flashing("error" -> Messages("could.not.authenticate"))
+      }
     }
   }
 }
