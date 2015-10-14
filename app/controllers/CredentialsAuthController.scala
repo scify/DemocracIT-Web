@@ -52,11 +52,14 @@ class CredentialsAuthController @Inject() (
    */
   def authenticate = Action.async { implicit request =>
     SignInForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.account.signIn(form, socialProviderRegistry))),
+      form => Future.successful(BadRequest(views.html.account.signIn(form,None, socialProviderRegistry))),
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(routes.HomeController.index())
+
+          val result= if (data.returnUrl.isDefined) Redirect(data.returnUrl.get,SEE_OTHER)
+                      else Redirect(routes.HomeController.index())
+
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               val c = configuration.underlying
@@ -78,7 +81,7 @@ class CredentialsAuthController @Inject() (
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(routes.AccountController.signIn()).flashing("error" -> Messages("invalid.credentials"))
+            Redirect(routes.AccountController.signIn(None)).flashing("error" -> Messages("invalid.credentials"))
         }
       }
     )

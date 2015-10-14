@@ -7,10 +7,10 @@ GET         /                                             @controllers.HomeContr
 GET         /footer                                       @controllers.HomeController.footer
 GET         /header                                       @controllers.HomeController.header
 
-GET         /signIn                                       @controllers.AccountController.signIn
+GET         /signIn                                       @controllers.AccountController.signIn(returnUrl:Option[String])
 GET         /signUp                                       @controllers.AccountController.signUp
 GET         /signOut                                      @controllers.AccountController.signOut
-GET         /authenticate/:provider                       @controllers.SocialAuthController.authenticate(provider)
+GET         /authenticate/:provider                       @controllers.SocialAuthController.authenticate(provider,returnUrl:Option[String] ?=None)
 POST        /authenticate/credentials                     @controllers.CredentialsAuthController.authenticate
 POST        /signUp                                       @controllers.SignUpController.signUp
 

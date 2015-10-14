@@ -38,8 +38,12 @@ class SocialAuthController @Inject() (
    * @param provider The ID of the provider to authenticate against.
    * @return The result to display.
    */
-  def authenticate(provider: String) = Action.async { implicit request =>
+  def authenticate(provider: String, returnUrl:Option[String]) = Action.async { implicit request =>
+
+    var returnUrl = request.getQueryString("returnUrl")
     (socialProviderRegistry.get[SocialProvider](provider) match {
+
+
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         p.authenticate().flatMap {
           case Left(result) => Future.successful(result)
@@ -59,7 +63,7 @@ class SocialAuthController @Inject() (
     }).recover {
       case e: ProviderException =>
         logger.error("Unexpected provider error", e)
-        Redirect(routes.AccountController.signIn()).flashing("error" -> Messages("could.not.authenticate"))
+        Redirect(routes.AccountController.signIn(Some("asd"))).flashing("error" -> Messages("could.not.authenticate"))
     }
   }
 }

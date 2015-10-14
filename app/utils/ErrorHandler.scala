@@ -39,11 +39,11 @@ class ErrorHandler @Inject() (
 
         val isAjax = request.headers.get("X-Requested-With") == Some("XMLHttpRequest")
         if (isAjax){
-          Some(Future.successful(Unauthorized(play.api.libs.json.Json.toJson(routes.AccountController.signIn.url))))
+          Some(Future.successful(Unauthorized(play.api.libs.json.Json.toJson(routes.AccountController.signIn(None).url))))
         }
         else {
 
-          Some(Future.successful(Redirect(routes.AccountController.signIn)))
+          Some(Future.successful(Redirect(routes.AccountController.signIn(None))))
         }
 
   }
@@ -66,7 +66,7 @@ class ErrorHandler @Inject() (
           Some(Future.successful(Forbidden(play.api.libs.json.Json.toJson(messagesApi("access.denied")))))
         }
         else {
-          Some(Future.successful(Redirect(routes.AccountController.signIn)
+          Some(Future.successful(Redirect(routes.AccountController.signIn(None))
             .flashing("error" -> messagesApi("access.denied"))))
         }
 

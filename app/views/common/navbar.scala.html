@@ -41,17 +41,17 @@
                              @if(play.Play.application().configuration().getString("application.state") == "development") {
                                     <li><a href="@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
                              } else {
-                                <li><a href="http://beta.democracit.org@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                                <li><a href="@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
                              }
                         </ul>
                     </li>
                     }.getOrElse {
                         @if(play.Play.application().configuration().getString("application.state") == "development") {
                             <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
-                            <li id="login"><a href="@routes.AccountController.signIn">ΕΙΣΟΔΟΣ</a></li>
+                            <li id="login"><a href="@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
                         } else {
-                            <li id="register"><a href="http://beta.democracit.org@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
-                            <li id="login"><a href="http://beta.democracit.org@routes.AccountController.signIn">ΕΙΣΟΔΟΣ</a></li>
+                            <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
+                            <li id="login"><a href="@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
                         }
                     }
                 </ul>
