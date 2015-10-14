@@ -1,5 +1,6 @@
 @(user:Option[model.User], annotationsRelatedToProblems: Seq[model.dtos.AnnotationTags],
-  annotationsRelatedToTopics: Seq[model.dtos.AnnotationTags], consultationOpenGovUrl:String)
+  annotationsRelatedToTopics: Seq[model.dtos.AnnotationTags],
+  consultationOpenGovUrl:String)(implicit request: play.api.mvc.Request[Any])
 
 <div class="modal fade" id="toolbar-modal" tabindex="-1" role="dialog" aria-labelledby="annotate-toolbar">
     <div class="modal-dialog" role="document">
@@ -36,6 +37,7 @@
                             }
                             </select>
 
+
                             <label id="tag-problem-label"><span data-article="Αναγνωρίζετε κάποιο πρόβλημα στο άρθρο;" data-text="Αναγνωρίζετε κάποιο πρόβλημα;"></span>&nbsp;
                                 <i class="fa fa-info-circle"
                                 data-toggle="tooltip"
@@ -61,7 +63,7 @@
 
                         } else {
                             <div class="notLoggedinWrapper">
-                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a></p></div>
+                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
                             </div>
                         }
                         </div>

@@ -15,7 +15,8 @@ object SignInForm {
     mapping(
       "email" -> email,
       "password" -> nonEmptyText,
-      "rememberMe" -> boolean
+      "rememberMe" -> boolean,
+      "returnUrl" -> optional(text)
     )(Data.apply)(Data.unapply)
   )
 
@@ -29,5 +30,6 @@ object SignInForm {
   case class Data(
                    email: String,
                    password: String,
-                   rememberMe: Boolean)
+                   rememberMe: Boolean,
+                   returnUrl:Option[String])
 }
