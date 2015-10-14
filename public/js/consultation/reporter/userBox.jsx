@@ -86,7 +86,7 @@
                     );
                 }
                 return (
-                    <scify.CommentList data={this.props.data} parent="reporter"/>
+                    <scify.CommentList data={this.props.data} parent="reporterUserStats"/>
                 );
             } else {
                 return (

@@ -82,7 +82,7 @@
                     );
                 }
                 return (
-                    <scify.CommentList data={this.state.comments} parent="consultation"/>
+                    <scify.CommentList data={this.state.comments} parent="reporter"/>
                 );
             } else {
                 return (

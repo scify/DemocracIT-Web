@@ -221,7 +221,7 @@
             $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
         },
         render: function render() {
-            if (this.props.parent == "consultation") {
+            if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 var commentFromDB = this.props.data;
             } else {
                 var commentFromDB = this.props.data.comment;
@@ -275,7 +275,7 @@
             });
 
             var options, avatarDiv, commenterName, commentBody, annotatedText;
-            if (this.props.parent == "consultation") {
+            if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
@@ -303,7 +303,8 @@
                     "Σχόλιο: ",
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
-            } else if (this.props.parent == "reporter") {
+            } else if (this.props.parent == "reporterUserStats") {
+                console.log(this.props.data);
                 options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 commentBody = React.createElement(
                     "div",
@@ -316,6 +317,14 @@
                     { className: "htmlText" },
                     "Τμήμα κειμένου: ",
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
+                );
+            }
+            if (this.props.parent == "reporter") {
+                if (this.props.data.userAnnotatedText != null) annotatedText = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    "Τμήμα κειμένου: ",
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                 );
             }
             return React.createElement(

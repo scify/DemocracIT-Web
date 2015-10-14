@@ -91,7 +91,7 @@
                         React.createElement(scify.ReactLoader, { display: this.props.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporter" });
+                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporterUserStats" });
             } else {
                 return React.createElement("div", null);
             }

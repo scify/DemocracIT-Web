@@ -73,6 +73,7 @@ class CommentsRepository {
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
            """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
+
       comments.map(tuple => {
         new CommentWithArticleName(tuple._1, tuple._2)
       })
