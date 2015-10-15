@@ -282,7 +282,7 @@
                         {commenterName}
                         {commentBody}
                         {annotatedText}
-                        <div className="tags"> {taggedProblemsContainer} {taggedTopicsContainer}</div>
+                        <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>
                     </div>
                     {options}
                     <div className={iconsClasses}>

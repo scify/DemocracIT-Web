@@ -358,7 +358,13 @@
                     annotatedText,
                     React.createElement(
                         "div",
-                        { className: "tags" },
+                        { className: "tags htmlText" },
+                        React.createElement("i", { className: "fa fa-thumb-tack" }),
+                        React.createElement(
+                            "span",
+                            { className: "partName" },
+                            "Θέματα: "
+                        ),
                         " ",
                         taggedProblemsContainer,
                         " ",
