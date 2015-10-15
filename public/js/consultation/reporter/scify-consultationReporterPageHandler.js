@@ -118,19 +118,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }, 1000);
         },
 
-        loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
-            if(typeOfAnn == "annotation") {
-                window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-                $('html, body').animate({
-                    scrollTop: $("#commentsPerAnnIdPerArticle").offset().top -100
-                }, 1000);
-            } else if(typeOfAnn == "problem") {
-                window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
-                $('html, body').animate({
-                    scrollTop: $("#commentsPerProblemId").offset().top -100
-                }, 1000);
-            }
-        },
         loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
             if(typeOfAnn == "annotation") {
                 window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
@@ -144,6 +131,20 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 }, 1000);
             }
         },
+        loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
+            if(typeOfAnn == "annotation") {
+                window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+                $('html, body').animate({
+                    scrollTop: $("#commentsPerAnnIdPerArticle").offset().top -100
+                }, 1000);
+            } else if(typeOfAnn == "problem") {
+                window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+                $('html, body').animate({
+                    scrollTop: $("#commentsPerProblemIdPerArticle").offset().top -100
+                }, 1000);
+            }
+        },
+
         createListOfCommentsPerArticle = function(){
             var domElementOpenGovComments = document.getElementById("commentsOpenGov");
             var domElementDITComments = document.getElementById("commentsDIT");
@@ -162,6 +163,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByAnnIdPerArticle = function() {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
             window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+        },
+        createListOfCommentsByProblemIdPerArticle = function() {
+            var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
+            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -191,6 +196,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     'hAxis': {
                         title: xName,
                         minValue: 0
+                    },
+                    animation:{
+                        duration: 1000,
+                        easing: 'out',
                     },
                     'is3D':true,
                     'vAxis': {
@@ -246,6 +255,14 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             //sets the selection to null again
                             chart.setSelection();
                             break;
+                        case "annotationProblemsPerArticleInnerChart":
+                            var selection = chart.getSelection();
+                            var articleId = dataForChart[selection[0].row][3];
+                            var annTagId = dataForChart[selection[0].row][5];
+                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationid, "problem");
+                            //sets the selection to null again
+                            chart.setSelection();
+                            break;
                         default:
                             break;
 
@@ -288,13 +305,14 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             createChart(this.annotationsPerArticle, "annotationsPerArticleInnerChart", "Θέματα ανά άρθρο", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar', instance);
         }
         if(this.annotationProblemsPerArticle.length > 0) {
-            createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleChart", "Προβλήματα ανά άρθρο", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleInnerChart", "Προβλήματα ανά άρθρο", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
         }
         createUserBox(this);
         createListOfCommentsPerArticle();
         createListOfCommentsByAnnId();
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
+        createListOfCommentsByProblemIdPerArticle();
     };
 
     return {
