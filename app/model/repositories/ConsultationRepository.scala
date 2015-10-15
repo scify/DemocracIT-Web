@@ -20,15 +20,15 @@ class ConsultationRepository {
                (
 
                  select id as OrganizationId, title,
-             case when id in (323,324,325,326,327,328,350,351,331,332,349) then 'Υπουργεία'
-             when id in (343,345,347,342,341,346,348,344,340) then 'Πρώην Υπουργεία'
-             when id in (335,333,334,338,339,336,330,329,337) then 'Άλλοι φορείς'
+             case when group_title in ('Περιεχόμενο ανά Υπουργείο') then 'Υπουργεία'
+             when group_title  in ('Περιεχόμενο Πρώην Υπουργείων') then 'Πρώην Υπουργεία'
+             when group_title  in ('Περιεχόμενο άλλων Φορέων') then 'Άλλοι φορείς'
              else 'n/a'
              End  as categTitle,
-             case when id in (323,324,325,326,327,328,350,351,331,332,349) then 1
-             when id in (343,345,347,342,341,346,348,344,340) then 2
-             when id in (335,333,334,338,339,336,330,329,337) then 3
-             else 3
+             case when group_title in ('Περιεχόμενο ανά Υπουργείο') then 1
+                  when group_title  in ('Περιεχόμενο Πρώην Υπουργείων') then 2
+                  when group_title  in ('Περιεχόμενο άλλων Φορέων') then 3
+             else 4
              End  as order
              from public.organization_lkp
              ),
