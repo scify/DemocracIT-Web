@@ -353,6 +353,17 @@ a.load {
 .commentBox .htmlText {
   margin-top: 16px;
 }
+.htmlText {
+  background-color: white;
+  margin-top: 15px;
+  padding: 10px;
+}
+.htmlText .fa {
+  margin-right: 5px;
+}
+.partName {
+  font-weight: bold;
+}
 .commentBox .commentForm
 {
   display:none;

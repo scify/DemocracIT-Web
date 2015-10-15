@@ -264,16 +264,16 @@
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
 
 
-                commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
             } else if(this.props.parent == "reporterUserStats") {
                 console.log(this.props.data);
                 options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
-                commentBody = <div className="htmlText">Σχόλιο: <span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
-                annotatedText = <div className="htmlText">Τμήμα κειμένου: <span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
+                annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null)
-                    annotatedText = <div className="htmlText">Τμήμα κειμένου: <span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
             }
             return (
                 <div className="comment">
