@@ -129,4 +129,10 @@
 .userStatsTab tr:hover {
   cursor: pointer; }
 
+.statsBar {
+  background-color: #7cb6f7; }
+
+.statsBar a {
+  color: white; }
+
 /*# sourceMappingURL=reporter.css.map */
