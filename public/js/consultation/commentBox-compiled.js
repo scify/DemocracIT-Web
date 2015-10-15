@@ -137,7 +137,7 @@
                 { className: topClasses },
                 React.createElement(TotalCommentsLink, { onClick: this.refreshComments,
                     count: this.state.commentsCount,
-                    ource: this.props.source,
+                    source: this.props.source,
                     isdiscussionForTheWholeArticle: this.props.isdiscussionForTheWholeArticle }),
                 React.createElement(
                     "div",
