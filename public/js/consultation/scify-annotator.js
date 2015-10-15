@@ -142,7 +142,7 @@ scify.Annotator.prototype = (function(){
                         //add additional tags to the select | these are created based on the text use has selected from the ui
                         var select =  $('#annotationTagTopicId')
                         $.each(tags, function (i, tag) {
-                            select.prepend($("<option class='text-tag' value='-1'>"+tag+"</option>"));
+                            select.append($("<option class='text-tag extracted-auto' value='-1'>"+tag+"</option>"));
                         });
                         destroyAnnotationTopicTagsSelect();
                         initAnnotationTopicTagsSelect();
@@ -241,7 +241,7 @@ scify.Annotator.prototype = (function(){
         },
         initAnnotationTopicTagsSelect = function(){
             var firstTag = $("#annotationTagTopicId").find("option").first()
-            var placeHolderExample = firstTag ? "πχ '"+ firstTag.text()+"'" : "";
+            var placeHolderExample = firstTag && firstTag.length>0 ? "πχ '"+ firstTag.text()+"'" : "";
             $("#annotationTagTopicId").select2({
                 placeholder:  "κλικ εδώ για να θέσετε το θέμα "  + placeHolderExample,
                 tags: true,

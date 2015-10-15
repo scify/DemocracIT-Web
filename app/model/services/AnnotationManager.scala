@@ -6,8 +6,17 @@ import java.util.Date
 import model.dtos.{PlatformStats, _}
 import model.repositories._
 import model.viewmodels._
+import org.apache.http.NameValuePair
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.message.BasicNameValuePair
 import org.scify.democracit.solr.DitSorlQuery
+import play.api.libs.json.JsArray
+import play.api.libs.ws.WS
+import play.api.Play.current
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 class AnnotationManager {
 
@@ -15,8 +24,24 @@ class AnnotationManager {
   val commentsRepository = new CommentsRepository()
 
   def extractTags(input:String):Seq[String] = {
-    //todo: Integrate with paulopoulos library
-    "extracted-topic-from-paulopoulos"::Nil
+    import scala.concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration._
+
+    Await.result(
+    WS.url(play.api.Play.current.configuration.getString("application.webservice.termsExtraction").get)
+                    .withHeaders(("Content-Type" ->"application/x-www-form-urlencoded; charset=utf-8"))
+                    .post("text="+input) map {
+      response => {
+
+      val content =(response.json \ "content")
+
+      val tags = content.get.asInstanceOf[JsArray].value.map( x=>
+                        x.toString().replace("\"","")
+                ).toList
+        tags
+      }
+    },15 seconds)
+
   }
 
   def saveComment(comment:Comment): Comment = {
