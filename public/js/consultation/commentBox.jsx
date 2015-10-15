@@ -253,7 +253,7 @@
                     commentFromDB.dateAdded < this.props.consultationEndDate
                 });
 
-            var options,avatarDiv,commenterName,commentBody,annotatedText;
+            var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
@@ -275,6 +275,9 @@
                 if(this.props.data.userAnnotatedText != null)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
             }
+            if(taggedProblems.length > 0 || taggedTopics.length > 0)
+                topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
+
             return (
                 <div className="comment">
                     {avatarDiv}
@@ -282,7 +285,7 @@
                         {commenterName}
                         {commentBody}
                         {annotatedText}
-                        <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>
+                        {topicsHtml}
                     </div>
                     {options}
                     <div className={iconsClasses}>

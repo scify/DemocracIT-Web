@@ -273,7 +273,7 @@
                 hide: commentFromDB.source.commentSource == 2 || commentFromDB.dateAdded < this.props.consultationEndDate
             });
 
-            var options, avatarDiv, commenterName, commentBody, annotatedText;
+            var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
@@ -346,6 +346,21 @@
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                 );
             }
+            if (taggedProblems.length > 0 || taggedTopics.length > 0) topicsHtml = React.createElement(
+                "div",
+                { className: "tags htmlText" },
+                React.createElement("i", { className: "fa fa-thumb-tack" }),
+                React.createElement(
+                    "span",
+                    { className: "partName" },
+                    "Θέματα: "
+                ),
+                " ",
+                taggedProblemsContainer,
+                " ",
+                taggedTopicsContainer
+            );
+
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -356,20 +371,7 @@
                     commenterName,
                     commentBody,
                     annotatedText,
-                    React.createElement(
-                        "div",
-                        { className: "tags htmlText" },
-                        React.createElement("i", { className: "fa fa-thumb-tack" }),
-                        React.createElement(
-                            "span",
-                            { className: "partName" },
-                            "Θέματα: "
-                        ),
-                        " ",
-                        taggedProblemsContainer,
-                        " ",
-                        taggedTopicsContainer
-                    )
+                    topicsHtml
                 ),
                 options,
                 React.createElement(
