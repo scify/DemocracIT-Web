@@ -110,7 +110,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
         loadListOfCommentsPerArticle = function(articleId) {
             $(".commentsTabs").css("display","block");
-            console.log("article id: " + articleId);
             window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
             window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
 
@@ -200,18 +199,22 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     if(chartId == "commentsPerArticleInnerChart") {
                         var selection = chart.getSelection();
                         var articleId = dataForChart[selection[0].row][3];
-                        var numOfComments = dataForChart[selection[0].row][4];
                         loadListOfCommentsPerArticle(articleId);
+                        //sets the selection to null again
+                        chart.setSelection();
                     } else if(chartId == "annotationsForConsultationInnerChart") {
                         var selection = chart.getSelection();
-                        if(selection != null) {
-                            var annTagId = dataForChart[selection[0].row][3];
-                            loadListOfCommentsByAnnId(annTagId, instance.consultationid, "annotation");
-                        }
+                        var annTagId = dataForChart[selection[0].row][3];
+                        loadListOfCommentsByAnnId(annTagId, instance.consultationid, "annotation");
+                        //sets the selection to null again
+                        chart.setSelection();
                     } else if(chartId == "annotationProblemsForConsultationInnerChart") {
                         var selection = chart.getSelection();
+                        console.log(selection[0]);
                         var annTagId = dataForChart[selection[0].row][3];
                         loadListOfCommentsByAnnId(annTagId, instance.consultationid, "problem");
+                        //sets the selection to null again
+                        chart.setSelection();
                     }
                 });
             }
