@@ -299,7 +299,12 @@
                 commentBody = React.createElement(
                     "div",
                     { className: "htmlText" },
-                    "Σχόλιο: ",
+                    React.createElement("i", { className: "fa fa-comment-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Σχόλιο: "
+                    ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
             } else if (this.props.parent == "reporterUserStats") {
@@ -308,13 +313,23 @@
                 commentBody = React.createElement(
                     "div",
                     { className: "htmlText" },
-                    "Σχόλιο: ",
+                    React.createElement("i", { className: "fa fa-comment-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Σχόλιο: "
+                    ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
                 );
                 annotatedText = React.createElement(
                     "div",
                     { className: "htmlText" },
-                    "Τμήμα κειμένου: ",
+                    React.createElement("i", { className: "fa fa-file-text-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Τμήμα κειμένου: "
+                    ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
                 );
             }
@@ -322,7 +337,12 @@
                 if (this.props.data.userAnnotatedText != null) annotatedText = React.createElement(
                     "div",
                     { className: "htmlText" },
-                    "Τμήμα κειμένου: ",
+                    React.createElement("i", { className: "fa fa-file-text-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Τμήμα κειμένου: "
+                    ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                 );
             }
@@ -338,7 +358,13 @@
                     annotatedText,
                     React.createElement(
                         "div",
-                        { className: "tags" },
+                        { className: "tags htmlText" },
+                        React.createElement("i", { className: "fa fa-thumb-tack" }),
+                        React.createElement(
+                            "span",
+                            { className: "partName" },
+                            "Θέματα: "
+                        ),
                         " ",
                         taggedProblemsContainer,
                         " ",

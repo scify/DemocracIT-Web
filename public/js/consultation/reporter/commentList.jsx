@@ -102,6 +102,36 @@
             });
             //return promise;
         },
+        getCommentsByAnnIdPerArticle : function(annId, articleId){
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: "/comments/retrieve/byannid/perarticle",
+                cache:false,
+                data:{
+                    annId :annId,
+                    articleId: articleId
+                },
+                beforeSend: function(){
+                    instance.state.busy=true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success : function(data){
+                    instance.state.comments = data;
+                    //console.log(data);
+                },
+                complete: function(){
+                    instance.state.busy=false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function(x,z,y){
+                    console.log(x);
+                }
+            });
+            //return promise;
+        },
         render: function() {
             if(this.state.display) {
                 if (this.state.busy) {
