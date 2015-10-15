@@ -121,8 +121,11 @@
                             }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationsPerArticleChart chart" id="annotationsPerArticleChart">
+                            <div id="annotationsPerArticleInnerChart"></div>
                             @if(vm.getAnnotationsPerArticle(1).isEmpty) {
                                 <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
+                            } else {
+                                <div id="commentsPerAnnIdPerArticle"></div>
                             }
                         </div>
                         <div role="tabpanel" class="tab-pane annotationProblemsPerArticleChart chart" id="annotationProblemsPerArticleChart">

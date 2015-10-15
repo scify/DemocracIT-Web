@@ -126,4 +126,7 @@
   margin-top: 20px;
   margin-bottom: 10%; }
 
+.userStatsTab tr:hover {
+  cursor: pointer; }
+
 /*# sourceMappingURL=reporter.css.map */
