@@ -5,7 +5,8 @@ import java.util.concurrent.TimeUnit
 import java.util.{Calendar, Date, Locale}
 
 import org.joda.time.DateTime
-import org.ocpsoft.prettytime.PrettyTime
+import org.ocpsoft.prettytime.units.Day
+import org.ocpsoft.prettytime.{Duration, TimeFormat, PrettyTime}
 import utils.Pluralizer
 
 
@@ -48,9 +49,46 @@ case class Consultation( id:Long,
       //  val locale = new Locale("el");
       // val stats = ResourceBundle.getBundle("org.ocpsoft.prettytime.i18n.Resources", locale);
         val t = new PrettyTime(Calendar.getInstance().getTime(), new Locale("el"))
-        t.format(endDate)
 
+    try{
+      //todo: on production the _el.properties are not loaded and the english one's are always displayed. Could not find out why, skipped to manual calculation of the string due to lack of development time needed to resolve the issue
+          manualCalculation(t)
     }
+    catch
+      {
+        case _: Throwable =>  t.format(endDate)
+      }
+    }
+
+  private def manualCalculation(t:PrettyTime):String = {
+    val approximateDuration = t.approximateDuration(endDate)
+    val unit =approximateDuration.getUnit()
+    import scala.collection.JavaConverters._
+    val duration = t.calculatePreciseDuration(endDate).asScala.toList
+    val d = duration.filter(p=>p.getUnit== unit)
+    val quantity =Math.abs(d.head.getQuantity())
+
+    var prefix="πριν "
+    if (approximateDuration.isInFuture())
+      prefix="σε "
+
+    if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Day])
+      prefix + utils.Pluralizer.get(quantity ,"ημέρα","ημέρες")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Week])
+      prefix + utils.Pluralizer.get(quantity ,"εβδομάδα","εβδομάδες")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Decade])
+      prefix + utils.Pluralizer.get(quantity ,"δεκαετία","δεκαετίες")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Month])
+      prefix + utils.Pluralizer.get(quantity ,"μήνα","μήνες")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Year])
+      prefix + utils.Pluralizer.get(quantity ,"χρόνο","χρόνια")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Hour])
+      prefix +  utils.Pluralizer.get(quantity ,"ώρα","ώρες")
+    else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Minute])
+      prefix +  utils.Pluralizer.get(quantity ,"λεπτό","λεπτά")
+    else
+      t.format(endDate)
+  }
 
 }
 
