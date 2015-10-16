@@ -225,6 +225,7 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
+            console.log(commentFromDB);
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                     return React.createElement(
@@ -308,7 +309,6 @@
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
             } else if (this.props.parent == "reporterUserStats") {
-                console.log(this.props.data);
                 options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 commentBody = React.createElement(
                     "div",

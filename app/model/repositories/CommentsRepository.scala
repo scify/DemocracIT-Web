@@ -138,11 +138,32 @@ class CommentsRepository {
               from comments c
                    inner join public.articles a on a.id = c.article_id
                    inner join account.user u on u.id = c.user_id
-                   left outer join public.comment_rating cr on cr.user_id = CAST($loggedInUserId as UUID)  and cr.comment_id = c.id
+                   left outer join public.comment_rating cr on cr.user_id = CAST($user_id as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
            """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
+      val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
+                             select ac.public_comment_id, tag.* from annotation_comment ac
+                                    inner join annotation_tag tag on ac.annotation_tag_id = tag.id
+                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join articles a on a.id = c.article_id
+                                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                    where c.user_id = CAST($user_id as UUID) and a.consultation_id = $consultation_id
+                            """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
+
+
+      relatedTags.groupBy( _._1).foreach {
+        tuple =>
+          val c= comments.find(com => com._2.id.get == tuple._1 )
+          if (c.isDefined)
+            {
+              var comment = c.get._2
+              comment.annotationTagProblems= tuple._2.filter(_._2.type_id==2).map(_._2)
+              comment.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
+            }
+
+      }
 
       comments.map(tuple => {
         new CommentWithArticleName(tuple._1, tuple._2)

@@ -25,7 +25,6 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
                    ) = UserAwareAction {  implicit request =>
 
     import utils.ImplicitReadWrites._
-    println("Hello, world")
     val comments = reporterManager.getCommentsForConsultationByUserId(consultationId, userId, request.identity)
     Ok(Json.toJson(comments))
   }
