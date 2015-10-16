@@ -487,4 +487,9 @@ a.load {
   color: #555;
   cursor: pointer; }
 
+.noStats {
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10%; }
+
 /*# sourceMappingURL=consultation.css.map */
