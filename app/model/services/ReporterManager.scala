@@ -1,6 +1,6 @@
 package model.services
 
-import java.util.UUID
+import java.util.{Date, UUID}
 
 import model.User
 import model.dtos.CommentWithArticleName
@@ -73,9 +73,9 @@ class ReporterManager {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getOpenGovCommentsForConsultation(consultationId: Long)
-    var commentsToString = ""
+    var commentsToString = "Comment body, Annotated Text, Commenter Name, Date Added" + sys.props("line.separator")
     for (comment <- comments) {
-      commentsToString += comment.body + "," + comment.userAnnotatedText.get +  "," + comment.fullName + "," + comment.dateAdded + sys.props("line.separator")
+      commentsToString += '"' + comment.body + '"' + "," + '\"' + comment.userAnnotatedText + '"'  +  "," + comment.fullName + "," + '"' + prettyDateFormat(comment.dateAdded) + '"'  + sys.props("line.separator")
     }
     //println(commentsToString)
     commentsToString
@@ -85,9 +85,9 @@ class ReporterManager {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getDITCommentsForConsultation(consultationId: Long)
-    var commentsToString = ""
+    var commentsToString = "Comment body, Annotated Text, Commenter Name, Date Added" + sys.props("line.separator")
     for (comment <- comments) {
-      commentsToString += comment.body + "," + comment.userAnnotatedText.get +  "," + comment.fullName + "," + comment.dateAdded
+      commentsToString += '"' + comment.body + '"' + "," + '"' + comment.userAnnotatedText.get + '"'  +  "," + comment.fullName + "," + '"' + prettyDateFormat(comment.dateAdded) + '"'
       for(annotationTag <- comment.annotationTagTopics) {
         commentsToString += "," + annotationTag.description
       }
@@ -126,5 +126,12 @@ class ReporterManager {
     }
     //println(commentsToString)
     annTagWithCommentsToString
+  }
+
+  def prettyDateFormat(date:Date) = {
+    val formatIncomming = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val formatOutgoing = new java.text.SimpleDateFormat("dd MMM yyyy HH:mm aaa")
+    val dateFormated = formatOutgoing.format(formatIncomming.parse(date.toString))
+    dateFormated
   }
 }
