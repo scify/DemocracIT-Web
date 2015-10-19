@@ -165,3 +165,17 @@
 .statsBar a {
   color:white;
 }
+
+.downloadStats {
+  margin-top: 20px;
+  list-style-type: none;
+  padding: 0px;
+}
+
+.downloadStats li i {
+  margin-right: 5px;
+}
+
+.downloadStats li a:hover, a:focus {
+  text-decoration: none;
+}

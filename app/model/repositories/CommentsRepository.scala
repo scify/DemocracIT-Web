@@ -305,6 +305,87 @@ class CommentsRepository {
     }
   }
 
+  def getOpenGovCommentsForConsultation(consultationId: Long):List[Comment] = {
+    DB.withConnection { implicit c =>
+
+      val comments: List[Comment] =
+        SQL"""with ratingCounter as
+                      (
+                       select cr.comment_id,
+                      	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                      	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                       from comment_rating cr
+                           full outer join comments c on cr.comment_id  = c.id
+                           inner join public.articles a on a.id = c.article_id
+                           where a.consultation_id = $consultationId
+                     group by cr.comment_id
+                    )
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl,
+                             counter.likes,
+                             counter.dislikes, false as userrating
+                       from public.comments c
+                         inner join public.articles a on a.id = c.article_id
+                         full outer join public.comment_opengov o on o.id =c.id
+                         full outer join ratingCounter counter on counter.comment_id = c.id
+                         where a.consultation_id = $consultationId
+                            and c.source_type_id = 2
+
+                         order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
+
+      comments
+    }
+  }
+
+  def getDITCommentsForConsultation(consultationId: Long):List[Comment] = {
+    DB.withConnection { implicit c =>
+
+      val comments: List[Comment] =
+        SQL"""with ratingCounter as
+                     (
+                      select cr.comment_id,
+                      sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                      sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                      from comment_rating cr
+                          full outer join comments c on cr.comment_id  = c.id
+        inner join public.articles a on a.id = c.article_id
+                                    where a.consultation_id = $consultationId
+                    group by cr.comment_id
+                   )
+                     select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name,
+                     cr.liked as userrating,
+                     counter.likes,
+                     counter.dislikes
+             from comments c
+                  inner join public.articles a on a.id = c.article_id
+                  inner join account.user u on u.id = c.user_id
+                  left outer join public.comment_rating cr on cr.user_id = c.user_id  and cr.comment_id = c.id
+                  left outer join ratingCounter counter on counter.comment_id = c.id
+             where a.consultation_id = $consultationId
+
+              order by c.date_added desc, c.id desc""".as(CommentsParser.Parse *)
+
+      val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
+                             select ac.public_comment_id, tag.* from annotation_comment ac
+                                    inner join annotation_tag tag on ac.annotation_tag_id = tag.id
+                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                    inner join public.articles a on a.id = c.article_id
+                                    where a.consultation_id = $consultationId
+                            """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
+
+      // group result List [Long,(tuple)]
+      //                                the tuple consists of List(Long,AnnotationTags))
+      relatedTags.groupBy( _._1).foreach {
+        tuple =>
+          val c= comments.filter(_.id.get == tuple._1).head
+          c.annotationTagProblems = tuple._2.filter(_._2.type_id==2).map(_._2)
+          c.annotationTagTopics = tuple._2.filter(_._2.type_id==1).map(_._2)
+      }
+
+      comments
+    }
+  }
+
   def getTagsForConsultation(consultation_id:Long):List[AnnotationTagWithComments] = {
 
     DB.withConnection { implicit c =>

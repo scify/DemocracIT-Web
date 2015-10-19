@@ -59,11 +59,12 @@
                 <div role="tabpanel" class="tab-pane active" id="annotatorContent">
                     <ul class="statsBar nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"> <a href="#commentsPerArticleChart" aria-controls="commentsPerArticleChart" role="tab" data-toggle="tab">Σχόλια ανά άρθρο</a></li>
-                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Θέματα που θίγονται</a></li>
+                        <li role="presentation"> <a href="#annotationsForConsultationChart" aria-controls="annotationsForConsultationChart" role="tab" data-toggle="tab">Θέματα</a></li>
                         <li role="presentation"> <a href="#annotationProblemsForConsultationChart" aria-controls="annotationProblemsForConsultationChart" role="tab" data-toggle="tab">Προβλήματα</a></li>
                         <li role="presentation"> <a href="#annotationsPerArticleChart" aria-controls="annotationsPerArticleChart" role="tab" data-toggle="tab">Θέματα ανά άρθρο</a></li>
                         <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
                         <li role="presentation"> <a href="#userStatsTab" aria-controls="userStatsTab" role="tab" data-toggle="tab">Στατιστικά χρηστών</a></li>
+                        <li role="presentation"> <a href="#userStatsDownloadTab" aria-controls="userStatsDownloadTab" role="tab" data-toggle="tab">Κατέβασμα Σχολίων</a></li>
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active" id="commentsPerArticleChart"><div class="commentsPerArticleChart chart" id="commentsPerArticleInnerChart"></div>
@@ -143,6 +144,12 @@
 
                                 </table>
                             }
+                        </div>
+                        <div role="tabpanel" class="tab-pane userStatsDownloadTab" id="userStatsDownloadTab">
+                            <ul class="downloadStats">
+                                <li><a href="/comments/cons/opengov/retrieve/csv/@vm.consultation.id"><i class="fa fa-download"></i>Κατεβάστε τα σχόλια για τη διαβούλευση από το opengov σε .csv αρχείο</a></li>
+                                <li><a href="/comments/cons/dit/retrieve/csv/@vm.consultation.id"><i class="fa fa-download"></i>Κατεβάστε τα σχόλια για τη διαβούλευση από το Democracit σε .csv αρχείο</a></li>
+                            </ul>
                         </div>
                     </div>
 

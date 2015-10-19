@@ -52,4 +52,16 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
     import utils.ImplicitReadWrites._
     Ok(Json.toJson(comments))
   }
+
+  def getOpenGovCommentsCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getOpenGovCommentsCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsOpenGov.csv"))
+  }
+
+  def getDITCommentsCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getDITCommentsCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsDIT.csv"))
+  }
 }

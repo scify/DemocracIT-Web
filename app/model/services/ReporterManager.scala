@@ -68,4 +68,35 @@ class ReporterManager {
     comments = commentsRepository.getCommentsByAnnIdPerArticle(annId: Long, articleId: Long)
     comments
   }
+
+  def getOpenGovCommentsCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getOpenGovCommentsForConsultation(consultationId: Long)
+    var commentsToString = ""
+    for (comment <- comments) {
+      commentsToString += comment.body + "," + comment.userAnnotatedText.get +  "," + comment.fullName + "," + comment.dateAdded + sys.props("line.separator")
+    }
+    //println(commentsToString)
+    commentsToString
+  }
+
+  def getDITCommentsCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getDITCommentsForConsultation(consultationId: Long)
+    var commentsToString = ""
+    for (comment <- comments) {
+      commentsToString += comment.body + "," + comment.userAnnotatedText.get +  "," + comment.fullName + "," + comment.dateAdded
+      for(annotationTag <- comment.annotationTagTopics) {
+        commentsToString += "," + annotationTag.description
+      }
+      for(annotationTagProblem <- comment.annotationTagProblems) {
+        commentsToString += "," + annotationTagProblem.description
+      }
+      commentsToString += sys.props("line.separator")
+    }
+    //println(commentsToString)
+    commentsToString
+  }
 }
