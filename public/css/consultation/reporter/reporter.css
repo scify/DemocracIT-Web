@@ -16,6 +16,9 @@
   margin-bottom: 3px;
 }
 */
+.statsBar.nav-tabs > li.active > a, .statsBar.nav-tabs > li.active > a:hover, .statsBar.nav-tabs > li.active > a:focus {
+  border: none !important; }
+
 .statsBar > li > a {
   border-radius: 0px;
   border: none;
