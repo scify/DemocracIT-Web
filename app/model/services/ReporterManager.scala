@@ -106,7 +106,23 @@ class ReporterManager {
     annTagWithComments = commentsRepository.getTagsForConsultation(consultationId: Long)
     var annTagWithCommentsToString = ""
     for (annTagWithComment <- annTagWithComments) {
-      annTagWithCommentsToString += annTagWithComment.annotationTag.description + "," + annTagWithComment.numberOfComments + sys.props("line.separator")
+      if(annTagWithComment.annotationTag.type_id == 1) {
+        annTagWithCommentsToString += annTagWithComment.annotationTag.description + "," + annTagWithComment.numberOfComments + sys.props("line.separator")
+      }
+    }
+    //println(commentsToString)
+    annTagWithCommentsToString
+  }
+
+  def getProblemsForConsultationCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var annTagWithComments :List[model.dtos.AnnotationTagWithComments] = Nil
+    annTagWithComments = commentsRepository.getTagsForConsultation(consultationId: Long)
+    var annTagWithCommentsToString = ""
+    for (annTagWithComment <- annTagWithComments) {
+      if(annTagWithComment.annotationTag.type_id == 2) {
+        annTagWithCommentsToString += annTagWithComment.annotationTag.description + "," + annTagWithComment.numberOfComments + sys.props("line.separator")
+      }
     }
     //println(commentsToString)
     annTagWithCommentsToString

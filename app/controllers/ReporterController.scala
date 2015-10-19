@@ -68,6 +68,12 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
   def getAnnotationsForConsultationCSV(consultationId: Long) = UserAwareAction { implicit request =>
     val response = OK
     val comments = reporterManager.getAnnotationsForConsultationCSV(consultationId)
-    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsDIT.csv"))
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsPerAnnotationTag.csv"))
+  }
+
+  def getProblemsForConsultationCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getProblemsForConsultationCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsPerProblemTag.csv"))
   }
 }
