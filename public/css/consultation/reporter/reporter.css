@@ -16,6 +16,16 @@
   margin-bottom: 3px;
 }
 */
+.statsBar > li > a {
+  border-radius: 0px;
+  border: none;
+  margin: 0px; }
+
+.statsBar > li > a:hover {
+  background-color: #ed6d46;
+  border: none;
+  margin: 0px; }
+
 .chart {
   margin: 20px; }
 
