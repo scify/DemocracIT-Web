@@ -168,12 +168,15 @@ scify.Annotator.prototype = (function(){
 
             if (target.closest(".title").length>0)
             {
+
                 $("#myModalLabel").text("Παρατήρηση/Σχόλιο για όλοκληρο το άρθρο:");
                 topicsLabel.text(topicsLabel.data("article"));
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("article"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("article"));
                 problemsLabel.text(problemsLabel.data("article"));
                 toolbar.find("blockquote").hide();
+                toolbar.find("input[name='discussionroomtypeid']").val(1);
+
             }
             else{
                 $("#myModalLabel").text("Παρατήρηση/Σχόλιο για το τμήμα κειμένου:");
@@ -181,6 +184,7 @@ scify.Annotator.prototype = (function(){
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
                 problemsLabel.text(problemsLabel.data("text"));
+                toolbar.find("input[name='discussionroomtypeid']").val(2);
                 toolbar.find("blockquote").show();
             }
 

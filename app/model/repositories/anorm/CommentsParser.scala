@@ -18,6 +18,7 @@ object CommentsParser{
     str("comment") ~
     int("source_type_id") ~
     get[Option[Long]]("discussion_thread_id") ~
+    get[Option[Int]]("discussion_thread_type_id") ~
     get[Option[java.util.UUID]]("user_id") ~
     str("fullName") ~
     get[Option[String]]("avatarUrl") ~
@@ -30,10 +31,10 @@ object CommentsParser{
     get[Option[Int]]("dislikes") ~
     get[Option[Boolean]]("userrating")  map
       {
-        case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~
+        case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~ discussion_thread_type_id ~
              user_id ~ full_name ~ avatarUrl ~ profileUrl ~ date_added ~ revision ~depth ~ annotatedText  ~ likes ~ dislikes ~ userrating =>
 
-          val discussionThread = if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id,"","",None)) else None
+          val discussionThread = if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id, discussion_thread_type_id.get,"","",None)) else None
           new Comment(Some(id),
                       article_id,
                       if (source_type_id==1) CommentSource.Democracit else  CommentSource.OpenGov,

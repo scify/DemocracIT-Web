@@ -43,8 +43,8 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-       val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
-       val comment = Comment(None, annotation.articleId,CommentSource.OpenGov,
+       val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+       val comment = Comment(None, annotation.articleId, CommentSource.OpenGov,
                            annotation.body,
                            annotation.userAnnotatedText,
                            Some(request.identity.userID),
