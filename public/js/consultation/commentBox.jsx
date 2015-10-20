@@ -226,7 +226,6 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
-            console.log(commentFromDB);
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                 return (
@@ -270,13 +269,18 @@
             } else if(this.props.parent == "reporterUserStats") {
                 options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
-                annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
+                if(this.props.data.discussionThread.discussion_thread_type_id == 2)
+                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
+                else
+                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null) {
-                    console.log(this.props.data);
                     if(this.props.data.userAnnotatedText)
-                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                        if(this.props.data.discussionThread.discussion_thread_type_id == 2)
+                            annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                        else
+                            annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
                 }
             }
             if(taggedProblems.length > 0 || taggedTopics.length > 0)

@@ -93,7 +93,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
     var addRelevantLawsHandler = function(){
             $(".relevantLawsBtn").on("click", function(){
-                console.log($(this).context.id);
                 $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
                 if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
                     $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
@@ -242,7 +241,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                         case "annotationProblemsForConsultationInnerChart":
                             var selection = chart.getSelection();
                             var annTagId = dataForChart[selection[0].row][3];
-                            console.log(dataForChart[selection[0].row]);
                             loadListOfCommentsByAnnId(annTagId, instance.consultationid, "problem");
                             //sets the selection to null again
                             chart.setSelection();

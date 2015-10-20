@@ -244,7 +244,7 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl,
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,
                              counter.likes,
                              counter.dislikes, false as userrating
                        from public.comments c

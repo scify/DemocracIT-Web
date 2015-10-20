@@ -226,7 +226,6 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
-            console.log(commentFromDB);
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                     return React.createElement(
@@ -322,7 +321,7 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
                 );
-                annotatedText = React.createElement(
+                if (this.props.data.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
                     "div",
                     { className: "htmlText" },
                     React.createElement("i", { className: "fa fa-file-text-o" }),
@@ -332,12 +331,21 @@
                         "Τμήμα κειμένου: "
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
+                );else annotatedText = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    React.createElement("i", { className: "fa fa-file-text-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Όνομα άρθρου: "
+                    ),
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
                 );
             }
             if (this.props.parent == "reporter") {
                 if (this.props.data.userAnnotatedText != null) {
-                    console.log(this.props.data);
-                    if (this.props.data.userAnnotatedText) annotatedText = React.createElement(
+                    if (this.props.data.userAnnotatedText) if (this.props.data.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
                         "div",
                         { className: "htmlText" },
                         React.createElement("i", { className: "fa fa-file-text-o" }),
@@ -345,6 +353,16 @@
                             "span",
                             { className: "partName" },
                             "Τμήμα κειμένου: "
+                        ),
+                        React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
+                    );else annotatedText = React.createElement(
+                        "div",
+                        { className: "htmlText" },
+                        React.createElement("i", { className: "fa fa-file-text-o" }),
+                        React.createElement(
+                            "span",
+                            { className: "partName" },
+                            "Όνομα άρθρου: "
                         ),
                         React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                     );
