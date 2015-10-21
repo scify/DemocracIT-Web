@@ -325,7 +325,7 @@ class CommentsRepository {
                            where a.consultation_id = $consultationId
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl,
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,
                              counter.likes,
                              counter.dislikes, false as userrating
                        from public.comments c
@@ -361,6 +361,7 @@ class CommentsRepository {
                      counter.likes,
                      counter.dislikes
              from comments c
+                  inner join public.articles a on a.id = c.article_id
                   inner join account.user u on u.id = c.user_id
                   inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                   left outer join public.comment_rating cr on cr.user_id = c.user_id  and cr.comment_id = c.id
