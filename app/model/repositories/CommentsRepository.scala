@@ -65,6 +65,7 @@ class CommentsRepository {
                       counter.likes,
                       counter.dislikes
               from comments c
+                   inner join public.articles a on a.id = c.article_id
                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                    inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
                    inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
