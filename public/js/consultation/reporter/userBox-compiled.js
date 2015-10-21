@@ -41,6 +41,7 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
+                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;

@@ -321,7 +321,7 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
                 );
-                if (this.props.data.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
+                if (this.props.data.comment.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
                     "div",
                     { className: "htmlText" },
                     React.createElement("i", { className: "fa fa-file-text-o" }),

@@ -269,7 +269,7 @@
             } else if(this.props.parent == "reporterUserStats") {
                 options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
-                if(this.props.data.discussionThread.discussion_thread_type_id == 2)
+                if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
                 else
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
