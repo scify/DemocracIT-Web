@@ -284,6 +284,13 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 var domElementToAddComponent = document.getElementById("box_" + userId);
                 scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
             });
+        },
+        attachTooltips = function () {
+            $("#usersStatsTooltip").attr('title', 'Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια');
+            $('#usersStatsTooltip').click(function () {
+                console.log("sfdgdg");
+                $('#usersStatsTooltip').mouseover();
+            });
         }
 
     init = function(){
@@ -311,6 +318,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
         createListOfCommentsByProblemIdPerArticle();
+        attachTooltips();
+
     };
 
     return {
