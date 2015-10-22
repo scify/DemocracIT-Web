@@ -1,6 +1,6 @@
 package model.services
 
-import java.util.UUID
+import java.util.{Date, UUID}
 
 import model.User
 import model.dtos.CommentWithArticleName
@@ -67,5 +67,71 @@ class ReporterManager {
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getCommentsByAnnIdPerArticle(annId: Long, articleId: Long)
     comments
+  }
+
+  def getOpenGovCommentsCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getOpenGovCommentsForConsultation(consultationId: Long)
+    var commentsToString = "Comment body, Annotated Text, Commenter Name, Date Added" + sys.props("line.separator")
+    for (comment <- comments) {
+      commentsToString += '"' + comment.body + '"' + "," + '\"' + comment.userAnnotatedText + '"'  +  "," + comment.fullName + "," + '"' + prettyDateFormat(comment.dateAdded) + '"'  + sys.props("line.separator")
+    }
+    //println(commentsToString)
+    commentsToString
+  }
+
+  def getDITCommentsCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getDITCommentsForConsultation(consultationId: Long)
+    var commentsToString = "Comment body, Annotated Text, Commenter Name, Date Added" + sys.props("line.separator")
+    for (comment <- comments) {
+      commentsToString += '"' + comment.body + '"' + "," + '"' + comment.userAnnotatedText.get + '"'  +  "," + comment.fullName + "," + '"' + prettyDateFormat(comment.dateAdded) + '"'
+      for(annotationTag <- comment.annotationTagTopics) {
+        commentsToString += "," + annotationTag.description
+      }
+      for(annotationTagProblem <- comment.annotationTagProblems) {
+        commentsToString += "," + annotationTagProblem.description
+      }
+      commentsToString += sys.props("line.separator")
+    }
+    //println(commentsToString)
+    commentsToString
+  }
+
+  def getAnnotationsForConsultationCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var annTagWithComments :List[model.dtos.AnnotationTagWithComments] = Nil
+    annTagWithComments = commentsRepository.getTagsForConsultation(consultationId: Long)
+    var annTagWithCommentsToString = ""
+    for (annTagWithComment <- annTagWithComments) {
+      if(annTagWithComment.annotationTag.type_id == 1) {
+        annTagWithCommentsToString += annTagWithComment.annotationTag.description + "," + annTagWithComment.numberOfComments + sys.props("line.separator")
+      }
+    }
+    //println(commentsToString)
+    annTagWithCommentsToString
+  }
+
+  def getProblemsForConsultationCSV(consultationId: Long): String = {
+    val commentsRepository = new CommentsRepository()
+    var annTagWithComments :List[model.dtos.AnnotationTagWithComments] = Nil
+    annTagWithComments = commentsRepository.getTagsForConsultation(consultationId: Long)
+    var annTagWithCommentsToString = ""
+    for (annTagWithComment <- annTagWithComments) {
+      if(annTagWithComment.annotationTag.type_id == 2) {
+        annTagWithCommentsToString += annTagWithComment.annotationTag.description + "," + annTagWithComment.numberOfComments + sys.props("line.separator")
+      }
+    }
+    //println(commentsToString)
+    annTagWithCommentsToString
+  }
+
+  def prettyDateFormat(date:Date) = {
+    val formatIncomming = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val formatOutgoing = new java.text.SimpleDateFormat("dd MMM yyyy HH:mm aaa")
+    val dateFormated = formatOutgoing.format(formatIncomming.parse(date.toString))
+    dateFormated
   }
 }

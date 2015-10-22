@@ -25,7 +25,6 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
                    ) = UserAwareAction {  implicit request =>
 
     import utils.ImplicitReadWrites._
-    println("Hello, world")
     val comments = reporterManager.getCommentsForConsultationByUserId(consultationId, userId, request.identity)
     Ok(Json.toJson(comments))
   }
@@ -52,5 +51,29 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
     val comments = reporterManager.getCommentsByAnnIdPerArticle(annId, articleId)
     import utils.ImplicitReadWrites._
     Ok(Json.toJson(comments))
+  }
+
+  def getOpenGovCommentsCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getOpenGovCommentsCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsOpenGov.csv"))
+  }
+
+  def getDITCommentsCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getDITCommentsCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsDIT.csv"))
+  }
+
+  def getAnnotationsForConsultationCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getAnnotationsForConsultationCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsPerAnnotationTag.csv"))
+  }
+
+  def getProblemsForConsultationCSV(consultationId: Long) = UserAwareAction { implicit request =>
+    val response = OK
+    val comments = reporterManager.getProblemsForConsultationCSV(consultationId)
+    Ok(comments).withHeaders(("Content-Type", "text/csv"), ("Content-Disposition", "attachment;filename=consultationCommentsPerProblemTag.csv"))
   }
 }

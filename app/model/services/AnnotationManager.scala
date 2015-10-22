@@ -1,22 +1,12 @@
 package model.services
 
-import java.util
-import java.util.Date
-
-import model.dtos.{PlatformStats, _}
+import model.dtos._
 import model.repositories._
-import model.viewmodels._
-import org.apache.http.NameValuePair
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.message.BasicNameValuePair
-import org.scify.democracit.solr.DitSorlQuery
+import play.api.Play.current
 import play.api.libs.json.JsArray
 import play.api.libs.ws.WS
-import play.api.Play.current
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 class AnnotationManager {
 
@@ -46,9 +36,13 @@ class AnnotationManager {
 
   def saveComment(comment:Comment): Comment = {
 
-    if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <=0 )
-        comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text)
+    if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <= 0) {
+     // retrieve the article name from database
+      // compare the article name with comment.discussionThread.get.text
+      // if it is the same , discussionThread.get.typeid = "Whole article"
 
+      comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text, comment.discussionThread.get.discussion_thread_type_id)
+    }
     comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
 
     comment

@@ -93,7 +93,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
 
     var addRelevantLawsHandler = function(){
             $(".relevantLawsBtn").on("click", function(){
-                console.log($(this).context.id);
                 $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
                 if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
                     $(".relevantLaw #" + $(this).context.id + " i").removeClass("fa-chevron-down");
@@ -112,22 +111,22 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             $(".commentsTabs").css("display","block");
             window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
             window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
-
             $('html, body').animate({
-                scrollTop: $("#commentsOpenGov").offset().top -100
+                scrollTop: 800
             }, 1000);
+
         },
 
         loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
             if(typeOfAnn == "annotation") {
                 window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
                 $('html, body').animate({
-                    scrollTop: $("#commentsPerAnnId").offset().top -100
+                    scrollTop: 800
                 }, 1000);
             } else if(typeOfAnn == "problem") {
                 window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
                 $('html, body').animate({
-                    scrollTop: $("#commentsPerProblemId").offset().top -100
+                    scrollTop: 800
                 }, 1000);
             }
         },
@@ -135,12 +134,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             if(typeOfAnn == "annotation") {
                 window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
                 $('html, body').animate({
-                    scrollTop: $("#commentsPerAnnIdPerArticle").offset().top -100
+                    scrollTop: 800
                 }, 1000);
             } else if(typeOfAnn == "problem") {
                 window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
                 $('html, body').animate({
-                    scrollTop: $("#commentsPerProblemIdPerArticle").offset().top -100
+                    scrollTop: 800
                 }, 1000);
             }
         },
@@ -242,7 +241,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                         case "annotationProblemsForConsultationInnerChart":
                             var selection = chart.getSelection();
                             var annTagId = dataForChart[selection[0].row][3];
-                            console.log(dataForChart[selection[0].row]);
                             loadListOfCommentsByAnnId(annTagId, instance.consultationid, "problem");
                             //sets the selection to null again
                             chart.setSelection();
@@ -286,6 +284,13 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 var domElementToAddComponent = document.getElementById("box_" + userId);
                 scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
             });
+        },
+        attachTooltips = function () {
+            $("#usersStatsTooltip").attr('title', 'Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια');
+            $('#usersStatsTooltip').click(function () {
+                console.log("sfdgdg");
+                $('#usersStatsTooltip').mouseover();
+            });
         }
 
     init = function(){
@@ -313,6 +318,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
         createListOfCommentsByProblemIdPerArticle();
+        attachTooltips();
+
     };
 
     return {

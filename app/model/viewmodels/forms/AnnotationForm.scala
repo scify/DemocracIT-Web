@@ -14,6 +14,7 @@ object AnnotationForm {
       "userAnnotatedText" -> optional(text), //the user user annotated
       "discussionthreadid" -> optional(longNumber),
       "discussionthreadclientid" -> text ,
+      "discussionthreadtypeid" -> number,
       "discussionThreadText" -> text,
       "annotationTagTopics" -> seq(
         mapping(
@@ -39,6 +40,7 @@ object AnnotationForm {
           userAnnotatedText: Option[String],
           discussionThreadId: Option[Long],
           discussionThreadClientId:String,
+          discussionThreadTypeId:Int,
           discusionThreadText:String,
           annotationTagTopics:Seq[AnnotationTagFormModel],
           annotationTagProblems:Seq[AnnotationTagFormModel]

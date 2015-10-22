@@ -16,6 +16,19 @@
   margin-bottom: 3px;
 }
 */
+.statsBar.nav-tabs > li.active > a, .statsBar.nav-tabs > li.active > a:hover, .statsBar.nav-tabs > li.active > a:focus {
+  border: none !important; }
+
+.statsBar > li > a {
+  border-radius: 0px;
+  border: none;
+  margin: 0px; }
+
+.statsBar > li > a:hover {
+  background-color: #ed6d46;
+  border: none;
+  margin: 0px; }
+
 .chart {
   margin: 20px; }
 
@@ -134,5 +147,23 @@
 
 .statsBar a {
   color: white; }
+
+.downloadStats {
+  margin-top: 20px;
+  list-style-type: none;
+  padding: 0px; }
+
+.downloadStats li {
+  margin-bottom: 10px; }
+
+.downloadStats li i {
+  margin-right: 5px; }
+
+.downloadStats li a:hover, a:focus {
+  text-decoration: none; }
+
+.statsTooltip {
+  margin-left: 5px;
+  color: #428bca; }
 
 /*# sourceMappingURL=reporter.css.map */

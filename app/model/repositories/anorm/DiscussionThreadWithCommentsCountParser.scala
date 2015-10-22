@@ -11,10 +11,11 @@ object DiscussionThreadWithCommentsCountParser{
 
       long("id") ~
       str("tagId") ~
+      get[Option[Int]]("typeid") ~
       int("numberOfComments")  map
       {
-        case id ~ discussionThreadClientId ~ numberOfComments =>
-          DiscussionThread(Some(id),discussionThreadClientId,"",Some(numberOfComments))
+        case id ~ discussionThreadClientId ~ discussionThreadTypeId ~ numberOfComments =>
+          DiscussionThread(Some(id),discussionThreadTypeId.get,discussionThreadClientId,"",Some(numberOfComments))
       }
   }
 }

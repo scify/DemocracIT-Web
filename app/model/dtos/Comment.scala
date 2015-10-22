@@ -1,10 +1,8 @@
 package model.dtos
 
-import java.util.{UUID, Date, Locale, Calendar}
+import java.util.{Date, UUID}
 
 import model.dtos.CommentSource.CommentSource
-import org.joda.time.{Period,Days, DateTime}
-import org.ocpsoft.prettytime.PrettyTime
 
 /**
  * @param body what user wrote in the comment
