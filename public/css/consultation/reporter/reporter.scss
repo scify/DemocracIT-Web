@@ -1,3 +1,5 @@
+@import "../../utilities/variables";
+
 .totalCommentsTitle {
   float:left;
 }
@@ -172,7 +174,11 @@
 }
 
 .statsBar {
-  background-color: #7cb6f7;
+  background-color: $consultation-subToolbar-backgroundColor;
+}
+.statsBar.nav-tabs
+{
+  border-color: $consultation-subToolbar-backgroundColor;
 }
 
 .statsBar a {

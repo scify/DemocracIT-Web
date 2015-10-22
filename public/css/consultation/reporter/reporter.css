@@ -145,6 +145,9 @@
 .statsBar {
   background-color: #7cb6f7; }
 
+.statsBar.nav-tabs {
+  border-color: #7cb6f7; }
+
 .statsBar a {
   color: white; }
 

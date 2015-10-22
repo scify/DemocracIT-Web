@@ -612,11 +612,19 @@ a.load {
   margin-right: 10px;
 }
 
-#tutorial {
-  float: left;
-  margin-top: 12px;
+.sub-toolbar {
+  border-radius: 0;
   margin-bottom: 18px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left:10px;
+  background-color:$consultation-subToolbar-backgroundColor;
 }
+.sub-toolbar ,.sub-toolbar a{
+  color:White;
+}
+#tutorial
+{float:left;}
 
 #tutorial a:hover {
   text-decoration: none !important;
@@ -632,11 +640,9 @@ a.load {
 }
 
 .statsBar.nav-tabs > li.active > a, .statsBar.nav-tabs > li.active > a:hover, .statsBar.nav-tabs > li.active > a:focus {
-  background-color: #fff;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: $consultation-subToolbar-backgroundColor-activeLink;
   border-bottom-color: transparent;
-  color: #555;
+  color: white;
   cursor: pointer;
 }
 
