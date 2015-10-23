@@ -4,6 +4,10 @@ Nowadays, in Greece, there is a vast amount of data which arise from the draft l
 
 http://www.scify.gr/site/en/projects/in-progress/democraciten
 
+## Roadmap/ Issues
+
+http://jira.scify.org/secure/RapidBoard.jspa?rapidView=9&projectKey=DW&view=planning
+
 ## Setup instructions
 
 
