@@ -51,12 +51,7 @@
                     <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTab</a></li>
                 }
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-
-                @if(play.Play.application().configuration().getString("application.state") == "development") {
-                    <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
-                } else {
-                    <li role="presentation"> <a href="#" onClick="alert('Coming soon'); return false;" target="_blank">Ανάλυση σχολίων</a></li>
-                }
+                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
 
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
