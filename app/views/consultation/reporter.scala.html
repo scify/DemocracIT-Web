@@ -6,15 +6,18 @@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
     @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
 
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
-    <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="@routes.Assets.at("js/moment-with-locales.min.js")" ></script>
     <script src="@routes.Assets.at("js/classnames.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/userBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/commentList-compiled.js")" ></script>
-    <script  src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
-    <script src="http://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/wordCloud-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
 {'modules':[{'name':'visualization','version':'1.1','packages':
 ['corechart']}]}"></script>
@@ -65,6 +68,7 @@
                         <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
                         <li role="presentation"> <a href="#userStatsTab" aria-controls="userStatsTab" role="tab" data-toggle="tab">Στατιστικά χρηστών</a></li>
                         <li role="presentation"> <a href="#userStatsDownloadTab" aria-controls="userStatsDownloadTab" role="tab" data-toggle="tab">Κατέβασμα Σχολίων</a></li>
+                        <li role="presentation"> <a href="#wordCloudTab" aria-controls="wordCloudTab" role="tab" data-toggle="tab">Σύννεφο λέξεων</a></li>
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active" id="commentsPerArticleChart"><div class="commentsPerArticleChart chart" id="commentsPerArticleInnerChart"></div>
@@ -153,6 +157,9 @@
                                 <li><a href="/comments/cons/problems/retrieve/csv/@vm.consultation.id"><i class="fa fa-download"></i>Κατεβάστε τον αριθμό σχολίων ανά προτεινόμενο πρόβλημα για τη διαβούλευση σε .csv αρχείο</a></li>
                                 -->
                             </ul>
+                        </div>
+                        <div role="tabpanel" class="tab-pane wordCloudTab" id="wordCloudTab">
+                            <div id="wordCloudDiv"></div>
                         </div>
                     </div>
 

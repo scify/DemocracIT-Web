@@ -167,6 +167,17 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
         },
+        createWordCloudChart = function(instance) {
+            var domElementWordCloud = document.getElementById("wordCloudDiv");
+            window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
+            loadWordCloud(instance.consultationid);
+        },
+        loadWordCloud = function(consultationId) {
+            window.WordCloudComponent.getWordCloudFromServer(consultationId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
                 var data = new google.visualization.DataTable();
@@ -318,6 +329,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
         createListOfCommentsByProblemIdPerArticle();
+        createWordCloudChart(instance);
         attachTooltips();
 
     };
