@@ -252,12 +252,36 @@ scify.Annotator.prototype = (function(){
                 tokenSeparators: [',', ' ']
             });
         },
+        formIsValid = function(data){
+
+            if ($.trim(data.annotationTagProblems.length==0) &&
+                $.trim(data.annotationTagTopics.length==0) &&
+                $.trim(data.body.length==0))
+            {
+                swal({
+                    title: "Όπα!",
+                    text: 'Παρακαλώ εισάγετε ενα σχόλιο ή <br/><br/> υποδηλώστε πρόβλημα/θέμα στο κείμενο',
+                    html: true
+                });
+
+                return false;
+            }
+
+            return true;
+        },
         handleAnnotationSave = function(e){
             var form = $("#toolbar-modal").find("form");
             var data = collectAnnotatorData(e);
             data.action = form.attr("action");
-            hideToolBar();
-            this.onCommentSubmitHandler(data);
+
+            if (formIsValid(data))
+            {
+                hideToolBar();
+                this.onCommentSubmitHandler(data);
+            }
+
+
+
         },
         init = function(){
             createAnnotatableAreas();
