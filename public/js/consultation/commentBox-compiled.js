@@ -6,9 +6,11 @@
         displayName: "CommentBox",
 
         getInitialState: function getInitialState() {
-            return { comments: [],
+            return { comments: [], //the comments that will be displayed (either all comments or top comments)
+                allComments: [], //in case we display a subset of comments, this array contains all the comments
+                topComments: [], //contains the top comments, the one with the most likes
                 discussionThreadId: this.props.discussionthreadid,
-                commentsCount: this.props.commentsCount
+                totalCommentsCount: this.props.commentsCount
             };
         },
         findTopComments: function findTopComments(comments) {
@@ -17,16 +19,23 @@
 
             var topComments = _.filter(comments, function (comment) {
                 return comment.likesCounter > 0;
-            }); //get all comments with likes, and then sort them
+            }); //get all comments with likes,
 
             topComments = _.sortBy(topComments, function (comment) {
+                // sort comments by likes descending
                 return -comment.likesCounter;
             });
 
-            if (topComments.length > 1) //display top if they more than one
+            if (topComments.length > 1) //display the first 5 comments if we have at least two 2 top comments
                 return topComments.splice(0, 5);else return comments;
         },
-        getCommentsFromServer: function getCommentsFromServer(url) {
+        topCommentsAreDisplayed: function topCommentsAreDisplayed() {
+            return this.state.topComments.length == this.state.comments.length;
+        },
+        commentsLoadedFromServer: function commentsLoadedFromServer() {
+            return this.state.allComments.length > 0;
+        },
+        getCommentsFromServer: function getCommentsFromServer() {
             var instance = this;
 
             var promise = $.ajax({
@@ -46,10 +55,11 @@
                 },
                 success: function success(data) {
                     instance.state.allComments = data;
-                    instance.state.topcomments = instance.findTopComments(data);
-                    instance.state.comments = instance.state.topcomments;
+                    instance.state.topComments = instance.findTopComments(data);
+                    instance.state.comments = instance.state.topComments;
                     instance.state.busy = false;
                     instance.state.display = true;
+
                     instance.setState(instance.state);
                 },
                 error: function error(x, z, y) {
@@ -94,13 +104,22 @@
                 },
                 success: function success(comment) {
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
-                    instance.state.commentsCount = instance.state.commentsCount + 1;
-                    instance.state.comments.push(comment);
+                    instance.state.totalCommentsCount = instance.state.totalCommentsCount + 1;
+
+                    if (instance.commentsLoadedFromServer()) {
+                        instance.state.allComments.unshift(comment);
+                        //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
+                        if (!instance.topCommentsAreDisplayed()) instance.state.comments.unshift(comment);
+                    }
                 },
                 complete: function complete() {
-                    instance.state.busy = false;
-                    instance.state.display = instance.state.comments.length > 0;
-                    instance.setState(instance.state);
+
+                    if (instance.commentsLoadedFromServer()) {
+                        instance.state.busy = false;
+                        instance.setState(instance.state);
+                    } else {
+                        instance.getCommentsFromServer.call(instance);
+                    }
                 }
             });
         },
@@ -110,14 +129,14 @@
         },
         refreshComments: function refreshComments() {
             var instance = this;
-            if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
+            if (instance.state.totalCommentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         toogleBox: function toogleBox() {
             this.state.display = !this.state.display;
             this.setState(this.state);
         },
         shouldDisplayLoadMoreOption: function shouldDisplayLoadMoreOption() {
-            return this.state.commentsCount > this.state.comments.length;
+            return this.state.totalCommentsCount > this.state.comments.length;
         },
         render: function render() {
 
@@ -125,11 +144,11 @@
                 return React.createElement(
                     "div",
                     null,
-                    React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.commentsCount }),
+                    React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.totalCommentsCount }),
                     React.createElement(scify.ReactLoader, { display: this.state.busy })
                 );
             }
-            var topClasses = classNames({ hide: this.state.commentsCount == 0 });
+            var topClasses = classNames({ hide: this.state.totalCommentsCount == 0 });
             var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
             var loadAllClasses = classNames("load-all", { hide: !this.shouldDisplayLoadMoreOption() });
 
@@ -137,7 +156,7 @@
                 "div",
                 { className: topClasses },
                 React.createElement(TotalCommentsLink, { onClick: this.refreshComments,
-                    count: this.state.commentsCount,
+                    count: this.state.totalCommentsCount,
                     source: this.props.source,
                     isdiscussionForTheWholeArticle: this.props.isdiscussionForTheWholeArticle }),
                 React.createElement(
@@ -524,7 +543,6 @@
             );
         }
     });
-
     var DisplayForReporter = React.createClass({
         displayName: "DisplayForReporter",
 
