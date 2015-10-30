@@ -176,7 +176,10 @@
                         <div className={loadAllClasses} >
                             βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
                         </div>
-                        <scify.CommentList consultationEndDate={this.props.consultationEndDate} data={this.state.comments} parent={this.props.parent}/>
+                        <scify.CommentList
+                            consultationEndDate={this.props.consultationEndDate}
+                            data={this.state.comments}
+                            parent={this.props.parent}/>
                         <CommentForm />
                     </div>
                 </div>
@@ -344,18 +347,13 @@
                 method: "POST",
                 url: "/comments/rate",
                 data: { comment_id : this.props.id , liked : instance.state.liked},
-                beforeSend:function(){
+                beforeSend:function(){},
+                success : function(response){},
+                complete: function(){
                     instance.setState(instance.state);
                 },
-                success : function(response){
-                    var x = "stop";
-                },
-                complete: function(){},
-                error:function(x,y,z){
-                    console.log(x);
-                }
+                error:function(err){ console.log(err)}
             })
-
         },
         handleLikeComment :function(){ //user pressed the liked button
             var oldLikeStatus =this.state.liked;

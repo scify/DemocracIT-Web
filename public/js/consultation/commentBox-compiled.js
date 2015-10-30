@@ -174,7 +174,10 @@
                             "κλικ εδώ για να τα δείτε όλα"
                         )
                     ),
-                    React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate, data: this.state.comments, parent: this.props.parent }),
+                    React.createElement(scify.CommentList, {
+                        consultationEndDate: this.props.consultationEndDate,
+                        data: this.state.comments,
+                        parent: this.props.parent }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -446,15 +449,13 @@
                 method: "POST",
                 url: "/comments/rate",
                 data: { comment_id: this.props.id, liked: instance.state.liked },
-                beforeSend: function beforeSend() {
+                beforeSend: function beforeSend() {},
+                success: function success(response) {},
+                complete: function complete() {
                     instance.setState(instance.state);
                 },
-                success: function success(response) {
-                    var x = "stop";
-                },
-                complete: function complete() {},
-                error: function error(x, y, z) {
-                    console.log(x);
+                error: function error(err) {
+                    console.log(err);
                 }
             });
         },
