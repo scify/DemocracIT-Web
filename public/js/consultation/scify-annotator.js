@@ -254,13 +254,13 @@ scify.Annotator.prototype = (function(){
         },
         formIsValid = function(data){
 
-            if ($.trim(data.annotationTagProblems.length==0) &&
-                $.trim(data.annotationTagTopics.length==0) &&
-                $.trim(data.body.length==0))
+            if ($.trim(data.annotationTagProblems).length==0 &&
+                $.trim(data.annotationTagTopics).length==0 &&
+                $.trim(data.body).length==0 )
             {
                 swal({
-                    title: "Όπα!",
-                    text: 'Παρακαλώ εισάγετε ενα σχόλιο ή <br/><br/> υποδηλώστε πρόβλημα/θέμα στο κείμενο',
+                    title: "Κενό σχόλιο",
+                    text: 'Παρακαλώ εισάγετε την παρατήρηση σας ή <br/><br/> υποδηλώστε πρόβλημα/θέμα',
                     html: true
                 });
 
