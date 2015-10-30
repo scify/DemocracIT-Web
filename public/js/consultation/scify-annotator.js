@@ -136,7 +136,7 @@ scify.Annotator.prototype = (function(){
                 $.ajax({
                     method: "POST",
                     url: "/annotation/extractTags",
-                    contentType: 'text/plain',
+                    contentType: 'text/plain;charset=utf-8',
                     data: selectedText,
                     success : function(tags){
                         //add additional tags to the select | these are created based on the text use has selected from the ui
