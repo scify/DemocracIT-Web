@@ -47,7 +47,7 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
-@layout("DemocracIT", css, js,None) {
+@layout("DemocracIT", css, js,vm.user) {
 
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
         <div  class="container">
