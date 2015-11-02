@@ -58,7 +58,8 @@ img, .btn, i, a {
   margin-top: 40px;
   position: relative;
   z-index: 0;
-  font-size: 16px; }
+  font-size: 16px;
+  clear: both; }
 
 #footer h2 {
   color: white;
