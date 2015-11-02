@@ -427,7 +427,7 @@ class CommentsRepository {
               select c.*
               from comments c inner join public.articles a on a.id = c.article_id
               inner join public.consultation con on con.id = a.consultation_id
-              where a.consultation_id = 3594
+              where a.consultation_id = $consultation_id
           )
           select account.user.id as user_id, account.user.firstname as first_name, account.user.lastname as last_name, account.user.email, account.user.role, count(account.user.id) as number_of_comments
           from account.user

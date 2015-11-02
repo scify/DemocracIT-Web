@@ -56,6 +56,10 @@
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
 
                 <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
+                @if(play.Play.application().configuration().getString("application.state") == "development") {
+                    <li role="presentation"> <a href="#wordCloudTab" aria-controls="wordCloudTab" role="tab" data-toggle="tab">
+                        Σύννεφο λέξεων</a></li>
+                }
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
@@ -68,10 +72,6 @@
                         <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
                         <li role="presentation"> <a href="#userStatsTab" aria-controls="userStatsTab" role="tab" data-toggle="tab">Στατιστικά χρηστών</a></li>
                         <li role="presentation"> <a href="#userStatsDownloadTab" aria-controls="userStatsDownloadTab" role="tab" data-toggle="tab">Κατέβασμα Σχολίων</a></li>
-                        @if(play.Play.application().configuration().getString("application.state") == "development") {
-                            <li role="presentation"> <a href="#wordCloudTab" aria-controls="wordCloudTab" role="tab" data-toggle="tab">
-                                Σύννεφο λέξεων</a></li>
-                        }
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active" id="commentsPerArticleChart"><div class="commentsPerArticleChart chart" id="commentsPerArticleInnerChart"></div>
@@ -161,11 +161,6 @@
                                 -->
                             </ul>
                         </div>
-                        @if(play.Play.application().configuration().getString("application.state") == "development") {
-                            <div role="tabpanel" class="tab-pane wordCloudTab" id="wordCloudTab">
-                                <div id="wordCloudDiv"></div>
-                            </div>
-                        }
                     </div>
 
                 </div>
@@ -215,7 +210,11 @@
                         </div>
                     </div>
                 </div>
-
+                @if(play.Play.application().configuration().getString("application.state") == "development") {
+                    <div role="tabpanel" class="tab-pane wordCloudTab" id="wordCloudTab">
+                        <div id="wordCloudDiv"></div>
+                    </div>
+                }
             </div>
         </div>
 
