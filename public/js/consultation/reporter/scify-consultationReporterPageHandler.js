@@ -331,7 +331,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemIdPerArticle();
         createWordCloudChart(instance);
         attachTooltips();
-
     };
 
     return {
