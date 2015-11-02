@@ -73,9 +73,9 @@
                     })
                     .font("Impact")
                     .fontSize(function (d) {
-                        return d.size;
+                        return d.size +2;
                     })
-                    .padding(3)
+                    .padding(5)
                     .on("end", draw)
                     .start();
 

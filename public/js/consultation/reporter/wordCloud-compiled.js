@@ -77,8 +77,8 @@
                 d3.layout.cloud().size([800, 300]).words(this.state.frequency_list).rotate(function () {
                     return ~ ~(Math.random() * 2) * 90;
                 }).font("Impact").fontSize(function (d) {
-                    return d.size;
-                }).padding(3).on("end", draw).start();
+                    return d.size + 2;
+                }).padding(5).on("end", draw).start();
             }
         },
         render: function render() {
