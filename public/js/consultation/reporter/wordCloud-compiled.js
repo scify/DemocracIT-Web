@@ -55,14 +55,7 @@
 
             return promise;
         },
-        render: function render() {
-            if (this.props.busy) {
-                return React.createElement(
-                    "div",
-                    null,
-                    React.createElement(scify.ReactLoader, { display: this.props.busy })
-                );
-            }
+        drawD3: function drawD3() {
             var color = d3.scale.linear().domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100]).range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
 
             var color = d3.scale.linear().domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100]).range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
@@ -87,6 +80,16 @@
                     });
                 }
             }
+        },
+        render: function render() {
+            if (this.props.busy) {
+                return React.createElement(
+                    "div",
+                    null,
+                    React.createElement(scify.ReactLoader, { display: this.props.busy })
+                );
+            }
+            this.drawD3();
             return React.createElement("div", { id: "wordCloudChart" });
         }
     });
