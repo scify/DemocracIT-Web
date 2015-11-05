@@ -82,18 +82,27 @@
                 },
                 success: function success(data) {
                     var multiplier = 2;
+                    var sizes = 0;
+                    var average;
                     if (commentsNum < 20) {
                         multiplier = 5;
                     }
-                    console.log("multiplier: " + multiplier);
+                    for (var i = 0; i < data.results.length; i++) {
+                        sizes += data.results[i].freq;
+                    }
+                    average = sizes / data.results.length;
+                    if (average < 3) {
+                        multiplier = 12;
+                    }
                     var arr = $.map(data, function (el) {
                         var results = [];
                         for (var item in el) {
-                            //console.log(el[item]);
                             results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * multiplier) });
+                            sizes += el[item].freq;
                         }
                         return results;
                     });
+
                     instance.state.frequency_list = arr;
                 },
                 complete: function complete() {

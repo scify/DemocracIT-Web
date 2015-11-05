@@ -236,7 +236,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     switch (chartId) {
                         case "commentsPerArticleInnerChart":
                             var selection = chart.getSelection();
-                            console.log(dataForChart[selection[0].row]);
                             var articleId = dataForChart[selection[0].row][3];
                             var commentsNum = dataForChart[selection[0].row][4];
                             loadListOfCommentsPerArticle(articleId);
