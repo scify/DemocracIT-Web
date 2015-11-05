@@ -58,7 +58,7 @@
 
             return promise;
         },
-        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, wordCloudPath) {
+        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum) {
             this.state.frequency_list = [];
             console.log(articleId);
             var instance = this;
@@ -81,11 +81,16 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
+                    var multiplier = 2;
+                    if (commentsNum < 20) {
+                        multiplier = 5;
+                    }
+                    console.log("multiplier: " + multiplier);
                     var arr = $.map(data, function (el) {
                         var results = [];
                         for (var item in el) {
                             //console.log(el[item]);
-                            results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * 2) });
+                            results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * multiplier) });
                         }
                         return results;
                     });
@@ -140,7 +145,6 @@
             }
         },
         render: function render() {
-            console.log(this.state);
             if (this.state.display) {
                 if (this.state.busy) {
                     return React.createElement(

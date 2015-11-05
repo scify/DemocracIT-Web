@@ -174,8 +174,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
 
         },
-        loadArticleWordCloud = function(articleId, wordCloudPath) {
-            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath);
+        loadArticleWordCloud = function(articleId, wordCloudPath, commentsNum) {
+            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -238,9 +238,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             var selection = chart.getSelection();
                             console.log(dataForChart[selection[0].row]);
                             var articleId = dataForChart[selection[0].row][3];
+                            var commentsNum = dataForChart[selection[0].row][4];
                             loadListOfCommentsPerArticle(articleId);
                             instance.articleId = articleId;
-                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath);
+                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath, commentsNum);
 
                             //sets the selection to null again
                             chart.setSelection();
