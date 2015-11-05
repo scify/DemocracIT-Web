@@ -19,6 +19,7 @@
                 instance.setVisibibility.call(instance,true);
         },
         getWordCloudFromServer : function(consultationId){
+            console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -33,6 +34,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
+                    console.log(data);
                     var arr = $.map(data, function(el) {
                         var results = [];
                         for(var item in el) {
@@ -42,6 +44,7 @@
                         return results;
                     });
                     instance.state.frequency_list = arr;
+                    console.log(instance.state.frequency_list);
                 },
                 complete: function(){
                     instance.state.busy=false;

@@ -18,6 +18,7 @@
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         getWordCloudFromServer: function getWordCloudFromServer(consultationId) {
+            console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -32,6 +33,7 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
+                    console.log(data);
                     var arr = $.map(data, function (el) {
                         var results = [];
                         for (var item in el) {
@@ -41,6 +43,7 @@
                         return results;
                     });
                     instance.state.frequency_list = arr;
+                    console.log(instance.state.frequency_list);
                 },
                 complete: function complete() {
                     instance.state.busy = false;

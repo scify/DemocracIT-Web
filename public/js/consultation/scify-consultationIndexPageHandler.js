@@ -128,7 +128,15 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 if ($.trim($(this).text()).length==0)
                     $(this).remove();
             });
-        }
+        },
+    createWordCloudChart = function(instance) {
+        var domElementWordCloud = document.getElementById("wordCloudDiv");
+        window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
+        loadWordCloud(instance.consultationid);
+    },
+    loadWordCloud = function(consultationId) {
+        window.WordCloudComponent.getWordCloudFromServer(consultationId);
+    }
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -143,10 +151,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
+
         //tinymce.init({selector:'textarea'})
 
         this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
         this.tutorialAnnotator.init();
+        createWordCloudChart(instance);
     };
 
     return {

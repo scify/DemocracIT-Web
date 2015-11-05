@@ -651,3 +651,32 @@ a.load {
   margin-top: 20px;
   margin-bottom: 10%;
 }
+
+#consWordCloud a:hover {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+#consWordCloud {
+  margin-left: 35px;
+  float: left;
+}
+
+.wordCloudBtn {
+  background: transparent;
+  border: none;
+  margin: 0px;
+}
+
+.wordCloudBtn:focus {
+  outline-width: 0px !important;
+}
+
+#consWordCloudModal .modal-dialog {
+  width: 1000px;
+}
+
+.modal-body .explanation {
+  margin-top: 18px;
+  text-align: center;
+}

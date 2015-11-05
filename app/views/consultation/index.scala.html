@@ -7,15 +7,17 @@
 
     @*<script src="@routes.Assets.at("js/select2.full.js")"></script>*@
 
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="@routes.Assets.at("js/moment-with-locales.min.js")" ></script>
-
+    <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
     <script src="@routes.Assets.at("js/consultation/intro.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-tutorialAnnotator.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
     <script  src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reporter/wordCloud-compiled.js")" ></script>
     <script>
      $(function(){
         var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
@@ -59,7 +61,28 @@
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
                     <div class="sub-toolbar clearfix">
                         <div id="tutorial"><a>Δείξε μου πώς λειτουργεί</a></div>
+                        <div id="consWordCloud"><button class="wordCloudBtn" type="button" data-toggle="modal" data-target="#consWordCloudModal">Σύννεφο λέξεων</button></div>
+                    </div>
+                        <!-- Modal -->
+                    <div id="consWordCloudModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                                <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Βλέπετε το Σύννεφο λέξεων της διαβούλευσης</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="explanation"><p>Το Σύννεφο λέξεων για αυτή τη διαβούλευση έχει παραχθέι μετά από επεξεργασία των σχολίων που την αφορούν.</p></div>
+                                    <div id="wordCloudDiv"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
                         </div>
+                    </div>
                     @for(article <- vm.consultation.articles) {
                         <div data-id="@article.id"  class="row article">
                             <div class="col-md-12">
