@@ -17,15 +17,16 @@
             var instance = this;
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
-        getWordCloudFromServer: function getWordCloudFromServer(consultationId) {
+        getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId, wordCloudPath) {
+
             console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
-                url: "http://localhost:28084/WordCloud/WordCloud",
+                url: wordCloudPath,
                 cache: false,
                 data: {
-                    consultation_id: 3957
+                    consultation_id: consultationId
                 },
                 beforeSend: function beforeSend() {
                     instance.state.busy = true;
@@ -82,6 +83,12 @@
                 }).font("Impact").fontSize(function (d) {
                     return d.size + 2;
                 }).padding(5).on("end", draw).start();
+            } else {
+                return React.createElement(
+                    "div",
+                    { id: "explanation" },
+                    "Δεν βρέθηκαν δεδομένα."
+                );
             }
         },
         render: function render() {

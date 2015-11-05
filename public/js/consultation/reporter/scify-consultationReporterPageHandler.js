@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -6,6 +6,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
                                                   annotationProblemsPerArticle, commenters,
                                                   consultationEndDate){
     this.consultationid= consultationid;
+    this.wordCloudPath = wordCloudPath;
     this.userId = userId;
     this.fullName = fullName;
 
@@ -170,10 +171,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createWordCloudChart = function(instance) {
             var domElementWordCloud = document.getElementById("wordCloudDiv");
             window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
-            loadWordCloud(instance.consultationid);
+            loadWordCloud(instance.consultationid, instance.wordCloudPath);
         },
-        loadWordCloud = function(consultationId) {
-            window.WordCloudComponent.getWordCloudFromServer(consultationId);
+        loadWordCloud = function(consultationId, wordCloudPath) {
+            window.WordCloudComponent.getConsWordCloudFromServer(consultationId, wordCloudPath);
             $('html, body').animate({
                 scrollTop: 800
             }, 1000);

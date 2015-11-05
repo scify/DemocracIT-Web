@@ -18,15 +18,16 @@
             else
                 instance.setVisibibility.call(instance,true);
         },
-        getWordCloudFromServer : function(consultationId){
+        getConsWordCloudFromServer : function(consultationId, wordCloudPath){
+
             console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
-                url: "http://localhost:28084/WordCloud/WordCloud",
+                url: wordCloudPath,
                 cache:false,
                 data:{
-                    consultation_id :3957
+                    consultation_id :consultationId
                 },
                 beforeSend: function(){
                     instance.state.busy=true;
@@ -105,6 +106,10 @@
                             return d.text;
                         });
                 }
+            } else {
+                return (
+                    <div id="explanation">Δεν βρέθηκαν δεδομένα.</div>
+                );
             }
         },
         render: function() {

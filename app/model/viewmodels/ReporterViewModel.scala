@@ -2,11 +2,11 @@ package model.viewmodels
 
 import model.dtos._
 import org.apache.commons.lang3.StringUtils
+import play.api.Play
 import play.api.libs.json._
 import utils.ImplicitReadWrites._
 
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 case class ReporterViewModel(consultation:model.dtos.Consultation,
                                user: Option[model.User],
@@ -18,7 +18,7 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
                                userCommentStats: Seq[UserCommentStats]
                               )
 {
-
+  def wordCloudBaseUrl:String = {Play.current.configuration.getString("application.wordCloudBaseUrl").get}
   def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()
   def userCommentStatsToJson():String =Json.toJson(userCommentStats).toString()
   def annotationsForConsultationToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsForConsultation(type_of_ann)).toString()

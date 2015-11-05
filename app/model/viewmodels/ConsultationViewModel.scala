@@ -1,8 +1,9 @@
 package model.viewmodels
 
-import org.apache.commons.lang3.StringUtils
-import play.api.libs.json._
 import model.dtos._
+import org.apache.commons.lang3.StringUtils
+import play.api.Play
+import play.api.libs.json._
 import utils.ImplicitReadWrites._
 
 import scala.collection.mutable.ArrayBuffer
@@ -18,7 +19,7 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
   private var _distinctLaws:Seq[RelevantLaws] = Nil
 
    //def annotationTypesToJson():String = Json.toJson(annotationsRelatedToProblems).toString()
-
+   def wordCloudBaseUrl:String = {Play.current.configuration.getString("application.wordCloudBaseUrl").get}
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
   def relevantLawsToJson():String =Json.toJson(this.distinctLaws(false)).toString()
 
