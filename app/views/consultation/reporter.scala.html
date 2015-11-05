@@ -57,10 +57,6 @@
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
 
                 <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
-                @if(play.Play.application().configuration().getString("application.state") == "development") {
-                    <li role="presentation"> <a href="#wordCloudTab" aria-controls="wordCloudTab" role="tab" data-toggle="tab">
-                        Σύννεφο λέξεων</a></li>
-                }
                 @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
@@ -84,11 +80,17 @@
                                         Σχόλια OpenGov</a></li>
                                     <li role="presentation"><a href="#commentsDIT" aria-controls="commentsDIT" role="tab" data-toggle="tab">
                                         Σχόλια Democracit</a></li>
+                                    <li role="presentation"><a href="#articleWordCloud" aria-controls="articleWordCloud" role="tab" data-toggle="tab">
+                                        Σύννεφο λέξεων</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="commentsOpenGov">
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="commentsDIT">
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="articleWordCloud">
+                                        <div id="articleWordCloudDiv"></div>
+                                        <div id="wordCloudChart"></div>
                                     </div>
                                 </div>
                             }
@@ -211,11 +213,6 @@
                         </div>
                     </div>
                 </div>
-                @if(play.Play.application().configuration().getString("application.state") == "development") {
-                    <div role="tabpanel" class="tab-pane wordCloudTab" id="wordCloudTab">
-                        <div id="wordCloudDiv"></div>
-                    </div>
-                }
             </div>
         </div>
 

@@ -112,6 +112,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             $(".commentsTabs").css("display","block");
             window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
             window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
+
             $('html, body').animate({
                 scrollTop: 800
             }, 1000);
@@ -168,16 +169,13 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
         },
-        createWordCloudChart = function(instance) {
-            var domElementWordCloud = document.getElementById("wordCloudDiv");
-            window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
-            loadWordCloud(instance.consultationid, instance.wordCloudPath);
+        createArticleWordCloudChart = function(instance) {
+            var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
+            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+
         },
-        loadWordCloud = function(consultationId, wordCloudPath) {
-            window.WordCloudComponent.getConsWordCloudFromServer(consultationId, wordCloudPath);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
+        loadArticleWordCloud = function(articleId, wordCloudPath) {
+            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -238,8 +236,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     switch (chartId) {
                         case "commentsPerArticleInnerChart":
                             var selection = chart.getSelection();
+                            console.log(dataForChart[selection[0].row]);
                             var articleId = dataForChart[selection[0].row][3];
                             loadListOfCommentsPerArticle(articleId);
+                            instance.articleId = articleId;
+                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath);
+
                             //sets the selection to null again
                             chart.setSelection();
                             break;
@@ -330,7 +332,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
         createListOfCommentsByProblemIdPerArticle();
-        createWordCloudChart(instance);
+        createArticleWordCloudChart(instance);
         attachTooltips();
     };
 

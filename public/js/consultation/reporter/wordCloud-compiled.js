@@ -58,8 +58,54 @@
 
             return promise;
         },
+        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, wordCloudPath) {
+            this.state.frequency_list = [];
+            console.log(articleId);
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: wordCloudPath,
+                cache: false,
+                data: {
+                    article_id: articleId,
+                    max_terms: 30
+                },
+                beforeSend: function beforeSend() {
+                    instance.state.frequency_list = [];
+                    var chart = document.getElementById("wordCloudChart");
+                    while (chart.firstChild) {
+                        chart.removeChild(chart.firstChild);
+                    }
+                    instance.state.busy = true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    var arr = $.map(data, function (el) {
+                        var results = [];
+                        for (var item in el) {
+                            //console.log(el[item]);
+                            results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * 2) });
+                        }
+                        return results;
+                    });
+                    instance.state.frequency_list = arr;
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
+            });
+
+            return promise;
+        },
         drawD3: function drawD3() {
             var fill = d3.scale.category20();
+            var instance = this;
             if (this.state.frequency_list.length > 0) {
                 var draw = function draw(words) {
                     console.log(words);
@@ -72,6 +118,8 @@
                     }).text(function (d) {
                         return d.text;
                     });
+
+                    instance.state.frequency_list = [];
                 };
 
                 var color = d3.scale.linear().domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100]).range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
@@ -92,17 +140,20 @@
             }
         },
         render: function render() {
-            if (this.props.busy) {
-                return React.createElement(
-                    "div",
-                    null,
-                    React.createElement(scify.ReactLoader, { display: this.props.busy })
-                );
-            } else {
-                this.drawD3();
+            console.log(this.state);
+            if (this.state.display) {
+                if (this.state.busy) {
+                    return React.createElement(
+                        "div",
+                        null,
+                        React.createElement(scify.ReactLoader, { display: this.state.busy })
+                    );
+                } else {
+                    console.log("drawing now");
+                    this.drawD3();
+                }
             }
-
-            return React.createElement("div", { id: "wordCloudChart" });
+            return React.createElement("div", null);
         }
     });
 })();

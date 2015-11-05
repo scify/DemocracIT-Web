@@ -132,7 +132,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         },
     createWordCloudChart = function(instance) {
         var domElementWordCloud = document.getElementById("wordCloudDiv");
-        window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
+        var consWordCloudProperties = {
+            chartId : "wordCloudChart"
+        };
+        window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, consWordCloudProperties), domElementWordCloud);
         loadWordCloud(instance.consultationid, instance.wordCloudPath);
     },
     loadWordCloud = function(consultationId, wordCloudPath) {
