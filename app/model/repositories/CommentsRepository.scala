@@ -522,13 +522,12 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl, t.typeid as discussion_thread_type_id,
+                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,null as discussion_thread_type_id,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes
                        from public.comments c
                          left outer join public.comment_opengov o on o.id =c.id
-                         inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                          left outer join public.comment_rating cr on cr.user_id = CAST($useridParam as UUID)  and cr.comment_id = c.id
                          left outer join ratingCounter counter on counter.comment_id = c.id
                          where c.article_id = $articleId
