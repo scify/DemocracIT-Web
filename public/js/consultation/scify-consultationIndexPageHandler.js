@@ -1,5 +1,5 @@
 
-scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
+scify.ConsultationIndexPageHandler = function( consultationid,wordCloudPath,userId,fullName,
                                                discussionThreads,
                                                relevantLaws,
                                                consultationIsActive,
@@ -7,6 +7,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
                                                consultationEndDate){
     this.consultationid= consultationid;
     this.consultationIsActive = consultationIsActive;
+    this.wordCloudPath = wordCloudPath;
     this.userId = userId;
     this.fullName = fullName;
     this.imagesPath = imagesPath;
@@ -128,7 +129,18 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 if ($.trim($(this).text()).length==0)
                     $(this).remove();
             });
-        }
+        },
+    createWordCloudChart = function(instance) {
+        var domElementWordCloud = document.getElementById("wordCloudDiv");
+        var consWordCloudProperties = {
+            chartId : "wordCloudChart"
+        };
+        window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, consWordCloudProperties), domElementWordCloud);
+        loadWordCloud(instance.consultationid, instance.wordCloudPath);
+    },
+    loadWordCloud = function(consultationId, wordCloudPath) {
+        window.WordCloudComponent.getConsWordCloudFromServer(consultationId, wordCloudPath);
+    }
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -143,10 +155,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
+
         //tinymce.init({selector:'textarea'})
 
         this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
         this.tutorialAnnotator.init();
+        createWordCloudChart(instance);
     };
 
     return {

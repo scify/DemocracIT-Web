@@ -136,7 +136,7 @@ scify.Annotator.prototype = (function(){
                 $.ajax({
                     method: "POST",
                     url: "/annotation/extractTags",
-                    contentType: 'text/plain',
+                    contentType: 'text/plain;charset=utf-8',
                     data: selectedText,
                     success : function(tags){
                         //add additional tags to the select | these are created based on the text use has selected from the ui
@@ -252,12 +252,36 @@ scify.Annotator.prototype = (function(){
                 tokenSeparators: [',', ' ']
             });
         },
+        formIsValid = function(data){
+
+            if ($.trim(data.annotationTagProblems).length==0 &&
+                $.trim(data.annotationTagTopics).length==0 &&
+                $.trim(data.body).length==0 )
+            {
+                swal({
+                    title: "Κενό σχόλιο",
+                    text: 'Παρακαλώ εισάγετε την παρατήρηση σας ή <br/><br/> υποδηλώστε πρόβλημα/θέμα',
+                    html: true
+                });
+
+                return false;
+            }
+
+            return true;
+        },
         handleAnnotationSave = function(e){
             var form = $("#toolbar-modal").find("form");
             var data = collectAnnotatorData(e);
             data.action = form.attr("action");
-            hideToolBar();
-            this.onCommentSubmitHandler(data);
+
+            if (formIsValid(data))
+            {
+                hideToolBar();
+                this.onCommentSubmitHandler(data);
+            }
+
+
+
         },
         init = function(){
             createAnnotatableAreas();

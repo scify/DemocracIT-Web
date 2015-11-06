@@ -24,6 +24,7 @@
     <script>
      $(function(){
         var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
+                                                                '@vm.wordCloudBaseUrl',
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.commentsPerArticleToJson()),
@@ -47,7 +48,7 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
 }
 
-@layout("DemocracIT", css, js,None) {
+@layout("DemocracIT", css, js,vm.user) {
 
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
         <div  class="container">
@@ -68,10 +69,6 @@
                         <li role="presentation"> <a href="#annotationProblemsPerArticleChart" aria-controls="annotationProblemsPerArticleChart" role="tab" data-toggle="tab">Προβλήματα ανά άρθρο</a></li>
                         <li role="presentation"> <a href="#userStatsTab" aria-controls="userStatsTab" role="tab" data-toggle="tab">Στατιστικά χρηστών</a></li>
                         <li role="presentation"> <a href="#userStatsDownloadTab" aria-controls="userStatsDownloadTab" role="tab" data-toggle="tab">Κατέβασμα Σχολίων</a></li>
-                        @if(play.Play.application().configuration().getString("application.state") == "development") {
-                            <li role="presentation"> <a href="#wordCloudTab" aria-controls="wordCloudTab" role="tab" data-toggle="tab">
-                                Σύννεφο λέξεων</a></li>
-                        }
                     </ul>
                     <div class="tab-content stats" id="statsDiv">
                         <div role="tabpanel" class="tab-pane active" id="commentsPerArticleChart"><div class="commentsPerArticleChart chart" id="commentsPerArticleInnerChart"></div>
@@ -83,11 +80,17 @@
                                         Σχόλια OpenGov</a></li>
                                     <li role="presentation"><a href="#commentsDIT" aria-controls="commentsDIT" role="tab" data-toggle="tab">
                                         Σχόλια Democracit</a></li>
+                                    @*<li role="presentation"><a href="#articleWordCloud" aria-controls="articleWordCloud" role="tab" data-toggle="tab">*@
+                                        @*Σύννεφο λέξεων</a></li>*@
                                 </ul>
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="commentsOpenGov">
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="commentsDIT">
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="articleWordCloud">
+                                        <div id="articleWordCloudDiv"></div>
+                                        <div id="wordCloudChart"></div>
                                     </div>
                                 </div>
                             }
@@ -161,11 +164,6 @@
                                 -->
                             </ul>
                         </div>
-                        @if(play.Play.application().configuration().getString("application.state") == "development") {
-                            <div role="tabpanel" class="tab-pane wordCloudTab" id="wordCloudTab">
-                                <div id="wordCloudDiv"></div>
-                            </div>
-                        }
                     </div>
 
                 </div>
@@ -215,7 +213,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 

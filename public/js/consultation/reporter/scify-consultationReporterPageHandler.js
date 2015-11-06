@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -6,6 +6,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
                                                   annotationProblemsPerArticle, commenters,
                                                   consultationEndDate){
     this.consultationid= consultationid;
+    this.wordCloudPath = wordCloudPath;
     this.userId = userId;
     this.fullName = fullName;
 
@@ -111,6 +112,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             $(".commentsTabs").css("display","block");
             window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
             window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
+
             $('html, body').animate({
                 scrollTop: 800
             }, 1000);
@@ -167,16 +169,13 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
         },
-        createWordCloudChart = function(instance) {
-            var domElementWordCloud = document.getElementById("wordCloudDiv");
-            window.WordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementWordCloud);
-            loadWordCloud(instance.consultationid);
+        createArticleWordCloudChart = function(instance) {
+            var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
+            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+
         },
-        loadWordCloud = function(consultationId) {
-            window.WordCloudComponent.getWordCloudFromServer(consultationId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
+        loadArticleWordCloud = function(articleId, wordCloudPath, commentsNum) {
+            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -238,7 +237,11 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                         case "commentsPerArticleInnerChart":
                             var selection = chart.getSelection();
                             var articleId = dataForChart[selection[0].row][3];
+                            var commentsNum = dataForChart[selection[0].row][4];
                             loadListOfCommentsPerArticle(articleId);
+                            instance.articleId = articleId;
+                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath, commentsNum);
+
                             //sets the selection to null again
                             chart.setSelection();
                             break;
@@ -315,7 +318,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             createChart(this.annotationsForConsultation, "annotationsForConsultationInnerChart", "Θέματα που θίγονται (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα)", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '75%', 'bar', instance);
         }
         if(this.annotationProblemsForConsultation.length > 0) {
-            createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationInnerChart", "Προβλήματα (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα)", "Πρόβηλμα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationInnerChart", "Προβλήματα (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα)", "Πρόβλημα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
         }
         if(this.annotationsPerArticle.length > 0) {
             createChart(this.annotationsPerArticle, "annotationsPerArticleInnerChart", "Θέματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα ανά άρθρο)", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar', instance);
@@ -329,9 +332,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
         createListOfCommentsByProblemIdPerArticle();
-        createWordCloudChart(instance);
+        createArticleWordCloudChart(instance);
         attachTooltips();
-
     };
 
     return {
