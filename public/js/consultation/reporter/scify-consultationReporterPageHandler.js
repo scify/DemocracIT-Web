@@ -154,27 +154,56 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
         createListOfCommentsByAnnId = function() {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
-            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
+            if (domElementCommentsByAnnId) {
+                console.log('this record already exists');
+                window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
+            } else {
+                console.log('this record does not exist');
+            }
+
         },
 
         createListOfCommentsByProblemId = function() {
             var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
-            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
+            if (domElementCommentsByProblemId) {
+                console.log('this record already exists');
+                window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
+            } else {
+                console.log('this record does not exist');
+            }
+
         },
         createListOfCommentsByAnnIdPerArticle = function() {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
-            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+            if (domElementCommentsByAnnIdPerArticle) {
+                console.log('this record already exists');
+                window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+            } else {
+                console.log('this record does not exist');
+            }
         },
         createListOfCommentsByProblemIdPerArticle = function() {
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
-            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
+            if (domElementCommentsByProblemIdPerArticle) {
+                console.log('this record already exists');
+                window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
+            } else {
+                console.log('this record does not exist');
+            }
         },
         createArticleWordCloudChart = function(instance) {
+            console.log("sdfgsg");
+            if (document.getElementById("articleWordCloudDiv")) {
+                console.log('this record already exists');
+            } else {
+                console.log('this record does not exist');
+            }
             var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
             window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
 
         },
         loadArticleWordCloud = function(articleId, wordCloudPath, commentsNum) {
+            console.log("asdfafsdfgsg");
             window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {

@@ -142,7 +142,7 @@
             if (instance.state.parent == "cons") {
                 var translate = "translate(500,250)";
             } else if (instance.state.parent == "article") {
-                var translate = "translate(500,150)";
+                var translate = "translate(500,180)";
             }
             if (this.state.frequency_list.length > 0) {
                 var draw = function draw(words) {
