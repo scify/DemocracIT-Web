@@ -2,16 +2,15 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{Silhouette, Environment}
-import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, SessionAuthenticator}
+import com.mohiva.play.silhouette.api.{Environment, Silhouette}
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import model.dtos.CommentSource.CommentSource
-import play.api.cache.Cached
 import model.dtos._
 import model.services._
+import play.api.cache.Cached
 import play.api.i18n.MessagesApi
+import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
-import play.api.libs.json.{Json, JsValue, JsPath, Writes}
 
 
 
@@ -42,6 +41,13 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   //}
 
 
+
+  def getConsultationWordCloud(consultationId :Long )= Action {  implicit request =>
+    {
+      val results = consultationManager.getConsultationWordCloud(consultationId)
+      Ok(results)
+    }
+  }
 
   def search(query:String,ministryId:Option[Int] )= Action {  implicit request =>
     {

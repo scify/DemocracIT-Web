@@ -17,18 +17,13 @@
             var instance = this;
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
-        getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId, wordCloudPath) {
+        getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId) {
 
             console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache: false,
-                data: {
-                    consultation_id: consultationId,
-                    max_terms: 30
-                },
+                method: "POST",
+                url: "/consultation/wordCloud/" + consultationId,
                 beforeSend: function beforeSend() {
                     instance.state.busy = true;
                     instance.state.display = true;
@@ -76,18 +71,13 @@
 
             return promise;
         },
-        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum) {
+        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, commentsNum) {
             this.state.frequency_list = [];
             console.log(articleId);
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache: false,
-                data: {
-                    article_id: articleId,
-                    max_terms: 30
-                },
+                method: "POST",
+                url: "/article/wordCloud/" + articleId,
                 beforeSend: function beforeSend() {
                     instance.state.frequency_list = [];
                     var chart = document.getElementById("wordCloudChart");

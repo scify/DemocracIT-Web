@@ -6,6 +6,11 @@ import model.User
 import model.dtos.CommentWithArticleName
 import model.repositories._
 import model.viewmodels._
+import play.api.libs.json.JsValue
+import play.api.libs.ws.WS
+
+import scala.concurrent.Await
+import play.api.Play.current
 
 //case class SearchViewModel(consultations: List[Consultation],searchRequest:ConsultationSearchRequest)
 //{
@@ -30,6 +35,23 @@ class ReporterManager {
                           annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId),
                           relevantLaws = repository.getRelevantLaws(consultationId),
                           userCommentStats = commentsRepository.getCommentersForConsultation(consultationId))
+  }
+
+
+  def getArticleWordCloud(articleId:Long):JsValue = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration._
+
+    val result = Await.result(
+      WS.url(play.api.Play.current.configuration.getString("application.wordCloudBaseUrl").get)
+        .withQueryString("article_id" -> articleId.toString, "max_terms" -> "30").get map {
+        response => {
+          response.json
+        }
+      },25 seconds)
+
+    result
+
   }
 
 

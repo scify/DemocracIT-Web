@@ -27,6 +27,8 @@ GET         /consultation/:consultationId                 @controllers.Consultat
 GET         /comments/retrieve                            @controllers.ConsultationController.getComments(consultationId:Long, articleId:Long, source: String, discussionthreadid:Option[Int] ?= None, discussionthreadclientid:String, page:Option[Int] ?= None)
 GET         /comments/cons/retrieve                       @controllers.ReporterController.getCommentsForConsultationByUserId(consultationId:Long, userId:java.util.UUID)
 GET         /consultation/:consultationId                 @controllers.ConsultationController.getConsultation(consultationId :Long)
+POST        /consultation/wordCloud/:consultationId       @controllers.ConsultationController.getConsultationWordCloud(consultationId :Long)
+POST        /article/wordCloud/:articleId                 @controllers.ReporterController.getArticleWordCloud(articleId :Long)
 GET         /comments/retrieve/forarticle/opengov         @controllers.ReporterController.getOpenGovCommentsByArticleId(articleId:Long)
 GET         /comments/retrieve/forarticle/dit             @controllers.ReporterController.getDITCommentsByArticleId(articleId:Long)
 GET         /comments/retrieve/byannid                    @controllers.ReporterController.getCommentsByAnnId(annId:Long, consultationId:Long)

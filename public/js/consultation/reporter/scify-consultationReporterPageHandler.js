@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -6,7 +6,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,u
                                                   annotationProblemsPerArticle, commenters,
                                                   consultationEndDate){
     this.consultationid= consultationid;
-    this.wordCloudPath = wordCloudPath;
     this.userId = userId;
     this.fullName = fullName;
 
@@ -191,8 +190,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 console.log('this record does not exist');
             }
         },
-        createArticleWordCloudChart = function(instance) {
-            console.log("sdfgsg");
+        createArticleWordCloudChart = function() {
             if (document.getElementById("articleWordCloudDiv")) {
                 console.log('this record already exists');
             } else {
@@ -202,9 +200,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
 
         },
-        loadArticleWordCloud = function(articleId, wordCloudPath, commentsNum) {
-            console.log("asdfafsdfgsg");
-            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum);
+        loadArticleWordCloud = function(articleId, commentsNum) {
+            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -269,7 +266,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             var commentsNum = dataForChart[selection[0].row][4];
                             loadListOfCommentsPerArticle(articleId);
                             instance.articleId = articleId;
-                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath, commentsNum);
+                            loadArticleWordCloud(instance.articleId, commentsNum);
 
                             //sets the selection to null again
                             chart.setSelection();

@@ -18,18 +18,13 @@
             else
                 instance.setVisibibility.call(instance,true);
         },
-        getConsWordCloudFromServer : function(consultationId, wordCloudPath){
+        getConsWordCloudFromServer : function(consultationId){
 
             console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache:false,
-                data:{
-                    consultation_id :consultationId,
-                    max_terms : 30
-                },
+                method: "POST",
+                url: "/consultation/wordCloud/" + consultationId,
                 beforeSend: function(){
                     instance.state.busy=true;
                     instance.state.display = true;
@@ -77,18 +72,13 @@
 
             return promise;
         },
-        getArticleWordCloudFromServer : function(articleId, wordCloudPath, commentsNum){
+        getArticleWordCloudFromServer : function(articleId, commentsNum){
             this.state.frequency_list = [];
             console.log(articleId);
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache:false,
-                data:{
-                    article_id :articleId,
-                    max_terms : 30
-                },
+                method: "POST",
+                url: "/article/wordCloud/" + articleId,
                 beforeSend: function(){
                     instance.state.frequency_list = [];
                     var chart = document.getElementById("wordCloudChart");
