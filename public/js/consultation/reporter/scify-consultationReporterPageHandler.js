@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -6,7 +6,6 @@ scify.ConsultationReporterPageHandler = function( consultationid,wordCloudPath,u
                                                   annotationProblemsPerArticle, commenters,
                                                   consultationEndDate){
     this.consultationid= consultationid;
-    this.wordCloudPath = wordCloudPath;
     this.userId = userId;
     this.fullName = fullName;
 
@@ -154,28 +153,55 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
         createListOfCommentsByAnnId = function() {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
-            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
+            if (domElementCommentsByAnnId) {
+                console.log('this record already exists');
+                window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
+            } else {
+                console.log('this record does not exist');
+            }
+
         },
 
         createListOfCommentsByProblemId = function() {
             var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
-            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
+            if (domElementCommentsByProblemId) {
+                console.log('this record already exists');
+                window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
+            } else {
+                console.log('this record does not exist');
+            }
+
         },
         createListOfCommentsByAnnIdPerArticle = function() {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
-            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+            if (domElementCommentsByAnnIdPerArticle) {
+                console.log('this record already exists');
+                window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+            } else {
+                console.log('this record does not exist');
+            }
         },
         createListOfCommentsByProblemIdPerArticle = function() {
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
-            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
+            if (domElementCommentsByProblemIdPerArticle) {
+                console.log('this record already exists');
+                window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
+            } else {
+                console.log('this record does not exist');
+            }
         },
-        createArticleWordCloudChart = function(instance) {
+        createArticleWordCloudChart = function() {
+            if (document.getElementById("articleWordCloudDiv")) {
+                console.log('this record already exists');
+            } else {
+                console.log('this record does not exist');
+            }
             var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
             window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
 
         },
-        loadArticleWordCloud = function(articleId, wordCloudPath, commentsNum) {
-            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum);
+        loadArticleWordCloud = function(articleId, commentsNum) {
+            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
         },
         createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
             function drawMultSeries() {
@@ -240,7 +266,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             var commentsNum = dataForChart[selection[0].row][4];
                             loadListOfCommentsPerArticle(articleId);
                             instance.articleId = articleId;
-                            loadArticleWordCloud(instance.articleId, instance.wordCloudPath, commentsNum);
+                            loadArticleWordCloud(instance.articleId, commentsNum);
 
                             //sets the selection to null again
                             chart.setSelection();

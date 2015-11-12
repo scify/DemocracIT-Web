@@ -1,13 +1,18 @@
 package model.services
 
-import java.{lang, util}
+import java.util
 import java.util.Date
+
 import model.User
-import model.dtos._
+import model.dtos.{PlatformStats, _}
 import model.repositories._
 import model.viewmodels._
-import model.dtos.PlatformStats
-import org.scify.democracit.solr.{DitSorlQuery}
+import org.scify.democracit.solr.DitSorlQuery
+import play.api.Play.current
+import play.api.libs.json.JsValue
+import play.api.libs.ws.WS
+
+import scala.concurrent.Await
 
 class ConsultationManager {
 
@@ -70,6 +75,22 @@ class ConsultationManager {
 
 
 
+
+  def getConsultationWordCloud(consultationId:Long):JsValue = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration._
+
+   val result = Await.result(
+      WS.url(play.api.Play.current.configuration.getString("application.wordCloudBaseUrl").get)
+        .withQueryString("consultation_id" -> consultationId.toString, "max_terms" -> "30").get map {
+        response => {
+          response.json
+        }
+      },25 seconds)
+
+    result
+
+  }
 
   def median(s: List[Int]):Int = {
     val (lower, upper) = s.sortWith(_<_).splitAt(s.size / 2)

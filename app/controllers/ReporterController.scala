@@ -9,6 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.services.{AnnotationManager, ConsultationManager, ReporterManager}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
+import play.api.mvc.Action
 
 
 class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
@@ -27,6 +28,13 @@ class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
     import utils.ImplicitReadWrites._
     val comments = reporterManager.getCommentsForConsultationByUserId(consultationId, userId, request.identity)
     Ok(Json.toJson(comments))
+  }
+
+  def getArticleWordCloud(articleId :Long )= Action {  implicit request =>
+  {
+    val results = reporterManager.getArticleWordCloud(articleId)
+    Ok(results)
+  }
   }
 
   def getOpenGovCommentsByArticleId(articleId: Long) = UserAwareAction { implicit request =>

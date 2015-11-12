@@ -17,34 +17,47 @@
             var instance = this;
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
-        getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId, wordCloudPath) {
+        getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId) {
 
             console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache: false,
-                data: {
-                    consultation_id: consultationId
-                },
+                method: "POST",
+                url: "/consultation/wordCloud/" + consultationId,
                 beforeSend: function beforeSend() {
                     instance.state.busy = true;
                     instance.state.display = true;
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    console.log(data);
+                    var multiplier = 2;
+                    var sizes = 0;
+                    var average;
+
+                    for (var i = 0; i < data.results.length; i++) {
+                        sizes += data.results[i].freq;
+                    }
+                    average = sizes / data.results.length;
+                    console.log("average: " + average);
+                    if (average < 3) {
+                        multiplier = 10;
+                    } else if (average < 5) {
+                        multiplier = 8;
+                    } else if (average < 10) {
+                        multiplier = 4;
+                    } else if (average < 20) {
+                        multiplier = 2;
+                    }
                     var arr = $.map(data, function (el) {
                         var results = [];
                         for (var item in el) {
-                            //console.log(el[item]);
-                            results.push({ "text": el[item].term, "size": Math.floor(el[item].freq) });
+                            results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * multiplier) });
                         }
                         return results;
                     });
                     instance.state.frequency_list = arr;
                     console.log(instance.state.frequency_list);
+                    instance.state.parent = "cons";
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -58,18 +71,13 @@
 
             return promise;
         },
-        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, wordCloudPath, commentsNum) {
+        getArticleWordCloudFromServer: function getArticleWordCloudFromServer(articleId, commentsNum) {
             this.state.frequency_list = [];
             console.log(articleId);
             var instance = this;
             var promise = $.ajax({
-                method: "GET",
-                url: wordCloudPath,
-                cache: false,
-                data: {
-                    article_id: articleId,
-                    max_terms: 30
-                },
+                method: "POST",
+                url: "/article/wordCloud/" + articleId,
                 beforeSend: function beforeSend() {
                     instance.state.frequency_list = [];
                     var chart = document.getElementById("wordCloudChart");
@@ -98,12 +106,12 @@
                         var results = [];
                         for (var item in el) {
                             results.push({ "text": el[item].term, "size": Math.floor(el[item].freq * multiplier) });
-                            sizes += el[item].freq;
                         }
                         return results;
                     });
 
                     instance.state.frequency_list = arr;
+                    instance.state.parent = "article";
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -120,10 +128,16 @@
         drawD3: function drawD3() {
             var fill = d3.scale.category20();
             var instance = this;
+            var translate = "";
+            if (instance.state.parent == "cons") {
+                var translate = "translate(500,250)";
+            } else if (instance.state.parent == "article") {
+                var translate = "translate(500,180)";
+            }
             if (this.state.frequency_list.length > 0) {
                 var draw = function draw(words) {
-                    console.log(words);
-                    d3.select("#wordCloudChart").append("svg").attr("width", "100%").attr("height", 500).append("g").attr("transform", "translate(500,250)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+                    console.log(translate);
+                    d3.select("#wordCloudChart").append("svg").attr("width", "100%").attr("height", 500).append("g").attr("transform", translate).selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
                         return d.size + "px";
                     }).style("font-family", "Impact").style("fill", function (d, i) {
                         return fill(i);
@@ -146,11 +160,8 @@
                     return d.size + 2;
                 }).padding(5).on("end", draw).start();
             } else {
-                return React.createElement(
-                    "div",
-                    { id: "explanation" },
-                    "Δεν βρέθηκαν δεδομένα."
-                );
+
+                return "empty";
             }
         },
         render: function render() {
@@ -162,8 +173,15 @@
                         React.createElement(scify.ReactLoader, { display: this.state.busy })
                     );
                 } else {
-                    console.log("drawing now");
-                    this.drawD3();
+                    var draw = this.drawD3();
+                    if (draw == "empty") {
+                        console.log("empty");
+                        return React.createElement(
+                            "div",
+                            { className: "noStats" },
+                            "Δεν βρέθηκαν δεδομένα."
+                        );
+                    }
                 }
             }
             return React.createElement("div", null);
