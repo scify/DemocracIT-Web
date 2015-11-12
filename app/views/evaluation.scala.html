@@ -1,0 +1,19 @@
+@import model.viewmodels.EvaluationViewModel
+@(vm: EvaluationViewModel)(implicit request: play.api.mvc.Request[Any])
+@js = {
+
+  <script>
+
+  </script>
+}
+
+@css = {
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+
+}
+
+@layout("DemocracIT", css, js,vm.user) {
+
+}
