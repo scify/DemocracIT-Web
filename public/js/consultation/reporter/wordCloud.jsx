@@ -48,6 +48,8 @@
                         multiplier = 4;
                     } else if (average < 20) {
                         multiplier = 2;
+                    } else if(average > 80) {
+                        multiplier = 0.5;
                     }
                     var arr = $.map(data, function(el) {
                         var results = [];
@@ -102,6 +104,8 @@
                     average = sizes / data.results.length;
                     if(average < 3) {
                         multiplier = 12;
+                    } else if(average > 80) {
+                        multiplier = 0.5;
                     }
                     var arr = $.map(data, function(el) {
                         var results = [];
@@ -143,7 +147,7 @@
                 var color = d3.scale.linear()
                     .domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100])
                     .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-
+                console.log(this.state.frequency_list);
                 d3.layout.cloud().size([800, 300])
                     .words(this.state.frequency_list)
                     .rotate(function () {
@@ -158,7 +162,7 @@
                     .start();
 
                 function draw(words) {
-                    console.log(translate);
+                    console.log(words);
                     d3.select("#wordCloudChart").append("svg")
                         .attr("width", "100%")
                         .attr("height", 500)
