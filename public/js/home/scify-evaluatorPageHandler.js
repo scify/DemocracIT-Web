@@ -101,7 +101,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 bar: {groupWidth: "90%"},
                 'chartArea': {width: '75%','height': chartHeight,left:'200'},
                 'hAxis': {
-                    title: "Αριθμός διαβουλεύσεων",
+                    title: "Μήνες",
                     textStyle: {
                         fontSize: 11,
                         color: '#053061',
@@ -117,7 +117,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 },
                 'is3D':true,
                 'vAxis': {
-                    title: "Μήνες"
+                    title: "Αριθμός διαβουλεύσεων"
                 },
                 legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15
