@@ -216,18 +216,20 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 }
                 data.addColumn({type: 'number', role:'scope'});
                 data.addRows(dataForChart);
+
                 var numRows = dataForChart.length;
-                var expectedHeight = numRows * 30;
+                var expectedHeight = numRows * 20;
                 if(expectedHeight < 400) {
                     expectedHeight = 600;
                 }
+                var chartHeight = expectedHeight - 80;
                 var options = {
                     tooltip: {isHtml: true},
                     'displayAnnotations': true,
                     'title': chartName,
                     'height': expectedHeight,
                     'width':'1000',
-                    'chartArea': {width: chartWidth,'height': '400',left:'300'},
+                    'chartArea': {width: chartWidth,'height': chartHeight,left:'300'},
                     'hAxis': {
                         title: xName,
                         minValue: 0

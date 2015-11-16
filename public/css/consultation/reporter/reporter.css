@@ -169,4 +169,16 @@
   margin-left: 5px;
   color: #428bca; }
 
+.explanation {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px; }
+
+.explanation .fa {
+  color: #428bca; }
+
+.verticalChart {
+  margin-left: -185px; }
+
 /*# sourceMappingURL=reporter.css.map */

@@ -126,7 +126,6 @@
                     console.log(x);
                 }
             });
-
             return promise;
         },
         drawD3: function drawD3() {
@@ -164,7 +163,6 @@
                     return d.size + 2;
                 }).padding(5).on("end", draw).start();
             } else {
-
                 return "empty";
             }
         },

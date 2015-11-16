@@ -1,19 +1,49 @@
 @import model.viewmodels.EvaluationViewModel
-@(vm: EvaluationViewModel)(implicit request: play.api.mvc.Request[Any])
+@(vm: EvaluationViewModel)
+
 @js = {
-
-  <script>
-
-  </script>
+    <script src="@routes.Assets.at("js/home/scify-evaluatorPageHandler.js")" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+    {'modules':[{'name':'visualization','version':'1.1','packages':
+    ['corechart']}]}"></script>
+    <script>
+    $(function(){
+        var controller = new scify.EvaluatorPageHandler(@Html(vm.consultationsPerMonthToJson())
+                                                       );
+        controller.init();
+     })
+    </script>
 }
 
 @css = {
-  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
-
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/reporter/reporter.css")">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
+    <div  class="container">
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#consultationsPerMonthContent" aria-controls="profile" role="tab" data-toggle="tab">Διασπορά</a></li>
+            <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Διάρκεια</a></li>
+            <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Συμμετοχή</a></li>
+            <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Παρατηρήσεις Χρηστών</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="consultationsPerMonthContent">
+                <ul class="statsBar nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"> <a href="#consultationsPerMonthChart" aria-controls="consultationsPerMonthChart" role="tab" data-toggle="tab">Συνολικά</a></li>
+                    <li role="presentation"> <a href="#consultationsPerOrganizationPerMonthChart" aria-controls="consultationsPerOrganizationPerMonthChart" role="tab" data-toggle="tab">Ανά Οργανισμό</a></li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div id="consultationsPerMonthChart">
+                    <div class="explanation"><i class="fa fa-info-circle"></i> Τα στοιχεία αναφέρονται στα τελευταία 2 χρόνια</div>
+                    <div id="consultationsPerMonthInnerChart" class="verticalChart">
+                </div>
+            </div>
+        </div>
+    </div>
 
 }

@@ -127,7 +127,6 @@
                     console.log(x);
                 }
             });
-
             return promise;
         },
         drawD3 : function() {
@@ -187,7 +186,6 @@
                     instance.state.frequency_list = [];
                 }
             } else {
-
                 return "empty";
             }
         },
@@ -205,7 +203,6 @@
                         console.log("empty");
                         return ( <div className="noStats">Δεν βρέθηκαν δεδομένα.</div> );
                     }
-
                 }
             }
             return (
