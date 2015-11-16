@@ -9,7 +9,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     }
 };
 scify.EvaluatorPageHandler.prototype = function(){
-    createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
+    createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
             console.log(dataForChart);
@@ -17,42 +17,8 @@ scify.EvaluatorPageHandler.prototype = function(){
             data.addColumn('number', numName);
             data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
             data.addRows(dataForChart);
-            var numRows = dataForChart.length;
-            var expectedHeight = numRows * 30;
-            if(expectedHeight < 400) {
-                expectedHeight = 600;
-            }
-            var chartHeight = expectedHeight - 100;
-            var options = {
-                tooltip: {isHtml: true},
-                'displayAnnotations': true,
-                'title': chartName,
-                'height': expectedHeight,
-                'width':'1300',
-                bar: {groupWidth: "90%"},
-                'chartArea': {width: chartWidth,'height': chartHeight,left:'200'},
-                'hAxis': {
-                    title: yName,
-                    textStyle: {
-                        fontSize: 11,
-                        color: '#053061',
-                        bold: false,
-                        italic: false
-                    }
 
-                },
-                animation:{
-                    duration: 2000,
-                    easing: 'out',
-                    startup: true
-                },
-                'is3D':true,
-                'vAxis': {
-                    title: xName
-                },
-                legend: {position: 'none',alignment:'start'},
-                'fontSize' : 15
-            };
+            var options = chartOptions;
 
             var chart;
             switch(chartType) {
@@ -120,7 +86,43 @@ scify.EvaluatorPageHandler.prototype = function(){
     var init = function() {
         var instance = this;
         if(this.consultationsPerMonth.length > 0) {
-            createChart(this.consultationsPerMonth, "consultationsPerMonthInnerChart", "Αριθμος νεων διαβουλέυεσων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλέυεις)", "Αριθμός διαβουλεύσεων", "Μήνες", "Διαβούλευση", "", '75%', 'bar', instance);
+            var numRows = this.consultationsPerMonth.length;
+            var expectedHeight = numRows * 30;
+            if(expectedHeight < 400) {
+                expectedHeight = 600;
+            }
+            var chartHeight = expectedHeight - 100;
+            var consultationsPerMonthOptions = {
+                tooltip: {isHtml: true},
+                'displayAnnotations': true,
+                'title': "Αριθμος νεων διαβουλέυεσων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλέυεις)",
+                'height': expectedHeight,
+                'width':'1300',
+                bar: {groupWidth: "90%"},
+                'chartArea': {width: '75%','height': chartHeight,left:'200'},
+                'hAxis': {
+                    title: "Αριθμός διαβουλεύσεων",
+                    textStyle: {
+                        fontSize: 11,
+                        color: '#053061',
+                        bold: false,
+                        italic: false
+                    }
+
+                },
+                animation:{
+                    duration: 2000,
+                    easing: 'out',
+                    startup: true
+                },
+                'is3D':true,
+                'vAxis': {
+                    title: "Μήνες"
+                },
+                legend: {position: 'none',alignment:'start'},
+                'fontSize' : 15
+            };
+            createChart(this.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
 
     }
