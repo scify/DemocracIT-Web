@@ -22,18 +22,19 @@ scify.EvaluatorPageHandler.prototype = function(){
             if(expectedHeight < 400) {
                 expectedHeight = 600;
             }
-            var chartHeight = expectedHeight - 80;
+            var chartHeight = expectedHeight - 100;
             var options = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
                 'title': chartName,
                 'height': expectedHeight,
-                'width':'1800',
-                'chartArea': {width: chartWidth,'height': chartHeight,left:'100'},
+                'width':'1300',
+                bar: {groupWidth: "90%"},
+                'chartArea': {width: chartWidth,'height': chartHeight,left:'200'},
                 'hAxis': {
                     title: yName,
                     textStyle: {
-                        fontSize: 12,
+                        fontSize: 11,
                         color: '#053061',
                         bold: false,
                         italic: false
@@ -49,7 +50,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 'vAxis': {
                     title: xName
                 },
-                legend: {position: 'right',alignment:'start'},
+                legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15
             };
 
@@ -119,7 +120,7 @@ scify.EvaluatorPageHandler.prototype = function(){
     var init = function() {
         var instance = this;
         if(this.consultationsPerMonth.length > 0) {
-            createChart(this.consultationsPerMonth, "consultationsPerMonthInnerChart", "Διασπορά διαβουλέυεσων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλέυεις)", "Αριθμός διαβουλεύσεων", "Μήνες", "Διαβούλευση", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.consultationsPerMonth, "consultationsPerMonthInnerChart", "Αριθμος νεων διαβουλέυεσων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλέυεις)", "Αριθμός διαβουλεύσεων", "Μήνες", "Διαβούλευση", "", '75%', 'bar', instance);
         }
 
     }
