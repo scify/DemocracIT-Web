@@ -1,7 +1,7 @@
 
 scify.EvaluatorPageHandler = function(consultationsPerMonth) {
 
-    console.log(consultationsPerMonth);
+    //console.log(consultationsPerMonth);
     this.consultationsPerMonth = [];
     for (var i=0; i<consultationsPerMonth.length; i++)
     {
@@ -10,9 +10,10 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
 };
 scify.EvaluatorPageHandler.prototype = function(){
     createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
+        console.log(dataForChart);
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
-            console.log(dataForChart);
+            //console.log(dataForChart);
             data.addColumn('string', strName);
             data.addColumn('number', numName);
             data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
@@ -86,10 +87,10 @@ scify.EvaluatorPageHandler.prototype = function(){
     createConsFrequencyPerOrganizationDiv = function() {
         var domElementConsFreqPerOrganization = document.getElementById("consultationsPerOrganizationInnerDiv");
         if (domElementConsFreqPerOrganization) {
-            console.log('this record already exists');
+            //console.log('this record already exists');
             window.ConsFreqPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFreqPerOrganization);
         } else {
-            console.log('this record does not exist');
+            //console.log('this record does not exist');
         }
         loadConsFrequencyPerOrganization();
     },
