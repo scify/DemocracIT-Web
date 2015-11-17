@@ -31,7 +31,7 @@
                         var noConsultations = 1;
                         //console.log(chartId);
                         for(var j = index; j < index + 15; j++) {
-                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:100%">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>']);
+                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:100%">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>', data[j].numberOfConsultations]);
                             if(data[j].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -67,6 +67,7 @@
                 data.addColumn('string', "");
                 data.addColumn('number', "");
                 data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
+                data.addColumn({type:'number', role:'annotation'});
                 data.addRows(dataForChart);
 
                 var options = {
