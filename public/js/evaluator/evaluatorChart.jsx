@@ -36,12 +36,12 @@
                                 noConsultations = 0;
                             }
                         }
-                        $( "#consultationsPerOrganizationInnerDiv" ).append( '<div id="' + chartId  + '"></div>' );
+                        $( "#consultationsPerOrganizationInnerDiv" ).append( '<div class="organizationChart"><div id="' + chartId  + '"></div></div>' );
                         //console.log(dataForCurrentOrganization);
                         if(noConsultations) {
                             $("#" + chartId).append('' +
                                     '<div class="explanation organizationName">' + chartTitle + '</div>' +
-                                '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>');
+                                    '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 15 μήνες.</div>');
                         } else {
                             instance.createChart(dataForCurrentOrganization, chartId, chartTitle, 'bar');
                         }
