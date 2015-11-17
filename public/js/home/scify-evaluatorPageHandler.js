@@ -5,7 +5,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     this.consultationsPerMonth = [];
     for (var i=0; i<consultationsPerMonth.length; i++)
     {
-        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:100%">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>'])
+        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>'])
     }
 };
 scify.EvaluatorPageHandler.prototype = function(){
