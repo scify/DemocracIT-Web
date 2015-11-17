@@ -82,6 +82,19 @@ scify.EvaluatorPageHandler.prototype = function(){
             });
         }
         google.setOnLoadCallback(drawMultSeries);
+    },
+    createConsFrequencyPerOrganizationDiv = function() {
+        var domElementConsFreqPerOrganization = document.getElementById("consultationsPerOrganizationInnerDiv");
+        if (domElementConsFreqPerOrganization) {
+            console.log('this record already exists');
+            window.ConsFreqPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFreqPerOrganization);
+        } else {
+            console.log('this record does not exist');
+        }
+        loadConsFrequencyPerOrganization();
+    },
+    loadConsFrequencyPerOrganization = function() {
+        window.ConsFreqPerOrganizationComponent.getFrequencyPerOrganization();
     }
     var init = function() {
         var instance = this;
@@ -124,6 +137,8 @@ scify.EvaluatorPageHandler.prototype = function(){
             };
             createChart(this.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
+
+        createConsFrequencyPerOrganizationDiv();
 
     }
     return {

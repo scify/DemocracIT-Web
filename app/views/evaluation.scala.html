@@ -3,6 +3,7 @@
 
 @js = {
     <script src="@routes.Assets.at("js/home/scify-evaluatorPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/evaluator/evaluatorChart-compiled.js")" ></script>
     <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
     {'modules':[{'name':'visualization','version':'1.1','packages':
     ['corechart']}]}"></script>
@@ -33,14 +34,22 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="consultationsPerMonthContent">
                 <ul class="statsBar nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"> <a href="#consultationsPerMonthChart" aria-controls="consultationsPerMonthChart" role="tab" data-toggle="tab">Συνολικά</a></li>
-                    <li role="presentation"> <a href="#consultationsPerOrganizationPerMonthChart" aria-controls="consultationsPerOrganizationPerMonthChart" role="tab" data-toggle="tab">Ανά Οργανισμό</a></li>
+                    <li role="presentation" class="active"> <a href="#consultationsPerMonthDiv" aria-controls="consultationsPerMonthChart" role="tab" data-toggle="tab">Συνολικά</a></li>
+                    <li role="presentation"> <a href="#consultationsPerOrganizationDiv" aria-controls="consultationsPerOrganizationPerMonthChart" role="tab" data-toggle="tab">Ανά Οργανισμό</a></li>
                 </ul>
             </div>
             <div class="tab-content">
-                <div id="consultationsPerMonthChart">
-                    <div class="explanation"><i class="fa fa-info-circle"></i> Τα στοιχεία αναφέρονται στους τελευταίους 15 μήνες</div>
-                    <div id="consultationsPerMonthInnerChart" class="verticalChart">
+                <div  role="tabpanel" class="tab-pane active" id="consultationsPerMonthDiv">
+                    <div id="consultationsPerMonthChart">
+                        <div class="explanation"><i class="fa fa-info-circle"></i> Τα στοιχεία αναφέρονται στους τελευταίους 18 μήνες</div>
+                        <div id="consultationsPerMonthInnerChart" class="verticalChart"></div>
+                    </div>
+                </div>
+                <div  role="tabpanel" class="tab-pane" id="consultationsPerOrganizationDiv">
+                    <div id="consultationsPerOrganizationChart">
+                        <div class="explanation"><i class="fa fa-info-circle"></i> Τα στοιχεία αναφέρονται στους τελευταίους 15 μήνες</div>
+                        <div id="consultationsPerOrganizationInnerDiv"></div>
+                    </div>
                 </div>
             </div>
         </div>
