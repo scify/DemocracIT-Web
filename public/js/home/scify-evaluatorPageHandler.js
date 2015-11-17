@@ -10,7 +10,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
 };
 scify.EvaluatorPageHandler.prototype = function(){
     createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
-        console.log(dataForChart);
+        //console.log(dataForChart);
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
             //console.log(dataForChart);

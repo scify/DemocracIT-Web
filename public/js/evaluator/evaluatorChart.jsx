@@ -20,7 +20,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    console.log(data);
+                    //console.log(data);
                     var index = 0;
                     /*15 is the number of months we are querying for*/
                     var numberOfOrganizations = data.length / 15;
@@ -28,15 +28,25 @@
                         var chartId = "chart_" + data[index].organizationId;
                         var chartTitle = data[index].organizationName;
                         var dataForCurrentOrganization = [];
+                        var noConsultations = 1;
                         //console.log(chartId);
                         for(var j = index; j < index + 15; j++) {
                             dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:100%">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>']);
-
+                            if(data[j].numberOfConsultations != 0) {
+                                noConsultations = 0;
+                            }
                         }
                         $( "#consultationsPerOrganizationInnerDiv" ).append( '<div id="' + chartId  + '"></div>' );
-                        console.log(dataForCurrentOrganization);
-                        instance.createChart(dataForCurrentOrganization, chartId, chartTitle, 'bar');
+                        //console.log(dataForCurrentOrganization);
+                        if(noConsultations) {
+                            $("#" + chartId).append('' +
+                                    '<div class="explanation organizationName">' + chartTitle + '</div>' +
+                                '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>');
+                        } else {
+                            instance.createChart(dataForCurrentOrganization, chartId, chartTitle, 'bar');
+                        }
                         index+=15;
+                        noConsultations = 1;
                     }
                 },
                 complete: function(){
@@ -52,11 +62,8 @@
             return promise;
         },
         createChart : function(dataForChart, chartId, chartTitle, chartType) {
-            google.setOnLoadCallback(drawChart);
-            drawChart();
-            function drawChart() {
                 var data = new google.visualization.DataTable();
-                console.log(dataForChart);
+                //console.log(dataForChart);
                 data.addColumn('string', "");
                 data.addColumn('number', "");
                 data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
@@ -105,8 +112,6 @@
                         break
                 }
                 chart.draw(data, options);
-            }
-
         },
         render: function() {
             if(this.state.display) {
