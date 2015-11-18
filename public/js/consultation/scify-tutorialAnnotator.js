@@ -33,7 +33,7 @@ scify.TutorialAnnotator.prototype = (function(){
         },
         checkAndReadCookie = function() {
             var tutorialCookie = getCookie("tutorialCookie");
-            console.log(tutorialCookie);
+            //console.log(tutorialCookie);
             if (tutorialCookie!="") {
                 return false;
             } else {

@@ -19,8 +19,7 @@
                 instance.setVisibibility.call(instance,true);
         },
         getConsWordCloudFromServer : function(consultationId){
-
-            console.log("getWordCloudFromServer");
+            //console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "POST",
@@ -31,6 +30,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
+                    console.log(data);
                     var multiplier = 2;
                     var sizes = 0;
                     var average;
@@ -40,6 +40,8 @@
                     }
                     average = sizes / data.results.length;
                     console.log("average: " + average);
+                    instance.state.cloudHeight = 500;
+                    instance.state.translateHeight = 200;
                     if(average < 3) {
                         multiplier = 10;
                     } else if(average < 5) {
@@ -48,8 +50,14 @@
                         multiplier = 4;
                     } else if (average < 20) {
                         multiplier = 2;
+                    } else if(average > 120) {
+                        multiplier = 0.3;
+                        instance.state.cloudHeight = 700;
+                        instance.state.translateHeight = 300;
                     } else if(average > 80) {
                         multiplier = 0.5;
+                        instance.state.cloudHeight = 700;
+                        instance.state.translateHeight = 300;
                     }
                     var arr = $.map(data, function(el) {
                         var results = [];
@@ -59,7 +67,7 @@
                         return results;
                     });
                     instance.state.frequency_list = arr;
-                    console.log(instance.state.frequency_list);
+                    //console.log(instance.state.frequency_list);
                     instance.state.parent = "cons";
                 },
                 complete: function(){
@@ -102,10 +110,18 @@
                         sizes += data.results[i].freq;
                     }
                     average = sizes / data.results.length;
+                    instance.state.cloudHeight = 500;
+                    instance.state.translateHeight = 200;
                     if(average < 3) {
                         multiplier = 12;
+                    } else if(average > 120) {
+                        multiplier = 0.3;
+                        instance.state.cloudHeight = 700;
+                        instance.state.translateHeight = 300;
                     } else if(average > 80) {
                         multiplier = 0.5;
+                        instance.state.cloudHeight = 700;
+                        instance.state.translateHeight = 300;
                     }
                     var arr = $.map(data, function(el) {
                         var results = [];
@@ -134,9 +150,9 @@
             var instance = this;
             var translate = "";
             if (instance.state.parent == "cons") {
-                var translate = "translate(500,250)";
+                var translate = "translate(500," + instance.state.translateHeight + ")";
             } else if(instance.state.parent == "article") {
-                var translate = "translate(500,180)";
+                var translate = "translate(500," + instance.state.translateHeight + ")";
             }
             if(this.state.frequency_list.length > 0) {
                 var color = d3.scale.linear()
@@ -146,15 +162,17 @@
                 var color = d3.scale.linear()
                     .domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100])
                     .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-                console.log(this.state.frequency_list);
-                d3.layout.cloud().size([800, 300])
-                    .words(this.state.frequency_list)
+
+                var words =this.state.frequency_list;
+                console.log(words);
+                d3.layout.cloud().size([900, 500])
+                    .words(words)
                     .rotate(function () {
                         return ~~(Math.random() * 2) * 90;
                     })
                     .font("Impact")
                     .fontSize(function (d) {
-                        return d.size +2;
+                        return d.size;
                     })
                     .padding(5)
                     .on("end", draw)
@@ -164,7 +182,7 @@
                     console.log(words);
                     d3.select("#wordCloudChart").append("svg")
                         .attr("width", "100%")
-                        .attr("height", 500)
+                        .attr("height", instance.state.cloudHeight)
                         .append("g")
                         .attr("transform", translate)
                         .selectAll("text")
