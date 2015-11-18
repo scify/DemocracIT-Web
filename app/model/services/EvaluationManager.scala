@@ -58,4 +58,11 @@ class EvaluationManager {
     frequencies = evaluationRepository.getEvaluationPerOrganization(dateSet)
     frequencies
   }
+  def getConsDurationPerOrganization(): List[model.dtos.ConsDurationsPerOrganization] = {
+    val evaluationRepository = new EvaluationRepository()
+    var durations: List[model.dtos.ConsDurationsPerOrganization] = Nil
+    durations = evaluationRepository.getConsDurationPerOrganization()
+    durations
+  }
+
 }

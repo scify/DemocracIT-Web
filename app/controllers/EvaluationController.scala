@@ -26,4 +26,9 @@ class EvaluationController @Inject()  ( val messagesApi: MessagesApi,
     Ok(Json.toJson(frequencies))
   }
 
+  def getConsDurationPerOrganization() = UserAwareAction { implicit request =>
+    val durations = evaluationManager.getConsDurationPerOrganization()
+    Ok(Json.toJson(durations))
+  }
+
 }
