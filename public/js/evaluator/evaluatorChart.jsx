@@ -23,14 +23,14 @@
                     //console.log(data);
                     var index = 0;
                     /*15 is the number of months we are querying for*/
-                    var numberOfOrganizations = data.length / 15;
+                    var numberOfOrganizations = data.length / 18;
                     for(var i = 0; i < numberOfOrganizations; i++) {
                         var chartId = "chart_" + data[index].organizationId;
                         var chartTitle = data[index].organizationName;
                         var dataForCurrentOrganization = [];
                         var noConsultations = 1;
                         //console.log(chartId);
-                        for(var j = index; j < index + 15; j++) {
+                        for(var j = index; j < index + 18; j++) {
                             dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>', data[j].numberOfConsultations]);
                             if(data[j].numberOfConsultations != 0) {
                                 noConsultations = 0;
@@ -41,13 +41,13 @@
                         if(noConsultations) {
                             $("#" + chartId).append('' +
                                     '<div class="explanation organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 15 μήνες.</div>');
+                                    '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 18 μήνες.</div>');
                         } else {
                             $("#" + chartId).before('' +
                                 '<div class="explanation organizationName">' + chartTitle + '</div>');
                             instance.createChart(dataForCurrentOrganization, chartId, chartTitle, 'bar');
                         }
-                        index+=15;
+                        index+=18;
                         noConsultations = 1;
                     }
                 },
