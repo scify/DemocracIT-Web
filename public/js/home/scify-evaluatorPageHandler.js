@@ -105,6 +105,9 @@ scify.EvaluatorPageHandler.prototype = function(){
             if(expectedHeight < 400) {
                 expectedHeight = 600;
             }
+            /*var max = this.consultationsPerMonth.reduce(function(max, arr) {
+                return Math.max(max, arr[1]);
+            }, -Infinity);*/
             var chartHeight = expectedHeight - 100;
             var consultationsPerMonthOptions = {
                 tooltip: {isHtml: true},
@@ -124,6 +127,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                     }
 
                 },
+
                 animation:{
                     duration: 2000,
                     easing: 'out',
@@ -131,7 +135,11 @@ scify.EvaluatorPageHandler.prototype = function(){
                 },
                 'is3D':true,
                 'vAxis': {
-                    title: "Αριθμός διαβουλεύσεων"
+                    title: "Αριθμός διαβουλεύσεων",
+                    format: '#'
+                    /*gridlines: {
+                        count: max + 1
+                    }*/
                 },
                 legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15

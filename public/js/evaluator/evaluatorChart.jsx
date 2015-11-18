@@ -43,6 +43,8 @@
                                     '<div class="explanation organizationName">' + chartTitle + '</div>' +
                                     '<div class="explanation">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 15 μήνες.</div>');
                         } else {
+                            $("#" + chartId).before('' +
+                                '<div class="explanation organizationName">' + chartTitle + '</div>');
                             instance.createChart(dataForCurrentOrganization, chartId, chartTitle, 'bar');
                         }
                         index+=15;
@@ -62,6 +64,10 @@
             return promise;
         },
         createChart : function(dataForChart, chartId, chartTitle, chartType) {
+                var max = dataForChart.reduce(function(max, arr) {
+                        return Math.max(max, arr[1]);
+                    }, -Infinity);
+                //console.log(chartTitle + ": " +max);
                 var data = new google.visualization.DataTable();
                 //console.log(dataForChart);
                 data.addColumn('string', "");
@@ -73,7 +79,7 @@
                 var options = {
                     tooltip: {isHtml: true},
                     'displayAnnotations': true,
-                    'title': chartTitle,
+                    'title': '<div class="organizationName">' + chartTitle + '</div>',titlePosition: 'none',
                     'height': 500,
                     'width':'1300',
                     bar: {groupWidth: "90%"},
@@ -95,7 +101,14 @@
                     },
                     'is3D':true,
                     'vAxis': {
-                        title: "Αριθμός διαβουλεύσεων"
+                        title: "Αριθμός διαβουλεύσεων",
+                        viewWindow:{
+                            max:max,
+                            min:0
+                        },format: '#',
+                        gridlines: {
+                            count: max + 1
+                        }
                     },
                     legend: {position: 'none',alignment:'start'},
                     'fontSize' : 15
