@@ -75,15 +75,25 @@
                 data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
                 data.addColumn({type:'number', role:'annotation'});
                 data.addRows(dataForChart);
+                var chartHeight = 300;
+                if(max < 2) {
+                    chartHeight = 200;
+                } else if(max > 20) {
+                    chartHeight = 900;
+                } else if(max > 10) {
+                    chartHeight = 700;
+                } else if(max > 5) {
+                    chartHeight = 400;
+                }
 
                 var options = {
                     tooltip: {isHtml: true},
                     'displayAnnotations': true,
                     'title': '<div class="organizationName">' + chartTitle + '</div>',titlePosition: 'none',
-                    'height': 500,
+                    'height': chartHeight,
                     'width':'1300',
                     bar: {groupWidth: "90%"},
-                    'chartArea': {width: '75%','height': 400,left:'200'},
+                    'chartArea': {width: '75%','height': chartHeight -100,left:'200'},
                     'hAxis': {
                         title: "Μήνες",
                         textStyle: {
