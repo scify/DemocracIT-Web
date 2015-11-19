@@ -1,8 +1,8 @@
 package model.repositories
 
 import _root_.anorm._
-import model.dtos.{ConsDurations, ConsDurationsPerOrganization, ConsFrequencyPerOrganization, ConsultationsPerMonth}
-import model.repositories.anorm.{ConsDurationParser, ConsFrequencyPerOrganizationParser, ConsultationsPerMonthParser, ConsDurationPerOrganizationParser}
+import model.dtos._
+import model.repositories.anorm._
 import play.api.Play.current
 import play.api.db.DB
 
@@ -163,6 +163,68 @@ class EvaluationRepository {
                               END
             """).as(ConsDurationParser.Parse *)
       consDurationPerMonth
+    }
+  }
+
+  def getCommPerConsPerOrganization(): List[CommPerConsPerOrganization] = {
+    DB.withConnection { implicit c =>
+
+      val commPerConsPerOrganization: List[CommPerConsPerOrganization] =
+        SQL("""
+              WITH ConsultationComments AS (
+                      SELECT consultation.id, count (*) AS numberOfComments,
+              		organization_lkp.title                   AS organizationName,
+              		organization_lkp.id                      AS organizationId,
+              		organization_lkp.group_title		AS groupTitle
+                      FROM consultation
+                      INNER JOIN articles art ON consultation.id = art.consultation_id
+                      inner join comments comm on art.id = comm.article_id
+                      INNER JOIN organization_lkp ON consultation.organization_id = organization_lkp.id
+                      group by organizationId, consultation.id
+                      ),
+                      GroupedConsultations AS(
+                        SELECT CASE
+                                WHEN numberOfComments<=20
+                                     THEN '20 και λιγότερα'
+                                WHEN (numberOfComments>20 and numberOfComments<=50)
+                                     THEN '21 έως 50'
+                                WHEN (numberOfComments>50 and numberOfComments<=100)
+                                     THEN '51 έως 100'
+                                WHEN (numberOfComments>100 and numberOfComments<=200)
+                                     THEN '101 έως 200'
+                                WHEN (numberOfComments>200 and numberOfComments<=500)
+                                     THEN '201 έως 500'
+              		  WHEN (numberOfComments>500 and numberOfComments<=800)
+                                     THEN '501 έως 800'
+              		  WHEN (numberOfComments>800)
+                                     THEN '801 και περισσότερα'
+                                END AS CommentWindow,
+                                *
+                                FROM ConsultationComments
+              	)
+
+              	SELECT organizationId,
+              	       organizationName,
+              	       CommentWindow,
+              	       COUNT(*) AS numberOfConsultations,
+              	       groupTitle
+              	       FROM   GroupedConsultations
+              	       GROUP BY organizationId,
+              			organizationName,
+              			CommentWindow,
+              			groupTitle
+              	       ORDER BY organizationId,
+              			CASE CommentWindow WHEN '20 και λιγότερα'     THEN 1
+              				     WHEN '21 έως 50'           THEN 2
+              				     WHEN '51 έως 100'          THEN 3
+              				     WHEN '101 έως 200'         THEN 4
+              				     WHEN '201 έως 500' 	THEN 5
+              				     WHEN '501 έως 800' 	THEN 6
+              				     WHEN '801 και περισσότερα' THEN 7
+              			END
+
+            """).as(CommPerConsPerOrganizationParser.Parse *)
+      commPerConsPerOrganization
     }
   }
 

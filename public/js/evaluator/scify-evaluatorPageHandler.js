@@ -107,12 +107,21 @@ scify.EvaluatorPageHandler.prototype = function(){
     createConsDurationDiv = function() {
         var domElementConsDuration = document.getElementById("consDurationInnerChart");
         if (domElementConsDuration) {
-            //console.log('this record already exists');
-            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDuration);
+            window.ConsDurationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDuration);
         } else {
             //console.log('this record does not exist');
         }
         loadConsDuration();
+    },
+
+    createConsCommPerOrganizationDiv = function() {
+        var domElementConsCommPerOrganization = document.getElementById("commConsOrgInnerChart");
+        if (domElementConsCommPerOrganization) {
+            window.ConsCommPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsCommPerOrganization);
+        } else {
+            //console.log('this record does not exist');
+        }
+        loadConsCommPerOrganization();
     },
     loadConsFrequencyPerOrganization = function() {
         window.ConsFreqPerOrganizationComponent.getFrequencyPerOrganization();
@@ -121,7 +130,10 @@ scify.EvaluatorPageHandler.prototype = function(){
         window.ConsDurationPerOrganizationComponent.getDurationPerOrganization();
     },
     loadConsDuration = function() {
-        window.ConsDurationPerOrganizationComponent.getDuration();
+        window.ConsDurationComponent.getDuration();
+    },
+    loadConsCommPerOrganization = function() {
+        window.ConsCommPerOrganizationComponent.getConsCommPerOrganization();
     }
     var init = function() {
         var instance = this;
@@ -176,6 +188,7 @@ scify.EvaluatorPageHandler.prototype = function(){
         createConsFrequencyPerOrganizationDiv();
         createConsDurationPerOrganizationDiv();
         createConsDurationDiv();
+        createConsCommPerOrganizationDiv();
 
     }
     return {

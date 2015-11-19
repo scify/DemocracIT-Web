@@ -39,8 +39,9 @@ GET         /comments/cons/ann/retrieve/csv/:consultationId           @controlle
 GET         /comments/cons/problems/retrieve/csv/:consultationId           @controllers.ReporterController.getProblemsForConsultationCSV(consultationId:Long)
 GET         /evaluation                                   @controllers.EvaluationController.getEvaluationPage()
 GET         /evaluator/frequency/organization             @controllers.EvaluationController.getEvaluationPerOrganization()
-GET         /evaluator/duration/organization             @controllers.EvaluationController.getConsDurationPerOrganization()
-GET         /evaluator/duration/all             @controllers.EvaluationController.getConsDuration()
+GET         /evaluator/duration/organization              @controllers.EvaluationController.getConsDurationPerOrganization()
+GET         /evaluator/duration/all                       @controllers.EvaluationController.getConsDuration()
+GET         /evaluator/comments/organization              @controllers.EvaluationController.getConsCommPerOrganization()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

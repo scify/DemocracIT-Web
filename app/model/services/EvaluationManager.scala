@@ -70,5 +70,10 @@ class EvaluationManager {
     durations = evaluationRepository.getConsDuration()
     durations
   }
-
+  def getConsCommPerOrganization(): List[model.dtos.CommPerConsPerOrganization] = {
+    val evaluationRepository = new EvaluationRepository()
+    var durations: List[model.dtos.CommPerConsPerOrganization] = Nil
+    durations = evaluationRepository.getCommPerConsPerOrganization()
+    durations
+  }
 }

@@ -28,7 +28,7 @@
         <ul id="tabs" class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#consultationsPerMonthContent" aria-controls="profile" role="tab" data-toggle="tab">Διασπορά</a></li>
             <li role="presentation"><a href="#durationPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Διάρκεια</a></li>
-            <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Συμμετοχή</a></li>
+            <li role="presentation"><a href="#commPerConsPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Συμμετοχή</a></li>
             <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Παρατηρήσεις Χρηστών</a></li>
         </ul>
         <div class="tab-content">
@@ -66,6 +66,18 @@
                     <div  role="tabpanel" class="tab-pane" id="durationPerOrganizationDiv">
                         <div id="consDurationPerOrganizationChart">
                             <div id="consDurationPerOrganizationInnerChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="commPerConsPerOrganizationContent">
+                <ul class="statsBar nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"> <a href="#commConsContentDiv" aria-controls="commConsOrgChart" role="tab" data-toggle="tab">Ανά Οργανισμό</a></li>
+                    </ul>
+                <div class="tab-content">
+                    <div  role="tabpanel" class="tab-pane active" id="commConsContentDiv">
+                        <div id="commConsOrgChart">
+                            <div id="commConsOrgInnerChart" class="verticalChart"></div>
                         </div>
                     </div>
                 </div>

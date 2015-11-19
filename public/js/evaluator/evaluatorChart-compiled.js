@@ -170,6 +170,76 @@
 
             return promise;
         },
+        getConsCommPerOrganization: function getConsCommPerOrganization() {
+            //console.log("getFrequencyPerOrganization");
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: "/evaluator/comments/organization",
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    //console.log(data);
+                    var index = 0;
+                    var curOrganization = data[0].organizationId;
+                    var dataForCurrentOrganization = [];
+                    var noConsultations = 1;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].organizationId == curOrganization) {
+                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[i].commentWindow + "</h5>" + "<h5>Διαβουλέυσεις: " + data[i].numberOfConsultations + "</h5></div>", data[i].numberOfConsultations.toString()]);
+                            if (data[i].numberOfConsultations != 0) {
+                                noConsultations = 0;
+                            }
+                        } else {
+                            //console.log(data[i-1].periods);
+                            var chartId = "chart_comments_" + data[i - 1].organizationId;
+                            //console.log(chartId);
+                            var chartTitle = data[i - 1].organizationName;
+                            $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
+                            if (noConsultations) {
+                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                            } else {
+                                //console.log("το υπουργειο " + chartTitle + " εχει διαβουλευσεις")
+                                $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
+                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", "bar", "forAll");
+                            }
+                            dataForCurrentOrganization = [];
+                            curOrganization = data[i].organizationId;
+                            noConsultations = 1;
+                        }
+
+                        if (i == data.length - 1) {
+                            var chartId = "chart_comments_" + data[i - 1].organizationId;
+                            //console.log(chartId);
+                            var chartTitle = data[i - 1].organizationName;
+                            //console.log(chartTitle);
+                            $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
+                            if (noConsultations) {
+                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                            } else {
+                                $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
+                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", "bar", "forAll");
+                            }
+                        }
+                    }
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
+            });
+
+            return promise;
+        },
         createChart: function createChart(dataForChart, chartId, chartTitle, yName, xName, chartType, gridLines) {
 
             var max = dataForChart.reduce(function (max, arr) {
