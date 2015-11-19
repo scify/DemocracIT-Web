@@ -94,8 +94,21 @@ scify.EvaluatorPageHandler.prototype = function(){
         }
         loadConsFrequencyPerOrganization();
     },
+    createConsDurationPerOrganizationDiv = function() {
+        var domElementConsFreqPerOrganization = document.getElementById("consDurationPerOrganizationInnerChart");
+        if (domElementConsFreqPerOrganization) {
+            //console.log('this record already exists');
+            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFreqPerOrganization);
+        } else {
+            //console.log('this record does not exist');
+        }
+        loadConsDurationPerOrganization();
+    },
     loadConsFrequencyPerOrganization = function() {
         window.ConsFreqPerOrganizationComponent.getFrequencyPerOrganization();
+    },
+        loadConsDurationPerOrganization = function() {
+        window.ConsDurationPerOrganizationComponent.getDurationPerOrganization();
     }
     var init = function() {
         var instance = this;
@@ -148,6 +161,7 @@ scify.EvaluatorPageHandler.prototype = function(){
         }
 
         createConsFrequencyPerOrganizationDiv();
+        createConsDurationPerOrganizationDiv();
 
     }
     return {
