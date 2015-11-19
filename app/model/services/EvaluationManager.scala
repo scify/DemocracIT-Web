@@ -64,5 +64,11 @@ class EvaluationManager {
     durations = evaluationRepository.getConsDurationPerOrganization()
     durations
   }
+  def getConsDuration(): List[model.dtos.ConsDurations] = {
+    val evaluationRepository = new EvaluationRepository()
+    var durations: List[model.dtos.ConsDurations] = Nil
+    durations = evaluationRepository.getConsDuration()
+    durations
+  }
 
 }

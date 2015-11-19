@@ -9,7 +9,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     }
 };
 scify.EvaluatorPageHandler.prototype = function(){
-    createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
+    var createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
         //console.log(dataForChart);
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
@@ -95,20 +95,33 @@ scify.EvaluatorPageHandler.prototype = function(){
         loadConsFrequencyPerOrganization();
     },
     createConsDurationPerOrganizationDiv = function() {
-        var domElementConsFreqPerOrganization = document.getElementById("consDurationPerOrganizationInnerChart");
-        if (domElementConsFreqPerOrganization) {
+        var domElementConsDurationPerOrganization = document.getElementById("consDurationPerOrganizationInnerChart");
+        if (domElementConsDurationPerOrganization) {
             //console.log('this record already exists');
-            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFreqPerOrganization);
+            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDurationPerOrganization);
         } else {
             //console.log('this record does not exist');
         }
         loadConsDurationPerOrganization();
     },
+    createConsDurationDiv = function() {
+        var domElementConsDuration = document.getElementById("consDurationInnerChart");
+        if (domElementConsDuration) {
+            //console.log('this record already exists');
+            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDuration);
+        } else {
+            //console.log('this record does not exist');
+        }
+        loadConsDuration();
+    },
     loadConsFrequencyPerOrganization = function() {
         window.ConsFreqPerOrganizationComponent.getFrequencyPerOrganization();
     },
-        loadConsDurationPerOrganization = function() {
+    loadConsDurationPerOrganization = function() {
         window.ConsDurationPerOrganizationComponent.getDurationPerOrganization();
+    },
+    loadConsDuration = function() {
+        window.ConsDurationPerOrganizationComponent.getDuration();
     }
     var init = function() {
         var instance = this;
@@ -162,6 +175,7 @@ scify.EvaluatorPageHandler.prototype = function(){
 
         createConsFrequencyPerOrganizationDiv();
         createConsDurationPerOrganizationDiv();
+        createConsDurationDiv();
 
     }
     return {

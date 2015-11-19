@@ -1,8 +1,8 @@
 package model.repositories
 
 import _root_.anorm._
-import model.dtos.{ConsDurationsPerOrganization, ConsFrequencyPerOrganization, ConsultationsPerMonth}
-import model.repositories.anorm.{ConsFrequencyPerOrganizationParser, ConsultationsPerMonthParser, ConsDurationPerOrganizationParser}
+import model.dtos.{ConsDurations, ConsDurationsPerOrganization, ConsFrequencyPerOrganization, ConsultationsPerMonth}
+import model.repositories.anorm.{ConsDurationParser, ConsFrequencyPerOrganizationParser, ConsultationsPerMonthParser, ConsDurationPerOrganizationParser}
 import play.api.Play.current
 import play.api.db.DB
 
@@ -108,6 +108,60 @@ class EvaluationRepository {
                                          WHEN '50 και περισσότερες' THEN 7
                             END
           """).as(ConsDurationPerOrganizationParser.Parse *)
+      consDurationPerMonth
+    }
+  }
+
+  def getConsDuration(): List[ConsDurations] = {
+    DB.withConnection { implicit c =>
+
+      val consDurationPerMonth: List[ConsDurations] =
+        SQL("""
+              WITH ConsultationTimes AS (
+
+                      SELECT date_part('hour', end_date - start_date) AS ConsultationPeriod
+                      FROM consultation
+                      INNER JOIN organization_lkp ON consultation.organization_id = organization_lkp.id
+                   ),
+
+                   GroupedConsultations AS(
+                        SELECT CASE
+                                WHEN ConsultationPeriod<=5
+                                     THEN '5 και λιγότερες'
+                                WHEN (ConsultationPeriod>5 and ConsultationPeriod<=10)
+                                     THEN '6 έως 10'
+                                WHEN (ConsultationPeriod>10 and ConsultationPeriod<=15)
+                                     THEN '11 έως 15'
+                                WHEN (ConsultationPeriod>15 and ConsultationPeriod<=20)
+                                     THEN '16 έως 20'
+                                WHEN (ConsultationPeriod>20 and ConsultationPeriod<=30)
+                                     THEN '21 έως 30'
+              		  WHEN (ConsultationPeriod>30 and ConsultationPeriod<=50)
+                                     THEN '31 έως 50'
+              		  WHEN (ConsultationPeriod>50)
+                                     THEN '50 και περισσότερες'
+                                END AS Periods,
+                                *
+                                FROM ConsultationTimes
+                   )
+
+              SELECT
+                     Periods,
+                     COUNT(*) AS numberOfConsultations,
+                     round(100.0 *  COUNT(*) / sum(COUNT(*)) over (),1) as percentage
+                     FROM   GroupedConsultations
+                     GROUP BY
+                              Periods
+                     ORDER BY
+                              CASE Periods WHEN '5 και λιγότερες'     THEN 1
+                                           WHEN '6 έως 10'            THEN 2
+                                           WHEN '11 έως 15'           THEN 3
+                                           WHEN '16 έως 20'           THEN 4
+                                           WHEN '21 έως 30' 		THEN 5
+                                           WHEN '31 έως 50' 		THEN 6
+                                           WHEN '50 και περισσότερες' THEN 7
+                              END
+            """).as(ConsDurationParser.Parse *)
       consDurationPerMonth
     }
   }
