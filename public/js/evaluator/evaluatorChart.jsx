@@ -82,7 +82,7 @@
                     var noConsultations = 1;
                     for(var i = 0; i < data.length; i++) {
                         if(data[i].organizationId == curOrganization ) {
-                            dataForCurrentOrganization.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
                             if(data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -156,7 +156,7 @@
                     var chartId = "consDurationChartForAll";
                     var chartTitle = "Κατανομή Διαβουλεύσεων";
                     for(var i = 0; i < data.length; i++) {
-                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5>' + '<h5>Ποσοστό: ' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)"]);
+                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5>' + '<h5>Ποσοστό: ' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)"]);
                     }
                     $( "#consDurationInnerChart" ).append( '<div style="margin-top: 20px" class="organizationChart"><div id="' + chartId + '"></div></div>' );
                     $("#" + chartId).before('' +
@@ -195,7 +195,7 @@
                     var noConsultations = 1;
                     for(var i = 0; i < data.length; i++) {
                         if(data[i].organizationId == curOrganization ) {
-                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].commentWindow + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].commentWindow + ' σχόλια</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
                             if(data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
