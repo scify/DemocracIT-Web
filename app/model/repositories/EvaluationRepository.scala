@@ -57,7 +57,7 @@ class EvaluationRepository {
 
       val consDurationPerMonth: List[ConsDurationsPerOrganization] =
         SQL("""WITH ConsultationTimes AS (
-                                  SELECT date_part('hour', end_date - start_date) AS ConsultationPeriod,
+                                  SELECT date_part('day', end_date - start_date) AS ConsultationPeriod,
               			    organization_id
                                   FROM consultation
                                ),
@@ -113,7 +113,7 @@ class EvaluationRepository {
         SQL("""
               WITH ConsultationTimes AS (
 
-                      SELECT date_part('hour', end_date - start_date) AS ConsultationPeriod
+                      SELECT date_part('day', end_date - start_date) AS ConsultationPeriod
                       FROM consultation
                       INNER JOIN organization_lkp ON consultation.organization_id = organization_lkp.id
                    ),
