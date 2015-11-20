@@ -13,7 +13,6 @@
             };
         },
         getFrequencyPerOrganization: function getFrequencyPerOrganization() {
-            //console.log("getFrequencyPerOrganization");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -26,14 +25,16 @@
                 success: function success(data) {
                     //console.log(data);
                     var index = 0;
-                    /*15 is the number of months we are querying for*/
+                    /*18 is the number of months we are querying for
+                    * so, we iterate through the dataset, with an iteration gap of 18*/
                     var numberOfOrganizations = data.length / 18;
                     for (var i = 0; i < numberOfOrganizations; i++) {
                         var chartId = "chart_" + data[index].organizationId;
                         var chartTitle = data[index].organizationName;
                         var dataForCurrentOrganization = [];
+                        /*if noConsultations dont change while the iteration
+                        * it means that this organization has no consultations*/
                         var noConsultations = 1;
-                        //console.log(chartId);
                         for (var j = index; j < index + 18; j++) {
                             dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[j].date + "</h5>" + "<h5>Διαβουλέυσεις: " + data[j].numberOfConsultations + "</h5></div>", data[j].numberOfConsultations.toString()]);
                             if (data[j].numberOfConsultations != 0) {
@@ -41,14 +42,15 @@
                             }
                         }
                         $("#consultationsPerOrganizationInnerDiv").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
-                        //console.log(dataForCurrentOrganization);
                         if (noConsultations) {
                             $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 18 μήνες.</div>");
                         } else {
                             $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                            instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Μήνες", "bar", null);
+                            instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Μήνες", 1, null);
                         }
+                        /*Increase index*/
                         index += 18;
+                        /*Reset noConsultations checker*/
                         noConsultations = 1;
                     }
                 },
@@ -61,11 +63,9 @@
                     console.log(x);
                 }
             });
-
             return promise;
         },
         getDurationPerOrganization: function getDurationPerOrganization() {
-            //console.log("getFrequencyPerOrganization");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -76,48 +76,43 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    //console.log(data);
-                    var index = 0;
                     var curOrganization = data[0].organizationId;
                     var dataForCurrentOrganization = [];
+                    /*if noConsultations dont change while the iteration
+                     * it means that this organization has no consultations*/
                     var noConsultations = 1;
                     for (var i = 0; i < data.length; i++) {
+                        /*Here we know we have changed organization when the id has changed*/
                         if (data[i].organizationId == curOrganization) {
                             dataForCurrentOrganization.push([data[i].periods, data[i].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[i].periods + " ημέρες</h5>" + "<h5>Διαβουλέυσεις: " + data[i].numberOfConsultations + "</h5></div>", data[i].numberOfConsultations.toString()]);
                             if (data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
                         } else {
-                            //console.log(data[i-1].periods);
                             var chartId = "chart_duration_" + data[i - 1].organizationId;
-                            //console.log(chartId);
+                            /*The first time we have changed organization, the organization that is completed is the previous one*/
                             var chartTitle = data[i - 1].organizationName;
                             $("#consDurationPerOrganizationInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
                                 $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
                             } else {
-                                //console.log("το υπουργειο " + chartTitle + " εχει διαβουλευσεις")
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", "bar", "forAll");
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
                             noConsultations = 1;
                         }
-
+                        /*When reading the las element of the dataset, we are in the last organization, so we display it*/
                         if (i == data.length - 1) {
                             var chartId = "chart_duration_" + data[i - 1].organizationId;
-                            //console.log(chartId);
                             var chartTitle = data[i - 1].organizationName;
-                            //console.log(chartTitle);
                             $("#consDurationPerOrganizationInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
                                 $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", "bar", "forAll");
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
                             }
                         }
                     }
@@ -135,7 +130,6 @@
             return promise;
         },
         getDuration: function getDuration() {
-            //console.log("getFrequencyPerOrganization");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -156,7 +150,7 @@
                     $("#consDurationInnerChart").append("<div style=\"margin-top: 20px\" class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                     $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
                     console.log(dataForDuration);
-                    instance.createChart(dataForDuration, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", "bar", "forAll");
+                    instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -171,7 +165,6 @@
             return promise;
         },
         getConsCommPerOrganization: function getConsCommPerOrganization() {
-            //console.log("getFrequencyPerOrganization");
             var instance = this;
             var promise = $.ajax({
                 method: "GET",
@@ -182,30 +175,26 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    //console.log(data);
-                    var index = 0;
                     var curOrganization = data[0].organizationId;
                     var dataForCurrentOrganization = [];
                     var noConsultations = 1;
                     for (var i = 0; i < data.length; i++) {
+                        /*Here we know we have changed organization when the id has changed*/
                         if (data[i].organizationId == curOrganization) {
                             dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[i].commentWindow + " σχόλια</h5>" + "<h5>Διαβουλέυσεις: " + data[i].numberOfConsultations + "</h5></div>", data[i].numberOfConsultations.toString()]);
                             if (data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
                         } else {
-                            //console.log(data[i-1].periods);
+                            /*The first time we have changed organization, the organization that is completed is the previous one*/
                             var chartId = "chart_comments_" + data[i - 1].organizationId;
-                            //console.log(chartId);
                             var chartTitle = data[i - 1].organizationName;
                             $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
                                 $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
                             } else {
-                                //console.log("το υπουργειο " + chartTitle + " εχει διαβουλευσεις")
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", "bar", "forAll");
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", 1, 450);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
@@ -214,16 +203,13 @@
 
                         if (i == data.length - 1) {
                             var chartId = "chart_comments_" + data[i - 1].organizationId;
-                            //console.log(chartId);
                             var chartTitle = data[i - 1].organizationName;
-                            //console.log(chartTitle);
                             $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                //console.log("το υπουργειο " + chartTitle + " δεν εχει διαβουλευσεις");
                                 $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createChart(dataForCurrentOrganization, chartId, chartTitle, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", "bar", "forAll");
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", 1, 450);
                             }
                         }
                     }
@@ -240,46 +226,54 @@
 
             return promise;
         },
-        createChart: function createChart(dataForChart, chartId, chartTitle, yName, xName, chartType, gridLines) {
-
+        /**
+         *
+         * @param object dataForChart
+         * it should be and obect with the following members: {string: Key, number: Value, string:Tooltip (what is displayed when hovering), string:annotation(what is on the bar)}
+         * @param string chartId: a string containing the is of the DOM element we want the chart to appear
+         * @param yName: a string containing the title of the Y Axis
+         * @param xName: a string containing the title of the X Axis
+         * @param gridLines: it contains the number of the lines we want our scale to have. For charts that are long scaled (eg 0-200), pass 1. Otherwise, pass 0
+         * @param recommendedHeight: the recommendedHeight for the chart. If null passed, the height will be computed based on the max number of the chart
+         */
+        createBarChart: function createBarChart(dataForChart, chartId, yName, xName, gridLines, recommendedHeight) {
+            /*We find the max element (value) of the dataSet, to define the scale*/
             var max = dataForChart.reduce(function (max, arr) {
                 return Math.max(max, arr[1]);
             }, -Infinity);
-            //console.log(chartTitle + ": " +max);
-            if (gridLines == null) {
+            if (gridLines == 1) {
                 gridLines = {
                     count: max + 1
                 };
             }
             var data = new google.visualization.DataTable();
-            //console.log(dataForChart);
             data.addColumn("string", "");
             data.addColumn("number", "");
             data.addColumn({ type: "string", role: "tooltip", "p": { "html": true } });
             data.addColumn({ type: "string", role: "annotation" });
             data.addRows(dataForChart);
-            var chartHeight = 300;
-            if (max < 2) {
-                chartHeight = 200;
-            } else if (max > 20) {
-                chartHeight = 900;
-            } else if (max > 10) {
-                chartHeight = 600;
-            } else if (max > 5) {
-                chartHeight = 400;
-            }
-            if (gridLines == "forAll") {
-                chartHeight = 450;
+            if (recommendedHeight == null) {
+                var chartHeight = 300;
+                if (max < 2) {
+                    chartHeight = 200;
+                } else if (max > 20) {
+                    chartHeight = 900;
+                } else if (max > 10) {
+                    chartHeight = 600;
+                } else if (max > 5) {
+                    chartHeight = 400;
+                }
+                recommendedHeight = chartHeight;
             }
 
             var options = {
                 tooltip: { isHtml: true },
                 "displayAnnotations": true,
-                "title": "<div class=\"organizationName\">" + chartTitle + "</div>", titlePosition: "none",
-                "height": chartHeight,
+                "title": "", titlePosition: "none",
+                "height": recommendedHeight,
                 "width": "1300",
                 bar: { groupWidth: "90%" },
-                "chartArea": { width: "75%", "height": chartHeight - 100, left: "200" },
+                "chartArea": { width: "75%", "height": recommendedHeight - 100, left: "200" },
                 "hAxis": {
                     title: xName,
                     textStyle: {
@@ -310,16 +304,7 @@
             };
 
             var chart;
-            switch (chartType) {
-                case "bar":
-                    chart = new google.visualization.ColumnChart(document.getElementById(chartId));
-                    break;
-                case "pie":
-                    chart = new google.visualization.PieChart(document.getElementById(chartId));
-                    break;
-                default:
-                    break;
-            }
+            chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(data, options);
         },
         render: function render() {

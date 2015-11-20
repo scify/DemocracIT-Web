@@ -29,7 +29,10 @@
             <li role="presentation" class="active"><a href="#consultationsPerMonthContent" aria-controls="profile" role="tab" data-toggle="tab">Διασπορά</a></li>
             <li role="presentation"><a href="#durationPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Διάρκεια</a></li>
             <li role="presentation"><a href="#commPerConsPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Συμμετοχή</a></li>
-            <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Παρατηρήσεις Χρηστών</a></li>
+            @if(play.Play.application().configuration().getString("application.state") == "development") {
+                <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">
+                    Παρατηρήσεις Χρηστών</a></li>
+            }
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="consultationsPerMonthContent">
