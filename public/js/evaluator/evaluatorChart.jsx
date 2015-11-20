@@ -239,7 +239,8 @@
             return promise;
         },
         /**
-         *
+         * If you want to customize further the function, it is recommended you extend it by creating another one.
+         * function createBarChart
          * @param object dataForChart
          * it should be and obect with the following members: {string: Key, number: Value, string:Tooltip (what is displayed when hovering), string:annotation(what is on the bar)}
          * @param string chartId: a string containing the is of the DOM element we want the chart to appear
@@ -290,7 +291,7 @@
                 'hAxis': {
                     title: xName,
                     textStyle: {
-                        fontSize: 11,
+                        fontSize: 12,
                         color: '#053061',
                         bold: false,
                         italic: false
@@ -302,7 +303,7 @@
                     easing: 'out',
                     startup: true
                 },
-                'is3D':true,
+                'is3D':false,
                 'vAxis': {
                     title: yName,
                     viewWindow:{
