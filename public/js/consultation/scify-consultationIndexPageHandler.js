@@ -103,7 +103,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     addRelevantLawsHandler = function(){
         $(".relevantLawsBtn").on("click", function(){
-            console.log($(this).context.id);
             $(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").toggleClass("clicked");
             if($(".relevantLaw #" + $(this).context.id + " .relevantLawsBtn").hasClass("clicked")) {
                 $(".relevantLaw #" + $(this).context.id + " .childLaws").show("slow");
