@@ -21,8 +21,11 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="http://democracit.org">ΑΡΧΙΚΗ</a></li>
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="/evaluation">ΣΤΑΤΙΣΤΙΚΑ</a></li>
+                        <li><a href="@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
+                    } else {
+                        <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
                     }
+                    <li><a href="/evaluation">ΣΤΑΤΙΣΤΙΚΑ</a></li>
                     <li><a href="http://about.democracit.org/blog/">ΒLOG</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΣΧΕΤΙΚΑ <span class="caret"></span></a>
@@ -52,11 +55,21 @@
                     </li>
                     }.getOrElse {
                         @if(play.Play.application().configuration().getString("application.state") == "development") {
-                            <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
-                            <li id="login"><a href="@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
+                                    <li id="login"><a href="@routes.AccountController.signIn(None)">ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
+                                </ul>
+                            </li>
                         } else {
-                            <li id="register"><a href="http://www.democracit.org@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
-                            <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li id="register"><a href="http://www.democracit.org@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
+                                    <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
+                                </ul>
+                            </li>
                         }
                     }
                 </ul>
