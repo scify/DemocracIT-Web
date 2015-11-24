@@ -42,6 +42,7 @@ GET         /evaluator/frequency/organization             @controllers.Evaluatio
 GET         /evaluator/duration/organization              @controllers.EvaluationController.getConsDurationPerOrganization()
 GET         /evaluator/duration/all                       @controllers.EvaluationController.getConsDuration()
 GET         /evaluator/comments/organization              @controllers.EvaluationController.getConsCommPerOrganization()
+POST        /evaluator/consultations/get                  @controllers.EvaluationController.getConsultations(cons_ids:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

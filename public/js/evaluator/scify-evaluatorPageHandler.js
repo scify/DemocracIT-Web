@@ -5,8 +5,9 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     this.consultationsPerMonth = [];
     for (var i=0; i<consultationsPerMonth.length; i++)
     {
-        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>'])
+        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>',consultationsPerMonth[i].cons_ids])
     }
+    console.log(this.consultationsPerMonth);
 };
 scify.EvaluatorPageHandler.prototype = function(){
     var createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
@@ -17,6 +18,7 @@ scify.EvaluatorPageHandler.prototype = function(){
             data.addColumn('string', strName);
             data.addColumn('number', numName);
             data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
+            data.addColumn({type:'string', role:'scope'});
             data.addRows(dataForChart);
 
             var options = chartOptions;
@@ -36,44 +38,17 @@ scify.EvaluatorPageHandler.prototype = function(){
             // When a row is selected, the listener is triggered.
             google.visualization.events.addListener(chart, 'select', function() {
                 switch (chartId) {
-                    case "commentsPerArticleInnerChart":
+                    case "consultationsPerMonthInnerChart":
                         var selection = chart.getSelection();
-                        var articleId = dataForChart[selection[0].row][3];
+                        console.log(dataForChart[selection[0].row]);
+                        var cons_ids = dataForChart[selection[0].row[3]];
+
+                        /*var articleId = dataForChart[selection[0].row][3];
                         var commentsNum = dataForChart[selection[0].row][4];
                         loadListOfCommentsPerArticle(articleId);
                         instance.articleId = articleId;
                         loadArticleWordCloud(instance.articleId, commentsNum);
-
-                        //sets the selection to null again
-                        chart.setSelection();
-                        break;
-                    case "annotationsForConsultationInnerChart":
-                        var selection = chart.getSelection();
-                        var annTagId = dataForChart[selection[0].row][3];
-                        loadListOfCommentsByAnnId(annTagId, instance.consultationid, "annotation");
-                        //sets the selection to null again
-                        chart.setSelection();
-                        break;
-                    case "annotationProblemsForConsultationInnerChart":
-                        var selection = chart.getSelection();
-                        var annTagId = dataForChart[selection[0].row][3];
-                        loadListOfCommentsByAnnId(annTagId, instance.consultationid, "problem");
-                        //sets the selection to null again
-                        chart.setSelection();
-                        break;
-                    case "annotationsPerArticleInnerChart":
-                        var selection = chart.getSelection();
-                        var articleId = dataForChart[selection[0].row][3];
-                        var annTagId = dataForChart[selection[0].row][5];
-                        loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationid, "annotation");
-                        //sets the selection to null again
-                        chart.setSelection();
-                        break;
-                    case "annotationProblemsPerArticleInnerChart":
-                        var selection = chart.getSelection();
-                        var articleId = dataForChart[selection[0].row][3];
-                        var annTagId = dataForChart[selection[0].row][5];
-                        loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationid, "problem");
+                         */
                         //sets the selection to null again
                         chart.setSelection();
                         break;

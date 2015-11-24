@@ -17,14 +17,27 @@ class EvaluationRepository {
         val consultationsPerMonth: List[ConsultationsPerMonth] =
           SQL(query +
                  """
-                      select d.date, sum(case when c.id is null then 0 else 1 end) as numberOfConsultations from dates d
-                                      left outer join consultation c on to_char(start_date, 'YYYY/MM') = d.date
+                      select d.date, sum(case when c.id is null then 0 else 1 end) as numberOfConsultations, array_to_string(array_agg(c.id), ', ') as cons_ids
+                                    from dates d
+                                    left outer join consultation c on to_char(start_date, 'YYYY/MM') = d.date
                                     group by d.date
                                     order by d.date
                   """).as(ConsultationsPerMonthParser.Parse *)
         consultationsPerMonth
       }
     }
+
+  def getConsultations(cons_ids: String): List[ConsultationForEvaluation] = {
+    DB.withConnection { implicit c =>
+
+      val consultations: List[ConsultationForEvaluation] =
+        SQL(
+          """select * from consultation where id in (""" + cons_ids + """)
+          """).as(ConsultationForEvaluationParser.Parse *)
+      consultations
+    }
+  }
+
 
   def getEvaluationPerOrganization(dateSet: String): List[ConsFrequencyPerOrganization] = {
     DB.withConnection { implicit c =>

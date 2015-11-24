@@ -10,10 +10,11 @@ object ConsultationsPerMonthParser{
   val Parse: RowParser[ConsultationsPerMonth] = {
 
     str("date") ~
-    int("numberOfConsultations")map
+    int("numberOfConsultations")~
+    str("cons_ids")map
       {
-        case date ~ numberOfConsultations=>
-          new ConsultationsPerMonth(date, numberOfConsultations)
+        case date ~ numberOfConsultations ~cons_ids=>
+          new ConsultationsPerMonth(date, numberOfConsultations,cons_ids)
       }
 
   }

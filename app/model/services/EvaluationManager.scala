@@ -1,13 +1,12 @@
 package model.services
 
 import model.User
-import model.repositories.{ConsultationRepository, EvaluationRepository}
+import model.repositories.EvaluationRepository
 import model.viewmodels.EvaluationViewModel
 
 class EvaluationManager {
 
     def get(user:Option[User]): EvaluationViewModel= {
-      val repository = new ConsultationRepository()
       val evaluationRepository = new EvaluationRepository()
       val dateSet = """
                       select extract(year from now()) || to_char((now() - interval '1 month'), '/MM') as date union
@@ -75,5 +74,11 @@ class EvaluationManager {
     var durations: List[model.dtos.CommPerConsPerOrganization] = Nil
     durations = evaluationRepository.getCommPerConsPerOrganization()
     durations
+  }
+  def getConsultations(cons_ids:String): List[model.dtos.ConsultationForEvaluation] = {
+    val evaluationRepository = new EvaluationRepository()
+    var consultations: List[model.dtos.ConsultationForEvaluation] = Nil
+    consultations = evaluationRepository.getConsultations(cons_ids)
+    consultations
   }
 }

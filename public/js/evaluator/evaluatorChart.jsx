@@ -145,7 +145,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    console.log(data);
+                    //console.log(data);
                     var dataForDuration = [];
                     var chartId = "consDurationChartForAll";
                     var chartTitle = "Κατανομή Διαβουλεύσεων";
@@ -155,7 +155,7 @@
                     $( "#consDurationInnerChart" ).append( '<div style="margin-top: 20px" class="organizationChart"><div id="' + chartId + '"></div></div>' );
                     $("#" + chartId).before('' +
                         '<div class="explanation organizationName">' + chartTitle + '</div>');
-                    console.log(dataForDuration);
+                    //console.log(dataForDuration);
                     instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
                 },
                 complete: function(){
