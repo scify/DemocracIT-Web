@@ -43,10 +43,10 @@
                         }
                         $("#consultationsPerOrganizationInnerDiv").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                         if (noConsultations) {
-                            $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις τους τελευταίους 18 μήνες.</div>");
+                            $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις τους τελευταίους 18 μήνες.</div>");
                         } else {
                             $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                            instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Μήνες", 1, null);
+                            instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Μήνες", 1, null);
                         }
                         /*Increase index*/
                         index += 18;
@@ -94,10 +94,10 @@
                             var chartTitle = data[i - 1].organizationName;
                             $("#consDurationPerOrganizationInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
@@ -109,10 +109,10 @@
                             var chartTitle = data[i - 1].organizationName;
                             $("#consDurationPerOrganizationInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
                             }
                         }
                     }
@@ -150,7 +150,7 @@
                     $("#consDurationInnerChart").append("<div style=\"margin-top: 20px\" class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                     $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
                     console.log(dataForDuration);
-                    instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλέυσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
+                    instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -181,7 +181,7 @@
                     for (var i = 0; i < data.length; i++) {
                         /*Here we know we have changed organization when the id has changed*/
                         if (data[i].organizationId == curOrganization) {
-                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[i].commentWindow + " σχόλια</h5>" + "<h5>Διαβουλέυσεις: " + data[i].numberOfConsultations + "</h5></div>", data[i].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, "<div style=\"padding-left: 10px\"><h5 style=\"width:150px\">" + data[i].commentWindow + " σχόλια</h5>" + "<h5>Διαβουλεύσεις: " + data[i].numberOfConsultations + "</h5></div>", data[i].numberOfConsultations.toString()]);
                             if (data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -191,10 +191,10 @@
                             var chartTitle = data[i - 1].organizationName;
                             $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Αριθμός σχολίων", 1, 450);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
@@ -206,10 +206,10 @@
                             var chartTitle = data[i - 1].organizationName;
                             $("#commConsOrgInnerChart").append("<div class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                             if (noConsultations) {
-                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλέυσεις.</div>");
+                                $("#" + chartId).append("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>" + "<div class=\"explanation\">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>");
                             } else {
                                 $("#" + chartId).before("" + "<div class=\"explanation organizationName\">" + chartTitle + "</div>");
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλέυσεων", "Αριθμός σχολίων", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Αριθμός σχολίων", 1, 450);
                             }
                         }
                     }

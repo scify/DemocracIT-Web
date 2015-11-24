@@ -19,7 +19,11 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse" >
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="http://democracit.org">ΑΡΧΙΚΗ</a></li>
+                    @if(play.Play.application().configuration().getString("application.state") == "development") {
+                        <li><a href="/">ΑΡΧΙΚΗ</a></li>
+                    } else {
+                        <li><a href="http://democracit.org">ΑΡΧΙΚΗ</a></li>
+                    }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
                         <li><a href="@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
                     } else {

@@ -150,7 +150,7 @@ scify.EvaluatorPageHandler.prototype = function(){
             var consultationsPerMonthOptions = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
-                'title': "Αριθμος νεων διαβουλέυεσων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλέυεις)",
+                'title': "Αριθμος νεων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
                 'height': expectedHeight,
                 'width':'1300',
                 bar: {groupWidth: "90%"},

@@ -166,57 +166,54 @@ class EvaluationRepository {
       val commPerConsPerOrganization: List[CommPerConsPerOrganization] =
         SQL("""
               WITH ConsultationComments AS (
-                      SELECT consultation.id, count (*) AS numberOfComments,
-              		organization_lkp.title                   AS organizationName,
-              		organization_lkp.id                      AS organizationId,
-              		organization_lkp.group_title		AS groupTitle
-                      FROM consultation
-                      INNER JOIN articles art ON consultation.id = art.consultation_id
-                      inner join comments comm on art.id = comm.article_id
-                      INNER JOIN organization_lkp ON consultation.organization_id = organization_lkp.id
-                      group by organizationId, consultation.id
-                      ),
-                      GroupedConsultations AS(
-                        SELECT CASE
-                                WHEN numberOfComments<=20
-                                     THEN '20 και λιγότερα'
-                                WHEN (numberOfComments>20 and numberOfComments<=50)
-                                     THEN '21 έως 50'
-                                WHEN (numberOfComments>50 and numberOfComments<=100)
-                                     THEN '51 έως 100'
-                                WHEN (numberOfComments>100 and numberOfComments<=200)
-                                     THEN '101 έως 200'
-                                WHEN (numberOfComments>200 and numberOfComments<=500)
-                                     THEN '201 έως 500'
-              		  WHEN (numberOfComments>500 and numberOfComments<=800)
-                                     THEN '501 έως 800'
-              		  WHEN (numberOfComments>800)
-                                     THEN '801 και περισσότερα'
-                                END AS CommentWindow,
-                                *
-                                FROM ConsultationComments
-              	)
+                        SELECT consultation.id, consultation.organization_id as organizationId, count (*) AS numberOfComments
+                        FROM consultation
+                        INNER JOIN articles art ON consultation.id = art.consultation_id
+                        inner join comments comm on art.id = comm.article_id
+                        group by consultation.id
+                        order by organization_id
+                        ),
+                        GroupedConsultations AS(
+                          SELECT CASE
+                                  WHEN numberOfComments<=20
+                                       THEN '20 και λιγότερα'
+                                  WHEN (numberOfComments>20 and numberOfComments<=50)
+                                       THEN '21 έως 50'
+                                  WHEN (numberOfComments>50 and numberOfComments<=100)
+                                       THEN '51 έως 100'
+                                  WHEN (numberOfComments>100 and numberOfComments<=200)
+                                       THEN '101 έως 200'
+                                  WHEN (numberOfComments>200 and numberOfComments<=500)
+                                       THEN '201 έως 500'
+                                  WHEN (numberOfComments>500 and numberOfComments<=800)
+                                       THEN '501 έως 800'
+                                  WHEN (numberOfComments>800)
+                                       THEN '801 και περισσότερα'
+                                  END AS CommentWindow,
+                                  *
+                                  FROM ConsultationComments
+                        ),
+                        CommentWindow as (
+                            select '20 και λιγότερα' as CommentWindow ,1 as orderid union
+                            select '21 έως 50'  as CommentWindow, 2 as orderid union
+                            select '51 έως 100' as CommentWindow, 3 as orderid union
+                            select '101 έως 200' as CommentWindow, 4 as orderid union
+                            select '201 έως 500'  as CommentWindow, 5 as orderid union
+                            select '501 έως 800' as CommentWindow, 6 as orderid union
+                            select '801 και περισσότερα' as CommentWindow,7 as orderid),
+                                       Dimentions as (
+                                       select CommentWindow.CommentWindow,id, orderid, organization_lkp.title, organization_lkp.group_title
+                            from CommentWindow
+                            cross join organization_lkp )
 
-              	SELECT organizationId,
-              	       organizationName,
-              	       CommentWindow,
-              	       COUNT(*) AS numberOfConsultations,
-              	       groupTitle
-              	       FROM   GroupedConsultations
-              	       GROUP BY organizationId,
-              			organizationName,
-              			CommentWindow,
-              			groupTitle
-              	       ORDER BY organizationId,
-              			CASE CommentWindow WHEN '20 και λιγότερα'     THEN 1
-              				     WHEN '21 έως 50'           THEN 2
-              				     WHEN '51 έως 100'          THEN 3
-              				     WHEN '101 έως 200'         THEN 4
-              				     WHEN '201 έως 500' 	THEN 5
-              				     WHEN '501 έως 800' 	THEN 6
-              				     WHEN '801 και περισσότερα' THEN 7
-              			END
-
+                              SELECT  d.id AS organizationId,
+                                      d.title AS organizationName,
+                                      sum(case when organizationId is null then 0 else 1 end) AS numberOfConsultations,
+                                      d.group_title AS groupTitle, d.CommentWindow
+                                      from Dimentions d
+                                      left outer join  GroupedConsultations g on d.CommentWindow = g.CommentWindow and d.id = g.organizationId
+                                      group by d.CommentWindow, d.id, d.orderid, d.title, d.group_title
+                                      order by d.id, d.orderid
             """).as(CommPerConsPerOrganizationParser.Parse *)
       commPerConsPerOrganization
     }
