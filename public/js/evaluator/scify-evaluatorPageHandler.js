@@ -132,8 +132,8 @@ scify.EvaluatorPageHandler.prototype = function(){
             var consultationsPerMonthOptions = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
-                'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
-                //'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα",
+                //'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
+                'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα",
                 'height': expectedHeight,
                 'width':'1300',
                 bar: {groupWidth: "90%"},
