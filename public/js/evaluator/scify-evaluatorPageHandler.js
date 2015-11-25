@@ -7,7 +7,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     {
         this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>',consultationsPerMonth[i].cons_ids])
     }
-    console.log(this.consultationsPerMonth);
+    //console.log(this.consultationsPerMonth);
 };
 scify.EvaluatorPageHandler.prototype = function(){
     var createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
@@ -39,17 +39,15 @@ scify.EvaluatorPageHandler.prototype = function(){
             google.visualization.events.addListener(chart, 'select', function() {
                 switch (chartId) {
                     case "consultationsPerMonthInnerChart":
+                        /*Remove current list*/
+                        $("#consList").remove();
                         var selection = chart.getSelection();
-                        console.log(dataForChart[selection[0].row]);
-                        var cons_ids = dataForChart[selection[0].row[3]];
-
-                        /*var articleId = dataForChart[selection[0].row][3];
-                        var commentsNum = dataForChart[selection[0].row][4];
-                        loadListOfCommentsPerArticle(articleId);
-                        instance.articleId = articleId;
-                        loadArticleWordCloud(instance.articleId, commentsNum);
-                         */
-                        //sets the selection to null again
+                        var cons_ids = dataForChart[selection[0].row][3];
+                        /*Create new element for the list*/
+                        $("#" + chartId).after('<div id="consList"></div>');
+                        var domElementConsList = document.getElementById("consList");
+                        window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                        window.ConsListComponent.getConsultationsFromServer(cons_ids);
                         chart.setSelection();
                         break;
                     default:
@@ -125,8 +123,8 @@ scify.EvaluatorPageHandler.prototype = function(){
             var consultationsPerMonthOptions = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
-                //'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
-                'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα",
+                'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
+                //'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα",
                 'height': expectedHeight,
                 'width':'1300',
                 bar: {groupWidth: "90%"},

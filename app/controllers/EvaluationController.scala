@@ -39,7 +39,8 @@ class EvaluationController @Inject()  ( val messagesApi: MessagesApi,
     val comments = evaluationManager.getConsCommPerOrganization()
     Ok(Json.toJson(comments))
   }
-  def getConsultations(cons_ids:String) = UserAwareAction { implicit request =>
+  def getConsultations() = UserAwareAction { implicit request =>
+    val cons_ids = request.body.asFormUrlEncoded.get("cons_ids")(0)
     val consultations = evaluationManager.getConsultations(cons_ids)
     Ok(Json.toJson(consultations))
   }

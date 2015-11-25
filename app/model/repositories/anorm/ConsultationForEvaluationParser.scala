@@ -10,12 +10,12 @@ object ConsultationForEvaluationParser{
   val Parse: RowParser[ConsultationForEvaluation] = {
 
       long("id") ~
-      str("start_date")~
-      str("end_date")~
+      date("start_date")~
+      date("end_date")~
       str("title")~
       str("short_description")~
       long("organization_id")~
-      str("opengov_url")~
+      str("consultation_url")~
       int("completed")~
       int("num_of_articles")map
       {
