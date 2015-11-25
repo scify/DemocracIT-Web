@@ -13,10 +13,11 @@ object ConsFrequencyPerOrganizationParser{
     str("organizationName") ~
     long("organizationId") ~
     int("numberOfConsultations") ~
-      str("groupTitle") map
+      str("groupTitle") ~
+      str("cons_ids")map
       {
-        case date ~ organizationName ~ organizationId ~ numberOfConsultations ~ groupTitle =>
-          new ConsFrequencyPerOrganization(date, organizationName, organizationId, numberOfConsultations, groupTitle)
+        case date ~ organizationName ~ organizationId ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
+          new ConsFrequencyPerOrganization(date, organizationName, organizationId, numberOfConsultations, groupTitle, cons_ids)
       }
 
   }

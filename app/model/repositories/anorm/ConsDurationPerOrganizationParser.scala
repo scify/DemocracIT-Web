@@ -13,10 +13,11 @@ object ConsDurationPerOrganizationParser{
       str("organizationName") ~
       str("periods") ~
       int("numberOfConsultations")~
-      str("groupTitle") map
+      str("groupTitle")~
+        str("cons_ids")map
       {
-        case organizationId ~ organizationName ~ periods ~ numberOfConsultations ~ groupTitle =>
-          new ConsDurationsPerOrganization(organizationId, organizationName, periods, numberOfConsultations, groupTitle)
+        case organizationId ~ organizationName ~ periods ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
+          new ConsDurationsPerOrganization(organizationId, organizationName, periods, numberOfConsultations, groupTitle, cons_ids)
       }
 
   }

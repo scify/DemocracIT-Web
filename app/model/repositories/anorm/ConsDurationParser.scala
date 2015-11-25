@@ -11,10 +11,11 @@ object ConsDurationParser{
 
       str("periods") ~
       int("numberOfConsultations")~
-        double("percentage") map
+        double("percentage") ~
+        str("cons_ids") map
       {
-        case periods ~ numberOfConsultations ~ percentage =>
-          new ConsDurations(periods, numberOfConsultations, percentage)
+        case periods ~ numberOfConsultations ~ percentage ~ cons_ids =>
+          new ConsDurations(periods, numberOfConsultations, percentage, cons_ids)
       }
 
   }

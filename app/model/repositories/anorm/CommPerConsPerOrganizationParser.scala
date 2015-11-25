@@ -13,10 +13,11 @@ object CommPerConsPerOrganizationParser{
     str("organizationName") ~
     str("commentWindow") ~
     int("numberOfConsultations") ~
-      str("groupTitle") map
+      str("groupTitle") ~
+      str("cons_ids")map
       {
-        case organizationId ~ organizationName ~ commentWindow ~ numberOfConsultations ~ groupTitle =>
-          new CommPerConsPerOrganization(organizationId, organizationName, commentWindow, numberOfConsultations, groupTitle)
+        case organizationId ~ organizationName ~ commentWindow ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
+          new CommPerConsPerOrganization(organizationId, organizationName, commentWindow, numberOfConsultations, groupTitle, cons_ids)
       }
 
   }

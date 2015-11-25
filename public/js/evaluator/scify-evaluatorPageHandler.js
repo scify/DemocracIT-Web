@@ -37,13 +37,21 @@ scify.EvaluatorPageHandler.prototype = function(){
             chart.draw(data, options);
             // When a row is selected, the listener is triggered.
             google.visualization.events.addListener(chart, 'select', function() {
-                switch (chartId) {
+                /*Remove current list*/
+                $("#consList").remove();
+                var selection = chart.getSelection();
+                var cons_ids = dataForChart[selection[0].row][3];
+                /*Create new element for the list*/
+                $("#" + chartId).after('<div id="consList"></div>');
+                var domElementConsList = document.getElementById("consList");
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent.getConsultationsFromServer(cons_ids);
+                chart.setSelection();
+                /*switch (chartId) {
                     case "consultationsPerMonthInnerChart":
-                        /*Remove current list*/
                         $("#consList").remove();
                         var selection = chart.getSelection();
                         var cons_ids = dataForChart[selection[0].row][3];
-                        /*Create new element for the list*/
                         $("#" + chartId).after('<div id="consList"></div>');
                         var domElementConsList = document.getElementById("consList");
                         window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
@@ -52,7 +60,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                         break;
                     default:
                         break;
-                }
+                }*/
             });
         }
         google.setOnLoadCallback(drawMultSeries);

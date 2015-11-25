@@ -19,7 +19,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    //console.log(data);
+                    console.log(data);
                     var index = 0;
                     /*18 is the number of months we are querying for
                     * so, we iterate through the dataset, with an iteration gap of 18*/
@@ -32,7 +32,7 @@
                         * it means that this organization has no consultations*/
                         var noConsultations = 1;
                         for(var j = index; j < index + 18; j++) {
-                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>', data[j].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>', data[j].numberOfConsultations.toString(), data[j].cons_ids]);
                             if(data[j].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -83,7 +83,7 @@
                     for(var i = 0; i < data.length; i++) {
                         /*Here we know we have changed organization when the id has changed*/
                         if(data[i].organizationId == curOrganization ) {
-                            dataForCurrentOrganization.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString(),data[i].cons_ids]);
                             if(data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -150,7 +150,7 @@
                     var chartId = "consDurationChartForAll";
                     var chartTitle = "Κατανομή Διαβουλεύσεων";
                     for(var i = 0; i < data.length; i++) {
-                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5>' + '<h5>Ποσοστό: ' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)"]);
+                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5>' + '<h5>Ποσοστό: ' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)",data[i].cons_ids]);
                     }
                     $( "#consDurationInnerChart" ).append( '<div style="margin-top: 20px" class="organizationChart"><div id="' + chartId + '"></div></div>' );
                     $("#" + chartId).before('' +
@@ -187,7 +187,7 @@
                     for(var i = 0; i < data.length; i++) {
                         /*Here we know we have changed organization when the id has changed*/
                         if(data[i].organizationId == curOrganization ) {
-                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].commentWindow + ' σχόλια</h5>' + '<h5>Διαβουλεύσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString()]);
+                            dataForCurrentOrganization.push([data[i].commentWindow, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].commentWindow + ' σχόλια</h5>' + '<h5>Διαβουλεύσεις: ' + data[i].numberOfConsultations + '</h5></div>', data[i].numberOfConsultations.toString(),data[i].cons_ids]);
                             if(data[i].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -264,6 +264,7 @@
             data.addColumn('number', "");
             data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
             data.addColumn({type:'string', role:'annotation'});
+            data.addColumn({type:'string', role:'scope'});
             data.addRows(dataForChart);
             if(recommendedHeight == null) {
                 var chartHeight = 300;
@@ -320,6 +321,33 @@
             var chart;
             chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(data, options);
+            google.visualization.events.addListener(chart, 'select', function() {
+                /*Remove current list*/
+                $("#consList").remove();
+                var selection = chart.getSelection();
+                console.log(dataForChart[selection[0].row]);
+                var cons_ids = dataForChart[selection[0].row][4];
+                /*Create new element for the list*/
+                $("#" + chartId).after('<div id="consList"></div>');
+                var domElementConsList = document.getElementById("consList");
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent.getConsultationsFromServer(cons_ids);
+                chart.setSelection();
+                /*switch (chartId) {
+                 case "consultationsPerMonthInnerChart":
+                 $("#consList").remove();
+                 var selection = chart.getSelection();
+                 var cons_ids = dataForChart[selection[0].row][3];
+                 $("#" + chartId).after('<div id="consList"></div>');
+                 var domElementConsList = document.getElementById("consList");
+                 window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                 window.ConsListComponent.getConsultationsFromServer(cons_ids);
+                 chart.setSelection();
+                 break;
+                 default:
+                 break;
+                 }*/
+            });
         },
         render: function() {
             if(this.state.display) {

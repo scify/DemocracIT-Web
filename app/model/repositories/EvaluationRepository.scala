@@ -54,7 +54,7 @@ class EvaluationRepository {
               select dates.*, o.id from dates cross join organization_lkp  o
             )
 
-            select d.date, o.title as organizationName, d.id as organizationId, sum(case when c.id is null then 0 else 1 end) as numberOfConsultations, o.group_title as groupTitle
+            select d.date, o.title as organizationName, d.id as organizationId, sum(case when c.id is null then 0 else 1 end) as numberOfConsultations, o.group_title as groupTitle, array_to_string(array_agg(c.id), ', ') as cons_ids
               from datesBYOrganization d
             	  inner join organization_lkp o on d.id = o.id
             	  left outer join consultation c on to_char(start_date, 'YYYY/MM') = d.date and c.organization_id = o.id
@@ -70,7 +70,7 @@ class EvaluationRepository {
 
       val consDurationPerMonth: List[ConsDurationsPerOrganization] =
         SQL("""WITH ConsultationTimes AS (
-                                  SELECT date_part('day', end_date - start_date) AS ConsultationPeriod,
+                                  SELECT date_part('day', end_date - start_date) AS ConsultationPeriod, consultation.id,
               			    organization_id
                                   FROM consultation
                                ),
@@ -91,7 +91,7 @@ class EvaluationRepository {
                           		  WHEN (ConsultationPeriod>50)
                                                  THEN '50 και περισσότερες'
                                             END AS Periods,
-                                            organization_id
+                                            organization_id, id
                                             FROM ConsultationTimes
                                ),
                                Periods as (
@@ -109,7 +109,7 @@ class EvaluationRepository {
               			cross join organization_lkp
                                )
                                select d.id as organizationId, d.Periods as periods,  sum(case when g.organization_id is null then 0 else 1 end) as numberOfConsultations ,
-              			d.title as organizationName, d.group_title as groupTitle
+              			d.title as organizationName, d.group_title as groupTitle, array_to_string(array_agg(g.id), ', ') as cons_ids
               			from Dimentions d
               			left outer join  GroupedConsultations g on d.Periods = g.Periods and d.id = g.organization_id
               			group by d.Periods, d.id, d.orderid, d.title, d.group_title
@@ -126,7 +126,7 @@ class EvaluationRepository {
         SQL("""
               WITH ConsultationTimes AS (
 
-                      SELECT date_part('day', end_date - start_date) AS ConsultationPeriod
+                      SELECT date_part('day', end_date - start_date) AS ConsultationPeriod, consultation.id
                       FROM consultation
                       INNER JOIN organization_lkp ON consultation.organization_id = organization_lkp.id
                    ),
@@ -155,7 +155,7 @@ class EvaluationRepository {
               SELECT
                      Periods,
                      COUNT(*) AS numberOfConsultations,
-                     round(100.0 *  COUNT(*) / sum(COUNT(*)) over (),1) as percentage
+                     round(100.0 *  COUNT(*) / sum(COUNT(*)) over (),1) as percentage, array_to_string(array_agg(GroupedConsultations.id), ', ') as cons_ids
                      FROM   GroupedConsultations
                      GROUP BY
                               Periods
@@ -222,7 +222,7 @@ class EvaluationRepository {
                               SELECT  d.id AS organizationId,
                                       d.title AS organizationName,
                                       sum(case when organizationId is null then 0 else 1 end) AS numberOfConsultations,
-                                      d.group_title AS groupTitle, d.CommentWindow
+                                      d.group_title AS groupTitle, d.CommentWindow, array_to_string(array_agg(g.id), ', ') as cons_ids
                                       from Dimentions d
                                       left outer join  GroupedConsultations g on d.CommentWindow = g.CommentWindow and d.id = g.organizationId
                                       group by d.CommentWindow, d.id, d.orderid, d.title, d.group_title
