@@ -5,7 +5,7 @@ scify.EvaluatorPageHandler = function(consultationsPerMonth) {
     this.consultationsPerMonth = [];
     for (var i=0; i<consultationsPerMonth.length; i++)
     {
-        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>',consultationsPerMonth[i].cons_ids])
+        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>', consultationsPerMonth[i].numberOfConsultations.toString(),consultationsPerMonth[i].cons_ids])
     }
     //console.log(this.consultationsPerMonth);
 };
@@ -18,6 +18,7 @@ scify.EvaluatorPageHandler.prototype = function(){
             data.addColumn('string', strName);
             data.addColumn('number', numName);
             data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
+            data.addColumn({type:'string', role:'annotation'});
             data.addColumn({type:'string', role:'scope'});
             data.addRows(dataForChart);
 
@@ -40,7 +41,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 /*Remove current list*/
                 $("#consList").remove();
                 var selection = chart.getSelection();
-                var cons_ids = dataForChart[selection[0].row][3];
+                var cons_ids = dataForChart[selection[0].row][4];
                 /*Create new element for the list*/
                 $("#" + chartId).after('<div id="consList"></div>');
                 var domElementConsList = document.getElementById("consList");
@@ -136,7 +137,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 'height': expectedHeight,
                 'width':'1300',
                 bar: {groupWidth: "90%"},
-                'chartArea': {width: '75%','height': chartHeight,left:'200'},
+                'chartArea': {width: '75%','height': chartHeight,left:'90'},
                 'hAxis': {
                     title: "Μήνες",
                     textStyle: {

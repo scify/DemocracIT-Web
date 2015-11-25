@@ -9,7 +9,7 @@
             };
         },
         getConsultationsFromServer : function(cons_ids){
-            console.log(cons_ids)
+            //console.log(cons_ids)
             this.state.consultations = [];
             var instance = this;
             var promise = $.ajax({
@@ -49,11 +49,9 @@
                 } else {
                     var divToDisplay = [];
                     instance.state.consultations.forEach(function(consultation) {
-                        console.log(consultation);
-                        divToDisplay.push(<div className="consItem comment"><div className="consTitle">{consultation.title}</div>
+                        //console.log(consultation);
+                        divToDisplay.push(<div className="consItem comment"><div className="consTitle"><a href={"/consultation/" + consultation.id}>{consultation.title}</a></div>
                             <div>Ημερομηνία που ήταν ανοιχτή η διαβούλευση: <span className="consDate">{new Date(consultation.start_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span> έως <span className="consDate">{new Date(consultation.end_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span></div>
-                            <div className="linkToCons">Δείτε τη διαβούλευση <a href={"/consultation/" + consultation.id}>εδώ</a></div>
-                            <div className="linkToCons">Δείτε τη διαβούλευση στο <a href={consultation.opengov_url}>opengov</a></div>
                         </div>);
                     });
                     return (

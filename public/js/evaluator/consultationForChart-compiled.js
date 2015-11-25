@@ -13,7 +13,7 @@
             };
         },
         getConsultationsFromServer: function getConsultationsFromServer(cons_ids) {
-            console.log(cons_ids);
+            //console.log(cons_ids)
             this.state.consultations = [];
             var instance = this;
             var promise = $.ajax({
@@ -53,14 +53,18 @@
                 } else {
                     var divToDisplay = [];
                     instance.state.consultations.forEach(function (consultation) {
-                        console.log(consultation);
+                        //console.log(consultation);
                         divToDisplay.push(React.createElement(
                             "div",
                             { className: "consItem comment" },
                             React.createElement(
                                 "div",
                                 { className: "consTitle" },
-                                consultation.title
+                                React.createElement(
+                                    "a",
+                                    { href: "/consultation/" + consultation.id },
+                                    consultation.title
+                                )
                             ),
                             React.createElement(
                                 "div",
@@ -76,26 +80,6 @@
                                     "span",
                                     { className: "consDate" },
                                     new Date(consultation.end_date).toLocaleDateString("el-EL", { hour: "2-digit" })
-                                )
-                            ),
-                            React.createElement(
-                                "div",
-                                { className: "linkToCons" },
-                                "Δείτε τη διαβούλευση ",
-                                React.createElement(
-                                    "a",
-                                    { href: "/consultation/" + consultation.id },
-                                    "εδώ"
-                                )
-                            ),
-                            React.createElement(
-                                "div",
-                                { className: "linkToCons" },
-                                "Δείτε τη διαβούλευση στο ",
-                                React.createElement(
-                                    "a",
-                                    { href: consultation.opengov_url },
-                                    "opengov"
                                 )
                             )
                         ));
