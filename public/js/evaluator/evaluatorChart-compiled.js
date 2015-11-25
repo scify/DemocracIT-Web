@@ -275,7 +275,7 @@
                 "height": recommendedHeight,
                 "width": "1300",
                 bar: { groupWidth: "90%" },
-                "chartArea": { width: "75%", "height": recommendedHeight - 100, left: "200" },
+                "chartArea": { width: "75%", "height": recommendedHeight - 100, left: "100" },
                 "hAxis": {
                     title: xName,
                     textStyle: {
