@@ -1,12 +1,11 @@
 package model.repositories
 
-import _root_.anorm._
 import _root_.anorm.SqlParser._
+import _root_.anorm._
 import model.dtos._
-import model.repositories.anorm._
-import play.api.db.DB
+import model.repositories.anorm.{ArticleParser, ConsultationParser, _}
 import play.api.Play.current
-import model.repositories.anorm.{ArticleParser, ConsultationParser}
+import play.api.db.DB
 
 
 class ConsultationRepository {
@@ -96,6 +95,16 @@ class ConsultationRepository {
       results
     }
 
+  }
+
+  def getConsultationFinalLaw (consultationId: Long): Option[ConsultationFinalLaw] = {
+    DB.withConnection { implicit c =>
+
+      SQL"""
+        select * from public.consultation_final_law where consultation_id =  $consultationId
+        """.as(ConsFinalLawParser.Parse *).headOption
+
+    }
   }
 
   def get(consultationId: BigInt): Consultation =

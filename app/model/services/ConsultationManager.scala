@@ -64,13 +64,20 @@ class ConsultationManager {
     val commentsRepo = new CommentsRepository()
     val annotationTags = commentsRepo.loadAnnotationTags()
 
-    ConsultationViewModel(consultation = repository.get(consultationId),
+    val consultation = repository.get(consultationId);
+    var finalLaw:Option[ConsultationFinalLaw] = None
+    if (!consultation.isActive) {
+      finalLaw = repository.getConsultationFinalLaw(consultation.id)
+    }
+
+    ConsultationViewModel(consultation = consultation,
                           annotationsRelatedToProblems = annotationTags.filter(_.type_id==2),
                           annotationsRelatedToTopics= annotationTags.filter(_.type_id==1),
                           discussionThreads = commentsRepo.loadDiscussionThreadsWithCommentsCount(consultationId),
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
-                          relevantLaws = repository.getRelevantLaws(consultationId))
+                          relevantLaws = repository.getRelevantLaws(consultationId),
+                          finalLaw)
   }
 
 

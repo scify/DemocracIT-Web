@@ -13,7 +13,8 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  discussionThreads : Seq[DiscussionThread],
                                  user: Option[model.User],
                                  relevantMaterials: Seq[RelevantMaterial],
-                                 relevantLaws: Seq[RelevantLaws])
+                                 relevantLaws: Seq[RelevantLaws],
+                                 finalLaw: Option[ConsultationFinalLaw])
 {
   private var _distinctLaws:Seq[RelevantLaws] = Nil
 
@@ -36,6 +37,7 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
     _distinctLaws
 
   }
+
 
   def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
 
