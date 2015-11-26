@@ -43,6 +43,7 @@ GET         /evaluator/duration/organization              @controllers.Evaluatio
 GET         /evaluator/duration/all                       @controllers.EvaluationController.getConsDuration()
 GET         /evaluator/comments/organization              @controllers.EvaluationController.getConsCommPerOrganization()
 POST        /evaluator/consultations/get                  @controllers.EvaluationController.getConsultations()
+POST        /finalLawUpload                               @controllers.EvaluationController.uploadFinalLaw()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

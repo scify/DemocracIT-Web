@@ -44,4 +44,11 @@ class EvaluationController @Inject()  ( val messagesApi: MessagesApi,
     val consultations = evaluationManager.getConsultations(cons_ids)
     Ok(Json.toJson(consultations))
   }
+
+  def uploadFinalLaw() = UserAwareAction { implicit request =>
+    val file = request.request.body.asMultipartFormData.get.files(0).ref.file.getAbsoluteFile
+    val userId = request.identity.get.userID
+    val consultations = evaluationManager.getConsultations("0")
+    Ok(Json.toJson(consultations))
+  }
 }
