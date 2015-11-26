@@ -40,12 +40,27 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     }
   //}
 
-  def uploadFinalLaw() = SecuredAction { implicit request =>
+  /*def uploadFinalLaw() = SecuredAction { implicit request =>
     val file = request.request.body.asMultipartFormData.get.files(0).ref.file.getAbsoluteFile
     val userId = request.identity.userID
+    //todo: implement the following method
     //val savedFile = consultationManager.saveFile(file, userId)
     val savedFile = ""
     Ok(Json.toJson(savedFile))
+  }*/
+
+  def uploadFinalLaw = Action(parse.multipartFormData) { request =>
+    request.body.file("file").map { finalLawFile =>
+      import java.io.File
+      val filename = finalLawFile.filename
+      val contentType = finalLawFile.contentType
+      finalLawFile.ref.moveTo(new File("/tmp/file"))
+      Ok("File uploaded")
+    }.getOrElse {
+      Redirect("/").flashing(
+        "error" -> "Missing file"
+      )
+    }
   }
 
 
