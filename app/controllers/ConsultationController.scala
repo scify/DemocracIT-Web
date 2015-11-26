@@ -40,6 +40,13 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     }
   //}
 
+  def uploadFinalLaw() = SecuredAction { implicit request =>
+    val file = request.request.body.asMultipartFormData.get.files(0).ref.file.getAbsoluteFile
+    val userId = request.identity.userID
+    //val savedFile = consultationManager.saveFile(file, userId)
+    val savedFile = ""
+    Ok(Json.toJson(savedFile))
+  }
 
 
   def getConsultationWordCloud(consultationId :Long )= Action {  implicit request =>
