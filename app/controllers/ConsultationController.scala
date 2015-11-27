@@ -58,7 +58,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
 
   def storeFinalLawInDB(finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
       consultationManager.storeFinalLawInDB(finalLawPath, finalLawText, userId)
-  s}
+  }
 
   def getConsultationWordCloud(consultationId :Long )= Action {  implicit request =>
     {
