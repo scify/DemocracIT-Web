@@ -49,12 +49,18 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     Ok(Json.toJson(savedFile))
   }*/
 
-  def uploadFinalLaw = Action(parse.multipartFormData) { request =>
+  def uploadFinalLaw(consultationId :Long ) = Action(parse.multipartFormData) { request =>
     request.body.file("file").map { finalLawFile =>
       import java.io.File
-      val filename = finalLawFile.filename
-      val contentType = finalLawFile.contentType
-      finalLawFile.ref.moveTo(new File("/tmp/file"))
+      val contentType = finalLawFile.contentType.get
+      var extention = ""
+      if(contentType.toString.equals("application/pdf")) {
+        extention = ".pdf"
+      } else if(contentType.toString.equals("text/plain")) {
+        extention = ".txt"
+      }
+
+      finalLawFile.ref.moveTo(new File("public/files/finalLaw_" + consultationId + extention))
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(

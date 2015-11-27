@@ -138,6 +138,38 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     loadWordCloud = function(consultationId) {
         window.WordCloudComponent.getConsWordCloudFromServer(consultationId);
+    },
+    createFinalLawUpload = function(instance) {
+        // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+        Dropzone.options.finalLawDropZone = {
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: 2, // MB
+            url: "/finalLawUpload/" + instance.consultationid,
+            uploadMultiple: false,
+            maxFiles: 1,
+            acceptedFiles: "application/pdf,text/plain",
+            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
+            dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
+            accept: function(file, done) {
+                console.log(file);
+                if (file.name == "justinbieber.jpg") {
+                    done("Naha, you don't.");
+                }
+                else { done(); }
+            },
+            init: function() {
+                this.on("error", function(file,errorMessage) {
+                    console.log(errorMessage);
+                    $(".dz-error-message").css("opacity",1);
+                });
+                this.on("addedfile", function() {
+                    /*If more than one file, we ceep the latest one*/
+                    if (this.files[1]!=null){
+                        this.removeFile(this.files[0]);
+                    }
+                });
+            }
+        };
     }
     init = function(){
         var instance= this;
@@ -159,6 +191,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
         this.tutorialAnnotator.init();
         createWordCloudChart(instance);
+        createFinalLawUpload(instance);
     };
 
     return {

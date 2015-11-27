@@ -526,4 +526,10 @@ a.load {
 .organizationNameDiv {
   margin-bottom: 5px; }
 
+#finalLawDropZone {
+  text-align: center; }
+
+.dz-error-message {
+  width: 200px; }
+
 /*# sourceMappingURL=consultation.css.map */
