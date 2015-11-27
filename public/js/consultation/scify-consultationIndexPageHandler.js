@@ -144,14 +144,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         Dropzone.options.finalLawDropZone = {
             paramName: "file", // The name that will be used to transfer the file
             maxFilesize: 2, // MB
-            url: "/finalLawUpload/" + instance.consultationid,
+            url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
             dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
-                console.log(file);
+                console.log();
                 if (file.name == "justinbieber.jpg") {
                     done("Naha, you don't.");
                 }
@@ -159,7 +159,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             },
             init: function() {
                 this.on("error", function(file,errorMessage) {
-                    console.log(errorMessage);
                     $(".dz-error-message").css("opacity",1);
                 });
                 this.on("addedfile", function() {

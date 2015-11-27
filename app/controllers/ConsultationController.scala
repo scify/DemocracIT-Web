@@ -23,42 +23,28 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
-  def displayAll()= //cached("displayall") {
-      Action { implicit request =>
-      {
-        val results:List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1,"",-1))
+  def displayAll() = //cached("displayall") {
+    Action { implicit request => {
+      val results: List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1, "", -1))
 
-        implicit object Consultatites extends Writes[Consultation] {
-          override def writes(c:Consultation):JsValue = Json.arr(
-            (if (c.isActive) "λήξη σε:" else "έληξε: ")  + c.endDateFormatted,
-            "<a href='/consultation/"+c.id+"'>"+c.title+"</a>" ,
-            c.articlesNum.toString + (if (c.articlesNum==1) " άρθρo" else " άρθρα")
-          )
-        }
-        Ok(views.html.consultation.search("",Json.toJson(results),results.length))
+      implicit object Consultatites extends Writes[Consultation] {
+        override def writes(c: Consultation): JsValue = Json.arr(
+          (if (c.isActive) "λήξη σε:" else "έληξε: ") + c.endDateFormatted,
+          "<a href='/consultation/" + c.id + "'>" + c.title + "</a>",
+          c.articlesNum.toString + (if (c.articlesNum == 1) " άρθρo" else " άρθρα")
+        )
       }
+      Ok(views.html.consultation.search("", Json.toJson(results), results.length))
     }
+    }
+
   //}
 
-  /*def uploadFinalLaw() = SecuredAction { implicit request =>
-    val file = request.request.body.asMultipartFormData.get.files(0).ref.file.getAbsoluteFile
-    val userId = request.identity.userID
-    //todo: implement the following method
-    //val savedFile = consultationManager.saveFile(file, userId)
-    val savedFile = ""
-    Ok(Json.toJson(savedFile))
-  }*/
-
-  def uploadFinalLaw(consultationId :Long ) = Action(parse.multipartFormData) { request =>
+  def uploadFinalLaw(consultationId: Long, userId: java.util.UUID) = Action(parse.multipartFormData) { request =>
     request.body.file("file").map { finalLawFile =>
       import java.io.File
       val contentType = finalLawFile.contentType.get
-      var extention = ""
-      if(contentType.toString.equals("application/pdf")) {
-        extention = ".pdf"
-      } else if(contentType.toString.equals("text/plain")) {
-        extention = ".txt"
-      }
+      var extention = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf(".") + 1)
 
       finalLawFile.ref.moveTo(new File("public/files/finalLaw_" + consultationId + extention))
       Ok("File uploaded")
@@ -69,6 +55,10 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     }
   }
 
+
+  def storeFinalLawInDB(finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
+      consultationManager.storeFinalLawInDB(finalLawPath, finalLawText, userId)
+  s}
 
   def getConsultationWordCloud(consultationId :Long )= Action {  implicit request =>
     {

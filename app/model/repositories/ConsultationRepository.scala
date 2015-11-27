@@ -107,6 +107,14 @@ class ConsultationRepository {
     }
   }
 
+  def storeFinalLawInDB(finalLawPath:String, finalLawText:String, userId:java.util.UUID):Unit = {
+    DB.withConnection { implicit c =>
+      SQL"""
+           insert into 
+         """.execute()
+    }
+  }
+
   def get(consultationId: BigInt): Consultation =
   {
     DB.withConnection { implicit c =>

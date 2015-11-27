@@ -142,4 +142,9 @@ class ConsultationManager {
       organizationsPerCategory = organizationStatsPerCategory)
   }
 
+  def storeFinalLawInDB(finalLawPath:String, finalLawText:String, userId:java.util.UUID) = {
+    val repository = new ConsultationRepository()
+    repository.storeFinalLawInDB(finalLawPath,finalLawText, userId)
+  }
+
 }
