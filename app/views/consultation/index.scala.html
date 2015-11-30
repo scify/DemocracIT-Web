@@ -156,7 +156,16 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="finalLaw">
                     @if(vm.finalLaw.isEmpty) {
-                        <form class="dropzone" id="finalLawDropZone"></form>
+                        @if(vm.user.isDefined) {
+                            <div class="notLoggedIn">
+                                Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
+                                νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:</div>
+                            <form class="dropzone" id="finalLawDropZone"></form>
+                        } else {
+                            <div class="notLoggedIn">
+                                Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
+                                νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a></div>
+                        }
                     } else {
                         <div class="finalLaw">
                             <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
@@ -171,10 +180,26 @@
                                         <h4 class="modal-title">Αριστερά, βλέπετε το κείμενο της διαβούλευσης. Δεξιά, τον τελικό νόμο</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div id="finalLawDiv">
-                                            @vm.finalLaw.get.file_text
+                                        <div class="container">
+                                            <div id="consultationTextDiv">
+                                            @for(article <- vm.consultation.articles) {
+                                                <div data-id="@article.id"  class="row article">
+                                                    <div class="col-md-12">
+                                                        <div class="title">
+                                                        @article.title
+                                                        </div>
+                                                        <div>
+                                                        @Html(article.body)
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            }
+                                            </div>
+                                            <div id="finalLawDiv">
+                                                @vm.finalLaw.get.file_text
+                                            </div>
                                         </div>
-                                        <div id="finalLaw"></div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -693,3 +693,30 @@ a.load {
 .dz-error-message {
   width:200px;
 }
+
+#finalLawModal .modal-dialog {
+  width:95%;
+}
+
+#finalLawModal #consultationTextDiv {
+  float:left;
+  width:45%;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+#finalLawModal #finalLawDiv {
+  float:right;
+  width:45%;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+#finalLawModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#finalLawModal .title {
+  font-weight: bold;
+}
