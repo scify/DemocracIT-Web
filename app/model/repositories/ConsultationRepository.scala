@@ -107,10 +107,11 @@ class ConsultationRepository {
     }
   }
 
-  def storeFinalLawInDB(finalLawPath:String, finalLawText:String, userId:java.util.UUID):Unit = {
+  def storeFinalLawInDB(consultationId:Long, finalLawPath:String, finalLawText:String, userId:java.util.UUID):Unit = {
     DB.withConnection { implicit c =>
       SQL"""
-           insert into 
+           insert into consultation_final_law(consultation_id, user_id, date_added, file_text, file_path) values
+           ($consultationId, $userId::uuid, now(), $finalLawText, $finalLawPath)
          """.execute()
     }
   }

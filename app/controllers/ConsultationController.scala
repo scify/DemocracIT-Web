@@ -43,10 +43,10 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   def uploadFinalLaw(consultationId: Long, userId: java.util.UUID) = Action(parse.multipartFormData) { request =>
     request.body.file("file").map { finalLawFile =>
       import java.io.File
-      val contentType = finalLawFile.contentType.get
-      var extention = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf(".") + 1)
-
-      finalLawFile.ref.moveTo(new File("public/files/finalLaw_" + consultationId + extention))
+      val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf(".") + 1)
+      val path = "public/files/finalLaw_" + consultationId + extension
+      storeFinalLawInDB(consultationId, path, "blabla", userId)
+      finalLawFile.ref.moveTo(new File(path))
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
@@ -56,8 +56,8 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   }
 
 
-  def storeFinalLawInDB(finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
-      consultationManager.storeFinalLawInDB(finalLawPath, finalLawText, userId)
+  def storeFinalLawInDB(consultationId: Long, finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
+      consultationManager.storeFinalLawInDB(consultationId, finalLawPath, finalLawText, userId)
   }
 
   def getConsultationWordCloud(consultationId :Long )= Action {  implicit request =>
