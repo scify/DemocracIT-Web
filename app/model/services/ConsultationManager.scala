@@ -65,7 +65,7 @@ class ConsultationManager {
     val annotationTags = commentsRepo.loadAnnotationTags()
 
     val consultation = repository.get(consultationId);
-    var finalLaw:Option[ConsultationFinalLaw] = None
+    var finalLaw:Option[ConsultationFinalLaw] = repository.getConsultationFinalLaw(consultationId)
     if (!consultation.isActive) {
       finalLaw = repository.getConsultationFinalLaw(consultation.id)
     }

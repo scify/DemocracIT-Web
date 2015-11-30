@@ -26,7 +26,8 @@ libraryDependencies ++= Seq(
   "org.ocpsoft.prettytime" % "prettytime" % "3.2.7.Final",
   "org.postgresql" % "postgresql" % "9.3-1100-jdbc41",
   "org.specs2" %% "specs2-core" % "3.0.1" % "test",
-  "com.typesafe.play" %% "anorm" % "2.4.0"
+  "com.typesafe.play" %% "anorm" % "2.4.0",
+  "org.apache.pdfbox" % "pdfbox" % "1.8.2"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)

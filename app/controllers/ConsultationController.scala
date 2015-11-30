@@ -7,6 +7,8 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
 import model.services._
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.util.{PDFTextStripper, PDFTextStripperByArea}
 import play.api.cache.Cached
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsValue, Json, Writes}
@@ -43,10 +45,25 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   def uploadFinalLaw(consultationId: Long, userId: java.util.UUID) = Action(parse.multipartFormData) { request =>
     request.body.file("file").map { finalLawFile =>
       import java.io.File
-      val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf(".") + 1)
+
+      val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf("."))
+      var fileContent = ""
       val path = "public/files/finalLaw_" + consultationId + extension
-      storeFinalLawInDB(consultationId, path, "blabla", userId)
       finalLawFile.ref.moveTo(new File(path))
+      if(extension.equals(".txt")) {
+        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + extension).mkString
+      } else if (extension.equals(".pdf")) {
+        var document:PDDocument = new PDDocument()
+        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + extension))
+        document.getClass()
+          if( !document.isEncrypted() ) {
+            var stripper:PDFTextStripperByArea = new PDFTextStripperByArea()
+            stripper.setSortByPosition( true )
+            var Tstripper:PDFTextStripper = new PDFTextStripper()
+            fileContent  = Tstripper.getText(document);
+          }
+        }
+      storeFinalLawInDB(consultationId, path, fileContent, userId)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(

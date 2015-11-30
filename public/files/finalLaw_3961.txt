@@ -1,0 +1,113 @@
+shared hdd:
+ftp://192.168.1.251/mnt/usb1_1 (dolphin)
+
+pisaris@scify-desktop:~$ ssh pisaris@backend1.scify.org -p 222
+
+για τον development1 server (κανω pull απο το .git που ειναι στον backend1 server):
+ssh project_asana_ext@development1.scify.org
+&Ng5fj32
+cd www/AsanaExtentions/
+git pull
+&Ng5fj32
+
+cronjob:
+crontab -e
+0 4 * * * /home/project_asana_ext/www/AsanaExtentions/scripts/run_update_cache.sh
+
+create symbolic link:
+/var/www$ sudo ln -s /home/pisaris/PhpstormProjects/AsanaExtentions/ AsanaExtentions
+
+
+
+cliomuse clone:
+git clone ssh://backend1.scify.org:222/home/scifydev/iasionGit/cliomuseWebServices.git
+στο /var/www/ :
+sudo ln -s /home/pisaris/projects/clioMuseMobile/cliomuse/platforms/browser/www/ clio
+
+
+ftp clio:
+host: ftp://185.4.135.35
+username: akkornte655127
+pass: I7OQv8*Ai!JXNoCj
+
+workspaces: scify.org (2745445382955) iasion (13073623859442), newsumco (12671006412874)
+
+sudo chown -R pisaris:www-data Socital/
+
+Socital: 
+ssh project_socital@development1.scify.org
+lyRatCad9
+
+philotimo: 
+backend1.scify.org:222/home/scifydev/iasionGit/philotimo.git/
+
+ssh project_philotimo@development1.scify.org
+Qc8NV2mHpo5yTwt
+
+Οπότε, πήγαινε στο www/philotimo_service
+[12:56:34 Μ.Μ.]  Kostas Drossos: php artisan route:list
+[12:56:44 Μ.Μ.]  Kostas Drossos: και το output θα σου δείξει τα routes που είναι available
+
+after starting the emulator:
+adb shell ps (to see package name)
+adb uninstall com.philotimo
+adb install /home/pisaris/projects/philotimo/philotimoMobile/platforms/android/build/outputs/apk/android-debug.apk 
+
+db:
+ssh atzoumas@development1.scify.org -L3306:127.0.0.1:3306
+philotiuser
+b08f9PKmCixqVXe
+
+
+Class in model/dtos
+method in Consultation repository
+Parser in repositories/anorm
+add new property to ConsultationViewModel (Seq)
+ConsultationManager=> get | add relevant Laws
+
+- POSSIBILITIES100 
+- POSSIBILITIES010 
+
+git config --global alias.scify "log --all --graph --decorate --oneline"
+git scify
+
+ssh project_icstudy@development1.scify.org
+Password: ufafrcNu0QFU
+
+mysql -h localhost -u icstudy -p
+Password: UFQ0uNcrfafu
+> use project_icstudy;
+
+git clone ssh://project_icstudy@backend1.scify.org:222/home/scifydev/scifyGit/ICStudy/ICStudy-server.git
+
+Pass: ssh pass.
+
+public URL: http://icstudy.projects.development1.scify.org/www/ICStudy-server/public/
+
+
+ssh azureuser@democracit.cloudapp.net -L5001:localhost:5001
+me to antistixo port
+miso na bro pass
+Ax!!$dfsdf1..dfrkoit9^%f
+
+
+kaneis tag sto master branch
+k meta push sto origin master
+k meta kaneis checkout to production
+kai kaneis merge apo to master
+kai meta git push origin produciton
+k meta sindeomaste sto server gia na kanoume pit pull origin production
+ git tag -a v0.6.2 -m 'word cloud'
+ git log --pretty=oneline
+ git tag -a v0.6.2 393be1f5d872cc8d6096b6cfeee719de4cb55e09
+ git show v0.6.2
+ git push origin v0.6.2
+ git checkout production
+ κανω merge
+ git push origin production
+ 
+ 
+ 
+java -jar NGOClassifier.jar /home/pisaris/projects/ngo_services/ngo-service/ngoClassifier.conf control getJasonOfSource REPORTER.gr getJasonOfSourceStartingFromId 1000000009
+
+java -jar NGOClassifier.jar /home/pisaris/projects/ngo_services/ngo-service/ngoClassifier.conf control getJasonOfSource REPORTER.gr
