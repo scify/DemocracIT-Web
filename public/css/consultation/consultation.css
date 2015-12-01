@@ -571,4 +571,43 @@ a.load {
   margin-top: 10px;
   margin-bottom: 5px; }
 
+.finalLawIntegrity .stats {
+  margin-top: 15px; }
+
+.finalLawIntegrity .statRow {
+  margin-bottom: 5px; }
+
+.finalLawIntegrity .num {
+  color: #428bca; }
+
+.rateFinalLaw:hover {
+  cursor: pointer; }
+
+.notLoggedInBtn {
+  display: none; }
+
+.sameUploaderBtn {
+  display: none; }
+
+.consFinalLawModal .modal-dialog {
+  top: 200px; }
+
+.consFinalLawModal p {
+  color: #797979;
+  font-size: 16px;
+  text-align: center;
+  font-weight: 300;
+  position: relative;
+  text-align: inherit;
+  float: none;
+  margin-top: 5px;
+  padding: 0;
+  line-height: normal; }
+
+.consFinalLawModal .modal-content {
+  padding: 11px; }
+
+.consFinalLawModal .modal-header .close {
+  margin-top: -17px; }
+
 /*# sourceMappingURL=consultation.css.map */

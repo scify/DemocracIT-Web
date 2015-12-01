@@ -51,7 +51,15 @@ class ConsultationRepository {
     }
   }
 
-
+  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int):Unit = {
+    var column = "num_of_approvals"
+    if(attitude == 1) {
+      column = "num_of_dissaprovals"
+    }
+    DB.withConnection { implicit c =>
+      SQL("""update consultation_final_law set """ + column + """ = """ + column + """ + 1 where consultation_id ="""+consultationId + """ and id ="""+finalLawId).execute()
+    }
+  }
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
        //Retrieving values with string interpolation https://www.playframework.com/documentation/2.3.5/ScalaAnorm
@@ -101,7 +109,7 @@ class ConsultationRepository {
     DB.withConnection { implicit c =>
 
       SQL"""
-        select * from public.consultation_final_law where consultation_id =  $consultationId
+        select * from public.consultation_final_law where consultation_id =  $consultationId and num_of_dissaprovals < 5
         """.as(ConsFinalLawParser.Parse *).headOption
 
     }

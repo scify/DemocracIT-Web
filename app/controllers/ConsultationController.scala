@@ -72,6 +72,12 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     }
   }
 
+  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int) = Action { implicit request =>
+      consultationManager.rateFinalLaw(consultationId, finalLawId, attitude)
+      Created("")
+
+  }
+
 
   def storeFinalLawInDB(consultationId: Long, finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
       consultationManager.storeFinalLawInDB(consultationId, finalLawPath, finalLawText, userId)

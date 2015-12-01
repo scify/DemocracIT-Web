@@ -80,7 +80,10 @@ class ConsultationManager {
                           finalLaw)
   }
 
-
+  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int){
+    val repository = new ConsultationRepository()
+    repository.rateFinalLaw(consultationId, finalLawId, attitude)
+  }
 
 
   def getConsultationWordCloud(consultationId:Long):JsValue = {

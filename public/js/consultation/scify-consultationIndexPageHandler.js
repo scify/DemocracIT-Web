@@ -1,11 +1,13 @@
 
-scify.ConsultationIndexPageHandler = function( consultationid,userId,fullName,
+scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,finalLawUserId,userId,fullName,
                                                discussionThreads,
                                                relevantLaws,
                                                consultationIsActive,
                                                imagesPath,
                                                consultationEndDate){
     this.consultationid= consultationid;
+    this.finalLawId = finalLawId;
+    this.finalLawUserId = finalLawUserId;
     this.consultationIsActive = consultationIsActive;
     this.userId = userId;
     this.fullName = fullName;
@@ -67,8 +69,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 parent: "consultation"
             };
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
-            scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties),domElementToAddComponent );
-
+            if (domElementToAddComponent) {
+                scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
+            }
             $(articleDiv).find(".ann").each(function(i,ann){
                 var annId = $(ann).data("id");
                 commentBoxProperties.discussionthreadclientid = getDiscussionThreadClientId(articleid,annId );
@@ -139,6 +142,63 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     loadWordCloud = function(consultationId) {
         window.WordCloudComponent.getConsWordCloudFromServer(consultationId);
     },
+    rateFinalLawFile = function(instance) {
+        var userId = instance.userId;
+        console.log( "Handler init" );
+        console.log(userId);
+        console.log(instance.finalLawUserId);
+        var consultationId = instance.consultationid;
+        var finalLawId = instance.finalLawId;
+        $( "#rateApprove a" ).click(function() {
+            if(userId == "") {
+                $(".notLoggedInBtn").trigger( "click" );
+            }
+            else if(userId == instance.finalLawUserId) {
+                $(".sameUploaderBtn").trigger( "click" );
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 0,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        //console.log($("#rateApprove .counter").html());
+                        $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                    }
+                });
+            }
+        });
+
+        $( "#rateDisapprove a" ).click(function() {
+            if(userId == "") {
+                $(".notLoggedInBtn").trigger( "click" );
+            }
+            else if(userId == instance.finalLawUserId) {
+                $(".sameUploaderBtn").trigger( "click" );
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 1,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        //console.log($("#rateApprove .counter").html());
+                        $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                    }
+                });
+            }
+        });
+    },
     createFinalLawUpload = function(instance) {
         // "myAwesomeDropzone" is the camelized version of the HTML element's ID
         Dropzone.options.finalLawDropZone = {
@@ -191,6 +251,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         this.tutorialAnnotator.init();
         createWordCloudChart(instance);
         createFinalLawUpload(instance);
+
+        rateFinalLawFile(instance);
     };
 
     return {
