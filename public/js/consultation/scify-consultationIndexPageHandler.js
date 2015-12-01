@@ -144,17 +144,15 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
-        console.log( "Handler init" );
-        console.log(userId);
-        console.log(instance.finalLawUserId);
         var consultationId = instance.consultationid;
         var finalLawId = instance.finalLawId;
         $( "#rateApprove a" ).click(function() {
             if(userId == "") {
-                $(".notLoggedInBtn").trigger( "click" );
+                $(".noRateBtn").trigger( "click" );
             }
             else if(userId == instance.finalLawUserId) {
-                $(".sameUploaderBtn").trigger( "click" );
+                $(".noRateBtn").trigger( "click" );
+                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
             } else {
                 $.ajax({
                     type: 'POST',
@@ -176,10 +174,11 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         $( "#rateDisapprove a" ).click(function() {
             if(userId == "") {
-                $(".notLoggedInBtn").trigger( "click" );
+                $(".noRateBtn").trigger( "click" );
             }
             else if(userId == instance.finalLawUserId) {
-                $(".sameUploaderBtn").trigger( "click" );
+                $(".noRateBtn").trigger( "click" );
+                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
             } else {
                 $.ajax({
                     type: 'POST',
@@ -253,6 +252,11 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createFinalLawUpload(instance);
 
         rateFinalLawFile(instance);
+
+        $( "#closeInnerModal" ).click(function() {
+            console.log("here");
+            $("#noRateModal").hide();
+        });
     };
 
     return {

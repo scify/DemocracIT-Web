@@ -583,10 +583,7 @@ a.load {
 .rateFinalLaw:hover {
   cursor: pointer; }
 
-.notLoggedInBtn {
-  display: none; }
-
-.sameUploaderBtn {
+.noRateBtn {
   display: none; }
 
 .consFinalLawModal .modal-dialog {

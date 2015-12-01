@@ -175,48 +175,7 @@
                                 <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
                             </div>
                             <div class="finalLawIntegrity">
-                                <div class="stats">
-                                    <div id="rateApprove" class="statRow"><a class="rateFinalLaw">Συμφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
-                                    <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
-                                </div>
-                                <button class="notLoggedInBtn" type="button" data-toggle="modal" data-target="#notLoggedInModal"></button>
-                                <button class="sameUploaderBtn" type="button" data-toggle="modal" data-target="#sameUploaderModal"></button>
-                                <div id="notLoggedInModal" class="modal fade consFinalLawModal" role="dialog">
-                                    <div class="modal-dialog">
-                                            <!-- Modal content-->
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="notLoggedinWrapper">
-                                                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="sameUploaderModal" class="modal fade consFinalLawModal" role="dialog">
-                                    <div class="modal-dialog">
-                                            <!-- Modal content-->
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="notLoggedinWrapper">
-                                                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.</p></div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                         </div>
                         <div id="finalLawModal" class="modal fade" role="dialog">
                             <div class="modal-dialog">
@@ -244,7 +203,35 @@
                                             }
                                             </div>
                                             <div id="finalLawDiv">
+                                                <div class="stats">
+                                                    <div id="rateApprove" class="statRow"><a class="rateFinalLaw">Συμφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
+                                                    <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
+                                                    <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
+                                                    </div>
                                                 @vm.finalLaw.get.file_text
+                                                <div id="noRateModal" class="modal fade consFinalLawModal" role="dialog">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" id="closeInnerModal" onclick="myFunction()">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="notLoggedinWrapper">
+                                                                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="myFunction()">Κλείσιμο</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                                myFunction = function(){
+                                                                    $("#noRateModal").hide();
+                                                                }
+                                                            </script>
                                             </div>
                                         </div>
                                     </div>
