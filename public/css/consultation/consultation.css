@@ -555,4 +555,20 @@ a.load {
 #finalLawModal .title {
   font-weight: bold; }
 
+.finalLaw .container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%; }
+
+.finalLawBtn {
+  background-color: #428bca;
+  border: none;
+  color: white;
+  padding: 11px;
+  font-size: medium; }
+
+.finalLaw .title {
+  margin-top: 10px;
+  margin-bottom: 5px; }
+
 /*# sourceMappingURL=consultation.css.map */
