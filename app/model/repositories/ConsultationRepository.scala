@@ -1,5 +1,7 @@
 package model.repositories
 
+import java.util.UUID
+
 import _root_.anorm.SqlParser._
 import _root_.anorm._
 import model.dtos._
@@ -51,15 +53,37 @@ class ConsultationRepository {
     }
   }
 
-  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int):Unit = {
+  def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean):Unit = {
     var column = "num_of_approvals"
     if(attitude == 1) {
       column = "num_of_dissaprovals"
     }
     DB.withConnection { implicit c =>
-      SQL("""update consultation_final_law set """ + column + """ = """ + column + """ + 1 where consultation_id ="""+consultationId + """ and id ="""+finalLawId).execute()
+        val likedBit = if (liked) 1 else 0
+        if(likedBit == 1) {
+          SQL( """update consultation_final_law set """ + column + """ = """ + column + """ + 1 where consultation_id =""" + consultationId + """ and id =""" + finalLawId).execute()
+          SQL"""
+                UPDATE consultation_final_law_rating
+                        set liked = CAST($likedBit AS BIT)
+                        where user_id = CAST($userId AS UUID)  and consultation_id = $consultationId;
+
+                INSERT INTO consultation_final_law_rating (user_id, consultation_id,liked,date_added)
+                        select CAST($userId AS UUID), $consultationId ,CAST($likedBit AS BIT) , now()
+                               where not exists (select 1 from consultation_final_law_rating where user_id = CAST($userId AS UUID) and consultation_id = $consultationId );
+
+                  """.execute()
+        } else {
+          SQL( """update consultation_final_law set """ + column + """ = """ + column + """ - 1 where consultation_id =""" + consultationId + """ and id =""" + finalLawId).execute()
+          SQL"""
+               delete from consultation_final_law_rating
+                      where user_id = CAST($userId AS UUID) and consultation_id = $consultationId ;
+
+              """.execute()
+        }
     }
   }
+
+
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
        //Retrieving values with string interpolation https://www.playframework.com/documentation/2.3.5/ScalaAnorm
@@ -115,12 +139,26 @@ class ConsultationRepository {
     }
   }
 
+  def getFinalLawRatingUsers(consultationId:Long, finalLawId:BigInt): List[ConsFinalLawRatingUsers] = {
+    DB.withConnection { implicit c =>
+      SQL"""
+           select $finalLawId as final_law_id ,* from consultation_final_law_rating where consultation_id = $consultationId
+         """.as(ConsFinalLawRatingUsersParser.Parse *)
+    }
+  }
+
   def storeFinalLawInDB(consultationId:Long, finalLawPath:String, finalLawText:String, userId:java.util.UUID):Unit = {
     DB.withConnection { implicit c =>
       SQL"""
-           insert into consultation_final_law(consultation_id, user_id, date_added, file_text, file_path) values
-           ($consultationId, $userId::uuid, now(), $finalLawText, $finalLawPath)
+           insert into consultation_final_law(consultation_id, user_id, date_added, file_text, file_path, active) values
+           ($consultationId, $userId::uuid, now(), $finalLawText, $finalLawPath, CAST(1 AS BIT))
          """.execute()
+    }
+  }
+
+  def setConsultationFinalLawInactive(finalLawId:Long): Unit = {
+    DB.withConnection { implicit c =>
+      SQL""" update consultation_final_law set active = 0""".execute()
     }
   }
 

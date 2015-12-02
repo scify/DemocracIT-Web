@@ -1,7 +1,7 @@
 package model.services
 
 import java.util
-import java.util.Date
+import java.util.{UUID, Date}
 
 import model.User
 import model.dtos.{PlatformStats, _}
@@ -66,9 +66,13 @@ class ConsultationManager {
 
     val consultation = repository.get(consultationId);
     var finalLaw:Option[ConsultationFinalLaw] = repository.getConsultationFinalLaw(consultationId)
+    var ratingUsers: Seq[ConsFinalLawRatingUsers]= Nil;
     if (!consultation.isActive) {
       finalLaw = repository.getConsultationFinalLaw(consultation.id)
+      if (finalLaw.isDefined)
+        ratingUsers= repository.getFinalLawRatingUsers(consultationId, finalLaw.get.id)
     }
+
 
     ConsultationViewModel(consultation = consultation,
                           annotationsRelatedToProblems = annotationTags.filter(_.type_id==2),
@@ -77,12 +81,14 @@ class ConsultationManager {
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
                           relevantLaws = repository.getRelevantLaws(consultationId),
-                          finalLaw)
+                          finalLaw,
+                          ratingUsers = ratingUsers)
   }
 
-  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int){
+
+  def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean){
     val repository = new ConsultationRepository()
-    repository.rateFinalLaw(consultationId, finalLawId, attitude)
+    repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
   }
 
 

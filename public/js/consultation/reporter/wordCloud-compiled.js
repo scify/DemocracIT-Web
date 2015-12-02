@@ -74,9 +74,7 @@
                     instance.state.display = true;
                     instance.setState(instance.state);
                 },
-                error: function error(x, z, y) {
-                    console.log(x);
-                }
+                error: function error(x, z, y) {}
             });
 
             return promise;
@@ -195,7 +193,6 @@
                 } else {
                     var draw = this.drawD3();
                     if (draw == "empty") {
-                        console.log("empty");
                         return React.createElement(
                             "div",
                             { className: "noStats" },
@@ -208,5 +205,7 @@
         }
     });
 })();
+
+//console.log(x);
 
 //# sourceMappingURL=wordCloud-compiled.js.map

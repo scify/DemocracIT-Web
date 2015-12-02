@@ -51,6 +51,7 @@ object ImplicitReadWrites  {
   implicit val consdurationsWrites = Json.writes[ConsDurations]
   implicit val consCommPerOrganizationWrites = Json.writes[CommPerConsPerOrganization]
   implicit val consultationForEvaluationWrites = Json.writes[ConsultationForEvaluation]
+  implicit val consultationRatingUserWrites = Json.writes[ConsFinalLawRatingUsers]
 
   implicit val discussionThreadWrites= Json.writes[DiscussionThread]
   implicit object commentSourcesWrites extends Writes[CommentSource] {

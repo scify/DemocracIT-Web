@@ -1,5 +1,5 @@
 
-scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,finalLawUserId,userId,fullName,
+scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingUsers,finalLawUserId,userId,fullName,
                                                discussionThreads,
                                                relevantLaws,
                                                consultationIsActive,
@@ -12,8 +12,12 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,finalLa
     this.userId = userId;
     this.fullName = fullName;
     this.imagesPath = imagesPath;
-
     this.discussionThreads ={};
+    this.ratingUsers = [];
+    for (var i=0; i<ratingUsers.length; i++) {
+        this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
+    }
+    console.log(this.ratingUsers);
     for (var i=0; i<discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
@@ -142,26 +146,67 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     loadWordCloud = function(consultationId) {
         window.WordCloudComponent.getConsWordCloudFromServer(consultationId);
     },
+    refreshLikeDislikeLinks = function(elementId){
+        if($(elementId).hasClass("liked")) {
+            $(elementId+ " a").css("color","grey");
+        } else if($(elementId).hasClass("disliked")){
+            $(elementId + " a").css("color","#337ab7");
+        }
+    },
+    checkRatingUsers = function(array, user_id) {
+        for(var i=0; i<array.length; i++) {
+            if(array[i].userId == user_id)
+                return array[i];
+        }
+        return false;
+    }
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
+        var userRate = checkRatingUsers(instance.ratingUsers, userId);
+        console.log(userRate);
+        if(userRate) {
+            if(userRate.liked) {
+                console.log("exei kanei like");
+                $( "#rateApprove").addClass("liked");
+                refreshLikeDislikeLinks("#rateApprove");
+            } else {
+                $( "#rateDisapprove").addClass("liked");
+                refreshLikeDislikeLinks("#rateDisapprove");
+            }
+        }
+
         var consultationId = instance.consultationid;
         var finalLawId = instance.finalLawId;
+        var liked = false;
         $( "#rateApprove a" ).click(function() {
             if(userId == "") {
                 $(".noRateBtn").trigger( "click" );
             }
-            else if(userId == instance.finalLawUserId) {
+            /*else if(userId == instance.finalLawUserId) {
                 $(".noRateBtn").trigger( "click" );
                 $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-            } else {
+            }*/ else {
+                if(!$( "#rateApprove").hasClass("liked")) {
+                    $( "#rateApprove").removeClass("disliked");
+                    $( "#rateApprove").addClass("liked");
+                    liked = true;
+                } else {
+                    $( "#rateApprove").removeClass("liked");
+                    $( "#rateApprove").addClass("disliked");
+                    liked = false;
+                }
                 $.ajax({
                     type: 'POST',
-                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 0,
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 0 + "/" + userId + "/" + liked,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
-                        //console.log($("#rateApprove .counter").html());
-                        $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
+                        if(liked) {
+                            $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
+                        } else {
+                            $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) - 1);
+                        }
+                        refreshLikeDislikeLinks("#rateApprove");
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -169,6 +214,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     complete: function () {
                     }
                 });
+
             }
         });
 
@@ -176,10 +222,17 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             if(userId == "") {
                 $(".noRateBtn").trigger( "click" );
             }
-            else if(userId == instance.finalLawUserId) {
+            /*else if(userId == instance.finalLawUserId) {
                 $(".noRateBtn").trigger( "click" );
                 $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-            } else {
+            }*/ else {
+                if(!$( "#rateDisapprove").hasClass("liked")) {
+                    $( "#rateDisapprove").removeClass("disliked");
+                    $( "#rateDisapprove").addClass("liked");
+                } else {
+                    $( "#rateDisapprove").removeClass("liked");
+                    $( "#rateDisapprove").addClass("disliked");
+                }
                 $.ajax({
                     type: 'POST',
                     url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 1,
@@ -188,6 +241,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     success: function (returnData) {
                         //console.log($("#rateApprove .counter").html());
                         $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                        refreshLikeDislikeLinks("#rateDisapprove");
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -195,6 +249,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     complete: function () {
                     }
                 });
+
             }
         });
     },
@@ -253,10 +308,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         rateFinalLawFile(instance);
 
-        $( "#closeInnerModal" ).click(function() {
-            console.log("here");
-            $("#noRateModal").hide();
-        });
     };
 
     return {

@@ -16,10 +16,11 @@ object ConsFinalLawParser{
       int("num_of_approvals") ~
       int("num_of_dissaprovals") ~
       str("file_text") ~
-      str("file_path") map
+      str("file_path") ~
+      int("active") map
       {
-        case id ~ consultation_id ~ user_id ~ date_added ~ num_of_approvals ~ num_of_dissaprovals ~ file_text ~ file_path =>
-          new ConsultationFinalLaw(id, consultation_id, user_id, date_added, num_of_approvals, num_of_dissaprovals, file_text, file_path)
+        case id ~ consultation_id ~ user_id ~ date_added ~ num_of_approvals ~ num_of_dissaprovals ~ file_text ~ file_path ~ active =>
+          new ConsultationFinalLaw(id, consultation_id, user_id, date_added, num_of_approvals, num_of_dissaprovals, file_text, file_path, active)
       }
 
   }

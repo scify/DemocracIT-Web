@@ -76,7 +76,7 @@
                     instance.setState(instance.state);
                 },
                 error: function(x,z,y){
-                    console.log(x);
+                    //console.log(x);
                 }
             });
 
@@ -218,7 +218,6 @@
                 } else {
                     var draw = this.drawD3();
                     if(draw == "empty") {
-                        console.log("empty");
                         return ( <div className="noStats">Δεν βρέθηκαν δεδομένα.</div> );
                     }
                 }

@@ -14,13 +14,15 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
                                  user: Option[model.User],
                                  relevantMaterials: Seq[RelevantMaterial],
                                  relevantLaws: Seq[RelevantLaws],
-                                 finalLaw: Option[ConsultationFinalLaw])
+                                 finalLaw: Option[ConsultationFinalLaw],
+                                 ratingUsers: Seq[ConsFinalLawRatingUsers])
 {
   private var _distinctLaws:Seq[RelevantLaws] = Nil
 
    //def annotationTypesToJson():String = Json.toJson(annotationsRelatedToProblems).toString()
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
   def relevantLawsToJson():String =Json.toJson(this.distinctLaws(false)).toString()
+  def ratingUsersToJson():String = Json.toJson(ratingUsers).toString()
 
   def distinctLaws(ignoreCharacters:Boolean = true):Seq[RelevantLaws] = {
 

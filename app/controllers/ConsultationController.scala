@@ -1,5 +1,6 @@
 package controllers
 
+import java.util.UUID
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
@@ -72,8 +73,8 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
     }
   }
 
-  def rateFinalLaw(consultationId: Long, finalLawId: Long, attitude: Int) = Action { implicit request =>
-      consultationManager.rateFinalLaw(consultationId, finalLawId, attitude)
+  def rateFinalLaw(userId:UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean) = Action { implicit request =>
+      consultationManager.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
       Created("")
 
   }
