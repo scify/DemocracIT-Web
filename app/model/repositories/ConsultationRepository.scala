@@ -59,9 +59,12 @@ class ConsultationRepository {
       column = "num_of_dissaprovals"
     }
     DB.withConnection { implicit c =>
-        val likedBit = if (liked) 1 else 0
+        var likedBit = if (liked) 1 else 0
         if(likedBit == 1) {
           SQL( """update consultation_final_law set """ + column + """ = """ + column + """ + 1 where consultation_id =""" + consultationId + """ and id =""" + finalLawId).execute()
+          if(attitude == 1) {
+            likedBit = 0
+          }
           SQL"""
                 UPDATE consultation_final_law_rating
                         set liked = CAST($likedBit AS BIT)

@@ -183,10 +183,15 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $(".noRateBtn").trigger( "click" );
             }
             /*else if(userId == instance.finalLawUserId) {
-                $(".noRateBtn").trigger( "click" );
-                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-            }*/ else {
-                if(!$( "#rateApprove").hasClass("liked")) {
+             $(".noRateBtn").trigger( "click" );
+             $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+             }*/
+            else {
+                if($( "#rateDisapprove").hasClass("liked")) {
+                    $( "#rateDisapprove a").trigger("click");
+                    return;
+                }
+                else if(!$( "#rateApprove").hasClass("liked")) {
                     $( "#rateApprove").removeClass("disliked");
                     $( "#rateApprove").addClass("liked");
                     liked = true;
@@ -197,7 +202,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 }
                 $.ajax({
                     type: 'POST',
-                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 0 + "/" + userId + "/" + liked,
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 0 + "/" + userId + "/" + liked,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
@@ -223,24 +228,35 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $(".noRateBtn").trigger( "click" );
             }
             /*else if(userId == instance.finalLawUserId) {
-                $(".noRateBtn").trigger( "click" );
-                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-            }*/ else {
-                if(!$( "#rateDisapprove").hasClass("liked")) {
+             $(".noRateBtn").trigger( "click" );
+             $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+             }*/
+            else {
+                if($( "#rateApprove").hasClass("liked")) {
+                    $( "#rateApprove a").trigger("click");
+                    return;
+                }
+                else if(!$( "#rateDisapprove").hasClass("liked")) {
                     $( "#rateDisapprove").removeClass("disliked");
                     $( "#rateDisapprove").addClass("liked");
+                    liked = true;
                 } else {
                     $( "#rateDisapprove").removeClass("liked");
                     $( "#rateDisapprove").addClass("disliked");
+                    liked = false;
                 }
                 $.ajax({
                     type: 'POST',
-                    url: "/consultation/finallaw/rate/" + consultationId + "/" + finalLawId + "/" + 1,
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 1 + "/" + userId + "/" + liked,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
                         //console.log($("#rateApprove .counter").html());
-                        $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                        if(liked) {
+                            $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                        } else {
+                            $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) - 1);
+                        }
                         refreshLikeDislikeLinks("#rateDisapprove");
                     },
                     error: function (xhr, textStatus, errorThrown) {
