@@ -3,7 +3,7 @@ package model.services
 import java.util.{Date, UUID}
 
 import model.User
-import model.dtos.CommentWithArticleName
+import model.dtos.{ConsFinalLawRatingUsers, ConsultationFinalLaw, CommentWithArticleName}
 import model.repositories._
 import model.viewmodels._
 import play.api.libs.json.JsValue
@@ -26,15 +26,25 @@ class ReporterManager {
   def get(consultationId: Long, user:Option[User]): ReporterViewModel= {
     val repository = new ConsultationRepository()
     val commentsRepository = new CommentsRepository()
+    val consultation = repository.get(consultationId);
+    var finalLaw:Option[ConsultationFinalLaw] = repository.getConsultationFinalLaw(consultationId)
+    var ratingUsers: Seq[ConsFinalLawRatingUsers]= Nil;
+    if (!consultation.isActive) {
+      finalLaw = repository.getConsultationFinalLaw(consultation.id)
+      if (finalLaw.isDefined)
+        ratingUsers= repository.getFinalLawRatingUsers(consultationId, finalLaw.get.id)
+    }
 
-    ReporterViewModel(consultation = repository.get(consultationId),
+    ReporterViewModel(consultation,
                           user = user,
                           relevantMaterials = repository.getRelevantMaterial(consultationId),
                           commentsPerArticle = commentsRepository.getCommentsPerArticle(consultationId),
                           annotationTagWithComments = commentsRepository.getTagsForConsultation(consultationId),
                           annotationTagPerArticleWithComments = commentsRepository.getTagsPerArticle(consultationId),
                           relevantLaws = repository.getRelevantLaws(consultationId),
-                          userCommentStats = commentsRepository.getCommentersForConsultation(consultationId))
+                          userCommentStats = commentsRepository.getCommentersForConsultation(consultationId),
+                          finalLaw,
+                          ratingUsers = ratingUsers)
   }
 
 

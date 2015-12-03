@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,ratingUsers,finalLawUserId,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -8,6 +8,12 @@ scify.ConsultationReporterPageHandler = function( consultationid,userId,fullName
     this.consultationid= consultationid;
     this.userId = userId;
     this.fullName = fullName;
+    this.finalLawId = finalLawId;
+    this.finalLawUserId = finalLawUserId;
+    this.ratingUsers = [];
+    for (var i=0; i<ratingUsers.length; i++) {
+        this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
+    }
 
     this.consultationEndDate = consultationEndDate;
 
@@ -148,8 +154,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsPerArticle = function(){
             var domElementOpenGovComments = document.getElementById("commentsOpenGov");
             var domElementDITComments = document.getElementById("commentsDIT");
-            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementOpenGovComments);
-            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementDITComments);
+            if (domElementOpenGovComments) {
+                window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementOpenGovComments);
+            }
+            if (domElementDITComments) {
+                window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementDITComments);
+            }
         },
         createListOfCommentsByAnnId = function() {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
@@ -197,7 +207,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 console.log('this record does not exist');
             }
             var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
-            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+            if (domElementArticleWordCloud) {
+                window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+            }
 
         },
         loadArticleWordCloud = function(articleId, commentsNum) {
@@ -333,7 +345,186 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 console.log("sfdgdg");
                 $('#usersStatsTooltip').mouseover();
             });
+        },
+    refreshLikeDislikeLinks = function(elementId){
+            if($(elementId).hasClass("liked")) {
+                $(elementId+ " a").css("color","grey");
+            } else if($(elementId).hasClass("disliked")){
+                $(elementId + " a").css("color","#337ab7");
+            }
+        },
+    checkRatingUsers = function(array, user_id) {
+        for(var i=0; i<array.length; i++) {
+            if(array[i].userId == user_id)
+                return array[i];
         }
+        return false;
+    }
+    rateFinalLawFile = function(instance) {
+    var userId = instance.userId;
+    var userRate = checkRatingUsers(instance.ratingUsers, userId);
+    console.log(userRate);
+    if(userRate) {
+        if(userRate.liked) {
+            $( "#rateApprove").addClass("liked");
+            refreshLikeDislikeLinks("#rateApprove");
+        } else {
+            $( "#rateDisapprove").addClass("liked");
+            refreshLikeDislikeLinks("#rateDisapprove");
+        }
+    }
+
+    var consultationId = instance.consultationid;
+    var finalLawId = instance.finalLawId;
+    var liked = false;
+    $( "#rateApprove a" ).click(function() {
+        if(userId == "") {
+            $(".noRateBtn").trigger( "click" );
+        }
+        /*else if(userId == instance.finalLawUserId) {
+         $(".noRateBtn").trigger( "click" );
+         $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+         }*/
+        else {
+            if($( "#rateDisapprove").hasClass("liked")) {
+                $( "#rateDisapprove a").trigger("click");
+                return;
+            }
+            else if(!$( "#rateApprove").hasClass("liked")) {
+                $( "#rateApprove").removeClass("disliked");
+                $( "#rateApprove").addClass("liked");
+                liked = true;
+            } else {
+                $( "#rateApprove").removeClass("liked");
+                $( "#rateApprove").addClass("disliked");
+                liked = false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 0 + "/" + userId + "/" + liked,
+                beforeSend: function () {
+                },
+                success: function (returnData) {
+                    if(liked) {
+                        $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
+                    } else {
+                        $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) - 1);
+                    }
+                    refreshLikeDislikeLinks("#rateApprove");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function () {
+                }
+            });
+
+        }
+    });
+
+    $( "#rateDisapprove a" ).click(function() {
+        if(userId == "") {
+            $(".noRateBtn").trigger( "click" );
+        }
+        /*else if(userId == instance.finalLawUserId) {
+         $(".noRateBtn").trigger( "click" );
+         $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+         }*/
+        else {
+            if($( "#rateApprove").hasClass("liked")) {
+                $( "#rateApprove a").trigger("click");
+                return;
+            }
+            else if(!$( "#rateDisapprove").hasClass("liked")) {
+                $( "#rateDisapprove").removeClass("disliked");
+                $( "#rateDisapprove").addClass("liked");
+                liked = true;
+            } else {
+                $( "#rateDisapprove").removeClass("liked");
+                $( "#rateDisapprove").addClass("disliked");
+                liked = false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 1 + "/" + userId + "/" + liked,
+                beforeSend: function () {
+                },
+                success: function (returnData) {
+                    //console.log($("#rateApprove .counter").html());
+                    if(liked) {
+                        $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                    } else {
+                        $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) - 1);
+                    }
+                    refreshLikeDislikeLinks("#rateDisapprove");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function () {
+                }
+            });
+
+        }
+    });
+},
+    createFinalLawUpload = function(instance) {
+        // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+        Dropzone.options.finalLawDropZone = {
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: 2, // MB
+            url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
+            uploadMultiple: false,
+            maxFiles: 1,
+            acceptedFiles: "application/pdf,text/plain",
+            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
+            dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
+            accept: function(file, done) {
+                console.log();
+                if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
+                    done("Naha, you don't.");
+                }
+                else { done(); }
+            },
+            init: function() {
+                this.on("error", function(file,errorMessage) {
+                    $(".dz-error-message").css("opacity",1);
+                });
+                this.on("addedfile", function() {
+                    /*If more than one file, we ceep the latest one*/
+                    if (this.files[1]!=null){
+                        this.removeFile(this.files[0]);
+                    }
+                });
+                this.on('success', function() {
+                    console.log("success");
+                    setTimeout(function (){
+                        var url = window.location.href;
+                        url += '?target=finalLaw';
+                        window.location.href = url;
+                    }, 500);
+                });
+            }
+        };
+    },
+    getParameterPointToFinalLaw = function () {
+        var parameter = getParameterByName("target");
+        console.log(parameter);
+        if(parameter == "finalLaw") {
+            console.log("scroll");
+            $('html, body').animate({
+                scrollTop: 500
+            }, 1000);
+            $(".finalLawLi a").trigger("click");
+        }
+    },
+    getParameterByName = function(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
 
     init = function(){
         var instance= this;
@@ -362,6 +553,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemIdPerArticle();
         createArticleWordCloudChart(instance);
         attachTooltips();
+        createFinalLawUpload(instance);
+
+        rateFinalLawFile(instance);
+        getParameterPointToFinalLaw();
     };
 
     return {

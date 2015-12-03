@@ -60,7 +60,6 @@
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
                 <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
                 @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
-                @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
@@ -175,8 +174,6 @@
                             <div class="container">
                                 <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
                             </div>
-                            <div class="finalLawIntegrity">
-
                         </div>
                         <div id="finalLawModal" class="modal fade" role="dialog">
                             <div class="modal-dialog">

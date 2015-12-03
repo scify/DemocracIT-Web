@@ -14,13 +14,16 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
                                annotationTagWithComments: Seq[AnnotationTagWithComments],
                                annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
                                relevantLaws: Seq[RelevantLaws],
-                               userCommentStats: Seq[UserCommentStats]
+                               userCommentStats: Seq[UserCommentStats],
+                               finalLaw: Option[ConsultationFinalLaw],
+                               ratingUsers: Seq[ConsFinalLawRatingUsers]
                               )
 {
   def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()
   def userCommentStatsToJson():String =Json.toJson(userCommentStats).toString()
   def annotationsForConsultationToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsForConsultation(type_of_ann)).toString()
   def annotationsPerArticleToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsPerArticle(type_of_ann)).toString()
+  def ratingUsersToJson():String = Json.toJson(ratingUsers).toString()
 
   def totalComments:Int = {
     var total = 0

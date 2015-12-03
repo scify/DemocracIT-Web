@@ -76,7 +76,6 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   def rateFinalLaw(userId:UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean) = Action { implicit request =>
       consultationManager.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
       Created("")
-
   }
 
 

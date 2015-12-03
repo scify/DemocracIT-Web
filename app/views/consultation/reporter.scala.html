@@ -1,5 +1,5 @@
 @import model.viewmodels.ReporterViewModel
-@(vm: ReporterViewModel)
+@(vm: ReporterViewModel)(implicit request: play.api.mvc.Request[Any])
 
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
@@ -18,12 +18,16 @@
     <script src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
     <script src="@routes.Assets.at("js/consultation/reporter/scify-consultationReporterPageHandler.js")"></script>
+    <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
     {'modules':[{'name':'visualization','version':'1.1','packages':
     ['corechart']}]}"></script>
     <script>
      $(function(){
         var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
+                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
+                                                                @Html(vm.ratingUsersToJson()),
+                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
                                                                 @Html(vm.commentsPerArticleToJson()),
@@ -45,6 +49,7 @@
 
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/reporter/reporter.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/dropzone.css")">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
@@ -54,9 +59,9 @@
             <ul id="tabs" class="nav nav-tabs" role="tablist">
                 <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Συμμετοχή στη διαβούλευση</a></li>
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-
                 <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
-                @*<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>*@
+                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
+
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="annotatorContent">
@@ -211,6 +216,92 @@
                         }
                         </div>
                     </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="finalLaw">
+                @if(vm.finalLaw.isEmpty) {
+                    @if(vm.user.isDefined) {
+                        <div class="notLoggedIn">
+                            Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
+                            νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:</div>
+                        <form class="dropzone" id="finalLawDropZone"></form>
+                    } else {
+                        <div class="notLoggedIn">
+                            Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
+                            νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a></div>
+                    }
+                } else {
+                    <div class="finalLaw">
+                        <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
+                        <div class="container">
+                            <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
+                        </div>
+                    </div>
+                    <div id="finalLawModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                                <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Αριστερά, βλέπετε το κείμενο της διαβούλευσης. Δεξιά, τον τελικό νόμο</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <div id="consultationTextDiv">
+                                        @for(article <- vm.consultation.articles) {
+                                            <div data-id="@article.id"  class="row article">
+                                                <div class="col-md-12">
+                                                    <div class="title">
+                                                    @article.title
+                                                    </div>
+                                                    <div>
+                                                    @Html(article.body)
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        }
+                                        </div>
+                                        <div id="finalLawDiv">
+                                            <div class="stats">
+                                                <div id="rateApprove" class="statRow"><a class="rateFinalLaw">Συμφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
+                                                <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
+                                                <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
+                                            </div>
+                                            @vm.finalLaw.get.file_text
+                                            <div id="noRateModal" class="modal fade consFinalLawModal" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" id="closeInnerModal" onclick="myFunction()">&times;</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="notLoggedinWrapper">
+                                                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="myFunction()">Κλείσιμο</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                    myFunction = function(){
+                                                        $("#noRateModal").modal('hide')
+                                                    }
+                                                </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
                 </div>
             </div>
         </div>
