@@ -166,7 +166,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         console.log(userRate);
         if(userRate) {
             if(userRate.liked) {
-                console.log("exei kanei like");
                 $( "#rateApprove").addClass("liked");
                 refreshLikeDislikeLinks("#rateApprove");
             } else {
@@ -297,8 +296,33 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                         this.removeFile(this.files[0]);
                     }
                 });
+                this.on('success', function() {
+                    console.log("success");
+                    setTimeout(function (){
+                        var url = window.location.href;
+                        url += '?target=finalLaw';
+                        window.location.href = url;
+                    }, 500);
+                });
             }
         };
+    },
+    getParameterPointToFinalLaw = function () {
+        var parameter = getParameterByName("target");
+        console.log(parameter);
+        if(parameter == "finalLaw") {
+            console.log("scroll");
+            $('html, body').animate({
+                scrollTop: 500
+            }, 1000);
+            $(".finalLawLi a").trigger("click");
+        }
+    },
+    getParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
     init = function(){
         var instance= this;
@@ -323,6 +347,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         createFinalLawUpload(instance);
 
         rateFinalLawFile(instance);
+        getParameterPointToFinalLaw();
 
     };
 

@@ -607,4 +607,14 @@ a.load {
 .consFinalLawModal .modal-header .close {
   margin-top: -17px; }
 
+#rateApprove {
+  float: left; }
+
+#rateDisapprove {
+  float: right; }
+
+#finalLawDiv .stats {
+  margin-bottom: 35px;
+  padding-right: 10px; }
+
 /*# sourceMappingURL=consultation.css.map */

@@ -62,6 +62,12 @@ class ConsultationRepository {
         var likedBit = if (liked) 1 else 0
         if(likedBit == 1) {
           SQL( """update consultation_final_law set """ + column + """ = """ + column + """ + 1 where consultation_id =""" + consultationId + """ and id =""" + finalLawId).execute()
+          if(likedBit == 1 && attitude == 1) {
+            SQL"""
+                UPDATE consultation_final_law
+                        set active = CAST(0 AS BIT)
+                        where id = $finalLawId  and consultation_id = $consultationId and num_of_dissaprovals > 4;""".execute()
+          }
           if(attitude == 1) {
             likedBit = 0
           }
@@ -70,8 +76,8 @@ class ConsultationRepository {
                         set liked = CAST($likedBit AS BIT)
                         where user_id = CAST($userId AS UUID)  and consultation_id = $consultationId;
 
-                INSERT INTO consultation_final_law_rating (user_id, consultation_id,liked,date_added)
-                        select CAST($userId AS UUID), $consultationId ,CAST($likedBit AS BIT) , now()
+                INSERT INTO consultation_final_law_rating (user_id, consultation_id,liked,date_added, final_law_id)
+                        select CAST($userId AS UUID), $consultationId ,CAST($likedBit AS BIT) , now(), $finalLawId
                                where not exists (select 1 from consultation_final_law_rating where user_id = CAST($userId AS UUID) and consultation_id = $consultationId );
 
                   """.execute()
@@ -136,7 +142,7 @@ class ConsultationRepository {
     DB.withConnection { implicit c =>
 
       SQL"""
-        select * from public.consultation_final_law where consultation_id =  $consultationId and num_of_dissaprovals < 5
+        select * from public.consultation_final_law where consultation_id =  $consultationId and active = CAST(1 AS BIT)
         """.as(ConsFinalLawParser.Parse *).headOption
 
     }
@@ -145,7 +151,9 @@ class ConsultationRepository {
   def getFinalLawRatingUsers(consultationId:Long, finalLawId:BigInt): List[ConsFinalLawRatingUsers] = {
     DB.withConnection { implicit c =>
       SQL"""
-           select $finalLawId as final_law_id ,* from consultation_final_law_rating where consultation_id = $consultationId
+           select $finalLawId as final_law_id ,* from consultation_final_law_rating
+              inner join consultation_final_law law on law.id = consultation_final_law_rating.final_law_id
+           where consultation_final_law_rating.consultation_id = $consultationId and law.active = CAST(1 AS BIT)
          """.as(ConsFinalLawRatingUsersParser.Parse *)
     }
   }
