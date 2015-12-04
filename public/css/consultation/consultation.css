@@ -532,6 +532,9 @@ a.load {
 .dz-error-message {
   width: 200px; }
 
+#finalLaw {
+  margin-top: 10px; }
+
 #finalLawModal .modal-dialog {
   width: 95%; }
 
@@ -616,5 +619,18 @@ a.load {
 #finalLawDiv .stats {
   margin-bottom: 35px;
   padding-right: 10px; }
+
+#finalLawExplanationModal .msg {
+  padding: 15px; }
+
+#finalLawExplanationModal .number {
+  margin-right: 13px;
+  margin-bottom: 60px;
+  float: left;
+  font-size: x-large;
+  color: #428bca; }
+
+#finalLawExplanationModal i {
+  color: #428bca; }
 
 /*# sourceMappingURL=consultation.css.map */
