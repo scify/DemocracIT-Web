@@ -25,19 +25,19 @@
                         <li><a href="http://democracit.org"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
                     }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
+                        <li><a href="@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
                     } else {
-                        <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
+                        <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
                     }
-                    <li><a href="/evaluation">ΑΝΑΦΟΡΕΣ</a></li>
+                    <li><a href="/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
                     <li><a href="http://about.democracit.org/blog/"><i class="fa fa-rss"></i> ΒLOG</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΣΧΕΤΙΚΑ <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-info-circle"></i> ΣΧΕΤΙΚΑ <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="http://about.democracit.org/h-anagki//">H ΑΝΑΓKH</a></li>
                             <li><a href="http://about.democracit.org/to-ergo/">ΤΟ ΕΡΓΟ</a></li>
                             <li><a href="http://about.democracit.org/h-omada/">H ΟΜΑΔΑ</a></li>
-                            <li><a href="http://about.democracit.org/frequently-asked-questions">ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ</a></li>
+                            <li><a href="http://about.democracit.org/frequently-asked-questions"><i class="fa fa-question-circle"></i> ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ</a></li>
                         </ul>
                     </li>
 
@@ -68,10 +68,10 @@
                             </li>
                         } else {
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> ΕΙΣΟΔΟΣ <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li id="register"><a href="http://www.democracit.org@routes.AccountController.signUp">ΕΓΓΡΑΦΗ</a></li>
-                                    <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)">ΕΙΣΟΔΟΣ</a></li>
+                                    <li id="register"><a href="http://www.democracit.org@routes.AccountController.signUp"><i class="fa fa-user-plus"></i> ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
+                                    <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
                                 </ul>
                             </li>
                         }
