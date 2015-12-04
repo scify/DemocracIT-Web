@@ -20,9 +20,9 @@
             <div id="navbar" class="navbar-collapse collapse" >
                 <ul class="nav navbar-nav navbar-right">
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="/">ΑΡΧΙΚΗ</a></li>
+                        <li><a href="/"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
                     } else {
-                        <li><a href="http://democracit.org">ΑΡΧΙΚΗ</a></li>
+                        <li><a href="http://democracit.org"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
                     }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
                         <li><a href="@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
@@ -30,7 +30,7 @@
                         <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()">ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
                     }
                     <li><a href="/evaluation">ΑΝΑΦΟΡΕΣ</a></li>
-                    <li><a href="http://about.democracit.org/blog/">ΒLOG</a></li>
+                    <li><a href="http://about.democracit.org/blog/"><i class="fa fa-rss"></i> ΒLOG</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΣΧΕΤΙΚΑ <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -51,19 +51,19 @@
                         </a>
                         <ul class="dropdown-menu">
                              @if(play.Play.application().configuration().getString("application.state") == "development") {
-                                    <li><a href="@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                                    <li><a href="@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> ΕΞΟΔΟΣ</a></li>
                              } else {
-                                <li><a href="http://www.democracit.org@routes.AccountController.signOut">ΕΞΟΔΟΣ</a></li>
+                                <li><a href="http://www.democracit.org@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> ΕΞΟΔΟΣ</a></li>
                              }
                         </ul>
                     </li>
                     }.getOrElse {
                         @if(play.Play.application().configuration().getString("application.state") == "development") {
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> ΕΙΣΟΔΟΣ <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li id="register"><a href="@routes.AccountController.signUp">ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
-                                    <li id="login"><a href="@routes.AccountController.signIn(None)">ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
+                                    <li id="register"><a href="@routes.AccountController.signUp"><i class="fa fa-user-plus"></i> ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
+                                    <li id="login"><a href="@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
                                 </ul>
                             </li>
                         } else {
