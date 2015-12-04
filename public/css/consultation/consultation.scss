@@ -813,8 +813,17 @@ a.load {
   float: left;
   font-size: x-large;
   color: #428bca;
+  font-weight: bold;
+}
+
+.finalLawExplanationBtn {
+  margin-top: 15px;
 }
 
 #finalLawExplanationModal i {
   color: #428bca;
+}
+
+#finalLaw .info {
+  margin-bottom: 10px;
 }

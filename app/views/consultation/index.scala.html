@@ -159,12 +159,12 @@
                 <div role="tabpanel" class="tab-pane" id="finalLaw">
                     @if(vm.finalLaw.isEmpty) {
                         @if(vm.user.isDefined) {
-                            <div class="notLoggedIn">
+                            <div class="notLoggedIn info">
                                 Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
                                 νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:</div>
                             <form class="dropzone" id="finalLawDropZone"></form>
                         } else {
-                            <div class="notLoggedIn">
+                            <div class="notLoggedIn info">
                                 Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
                                 νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a></div>
                         }

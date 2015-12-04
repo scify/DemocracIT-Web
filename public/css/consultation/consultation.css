@@ -628,9 +628,16 @@ a.load {
   margin-bottom: 60px;
   float: left;
   font-size: x-large;
-  color: #428bca; }
+  color: #428bca;
+  font-weight: bold; }
+
+.finalLawExplanationBtn {
+  margin-top: 15px; }
 
 #finalLawExplanationModal i {
   color: #428bca; }
+
+#finalLaw .info {
+  margin-bottom: 10px; }
 
 /*# sourceMappingURL=consultation.css.map */
