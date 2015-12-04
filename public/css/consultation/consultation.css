@@ -640,4 +640,7 @@ a.load {
 #finalLaw .info {
   margin-bottom: 10px; }
 
+#noRateModal .modal-dialog {
+  width: 35%; }
+
 /*# sourceMappingURL=consultation.css.map */

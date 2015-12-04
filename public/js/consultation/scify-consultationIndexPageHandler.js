@@ -181,10 +181,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             if(userId == "") {
                 $(".noRateBtn").trigger( "click" );
             }
-            /*else if(userId == instance.finalLawUserId) {
+            else if(userId == instance.finalLawUserId) {
              $(".noRateBtn").trigger( "click" );
              $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-             }*/
+            }
             else {
                 if($( "#rateDisapprove").hasClass("liked")) {
                     $( "#rateDisapprove a").trigger("click");
@@ -226,10 +226,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             if(userId == "") {
                 $(".noRateBtn").trigger( "click" );
             }
-            /*else if(userId == instance.finalLawUserId) {
+            else if(userId == instance.finalLawUserId) {
              $(".noRateBtn").trigger( "click" );
              $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-             }*/
+            }
             else {
                 if($( "#rateApprove").hasClass("liked")) {
                     $( "#rateApprove a").trigger("click");
