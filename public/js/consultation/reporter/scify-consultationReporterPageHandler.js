@@ -164,10 +164,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByAnnId = function() {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
             if (domElementCommentsByAnnId) {
-                console.log('this record already exists');
                 window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
-            } else {
-                console.log('this record does not exist');
             }
 
         },
@@ -175,37 +172,24 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId = function() {
             var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
             if (domElementCommentsByProblemId) {
-                console.log('this record already exists');
                 window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
-            } else {
-                console.log('this record does not exist');
             }
 
         },
         createListOfCommentsByAnnIdPerArticle = function() {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
             if (domElementCommentsByAnnIdPerArticle) {
-                console.log('this record already exists');
                 window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
-            } else {
-                console.log('this record does not exist');
             }
         },
         createListOfCommentsByProblemIdPerArticle = function() {
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             if (domElementCommentsByProblemIdPerArticle) {
-                console.log('this record already exists');
                 window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
-            } else {
-                console.log('this record does not exist');
             }
         },
         createArticleWordCloudChart = function() {
-            if (document.getElementById("articleWordCloudDiv")) {
-                console.log('this record already exists');
-            } else {
-                console.log('this record does not exist');
-            }
+
             var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
             if (domElementArticleWordCloud) {
                 window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
