@@ -9,24 +9,24 @@ class EvaluationManager {
     def get(user:Option[User]): EvaluationViewModel= {
       val evaluationRepository = new EvaluationRepository()
       val dateSet = """
-                      select extract(year from now()) || to_char((now() - interval '1 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '2 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '3 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '4 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '5 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '6 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '7 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '8 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '9 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '10 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '11 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '12 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '1 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '2 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '3 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '4 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '5 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '6 month'), '/MM') as date"""
+                      select to_char(CURRENT_DATE, 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '1 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '2 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '3 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '4 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '5 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '6 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '7 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '8 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '9 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '10 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '11 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '12 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '13 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '14 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '15 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '16 months', 'YYYY/MM') as date union
+                      select to_char(CURRENT_DATE - INTERVAL '17 months', 'YYYY/MM') as date"""
 
 
       EvaluationViewModel(user = user, evaluationRepository.getConsultationCommentsPerMonth(dateSet))
@@ -36,24 +36,24 @@ class EvaluationManager {
     val evaluationRepository = new EvaluationRepository()
     var frequencies:List[model.dtos.ConsFrequencyPerOrganization] = Nil
     val dateSet = """
-                      select extract(year from now()) || to_char((now() - interval '1 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '2 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '3 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '4 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '5 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '6 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '7 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '8 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '9 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '10 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '11 month'), '/MM') as date union
-                      select extract(year from now()) || to_char((now() - interval '12 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '1 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '2 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '3 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '4 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '5 month'), '/MM') as date union
-                      select extract(year from (now() - interval '1 year')) || to_char((now() - interval '6 month'), '/MM') as date"""
+                    select to_char(CURRENT_DATE, 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '1 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '2 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '3 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '4 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '5 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '6 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '7 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '8 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '9 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '10 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '11 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '12 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '13 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '14 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '15 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '16 months', 'YYYY/MM') as date union
+                    select to_char(CURRENT_DATE - INTERVAL '17 months', 'YYYY/MM') as date"""
     frequencies = evaluationRepository.getEvaluationPerOrganization(dateSet)
     frequencies
   }
