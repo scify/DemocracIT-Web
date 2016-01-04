@@ -1,5 +1,5 @@
 error.email = Εισάγετε μια διεύθυνση email
-sign.in.credentials =Είσοδος
+sign.in.credentials = Είσοδος
 sign.in =Είσοδος
 sign.in.title=Είσοδος
 not.a.member=Δεν είστε μέλος;
@@ -20,4 +20,3 @@ invalid.credentials = Τα στοιχεία εισόδου δεν είναι σ�
 access.denied =Δεν είναι επιτρεπτή η πρόσβαση
 user.exists = Ο συγκεκριμένος χρήστης υπάρχει ήδη
 could.not.authenticate =Δεν ήταν δύνατή η σύνδεση. Παρακαλώ δοκιμάστε ξανά!
-
