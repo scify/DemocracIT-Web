@@ -171,6 +171,13 @@
                         }
                     } else {
                         <div class="finalLaw">
+                            @if(vm.user.isDefined) {
+                                @if(vm.finalLaw.get.user_id.toString.equals(vm.user.get.userID.toString)) {
+                                    <div class="title marginBottom">
+                                        Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw">
+                                        εδώ</a></div>
+                                }
+                            }
                             <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
                             <div class="container">
                                 <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>

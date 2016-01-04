@@ -92,6 +92,14 @@ class ConsultationRepository {
     }
   }
 
+  def deleteFinalLaw(finalLawId: Long):Unit = {
+    DB.withConnection { implicit c =>
+      SQL"""
+         update consultation_final_law set active = CAST(0 AS BIT) where id = $finalLawId
+         """.execute()
+    }
+  }
+
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 

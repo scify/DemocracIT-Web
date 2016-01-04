@@ -694,5 +694,7 @@ a.load {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
+.marginBottom {
+  margin-bottom: 5px; }
 
 /*# sourceMappingURL=consultation.css.map */

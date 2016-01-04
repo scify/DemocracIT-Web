@@ -78,6 +78,11 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       Created("")
   }
 
+  def deleteFinalLaw(finalLawId: Long) = Action { implicit request =>
+    consultationManager.deleteFinalLaw(finalLawId)
+    Created("")
+  }
+
 
   def storeFinalLawInDB(consultationId: Long, finalLawPath: String, finalLawText: String, userId: java.util.UUID) {
       consultationManager.storeFinalLawInDB(consultationId, finalLawPath, finalLawText, userId)

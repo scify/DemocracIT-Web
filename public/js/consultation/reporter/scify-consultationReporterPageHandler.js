@@ -525,8 +525,41 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    },
+    deleteFinalLawHandler = function(instance) {
+        $( "#deleteFinalLaw" ).click(function() {
+            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
+            if (answer == true) {
+                console.log("You pressed OK!");
+                var finalLawId = instance.finalLawId;
+                console.log(finalLawId);
+                $.ajax({
+                    type: 'GET',
+                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        console.log(returnData);
+                        setTimeout(function (){
+                            var url = window.location.href;
+                            if(url.indexOf("?target=finalLaw") == -1)
+                                url += '?target=finalLaw';
+                            window.location.href = url;
+                        }, 200);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                        console.log("complete");
 
+                    }
+                });
+            } else {
+                console.log("You pressed Cancel!");
+            }
+        });
+    }
 
     init = function(){
         var instance= this;
@@ -556,7 +589,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createArticleWordCloudChart(instance);
         attachTooltips();
         createFinalLawUpload(instance);
-
+        deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
     };
