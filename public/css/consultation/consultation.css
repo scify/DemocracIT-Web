@@ -541,8 +541,24 @@ a.load {
 #finalLawModal .modal-dialog {
   width: 95%; }
 
+#finalLawModal .modal-footer {
+  text-align: center; }
+
 #finalLawModal .modal-body {
-  height: 750px;
+  height: 750px; }
+
+#finalLawModal #consultationTextDiv {
+  max-height: 750px;
+  overflow-y: scroll;
+  width: auto;
+  overflow-x: hidden;
+  direction: rtl; }
+
+#finalLawModal #consultationTextDiv .consultationText {
+  direction: ltr; }
+
+#finalLawModal #finalLawDiv {
+  max-height: 750px;
   overflow-y: scroll; }
 
 #noRateModal .modal-body {
