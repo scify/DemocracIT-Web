@@ -233,7 +233,7 @@
                         <div class="finalLaw">
                             @if(vm.user.isDefined) {
                                 @if(vm.finalLaw.get.user_id.toString.equals(vm.user.get.userID.toString)) {
-                                    <div class="title marginBottom">
+                                    <div class="title marginBottom" id="deleteLaw">
                                         Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw">
                                         εδώ</a></div>
                                 }
@@ -274,7 +274,7 @@
                                                     <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
                                                     <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
                                                 </div>
-                                                @vm.finalLaw.get.file_text
+                                                @Html(vm.finalLaw.get.file_text)
                                                 <div id="noRateModal" class="modal fade consFinalLawModal" role="dialog">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">

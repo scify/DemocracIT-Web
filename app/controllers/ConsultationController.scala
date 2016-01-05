@@ -48,15 +48,16 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       import java.io.File
 
       val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf("."))
+      val timestamp = System.currentTimeMillis / 1000
       var fileContent = ""
       var fileContentFinal = ""
-      val path = "public/files/finalLaw_" + consultationId + extension
+      val path = "public/files/finalLaw_" + consultationId + timestamp + extension
       finalLawFile.ref.moveTo(new File(path))
       if(extension.equals(".txt")) {
-        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + extension).mkString
+        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + timestamp + extension).mkString
       } else if (extension.equals(".pdf")) {
         var document:PDDocument = new PDDocument()
-        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + extension))
+        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + timestamp + extension))
         document.getClass()
           if( !document.isEncrypted() ) {
             val Tstripper:PDFTextStripper = new PDFTextStripper()
@@ -71,8 +72,20 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
             var splitContent:Array[String] = fileContent.split("\\r?\\n")
             var l = splitContent.length
             for(i <- splitContent){
-              fileContentFinal += i + "<br>"
+              if(i.length > 6) {
+                val v = i.substring(0,6)
+                if (i.substring(0, 6).equals("Άρθρο ")) {
+                  fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
+                }
+                else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
+                  fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
+                } else{
+                  fileContentFinal += i + "<br>"
+                }
+              } else
+                fileContentFinal += i + "<br>"
             }
+
 
           } else {
             sys.error("File encrypted")

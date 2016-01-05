@@ -461,7 +461,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
+            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ",
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
@@ -486,7 +486,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     console.log("success");
                     setTimeout(function (){
                         var url = window.location.href;
-                        url += '?target=finalLaw';
+                        if(url.indexOf("?target=finalLaw") == -1)
+                            url += '?target=finalLaw';
                         window.location.href = url;
                     }, 500);
                 });
@@ -511,12 +512,14 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     },
     deleteFinalLawHandler = function(instance) {
+
         $( "#deleteFinalLaw" ).click(function() {
             var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
             if (answer == true) {
                 console.log("You pressed OK!");
                 var finalLawId = instance.finalLawId;
                 console.log(finalLawId);
+                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
                     url: "/consultation/finallaw/delete/" + finalLawId,
@@ -525,6 +528,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     success: function (returnData) {
                         console.log(returnData);
                         setTimeout(function (){
+                            //$("#deleteLaw").find(".loaderSmall").remove();
                             var url = window.location.href;
                             if(url.indexOf("?target=finalLaw") == -1)
                                 url += '?target=finalLaw';

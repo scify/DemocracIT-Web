@@ -277,7 +277,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: 'Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ',
+            dictDefaultMessage: 'Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ',
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
