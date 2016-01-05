@@ -743,4 +743,7 @@ a.load {
   width: 20px;
   height: 20px; }
 
+#deleteFinalLaw:hover {
+  cursor: pointer; }
+
 /*# sourceMappingURL=consultation.css.map */
