@@ -51,7 +51,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       val timestamp = System.currentTimeMillis / 1000
       var fileContent = ""
       var fileContentFinal = ""
-      val path = "public/files/finalLaw_" + consultationId + timestamp + extension
+      val path = "public/files/finalLaw_" + consultationId + "_" + timestamp + extension
       finalLawFile.ref.moveTo(new File(path))
       if(extension.equals(".txt")) {
         fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + "_" + timestamp + extension).mkString
