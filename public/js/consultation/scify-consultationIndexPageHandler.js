@@ -272,7 +272,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         // "myAwesomeDropzone" is the camelized version of the HTML element's ID
         Dropzone.options.finalLawDropZone = {
             paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 4, // MB
+            maxFilesize: 10, // MB
             url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
             uploadMultiple: false,
             maxFiles: 1,
