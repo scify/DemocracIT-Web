@@ -547,7 +547,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 console.log("You pressed Cancel!");
             }
         });
-    }
+    },
+    var expandArticleOnClick = function(){
+            var article = $(this).closest(".article");
+            if (!article.find(".article-body").hasClass("in"))
+                article.find(".show-hide").trigger("click");
+        }
 
     init = function(){
         var instance= this;
@@ -580,6 +585,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
+        expandArticleOnClick();
     };
 
     return {
