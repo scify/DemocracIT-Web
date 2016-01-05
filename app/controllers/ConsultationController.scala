@@ -62,35 +62,33 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
           if( !document.isEncrypted() ) {
             val Tstripper:PDFTextStripper = new PDFTextStripper()
             //fileContent  = Tstripper.getText(document);
-
             for (a <- 1 to document.getNumberOfPages()) {
               Tstripper.setStartPage(a)
               Tstripper.setEndPage(a)
               fileContent += Tstripper.getText(document) + "<br><br><br>"
 
             }
-            var splitContent:Array[String] = fileContent.split("\\r?\\n")
-            var l = splitContent.length
-            for(i <- splitContent){
-              if(i.length > 6) {
-                val v = i.substring(0,6)
-                if (i.substring(0, 6).equals("Άρθρο ")) {
-                  fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
-                }
-                else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
-                  fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
-                } else{
-                  fileContentFinal += i + "<br>"
-                }
-              } else
-                fileContentFinal += i + "<br>"
-            }
-
-
           } else {
             sys.error("File encrypted")
           }
         }
+      /*Get and format each line from the law file content*/
+      var splitContent:Array[String] = fileContent.split("\\r?\\n")
+      var l = splitContent.length
+      for(i <- splitContent){
+        if(i.length > 6) {
+          val v = i.substring(0,6)
+          if (i.substring(0, 6).equals("Άρθρο ")) {
+            fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
+          }
+          else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
+            fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
+          } else{
+            fileContentFinal += i + "<br>"
+          }
+        } else
+          fileContentFinal += i + "<br>"
+      }
       storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
       Ok("File uploaded")
     }.getOrElse {

@@ -456,7 +456,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         // "myAwesomeDropzone" is the camelized version of the HTML element's ID
         Dropzone.options.finalLawDropZone = {
             paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 2, // MB
+            maxFilesize: 4, // MB
             url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
             uploadMultiple: false,
             maxFiles: 1,
@@ -465,7 +465,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε <div class="loader">Loading...</div></div>');
+                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της πεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
