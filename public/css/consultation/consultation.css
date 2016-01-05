@@ -529,6 +529,9 @@ a.load {
 #finalLawDropZone {
   text-align: center; }
 
+.finalLaw .title {
+  width: 65%; }
+
 .dz-error-message {
   width: 200px; }
 
@@ -700,5 +703,28 @@ a.load {
 .dropzone {
   min-height: 150px;
   border: 2px solid rgba(66, 139, 202, 0.7) !important; }
+
+.loaderSmall {
+  padding-right: 3px;
+  float: right;
+  margin: 0px;
+  font-size: 3px !important;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(66, 139, 202, 0.2);
+  border-right: 1.1em solid rgba(66, 139, 202, 0.2);
+  border-bottom: 1.1em solid rgba(66, 139, 202, 0.2);
+  border-left: 1.1em solid #428BCA;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear; }
+
+.loaderSmall,
+.loaderSmall:after {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px; }
 
 /*# sourceMappingURL=consultation.css.map */

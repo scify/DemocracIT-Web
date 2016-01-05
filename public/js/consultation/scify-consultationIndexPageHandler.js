@@ -5,6 +5,8 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                consultationIsActive,
                                                imagesPath,
                                                consultationEndDate){
+    console.log(userId);
+    console.log(finalLawUserId);
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
@@ -17,7 +19,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     for (var i=0; i<ratingUsers.length; i++) {
         this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
     }
-    console.log(this.ratingUsers);
     for (var i=0; i<discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
@@ -163,7 +164,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
         var userRate = checkRatingUsers(instance.ratingUsers, userId);
-        console.log(userRate);
         if(userRate) {
             if(userRate.liked) {
                 $( "#rateApprove").addClass("liked");
@@ -328,12 +328,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     },
     deleteFinalLawHandler = function(instance) {
+
         $( "#deleteFinalLaw" ).click(function() {
             var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
             if (answer == true) {
                 console.log("You pressed OK!");
                 var finalLawId = instance.finalLawId;
                 console.log(finalLawId);
+                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
                     url: "/consultation/finallaw/delete/" + finalLawId,
@@ -342,6 +344,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     success: function (returnData) {
                         console.log(returnData);
                         setTimeout(function (){
+                            //$("#deleteLaw").find(".loaderSmall").remove();
                             var url = window.location.href;
                             if(url.indexOf("?target=finalLaw") == -1)
                                 url += '?target=finalLaw';

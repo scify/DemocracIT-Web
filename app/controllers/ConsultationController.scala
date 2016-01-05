@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
 import model.services._
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.util.{PDFTextStripper, PDFTextStripperByArea}
+import org.apache.pdfbox.util.PDFTextStripper
 import play.api.cache.Cached
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsValue, Json, Writes}
@@ -49,6 +49,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
 
       val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf("."))
       var fileContent = ""
+      var fileContentFinal = ""
       val path = "public/files/finalLaw_" + consultationId + extension
       finalLawFile.ref.moveTo(new File(path))
       if(extension.equals(".txt")) {
@@ -58,13 +59,26 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
         document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + extension))
         document.getClass()
           if( !document.isEncrypted() ) {
-            var stripper:PDFTextStripperByArea = new PDFTextStripperByArea()
-            stripper.setSortByPosition( true )
-            var Tstripper:PDFTextStripper = new PDFTextStripper()
-            fileContent  = Tstripper.getText(document);
+            val Tstripper:PDFTextStripper = new PDFTextStripper()
+            //fileContent  = Tstripper.getText(document);
+
+            for (a <- 1 to document.getNumberOfPages()) {
+              Tstripper.setStartPage(a)
+              Tstripper.setEndPage(a)
+              fileContent += Tstripper.getText(document) + "<br><br><br>"
+
+            }
+            var splitContent:Array[String] = fileContent.split("\\r?\\n")
+            var l = splitContent.length
+            for(i <- splitContent){
+              fileContentFinal += i + "<br>"
+            }
+
+          } else {
+            sys.error("File encrypted")
           }
         }
-      storeFinalLawInDB(consultationId, path, fileContent, userId)
+      storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
