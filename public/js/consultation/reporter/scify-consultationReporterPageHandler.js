@@ -465,7 +465,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της πεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
+                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -547,12 +547,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 console.log("You pressed Cancel!");
             }
         });
-    },
+    }
     var expandArticleOnClick = function(){
             var article = $(this).closest(".article");
             if (!article.find(".article-body").hasClass("in"))
                 article.find(".show-hide").trigger("click");
-        }
+    }
 
     init = function(){
         var instance= this;
