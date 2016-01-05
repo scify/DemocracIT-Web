@@ -54,10 +54,10 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       val path = "public/files/finalLaw_" + consultationId + timestamp + extension
       finalLawFile.ref.moveTo(new File(path))
       if(extension.equals(".txt")) {
-        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + timestamp + extension).mkString
+        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + "_" + timestamp + extension).mkString
       } else if (extension.equals(".pdf")) {
         var document:PDDocument = new PDDocument()
-        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + timestamp + extension))
+        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + "_" + timestamp + extension))
         document.getClass()
           if( !document.isEncrypted() ) {
             val Tstripper:PDFTextStripper = new PDFTextStripper()
