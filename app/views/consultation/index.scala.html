@@ -197,13 +197,13 @@
                                                 <div class="consultationText">
                                                     @for(article <- vm.consultation.articles) {
                                                         <div  class="row article">
-                                                            <div class="col-md-12">
+                                                            <div class="">
                                                                 <div class="title">
                                                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#finalLawBody-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                                                     <span class="article-title">@article.title</span>
                                                                 </div>
                                                                 <div id="finalLawBody-@article.id" class="collapse" style="height:0;" >
-                                                                    <div class="article-body">
+                                                                    <div class="">
                                                                         @Html(article.body)
                                                                     </div>
                                                                 </div>

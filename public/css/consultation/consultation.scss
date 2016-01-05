@@ -719,8 +719,12 @@ a.load {
   overflow-x: hidden;
   direction: rtl;
 }
+
 #finalLawModal #consultationTextDiv .consultationText{
   direction: ltr;
+}
+#finalLawModal #consultationTextDiv .consultationText .article{
+  width:100%
 }
 #finalLawModal #finalLawDiv {
   max-height: 750px;
