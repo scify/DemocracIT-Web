@@ -1,4 +1,4 @@
-@(viewmodel: model.viewmodels.HomeViewModel)
+@(viewmodel: model.viewmodels.HomeViewModel)(implicit messages :Messages)
 @js = {
     <script src="@routes.Assets.at("js/home/consultation-search-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/home/scify-homePageHandler.js")" ></script>
@@ -16,8 +16,8 @@
     <div id="democracit">
         <div class="mask">
             <div class="container">
-                <h1>Βελτιώνουμε τη διαδικασία της ανοικτής διαβούλευσης</h1>
-                <h2>Σύγχρονα εργαλεία στην υπηρεσία των πολιτών</h2>
+                <h1>@messages("index.header.1")</h1>
+                <h2>@messages("index.header.2")</h2>
             </div>
         </div>
     </div>
@@ -26,22 +26,22 @@
             <div class="carousel-inner">
                 <div class="item active">
                     <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-1" target="_blank">Τι επιτυγχάνει το DemocracIT;</a>
+                        <a href="http://about.democracit.org/frequently-asked-questions#question-1" target="_blank">@messages("index.faq.1")</a>
                     </div>
                 </div>
                 <div class="item">
                     <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-2" target="_blank">Τι σημαίνει ανοικτή διαβούλευση;</a>
+                        <a href="http://about.democracit.org/frequently-asked-questions#question-2" target="_blank">@messages("index.faq.2")</a>
                     </div>
                 </div>
                 <div class="item">
                     <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-3" target="_blank">Πώς μπορώ να συνεισφέρω;</a>
+                        <a href="http://about.democracit.org/frequently-asked-questions#question-3" target="_blank">@messages("index.faq.3")</a>
                     </div>
                 </div>
                 <div class="item">
                     <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-4" target="_blank">Τι σχέση έχει το DemocracIT με το Opengov.gr;</a>
+                        <a href="http://about.democracit.org/frequently-asked-questions#question-4" target="_blank">@messages("index.faq.4")</a>
                     </div>
                 </div>
             </div>
@@ -53,28 +53,28 @@
                 <div id="consultation-stats" class="wrp collapsed" data-target="#consultation-distr" data-parent="#platform-stats" data-toggle="collapse">
                     @viewmodel.stats.totalConsultations
                     <br>
-                    διαβουλεύσεις
+                    @messages("index.consultations")
                 </div>
             </div>
             <div class="total col-md-4">
                 <div id="comments-stats" class="wrp collapsed" data-target="#comments-distr" data-parent="#platform-stats" data-toggle="collapse">
-                    Μέσος αριθμός σχολίων
+                    @messages("index.average")
                     <br>
                     @viewmodel.stats.medianAverageCommentsPerConsultations
                 </div>
             </div>
             <div class=" total col-md-4">
                 <div id="duration-stats" class="wrp collapsed" data-target="#duration-distr" data-parent="#platform-stats" data-toggle="collapse">
-                    Μέση διάρκεια διαβούλευσης
+                    @messages("index.duration")
                     <br>
-                    @viewmodel.stats.medianAverageDaysPerConsultation ημερες
+                    @viewmodel.stats.medianAverageDaysPerConsultation @messages("index.days")
                 </div>
             </div>
         </div>
 
         <div class="panel">
             <div id="consultation-distr" class="row collapse">
-                <h2>Αριθμός διαβουλεύσεων</h2>
+                <h2>@messages("index.number")</h2>
                 @for(orgs <- viewmodel.stats.organizationsPerCategory) {
                     <div class="organization-group col-md-4">
 
@@ -92,7 +92,7 @@
                                             <br>
                                             <span class="active">
                                                 @stat.activeConsultations @if(stat.activeConsultations == 1) {
-                                                ενεργή } else { ενεργές }
+                                                @messages("index.active") } else { @messages("index.active.plural") }
                                             </span>
                                         }
                                     @*</a>*@
@@ -106,7 +106,7 @@
         </div>
         <div class="panel">
             <div id="comments-distr" class="row collapse">
-                <h2>Αριθμός σχολίων σε κάθε διαβούλευση (μέσος όρος)</h2>
+                <h2>@messages("index.comments.avnumber")</h2>
                 @for(orgs <- viewmodel.stats.organizationsPerCategory) {
                     <div class="organization-group col-md-4">
 
@@ -116,7 +116,7 @@
                         @for(stat <- orgs.stats) {
                             <tr>
                                 <td>@stat.title</td>
-                                <td>@stat.medianAverageComments <br> σχόλια</td>
+                                <td>@stat.medianAverageComments <br> @messages("index.comments")</td>
                             </tr>
                         }
                         </table>
@@ -126,7 +126,7 @@
         </div>
         <div class="panel">
             <div id="duration-distr" class="row collapse">
-                <h2>Διάρκεια διαβουλεύσης (μέσος όρος)</h2>
+                <h2>@messages("index.duration.average")</h2>
                 @for(orgs <- viewmodel.stats.organizationsPerCategory) {
                     <div class="organization-group col-md-4">
 
@@ -136,7 +136,7 @@
                         @for(stat <- orgs.stats) {
                             <tr>
                                 <td>@stat.title</td>
-                                <td>@stat.medianAverageDays <br> ημέρες</td>
+                                <td>@stat.medianAverageDays <br> @messages("index.days")</td>
                             </tr>
                         }
                         </table>
@@ -153,13 +153,13 @@
     <div id="consultations">
         <div class="container">
             <div id="in-progress">
-                <h2>Σε εξέλιξη:</h2>
-                @displayConsultation(viewmodel.activeConsultations, "λήξη")
+                <h2>@messages("index.inprogress")</h2>
+                @displayConsultation(viewmodel.activeConsultations, "index.deadline")
             </div>
             <hr/>
             <div id="recent">
-                <h2>Έκλεισαν πρόσφατα:</h2>
-                @displayConsultation(viewmodel.recentConsultations, "έληξε")
+                <h2>@messages("index.finished")</h2>
+                @displayConsultation(viewmodel.recentConsultations, "index.closed" )
             </div>
         </div>
     </div>
@@ -169,7 +169,7 @@
     <div class="user col-md-6 col-md-offset-3">
         <div class="row">
             <hr class="col-md-12" />
-            <h4 class="col-md-8">Welcome, you are now signed in!</h4>
+            <h4 class="col-md-8">@messages("index.welcome")</h4>
             <div class="col-md-4 text-right">
                 <img src="@user.avatarURL.getOrElse(routes.Assets.at("images/silhouette.png"))" style="height : 40 px ;" />
             </div>
@@ -179,15 +179,15 @@
             <div class="col-md-12">
                 <div class="row">
                     <p class="col-md-6"><strong>
-                        First name:</strong></p><p class="col-md-6">@user.firstName.getOrElse("None")</p>
+                        @messages("index.name.first")</strong></p><p class="col-md-6">@user.firstName.getOrElse("None")</p>
                 </div>
                 <div class="row">
                     <p class="col-md-6"><strong>
-                        Last name:</strong></p><p class="col-md-6">@user.lastName.getOrElse("None")</p>
+                    @messages("index.name.last")</strong></p><p class="col-md-6">@user.lastName.getOrElse("None")</p>
                 </div>
                 <div class="row">
                     <p class="col-md-6"><strong>
-                        Full name:</strong></p><p class="col-md-6">@user.fullName.getOrElse("None")</p>
+                    @messages("index.name.full")</strong></p><p class="col-md-6">@user.fullName.getOrElse("None")</p>
                 </div>
                 <div class="row">
                     <p class="col-md-6"><strong>Email:</strong></p><p class="col-md-6">@user.email.getOrElse("None")</p>
@@ -201,7 +201,7 @@
 
 @if(consultations.length == 0) {
     <div class="empty">
-        Δεν υπάρχει ανοικτή διαβούλευση αυτή τη στιγμή
+        @messages("index.empty")
     </div>
 }
 
@@ -209,7 +209,7 @@
     <div class="consultation">
         <a href="@routes.ConsultationController.getConsultation(cons.id)">@Html(cons.title)</a>
         <br>
-        <span class="duration">@label: @cons.endDateFormatted | διάρκεια @cons.totalDurationFormatted</span>
+        <span class="duration">@label: @cons.endDateFormatted | @messages("evaluation.duration") @cons.totalDurationFormatted</span>
     </div>
 }
 }
