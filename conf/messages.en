@@ -20,4 +20,12 @@ invalid.credentials = Your password or username are invalid
 access.denied = Access denied
 user.exists = User already exist
 could.not.authenticate = Unable to connect. Please try again!
-
+evaluation.dispersion = Dispersion
+evaluation.duration = Duration
+evaluation.participation = Participation
+evaluation.comments.users = User comments
+evaluation.total = Total
+evaluation.perorg = Per organization
+evaluation.info = The data refer to the last 18 months (click on a bar the see the consultations)
+evaluation.press.bar = Click on a bar the see the consultations
+annotation.comment.text = Comments/notes for this text part:

@@ -1,6 +1,6 @@
 @import model.viewmodels.ConsultationViewModel
 @import model.dtos.RelevantLaws
-@(vm: ConsultationViewModel)(implicit request: play.api.mvc.Request[Any])
+@(vm: ConsultationViewModel)(implicit request: play.api.mvc.Request[Any], messages: Messages)
 @js = {
     @*<script src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js" ></script>*@
       @*<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>*@
