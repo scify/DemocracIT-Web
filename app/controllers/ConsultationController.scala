@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
 import model.services._
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.util.{PDFTextStripper, PDFTextStripperByArea}
+import org.apache.pdfbox.util.PDFTextStripper
 import play.api.cache.Cached
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsValue, Json, Writes}
@@ -48,23 +48,48 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       import java.io.File
 
       val extension = finalLawFile.filename.substring(finalLawFile.filename.lastIndexOf("."))
+      val timestamp = System.currentTimeMillis / 1000
       var fileContent = ""
-      val path = "public/files/finalLaw_" + consultationId + extension
+      var fileContentFinal = ""
+      val path = "public/files/finalLaw_" + consultationId + "_" + timestamp + extension
       finalLawFile.ref.moveTo(new File(path))
       if(extension.equals(".txt")) {
-        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + extension).mkString
+        fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + "_" + timestamp + extension).mkString
       } else if (extension.equals(".pdf")) {
         var document:PDDocument = new PDDocument()
-        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + extension))
+        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + "_" + timestamp + extension))
         document.getClass()
           if( !document.isEncrypted() ) {
-            var stripper:PDFTextStripperByArea = new PDFTextStripperByArea()
-            stripper.setSortByPosition( true )
-            var Tstripper:PDFTextStripper = new PDFTextStripper()
-            fileContent  = Tstripper.getText(document);
+            val Tstripper:PDFTextStripper = new PDFTextStripper()
+            //fileContent  = Tstripper.getText(document);
+            for (a <- 1 to document.getNumberOfPages()) {
+              Tstripper.setStartPage(a)
+              Tstripper.setEndPage(a)
+              fileContent += Tstripper.getText(document) + "<br><br><br>"
+
+            }
+          } else {
+            sys.error("File encrypted")
           }
         }
-      storeFinalLawInDB(consultationId, path, fileContent, userId)
+      /*Get and format each line from the law file content*/
+      var splitContent:Array[String] = fileContent.split("\\r?\\n")
+      var l = splitContent.length
+      for(i <- splitContent){
+        if(i.length > 6) {
+          val v = i.substring(0,6)
+          if (i.substring(0, 6).equals("Άρθρο ")) {
+            fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
+          }
+          else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
+            fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
+          } else{
+            fileContentFinal += i + "<br>"
+          }
+        } else
+          fileContentFinal += i + "<br>"
+      }
+      storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
@@ -76,6 +101,11 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   def rateFinalLaw(userId:UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean) = Action { implicit request =>
       consultationManager.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
       Created("")
+  }
+
+  def deleteFinalLaw(finalLawId: Long) = Action { implicit request =>
+    consultationManager.deleteFinalLaw(finalLawId)
+    Created("")
   }
 
 

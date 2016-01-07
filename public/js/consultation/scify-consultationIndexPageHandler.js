@@ -5,6 +5,8 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                consultationIsActive,
                                                imagesPath,
                                                consultationEndDate){
+    console.log(userId);
+    console.log(finalLawUserId);
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
@@ -17,7 +19,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     for (var i=0; i<ratingUsers.length; i++) {
         this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
     }
-    console.log(this.ratingUsers);
     for (var i=0; i<discussionThreads.length; i++) //create a map for quick access with id: The discussion thread client id and value: a object with info.
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
@@ -163,7 +164,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
         var userRate = checkRatingUsers(instance.ratingUsers, userId);
-        console.log(userRate);
         if(userRate) {
             if(userRate.liked) {
                 $( "#rateApprove").addClass("liked");
@@ -272,15 +272,16 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         // "myAwesomeDropzone" is the camelized version of the HTML element's ID
         Dropzone.options.finalLawDropZone = {
             paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 2, // MB
+            maxFilesize: 10, // MB
             url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
+            dictDefaultMessage: 'Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ',
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
+                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -297,10 +298,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     }
                 });
                 this.on('success', function() {
+                    $("#finalLawDropZone").find("waiting-msg").remove();
                     console.log("success");
                     setTimeout(function (){
                         var url = window.location.href;
-                        url += '?target=finalLaw';
+                        if(url.indexOf("?target=finalLaw") == -1)
+                            url += '?target=finalLaw';
                         window.location.href = url;
                     }, 500);
                 });
@@ -323,6 +326,43 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    },
+    deleteFinalLawHandler = function(instance) {
+
+        $( "#deleteFinalLaw" ).click(function() {
+            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
+            if (answer == true) {
+                console.log("You pressed OK!");
+                var finalLawId = instance.finalLawId;
+                console.log(finalLawId);
+                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
+                $.ajax({
+                    type: 'GET',
+                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        console.log(returnData);
+                        setTimeout(function (){
+                            //$("#deleteLaw").find(".loaderSmall").remove();
+                            var url = window.location.href;
+                            if(url.indexOf("?target=finalLaw") == -1)
+                                url += '?target=finalLaw';
+                            window.location.href = url;
+                        }, 200);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                        console.log("complete");
+
+                    }
+                });
+            } else {
+                console.log("You pressed Cancel!");
+            }
+        });
     }
     init = function(){
         var instance= this;
@@ -345,7 +385,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         this.tutorialAnnotator.init();
         createWordCloudChart(instance);
         createFinalLawUpload(instance);
-
+        deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
 

@@ -91,6 +91,11 @@ class ConsultationManager {
     repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
   }
 
+  def deleteFinalLaw(finalLawId: Long){
+    val repository = new ConsultationRepository()
+    repository.deleteFinalLaw(finalLawId)
+  }
+
 
   def getConsultationWordCloud(consultationId:Long):JsValue = {
     import scala.concurrent.ExecutionContext.Implicits.global

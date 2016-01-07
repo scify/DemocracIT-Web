@@ -19,7 +19,7 @@
                 instance.setVisibibility.call(instance,true);
         },
         getConsWordCloudFromServer : function(consultationId){
-            //console.log("getWordCloudFromServer");
+            console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "POST",

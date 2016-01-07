@@ -164,10 +164,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByAnnId = function() {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
             if (domElementCommentsByAnnId) {
-                console.log('this record already exists');
                 window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
-            } else {
-                console.log('this record does not exist');
             }
 
         },
@@ -175,37 +172,24 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByProblemId = function() {
             var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
             if (domElementCommentsByProblemId) {
-                console.log('this record already exists');
                 window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
-            } else {
-                console.log('this record does not exist');
             }
 
         },
         createListOfCommentsByAnnIdPerArticle = function() {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
             if (domElementCommentsByAnnIdPerArticle) {
-                console.log('this record already exists');
                 window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
-            } else {
-                console.log('this record does not exist');
             }
         },
         createListOfCommentsByProblemIdPerArticle = function() {
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             if (domElementCommentsByProblemIdPerArticle) {
-                console.log('this record already exists');
                 window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
-            } else {
-                console.log('this record does not exist');
             }
         },
         createArticleWordCloudChart = function() {
-            if (document.getElementById("articleWordCloudDiv")) {
-                console.log('this record already exists');
-            } else {
-                console.log('this record does not exist');
-            }
+
             var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
             if (domElementArticleWordCloud) {
                 window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
@@ -472,15 +456,16 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         // "myAwesomeDropzone" is the camelized version of the HTML element's ID
         Dropzone.options.finalLawDropZone = {
             paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 2, // MB
+            maxFilesize: 10, // MB
             url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ",
+            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ",
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
+                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -497,10 +482,12 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     }
                 });
                 this.on('success', function() {
+                    $("#finalLawDropZone").find("waiting-msg").remove();
                     console.log("success");
                     setTimeout(function (){
                         var url = window.location.href;
-                        url += '?target=finalLaw';
+                        if(url.indexOf("?target=finalLaw") == -1)
+                            url += '?target=finalLaw';
                         window.location.href = url;
                     }, 500);
                 });
@@ -523,8 +510,49 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    },
+    deleteFinalLawHandler = function(instance) {
 
+        $( "#deleteFinalLaw" ).click(function() {
+            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
+            if (answer == true) {
+                console.log("You pressed OK!");
+                var finalLawId = instance.finalLawId;
+                console.log(finalLawId);
+                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
+                $.ajax({
+                    type: 'GET',
+                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        console.log(returnData);
+                        setTimeout(function (){
+                            //$("#deleteLaw").find(".loaderSmall").remove();
+                            var url = window.location.href;
+                            if(url.indexOf("?target=finalLaw") == -1)
+                                url += '?target=finalLaw';
+                            window.location.href = url;
+                        }, 200);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                        console.log("complete");
+
+                    }
+                });
+            } else {
+                console.log("You pressed Cancel!");
+            }
+        });
+    }
+    var expandArticleOnClick = function(){
+            var article = $(this).closest(".article");
+            if (!article.find(".article-body").hasClass("in"))
+                article.find(".show-hide").trigger("click");
+    }
 
     init = function(){
         var instance= this;
@@ -554,9 +582,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createArticleWordCloudChart(instance);
         attachTooltips();
         createFinalLawUpload(instance);
-
+        deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
+        expandArticleOnClick();
     };
 
     return {
