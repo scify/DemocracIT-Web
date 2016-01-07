@@ -45,6 +45,7 @@ GET         /evaluator/comments/organization              @controllers.Evaluatio
 POST        /evaluator/consultations/get                  @controllers.EvaluationController.getConsultations()
 POST        /consultation/finalLawUpload/:consultationId/:userId                  @controllers.ConsultationController.uploadFinalLaw(consultationId: Long, userId:java.util.UUID)
 POST        /consultation/finallaw/rate/:consultationId/:finallawid/:attitude/:userId/:liked     @controllers.ConsultationController.rateFinalLaw(userId:java.util.UUID, consultationId: Long, finallawid:Long, attitude: Int, liked:Boolean)
+GET         /consultation/finallaw/delete/:finallawid     @controllers.ConsultationController.deleteFinalLaw(finallawid:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

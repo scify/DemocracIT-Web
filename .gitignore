@@ -13,7 +13,9 @@ dist
 /.project
 /RUNNING_PID
 /.settings
-
+/public/files/*.pdf
+/public/files/*.txt
+*.log
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 

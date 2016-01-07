@@ -231,6 +231,13 @@
                         }
                     } else {
                         <div class="finalLaw">
+                            @if(vm.user.isDefined) {
+                                @if(vm.finalLaw.get.user_id.toString.equals(vm.user.get.userID.toString)) {
+                                    <div class="title marginBottom" id="deleteLaw">
+                                        Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw">
+                                        εδώ</a></div>
+                                }
+                            }
                             <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
                             <div class="container">
                                 <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
@@ -247,19 +254,24 @@
                                     <div class="modal-body">
                                         <div class="container">
                                             <div id="consultationTextDiv">
-                                            @for(article <- vm.consultation.articles) {
-                                                <div data-id="@article.id"  class="row article">
-                                                    <div class="col-md-12">
-                                                        <div class="title">
-                                                        @article.title
-                                                        </div>
-                                                        <div>
-                                                        @Html(article.body)
-                                                        </div>
+                                                <div class="consultationText">
+                                                @for(article <- vm.consultation.articles) {
+                                                    <div data-id="@article.id"  class="row article">
+                                                        <div class="col-md-12">
+                                                            <div class="title">
+                                                                <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#finalLawBody-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
+                                                                <span class="article-title">@article.title</span>
+                                                            </div>
+                                                            <div id="finalLawBody-@article.id" class="collapse" style="height:0;" >
+                                                                <div class="article-body">
+                                                                @Html(article.body)
+                                                                </div>
+                                                            </div>
 
+                                                        </div>
                                                     </div>
+                                                }
                                                 </div>
-                                            }
                                             </div>
                                             <div id="finalLawDiv">
                                                 <div class="stats">
@@ -267,7 +279,7 @@
                                                     <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
                                                     <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
                                                 </div>
-                                                @vm.finalLaw.get.file_text
+                                                @Html(vm.finalLaw.get.file_text)
                                                 <div id="noRateModal" class="modal fade consFinalLawModal" role="dialog">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -313,9 +325,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="msg"><div class="number">1</div>Όταν μια διαβούλευση έχει λήξει και ο τελικός νόμος που την αφορά γίνει διαθέσιμος, οι χρήστες μπορούν να τον ανεβάσουν εδώ (σε μορφή .pdf ή .txt),
-                                            έτσι ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί που το αρχείο που έχει ανέβει ως τελικός νόμος για
-                                            μια διαβούλευση δεν είναι σωστό (ελλειπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχέιου. Αντίστοιχα, άν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
-                                            ανενεργό, και η διαδικασία μεταφόρτωσης του τελικού νόμου από τους χρήστες ξεκινά από την αρχή.
+                                            έτσι ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί ότι το αρχείο που έχει ανέβει ως τελικός νόμος για
+                                            μια διαβούλευση δεν είναι σωστό (ελλειπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχείου. Αντίστοιχα, άν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
+                                            ανενεργό και η διαδικασία μεταφόρτωσης του τελικού νόμου από τους χρήστες ξεκινά από την αρχή.
                                         </div>
                                     </div>
 
