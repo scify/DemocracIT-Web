@@ -19,7 +19,9 @@ import play.api.mvc._
 
 class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: MessagesApi,
                                          val env: Environment[model.User, CookieAuthenticator],
-                                         socialProviderRegistry: SocialProviderRegistry)
+                                         socialProviderRegistry: SocialProviderRegistry,
+                                         val gameEngine:GameEngineTrait)
+
   extends Silhouette[model.User, CookieAuthenticator] {
 
   private val consultationManager = new ConsultationManager()
@@ -90,6 +92,8 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
           fileContentFinal += i + "<br>"
       }
       storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
+
+      this.gameEngine.rewardUser(userId, this.gameEngine.UPLOAD_FILE_ACTION_ID)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
