@@ -107,7 +107,7 @@ class ConsultationManager {
         response => {
           response.json
         }
-      },25 seconds)
+      },55 seconds)
 
     result
 
