@@ -13,10 +13,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 
 
-class GameEngine @Inject()() extends GameEngineTrait{
-
-
-
+class GameEngine @Inject()(rules: List[RewardRuleTrait]) extends GameEngineTrait{
 
   override def rewardUser(user_id: UUID,action_id:Int): Int = {
     5
