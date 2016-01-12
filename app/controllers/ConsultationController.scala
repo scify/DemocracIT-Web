@@ -17,12 +17,12 @@ import play.api.mvc._
 
 
 
-class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: MessagesApi,
-                                         val env: Environment[model.User, CookieAuthenticator],
+class ConsultationController  @Inject() (val cached: Cached, val messagesApi: MessagesApi,
+                                         val env: Environment[User, CookieAuthenticator],
                                          socialProviderRegistry: SocialProviderRegistry,
                                          val gameEngine:GamificationEngineTrait)
 
-  extends Silhouette[model.User, CookieAuthenticator] {
+  extends Silhouette[User, CookieAuthenticator] {
 
   private val consultationManager = new ConsultationManager()
   private val commentManager = new AnnotationManager()

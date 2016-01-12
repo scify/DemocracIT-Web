@@ -10,6 +10,7 @@ import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
+import model.dtos.User
 import model.viewmodels.forms.SignInForm
 import model.services.UserService
 import net.ceedubs.ficus.Ficus._
@@ -36,14 +37,14 @@ import scala.language.postfixOps
  */
 class CredentialsAuthController @Inject() (
                                             val messagesApi: MessagesApi,
-                                            val env: Environment[model.User, CookieAuthenticator],
+                                            val env: Environment[User, CookieAuthenticator],
                                             userService: UserService,
                                             authInfoRepository: AuthInfoRepository,
                                             credentialsProvider: CredentialsProvider,
                                             socialProviderRegistry: SocialProviderRegistry,
                                             configuration: Configuration,
                                             clock: Clock)
-  extends Silhouette[model.User, CookieAuthenticator] {
+  extends Silhouette[User, CookieAuthenticator] {
 
   /**
    * Authenticates a user against the credentials provider.

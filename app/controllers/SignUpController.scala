@@ -9,8 +9,8 @@ import com.mohiva.play.silhouette.api.services.{ AvatarService }
 import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers._
+import model.dtos.User
 import model.viewmodels.forms.SignUpForm
-import model.User
 import model.services.UserService
 
 import play.api.i18n.{MessagesApi, Messages}

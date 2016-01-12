@@ -2,9 +2,7 @@ package model.services
 
 import java.util
 import java.util.{UUID, Date}
-
-import model.User
-import model.dtos.{PlatformStats, _}
+import model.dtos._
 import model.repositories._
 import model.viewmodels._
 import org.scify.democracit.solr.DitSorlQuery
@@ -118,7 +116,7 @@ class ConsultationManager {
     if (s.size % 2 == 0) Math.ceil((lower.last + upper.head) / 2.0).asInstanceOf[Int]  else upper.head
   }
 
-  def getConsultationsForHomePage(user: Option[model.User]): HomeViewModel = {
+  def getConsultationsForHomePage(user: Option[User]): HomeViewModel = {
 
     val consultations = new ConsultationRepository().latestConsultations(10)
     val today = new Date();

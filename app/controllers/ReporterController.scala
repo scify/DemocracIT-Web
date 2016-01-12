@@ -6,16 +6,17 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
+import model.dtos.User
 import model.services.{AnnotationManager, ConsultationManager, ReporterManager}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
 
 
-class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
-                                   val env: Environment[model.User, CookieAuthenticator],
-                                   socialProviderRegistry: SocialProviderRegistry)
-                        extends Silhouette[model.User, CookieAuthenticator] {
+class ReporterController  @Inject()  (val messagesApi: MessagesApi,
+                                      val env: Environment[User, CookieAuthenticator],
+                                      socialProviderRegistry: SocialProviderRegistry)
+                        extends Silhouette[User, CookieAuthenticator] {
 
   val consultationManager = new ConsultationManager
   private val commentManager = new AnnotationManager()

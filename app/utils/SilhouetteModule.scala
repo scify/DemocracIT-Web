@@ -18,7 +18,7 @@ import com.mohiva.play.silhouette.impl.providers.openid.services.PlayOpenIDServi
 import com.mohiva.play.silhouette.impl.repositories.DelegableAuthInfoRepository
 import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
-import model.User
+import model.dtos.User
 import model.repositories._
 import model.services.{ UserService, UserServiceImpl }
 import net.ceedubs.ficus.Ficus._

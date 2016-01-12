@@ -1,9 +1,7 @@
 package model.services
 
 import java.util.{Date, UUID}
-
-import model.User
-import model.dtos.{ConsFinalLawRatingUsers, ConsultationFinalLaw, CommentWithArticleName}
+import model.dtos.{User, ConsFinalLawRatingUsers, ConsultationFinalLaw, CommentWithArticleName}
 import model.repositories._
 import model.viewmodels._
 import play.api.libs.json.JsValue

@@ -3,7 +3,7 @@ package model.repositories
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import model.User
+import model.dtos.User
 
 import scala.concurrent.Future
 

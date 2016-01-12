@@ -15,9 +15,9 @@ import play.api.libs.json.Json
 import utils.ImplicitReadWrites.FormErrorWrites
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
-                                      val env: Environment[model.User, CookieAuthenticator],
+                                      val env: Environment[User, CookieAuthenticator],
                                       socialProviderRegistry: SocialProviderRegistry)
-              extends Silhouette[model.User, CookieAuthenticator] {
+              extends Silhouette[User, CookieAuthenticator] {
 
   var annotationManager = new AnnotationManager()
 

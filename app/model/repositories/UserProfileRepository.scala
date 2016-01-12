@@ -3,7 +3,7 @@ package model.repositories
 import java.util.UUID
 
 import _root_.anorm._
-import model.User
+import model.dtos.User
 import model.repositories.anorm._
 import play.api.Play.current
 import play.api.db.DB

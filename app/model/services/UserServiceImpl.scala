@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
-import model.User
+import model.dtos.User
 import model.repositories._
 
 import play.api.libs.concurrent.Execution.Implicits._

@@ -21,11 +21,40 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/userProfile.css")">
 }
 
 @layout("DemocracIT", css, js,vm.user) {
     <div  class="container">
-        @vm.user.get.firstName
+
+        <div class="profile">
+            <div class="user-profile">
+                @if(vm.hasImage()) {
+                    <img class="avatar" src="@vm.user.get.avatarURL" alt="Profile" />
+                } else {
+                    <img class="avatar" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTF_erFD1SeUnxEpvFjzBCCDxLvf-wlh9ZuPMqi02qGnyyBtPWdE-3KoH3s" alt="Ash" />
+                }
+                <div class="username">@vm.user.get.firstName @vm.user.get.lastName</div>
+                <div class="bio">
+                    (Πλήρες όνομα: @vm.user.get.fullName)
+                </div>
+                <div class="description">
+                    <div class="email">e-mail:</div> <a href="mailto:@vm.user.get.email">@vm.user.get.email</a>
+                </div>
+                <ul class="data">
+                    @*<li>*@
+                        @*<span class="entypo-heart"> 127</span>*@
+                    @*</li>*@
+                    @*<li>*@
+                        @*<span class="entypo-eye"> 853</span>*@
+                    @*</li>*@
+                    @*<li>*@
+                        @*<span class="entypo-user"> 311</span>*@
+                    @*</li>*@
+                    <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">42</span><i class="fa fa-heart pointIcon"></i></div></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
 }
