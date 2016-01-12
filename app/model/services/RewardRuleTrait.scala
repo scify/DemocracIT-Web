@@ -11,3 +11,8 @@ trait RewardRuleTrait {
   def getPoints(user_id: UUID): Int
 }
 
+object RewardRuleTrait
+{
+
+}
+
