@@ -347,7 +347,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
     rateFinalLawFile = function(instance) {
     var userId = instance.userId;
     var userRate = checkRatingUsers(instance.ratingUsers, userId);
-    console.log(userRate);
     if(userRate) {
         if(userRate.liked) {
             $( "#rateApprove").addClass("liked");
@@ -498,7 +497,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var parameter = getParameterByName("target");
         console.log(parameter);
         if(parameter == "finalLaw") {
-            console.log("scroll");
             $('html, body').animate({
                 scrollTop: 500
             }, 1000);
@@ -510,6 +508,14 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    },
+    finalLawModalHandler = function() {
+        $( "#finalLawModalBtn" ).click(function() {
+            console.log("wsadfrs");
+            $(".modal-body .container .consultationText div").first().find(".show-hide").click();
+            $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
+            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
+        });
     },
     deleteFinalLawHandler = function(instance) {
 
@@ -586,6 +592,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
         expandArticleOnClick();
+        finalLawModalHandler();
     };
 
     return {

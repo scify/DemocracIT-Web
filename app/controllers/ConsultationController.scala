@@ -70,11 +70,29 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
     var splitContent:Array[String] = fileContent.split("\\r?\\n")
     var l = splitContent.length
     var fileContentFinal = ""
+    var isFirstArticle = true
+    var htmlContent = ""
+    var articleNum = 1;
     for(i <- splitContent){
       if(i.length > 6) {
         val v = i.substring(0,6)
         if (i.substring(0, 6).equals("Άρθρο ")) {
-          fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
+          if(isFirstArticle) {
+            htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
+              "<div class=\"col-md-12\"><div class=\"title\">" +
+              "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
+              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+            isFirstArticle = false
+          } else {
+            htmlContent = "</div></div></div></div><div data-id=" + articleNum + "  class=\"row article\">" +
+              "<div class=\"col-md-12\"><div class=\"title\">" +
+              "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
+              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+          }
+
+          var htmlContentAfter = "</span></div><div id=\"finalLawUploadedBody-" + articleNum + "\" class=\"collapse\" style=\"height:0;\" ><div class=\"article-body\">"
+          articleNum += 1
+          fileContentFinal += htmlContent + i + htmlContentAfter
         }
         else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
           fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
@@ -84,6 +102,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
       } else
         fileContentFinal += i + "<br>"
     }
+    fileContentFinal += "</div></div></div></div></div>"
     fileContentFinal
   }
 

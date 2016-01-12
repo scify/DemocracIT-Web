@@ -327,6 +327,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     },
+    finalLawModalHandler = function() {
+        $( "#finalLawModalBtn" ).click(function() {
+            console.log("wsadfrs");
+            $(".modal-body .container .consultationText div").first().find(".show-hide").click();
+            $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
+            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
+        });
+    },
     deleteFinalLawHandler = function(instance) {
 
         $( "#deleteFinalLaw" ).click(function() {
@@ -388,7 +396,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
-
+        finalLawModalHandler();
     };
 
     return {
