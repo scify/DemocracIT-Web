@@ -1,0 +1,31 @@
+@import model.viewmodels.UserProfileViewModel
+@(vm: UserProfileViewModel)
+
+@js = {
+    <script src="@routes.Assets.at("js/evaluator/scify-evaluatorPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/evaluator/consultationForChart-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/evaluator/evaluatorChart-compiled.js")" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+    {'modules':[{'name':'visualization','version':'1.1','packages':
+    ['corechart']}]}"></script>
+    <script>
+    $(function(){
+        @*var controller = new scify.EvaluatorPageHandler(@Html(vm.consultationsPerMonthToJson())*@
+                                                       @*);*@
+        @*controller.init();*@
+     })
+    </script>
+}
+
+@css = {
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+}
+
+@layout("DemocracIT", css, js,vm.user) {
+    <div  class="container">
+        @vm.user.get.firstName
+    </div>
+
+}

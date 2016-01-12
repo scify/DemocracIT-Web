@@ -133,7 +133,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   }
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>
-
+        val e = env
         Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 
