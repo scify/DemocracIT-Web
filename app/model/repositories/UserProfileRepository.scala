@@ -30,4 +30,15 @@ class UserProfileRepository {
         """.as(UserParser.Parse  *).headOption
     }
   }
+
+  def getTotalPointsForUser(userId:UUID):Int = {
+    DB.withConnection { implicit c =>
+      val result:Int = SQL"""
+            select CASE WHEN sum(points)  IS NULL THEN 0 ELSE sum(points)
+            END AS total_points from user_awards where user_id = $userId
+            """.as(SqlParser.int("total_points").single)
+      result
+    }
+
+  }
 }

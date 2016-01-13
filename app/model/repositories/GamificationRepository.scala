@@ -16,15 +16,4 @@ class GamificationRepository {
             select CAST($userId AS UUID), $actionId, now(), $points)""".execute()
     }
   }
-
-  def getTotalPointsForUser(userId:UUID):Int = {
-    DB.withConnection { implicit c =>
-      val result:Int = SQL"""
-            select sum(points) as total_points from user_awards
-            where user_id = $userId
-            """.as(SqlParser.int("total_points"))
-      result
-    }
-
-  }
 }
