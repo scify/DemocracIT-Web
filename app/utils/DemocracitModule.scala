@@ -21,14 +21,6 @@ class DemocracitModule extends AbstractModule with ScalaModule{
       */
     bind[GamificationEngineTrait].to[GamificationEngine]
 
-    /*bind[RewardRuleTrait].to[RewardRule_UploadFinalLaw]
-    bind[RewardRuleTrait].to[RewardRule_CommentOnConsultation]*/
-
-   //TODO: check
-     val stringMulti = ScalaMultibinder.newSetBinder[String](binder)
-    stringMulti.addBinding.toInstance("A")
-    stringMulti.addBinding.toInstance("B")
-
     var gamificationRulesBinder =ScalaMultibinder.newSetBinder[RewardRuleTrait](binder)
     gamificationRulesBinder.addBinding.to(classOf[RewardRule_CommentOnConsultation])
     gamificationRulesBinder.addBinding.to(classOf[RewardRule_UploadFinalLaw])
