@@ -48,6 +48,21 @@ class AnnotationManager {
     comment
   }
 
+  private def getActionsMadeByUserWhileCommenting(comment:Comment): List[Int] = {
+
+    var action_ids = Nil
+
+    // if comment is only for an article
+    //action_ids = action_ids ::: GamificationEngineTrait.COMMENT_ON_CONSULTATION
+
+    // if comment has category tags
+    //action_ids = action_ids ::: GamificationEngineTrait.COMMENT_ON_CONSULTATION
+
+    //if comment has problem tags
+
+    action_ids
+  }
+
   def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]) = {
     commentsRepository.rateComment(user_id,comment_id,liked)
   }

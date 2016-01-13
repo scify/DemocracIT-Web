@@ -13,7 +13,7 @@ class GamificationRepository {
     DB.withConnection { implicit c =>
       SQL"""
             INSERT INTO user_awards (user_id, action_id, date_added, points)
-            select CAST($userId AS UUID), $actionId, now(), $points)""".execute()
+            values (CAST($userId AS UUID), $actionId, now(), $points)""".execute()
     }
   }
 }

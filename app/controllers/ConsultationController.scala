@@ -21,11 +21,11 @@ import play.api.mvc._
 class ConsultationController  @Inject() (val cached: Cached, val messagesApi: MessagesApi,
                                          val env: Environment[User, CookieAuthenticator],
                                          socialProviderRegistry: SocialProviderRegistry,
-                                         val gameEngine:GamificationEngineTrait)
+                                         val gamificationEngine:GamificationEngineTrait)
 
   extends Silhouette[User, CookieAuthenticator] {
 
-  private val consultationManager = new ConsultationManager()
+  private val consultationManager = new ConsultationManager(gamificationEngine)
   private val commentManager = new AnnotationManager()
   private val reporterManager = new ReporterManager()
 
@@ -125,7 +125,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
       /*Get and format each line from the law file content*/
       fileContentFinal = formatFileContent(fileContent)
       storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
-      this.gameEngine.rewardUser(userId, GamificationEngineTrait.UPLOAD_FILE_ACTION_ID)
+      this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.UPLOAD_FILE_ACTION_ID,None)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(

@@ -100,6 +100,15 @@ class ConsultationRepository {
     }
   }
 
+  def getFinalLawUploader(finalLawId: Long):String = {
+    DB.withConnection { implicit c =>
+      val userId:String = SQL"""
+         select cast(user_id as text) from consultation_final_law  where id = $finalLawId
+         """.as(SqlParser.str("user_id").single)
+      userId
+    }
+  }
+
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 

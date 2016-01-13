@@ -12,7 +12,7 @@ import play.api.libs.ws.WS
 
 import scala.concurrent.Await
 
-class ConsultationManager {
+class ConsultationManager (gamificationEngine: GamificationEngineTrait){
 
   private val commentsPageSize = 50
 
@@ -87,6 +87,25 @@ class ConsultationManager {
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean){
     val repository = new ConsultationRepository()
     repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
+    val uploader_id = UUID.fromString(repository.getFinalLawUploader(finalLawId))
+    rewardLawUploader(uploader_id, liked)
+
+  }
+
+  def rewardLawUploader(user_id:UUID, liked:Boolean ) ={
+    val repository = new GamificationRepository()
+    var action_id = 0
+    if (liked) {
+      // award user if the law is voted positively  +5
+      action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_LIKE
+
+    } else {
+      // punish the user if the low is voted negatively -5
+      action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_DISLIKE
+    }
+    //gamification engine should save points
+    gamificationEngine.rewardUser(user_id, action_id, None)
+
   }
 
   def deleteFinalLaw(finalLawId: Long){
