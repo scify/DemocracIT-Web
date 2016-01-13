@@ -13,7 +13,7 @@ object ConsFrequencyPerOrganizationParser{
     str("organizationName") ~
     long("organizationId") ~
     int("numberOfConsultations") ~
-      str("groupTitle") ~
+      get[Option[String]]("groupTitle") ~
       str("cons_ids")map
       {
         case date ~ organizationName ~ organizationId ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
