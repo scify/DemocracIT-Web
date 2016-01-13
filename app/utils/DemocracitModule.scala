@@ -1,14 +1,14 @@
 package modules
 
-import com.google.inject.AbstractModule
+import com.google.inject.{Binder, AbstractModule}
 import com.google.inject.multibindings.Multibinder
 import model.services._
-import net.codingwell.scalaguice.ScalaModule
+import net.codingwell.scalaguice.{ScalaMultibinder, ScalaModule}
 
 /**
  * The Guice module which wires all  dependencies on application root (application root is like the main)
  */
-class DemocracitModule extends AbstractModule with ScalaModule {
+class DemocracitModule extends AbstractModule with ScalaModule{
 
   /**
    * Configures the module.
@@ -24,13 +24,19 @@ class DemocracitModule extends AbstractModule with ScalaModule {
     /*bind[RewardRuleTrait].to[RewardRule_UploadFinalLaw]
     bind[RewardRuleTrait].to[RewardRule_CommentOnConsultation]*/
 
-    //TODO: check
-    var gamificationRulesBinder =Multibinder.newSetBinder(binder(), classOf[RewardRuleTrait])
-    gamificationRulesBinder.addBinding().to(classOf[RewardRule_CommentOnConsultation])
-    gamificationRulesBinder.addBinding().to(classOf[RewardRule_UploadFinalLaw])
+   //TODO: check
+     val stringMulti = ScalaMultibinder.newSetBinder[String](binder)
+    stringMulti.addBinding.toInstance("A")
+    stringMulti.addBinding.toInstance("B")
+
+    var gamificationRulesBinder =ScalaMultibinder.newSetBinder[RewardRuleTrait](binder)
+    gamificationRulesBinder.addBinding.to(classOf[RewardRule_CommentOnConsultation])
+    gamificationRulesBinder.addBinding.to(classOf[RewardRule_UploadFinalLaw])
 
 
   }
 
 
 }
+
+
