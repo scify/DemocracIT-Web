@@ -68,11 +68,12 @@
     background: #7cb6f7;
     text-align: center;
     border-radius: 0 0 .3em .3em;
+    padding-left: 0px;
 }
 .user-profile li {
     margin: 0 auto;
     padding: 1.30em;
-    width: 33.33334%;
+    width: 20%;
     display: table-cell;
     text-align: center;
 }
@@ -101,4 +102,12 @@
     color: #254254;
     float: left;
     margin-right: 8px;
+}
+
+#pointsExplanationBtn {
+    float: right;
+}
+
+#pointsExplanationBtn:hover {
+    cursor: pointer;
 }

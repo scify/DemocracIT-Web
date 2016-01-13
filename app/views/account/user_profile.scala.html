@@ -42,17 +42,26 @@
                     <div class="email">e-mail:</div> <a href="mailto:@vm.user.get.email">@vm.user.get.email</a>
                 </div>
                 <ul class="data">
-                    @*<li>*@
-                        @*<span class="entypo-heart"> 127</span>*@
-                    @*</li>*@
-                    @*<li>*@
-                        @*<span class="entypo-eye"> 853</span>*@
-                    @*</li>*@
-                    @*<li>*@
-                        @*<span class="entypo-user"> 311</span>*@
-                    @*</li>*@
-                    <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">@vm.totalUserPoints</span><i class="fa fa-heart pointIcon"></i></div></li>
+                    <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">@vm.totalUserPoints</span><i class="fa fa-heart pointIcon"></i>
+                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">Τι είναι οι πόντοι;</a></li>
                 </ul>
+            </div>
+        </div>
+        <div id="pointsExplanationModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                    <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Επεξήγηση συστήματος πόντων</h4>
+                    </div>
+                    <div class="modal-body">
+                        μπλα
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
