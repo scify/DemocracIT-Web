@@ -88,23 +88,23 @@ class ConsultationManager (gamificationEngine: GamificationEngineTrait){
     val repository = new ConsultationRepository()
     repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
     val uploader_id = UUID.fromString(repository.getFinalLawUploader(finalLawId))
-    rewardLawUploader(uploader_id, liked)
-
+    rewardLawUploader(uploader_id, liked, attitude, userId)
   }
 
-  def rewardLawUploader(user_id:UUID, liked:Boolean ) ={
+  def rewardLawUploader(user_id:UUID, liked:Boolean, attitude:Int, userThatPerformedAction:UUID) ={
     val repository = new GamificationRepository()
     var action_id = 0
-    if (liked) {
+    if (liked && attitude == 0) {
       // award user if the law is voted positively  +5
       action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_LIKE
-
-    } else {
+      //gamification engine should save points
+      this.gamificationEngine.rewardUser(user_id, action_id, userThatPerformedAction)
+    } else if(liked && attitude == 1){
       // punish the user if the low is voted negatively -5
       action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_DISLIKE
+      //gamification engine should save points
+      this.gamificationEngine.rewardUser(user_id, action_id, userThatPerformedAction)
     }
-    //gamification engine should save points
-    gamificationEngine.rewardUser(user_id, action_id, None)
 
   }
 

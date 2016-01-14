@@ -9,11 +9,18 @@ import play.api.db.DB
 
 class GamificationRepository {
 
-  def savePoints(userId:UUID, actionId:Int, points:Int):Unit = {
+  def savePoints(userId:UUID, actionId:Int, points:Int, relatedData:Any):Unit = {
     DB.withConnection { implicit c =>
-      SQL"""
+      if(relatedData.isInstanceOf[UUID]) {
+        val relatedUserId = relatedData.asInstanceOf[UUID]
+        SQL"""
+            INSERT INTO user_awards (user_id, action_id, date_added, points, related_data)
+            values (CAST($userId AS UUID), $actionId, now(), $points, CAST($relatedUserId AS UUID))""".execute()
+      } else {
+        SQL"""
             INSERT INTO user_awards (user_id, action_id, date_added, points)
             values (CAST($userId AS UUID), $actionId, now(), $points)""".execute()
+      }
     }
   }
 }

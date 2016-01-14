@@ -168,9 +168,9 @@ class ConsultationRepository {
   def getFinalLawRatingUsers(consultationId:Long, finalLawId:BigInt): List[ConsFinalLawRatingUsers] = {
     DB.withConnection { implicit c =>
       SQL"""
-           select $finalLawId as final_law_id ,* from consultation_final_law_rating
+           select consultation_final_law_rating.user_id, final_law_id, consultation_final_law_rating.consultation_id, liked from consultation_final_law_rating
               inner join consultation_final_law law on law.id = consultation_final_law_rating.final_law_id
-           where consultation_final_law_rating.consultation_id = $consultationId and law.active = CAST(1 AS BIT)
+              where consultation_final_law_rating.consultation_id = $consultationId and law.active = CAST(1 AS BIT)
          """.as(ConsFinalLawRatingUsersParser.Parse *)
     }
   }

@@ -26,13 +26,12 @@
 
 @layout("DemocracIT", css, js,vm.user) {
     <div  class="container">
-
         <div class="profile">
             <div class="user-profile">
                 @if(vm.hasImage()) {
                     <img class="avatar" src="@vm.user.get.avatarURL" alt="Profile" />
                 } else {
-                    <img class="avatar" src="http://hammersmithconsultancy.com/templates/templates/tem-4/images/icon-full-youth.png" alt="Profile" />
+                    <img class="avatar" src="/assets/images/profile_default.jpg" alt="Profile" />
                 }
                 <div class="username">@vm.user.get.firstName @vm.user.get.lastName</div>
                 <div class="bio">
@@ -43,7 +42,7 @@
                 </div>
                 <ul class="data">
                     <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">@vm.totalUserPoints</span><i class="fa fa-heart pointIcon"></i>
-                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">Τι είναι οι πόντοι;</a></li>
+                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">Πώς υπολογίζονται οι πόντοι;</a></li>
                 </ul>
             </div>
         </div>

@@ -16,8 +16,13 @@ class GamificationEngine @Inject()(val rules: Set[RewardRuleTrait] ) extends Gam
     {
 
     }
+    var userThatPerfrormedAction:Any = null
 
-    gamificationRepository.savePoints(user_id, action_id, rule.head.getPoints(user_id))
+    if(relatedData.isInstanceOf[UUID]) {
+      userThatPerfrormedAction = relatedData
+    }
+
+    gamificationRepository.savePoints(user_id, action_id, rule.head.getPoints(user_id), userThatPerfrormedAction)
     0
   }
 }

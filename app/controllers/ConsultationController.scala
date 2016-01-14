@@ -125,7 +125,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
       /*Get and format each line from the law file content*/
       fileContentFinal = formatFileContent(fileContent)
       storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
-      this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.UPLOAD_FILE_ACTION_ID,None)
+      this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.UPLOAD_FILE_ACTION_ID, None)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
