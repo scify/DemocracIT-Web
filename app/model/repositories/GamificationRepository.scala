@@ -10,13 +10,22 @@ import play.api.db.DB
 class GamificationRepository {
 
   def savePoints(userId:UUID, actionId:Int, points:Int, relatedData:Any):Unit = {
+    val test = relatedData.getClass
+    val t = 1
     DB.withConnection { implicit c =>
       if(relatedData.isInstanceOf[UUID]) {
         val relatedUserId = relatedData.asInstanceOf[UUID]
         SQL"""
             INSERT INTO user_awards (user_id, action_id, date_added, points, related_data)
             values (CAST($userId AS UUID), $actionId, now(), $points, CAST($relatedUserId AS UUID))""".execute()
-      } else {
+      } else if(relatedData.isInstanceOf[Long]) {
+        val relatedId = relatedData.asInstanceOf[Long]
+        SQL"""
+            INSERT INTO user_awards (user_id, action_id, date_added, points, related_data)
+            values (CAST($userId AS UUID), $actionId, now(), $points, CAST($relatedId AS text))""".execute()
+      }
+      else
+      {
         SQL"""
             INSERT INTO user_awards (user_id, action_id, date_added, points)
             values (CAST($userId AS UUID), $actionId, now(), $points)""".execute()

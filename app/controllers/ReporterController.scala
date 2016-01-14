@@ -20,7 +20,7 @@ class ReporterController  @Inject()  (val messagesApi: MessagesApi,
                         extends Silhouette[User, CookieAuthenticator] {
 
   val consultationManager = new ConsultationManager(gamificationEngine)
-  private val commentManager = new AnnotationManager()
+  private val commentManager = new AnnotationManager(gamificationEngine)
   private val reporterManager = new ReporterManager()
 
   def getCommentsForConsultationByUserId(consultationId:Long,

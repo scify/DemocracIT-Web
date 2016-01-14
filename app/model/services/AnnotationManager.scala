@@ -1,5 +1,7 @@
 package model.services
 
+import java.util.UUID
+
 import model.dtos._
 import model.repositories._
 import play.api.Play.current
@@ -8,7 +10,7 @@ import play.api.libs.ws.WS
 
 import scala.concurrent.Await
 
-class AnnotationManager {
+class AnnotationManager (gamificationEngine: GamificationEngineTrait){
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
@@ -64,7 +66,25 @@ class AnnotationManager {
   }
 
   def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]) = {
+    if(liked != None) {
+      //if the user has liked and has less than 10 likes today
+      if(liked.get && howManyLikesToday(user_id) < 10) {
+        gamificationEngine.rewardUser(user_id,GamificationEngineTrait.LIKE_COMMENT, comment_id)
+        //if the user is disliking
+      } else if(!liked.get) {
+        commentsRepository.cancelLikeReward(user_id, comment_id)
+      }
+    }
+    // if the user is taking back his like
+    else if(liked == None) {
+      commentsRepository.cancelLikeReward(user_id, comment_id)
+    }
     commentsRepository.rateComment(user_id,comment_id,liked)
+  }
+
+  def howManyLikesToday(user_id:UUID): Int ={
+    val answer = commentsRepository.howManyLikesToday(user_id)
+    answer
   }
 
   def getComments(consultationId:Long,

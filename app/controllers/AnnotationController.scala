@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.viewmodels.forms._
 import model.dtos._
-import model.services.AnnotationManager
+import model.services.{GamificationEngineTrait, AnnotationManager}
 import model.viewmodels.forms.RateCommentForm
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
@@ -16,10 +16,11 @@ import utils.ImplicitReadWrites.FormErrorWrites
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       val env: Environment[User, CookieAuthenticator],
-                                      socialProviderRegistry: SocialProviderRegistry)
+                                      socialProviderRegistry: SocialProviderRegistry,
+                                      val gamificationEngine:GamificationEngineTrait)
               extends Silhouette[User, CookieAuthenticator] {
 
-  var annotationManager = new AnnotationManager()
+  var annotationManager = new AnnotationManager(gamificationEngine)
 
   def rateComment() = SecuredAction { implicit request =>
 

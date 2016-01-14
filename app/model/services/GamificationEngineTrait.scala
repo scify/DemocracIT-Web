@@ -18,5 +18,6 @@ object GamificationEngineTrait
   val UPLOADED_FILE_RATED_DISLIKE = 5
   val REMOVE_UPLOADED_FILE = 6
   val RATE_LAW = 7
+  val LIKE_COMMENT = 8
 }
 
