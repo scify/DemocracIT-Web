@@ -111,3 +111,24 @@
 #pointsExplanationBtn:hover {
     cursor: pointer;
 }
+
+.msg {
+    padding: 15px;
+}
+
+.number {
+    margin-right: 13px;
+    float: left;
+    font-size: x-large;
+    color: #428bca;
+    font-weight: bold;
+}
+
+.explanationPoint {
+    color: #428bca;
+    font-weight: bold;
+}
+
+.explanationText {
+    margin-top: 5px;
+}
