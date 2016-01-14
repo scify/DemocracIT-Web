@@ -139,8 +139,8 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
       Created("")
   }
 
-  def deleteFinalLaw(finalLawId: Long) = Action { implicit request =>
-    consultationManager.deleteFinalLaw(finalLawId)
+  def deleteFinalLaw(finalLawId: Long, userId:UUID) = Action { implicit request =>
+    consultationManager.deleteFinalLaw(finalLawId, userId)
     Created("")
   }
 

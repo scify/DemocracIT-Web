@@ -5,8 +5,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                consultationIsActive,
                                                imagesPath,
                                                consultationEndDate){
-    console.log(userId);
-    console.log(finalLawUserId);
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
@@ -346,7 +344,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
-                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
                     beforeSend: function () {
                     },
                     success: function (returnData) {

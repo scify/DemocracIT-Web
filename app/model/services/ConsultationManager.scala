@@ -108,9 +108,10 @@ class ConsultationManager (gamificationEngine: GamificationEngineTrait){
 
   }
 
-  def deleteFinalLaw(finalLawId: Long){
+  def deleteFinalLaw(finalLawId: Long, userId:UUID){
     val repository = new ConsultationRepository()
     repository.deleteFinalLaw(finalLawId)
+    this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.REMOVE_UPLOADED_FILE, None)
   }
 
 

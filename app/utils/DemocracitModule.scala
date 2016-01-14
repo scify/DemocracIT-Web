@@ -25,6 +25,7 @@ class DemocracitModule extends AbstractModule with ScalaModule{
     gamificationRulesBinder.addBinding.to(classOf[RewardRule_UploadFinalLaw])
     gamificationRulesBinder.addBinding.to(classOf[RewardRule_UploadedFileRatedLike])
     gamificationRulesBinder.addBinding.to(classOf[RewardRule_UploadedFileRatedDislike])
+    gamificationRulesBinder.addBinding.to(classOf[RewardRule_RemoveUploadedFile])
   }
 
 
