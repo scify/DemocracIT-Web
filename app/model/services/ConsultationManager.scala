@@ -86,9 +86,22 @@ class ConsultationManager (gamificationEngine: GamificationEngineTrait){
 
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean){
     val repository = new ConsultationRepository()
-    repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
     val uploader_id = UUID.fromString(repository.getFinalLawUploader(finalLawId))
     rewardLawUploader(uploader_id, liked, attitude, userId)
+    if(!userHasRatedThisLaw(userId,finalLawId)) {
+      rewardUserWhoRated(userId)
+    }
+    repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
+  }
+
+  def userHasRatedThisLaw(userId:UUID, finalLawId:Long): Boolean = {
+    val repository = new GamificationRepository()
+    val hasUserRated = repository.userHasRatedThisLaw(userId,finalLawId)
+    hasUserRated
+  }
+
+  def rewardUserWhoRated(userId:UUID) = {
+    this.gamificationEngine.rewardUser(userId,GamificationEngineTrait.RATE_LAW, None)
   }
 
   def rewardLawUploader(user_id:UUID, liked:Boolean, attitude:Int, userThatPerformedAction:UUID) ={

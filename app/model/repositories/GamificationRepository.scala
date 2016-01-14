@@ -24,4 +24,12 @@ class GamificationRepository {
     }
   }
 
+  def userHasRatedThisLaw(userId:UUID, finalLawId:Long):Boolean = {
+    DB.withConnection { implicit c =>
+      val answer:Boolean = SQL"""
+            select exists(select 1 from consultation_final_law_rating where final_law_id=$finalLawId and user_id = CAST($userId AS UUID))""".as(SqlParser.bool("exists").single)
+      answer
+    }
+  }
+
 }
