@@ -19,5 +19,7 @@ object GamificationEngineTrait
   val REMOVE_UPLOADED_FILE = 6
   val RATE_LAW = 7
   val LIKE_COMMENT = 8
+  val COMMENT_WITH_ANN_TAGS = 9
+  val COMMENT_WITH_PROBLEM_TAGS = 10
 }
 

@@ -47,6 +47,22 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     }
     comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
 
+    if(comment.userId.isDefined) {
+      //check how many comments has the user entered today
+      if(commentsRepository.howManyCommentsToday(comment.userId.get) <= 20) {
+        if (comment.annotationTagProblems.size != 0) {
+          //award points for comment with annotation problems
+          gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_WITH_PROBLEM_TAGS, comment.id.get)
+        }
+        if (comment.annotationTagTopics.size != 0) {
+          //award points for comment with annotation tags
+          gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_WITH_ANN_TAGS, comment.id.get)
+        }
+        //awards points for comment
+        //TODO: define when comment for the whole article or on a paragraph
+        gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_ON_CONSULTATION_ARTICLE, comment.id.get)
+      }
+    }
     comment
   }
 

@@ -54,6 +54,19 @@ class CommentsRepository {
     }
   }
 
+  def howManyCommentsToday(userId:UUID):Int = {
+    DB.withConnection { implicit c =>
+      val answer:Int = SQL"""
+            select count(*) as numberOfComments from comments where user_id = cast($userId as uuid)
+            and date_part('year',date_added) = date_part('year',now())
+            and date_part('month',date_added) = date_part('month',now())
+            and date_part('day',date_added) = date_part('day',now())""".as(SqlParser.int("numberOfComments").single)
+      answer
+    }
+  }
+
+
+
   def cancelLikeReward(userId:UUID, comment_id:Long):Unit = {
     DB.withConnection { implicit c =>
       SQL"""
