@@ -42,14 +42,18 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
      // retrieve the article name from database
       // compare the article name with comment.discussionThread.get.text
       // if it is the same , discussionThread.get.typeid = "Whole article"
-
       comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text, comment.discussionThread.get.discussion_thread_type_id)
     }
     comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
+    awardPointsForComment(comment)
 
+    comment
+  }
+
+  private def awardPointsForComment(comment: Comment): Unit = {
     if(comment.userId.isDefined) {
       //check how many comments has the user entered today
-      if(commentsRepository.howManyCommentsToday(comment.userId.get) <= 20) {
+      if(commentsRepository.howManyCommentsToday(comment.userId.get) <= 10) {
         if (comment.annotationTagProblems.size != 0) {
           //award points for comment with annotation problems
           gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_WITH_PROBLEM_TAGS, comment.id.get)
@@ -58,12 +62,15 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
           //award points for comment with annotation tags
           gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_WITH_ANN_TAGS, comment.id.get)
         }
-        //awards points for comment
-        //TODO: define when comment for the whole article or on a paragraph
-        gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_ON_CONSULTATION_ARTICLE, comment.id.get)
+        if(comment.discussionThread.get.discussion_thread_type_id == 2) {
+          //awards points for comment that refers to part of the article
+          gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_ON_CONSULTATION_PARAGRAPH, comment.id.get)
+        } else if(comment.discussionThread.get.discussion_thread_type_id == 1) {
+          //awards points for comment that refers to the whole article
+          gamificationEngine.rewardUser(comment.userId.get, GamificationEngineTrait.COMMENT_ON_CONSULTATION_ARTICLE, comment.id.get)
+        }
       }
     }
-    comment
   }
 
   private def getActionsMadeByUserWhileCommenting(comment:Comment): List[Int] = {
