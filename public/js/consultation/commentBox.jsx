@@ -54,7 +54,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    console.log(data);
+                    //console.log(data);
                     instance.state.allComments = data;
                     instance.state.topComments = instance.findTopComments(data);
                     instance.state.comments =instance.state.topComments;
@@ -248,6 +248,11 @@
         componentDidMount : function(){
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
         },
+        handleReply: function() {
+            console.log("sdfsdfsdf");
+            this.state.displayReplyBox = !this.state.displayReplyBox;
+            this.setState(this.state);
+        },
         render: function() {
             //console.log(this.props.data);
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
@@ -285,7 +290,8 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = <CommentActionsEnabled id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                console.log(this.handleReply);
+                options = <CommentActionsEnabled handleReply={this.handleReply} source={this.props.data.source.commentSource} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -314,7 +320,7 @@
             }
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-
+            var replyBox = <scify.ReplyBox parentId={this.props.data.id} display={this.state.displayReplyBox}/>;
             return (
                 <div className="comment">
                     {avatarDiv}
@@ -328,6 +334,7 @@
                     <div className={iconsClasses}>
                         <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
                      </div>
+                    {replyBox}
                 </div>
             );
         }
@@ -338,7 +345,9 @@
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked : this.props.loggedInUserRating  //if not null it means has liked/disliked this comment
+                liked : this.props.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                source: this.props.source, //source =1 for democracIt, source = 2 for opengov
+                handleReply: this.props.handleReply
             };
         },
         postRateCommentAndRefresh: function(){
@@ -391,22 +400,25 @@
             this.state.liked= newLikeStatus;
             this.postRateCommentAndRefresh();
         },
+
         render: function() {
-            var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var replyClasses = classNames("reply",{hide: this.state.source ==2})//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
             return (
-                <div className="options">
-                    <a className={agreeClasses} onClick={this.handleLikeComment}>
-                        Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+                <div>
+                    <div className="options">
+                        <a className={agreeClasses} onClick={this.handleLikeComment}>
+                            Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
 
-                    </a><span className="c"> ({this.state.likeCounter})</span>
-                    <a className={disagreeClasses} onClick={this.handleDislikeComment}>
-                        Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
-                    </a> <span className="c"> ({this.state.dislikeCounter})</span>
-                    <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
-                    <span className="date">{date}</span>
+                        </a><span className="c"> ({this.state.likeCounter})</span>
+                        <a className={disagreeClasses} onClick={this.handleDislikeComment}>
+                            Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
+                        </a> <span className="c"> ({this.state.dislikeCounter})</span>
+                        <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
+                        <span className="date">{date}</span>
+                    </div>
                 </div>
             );
         }
