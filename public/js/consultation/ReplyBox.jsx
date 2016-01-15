@@ -6,8 +6,9 @@
         //        parentId: this.props.parentId //the Id of the comment this reply box belongs to
         //    }
         //},
-        handleReplySave: function() {
-            console.log("sdfasdf");
+        handleReplySave: function(event) {
+            event.preventDefault();
+            console.log(event);
         },
         render: function() {
             if(this.props.display) {
