@@ -755,4 +755,15 @@ a.load {
 #deleteFinalLaw:hover {
   cursor: pointer; }
 
+.replyInput {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  height: 100px;
+  width: 50%; }
+
+.replyBtn {
+  position: absolute;
+  margin-top: 70px; }
+
 /*# sourceMappingURL=consultation.css.map */

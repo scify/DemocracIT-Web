@@ -6,11 +6,20 @@
         //        parentId: this.props.parentId //the Id of the comment this reply box belongs to
         //    }
         //},
-
+        handleReplySave: function() {
+            console.log("sdfasdf");
+        },
         render: function() {
             if(this.props.display) {
                 return (
-                    <div>Hello</div>
+                    React.createElement('form', {className: 'ContactForm', onSubmit:this.handleReplySave},
+                        React.createElement('textarea', {
+                            className:'replyInput',
+                            type: 'text',
+                            placeholder: "θα ήθελα να δηλώσω..."
+                        }),
+                        React.createElement('button', {type: 'submit', className:'btn blue replyBtn'}, "Καταχώρηση")
+                    )
                 );
             } else {
                 return (
