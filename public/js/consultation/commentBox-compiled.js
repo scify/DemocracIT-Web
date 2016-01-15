@@ -564,7 +564,7 @@
                 { className: "options" },
                 React.createElement(
                     "div",
-                    { className: agreeClasses, onClick: this.handleLikeComment },
+                    { className: agreeClasses },
                     "Χρήστες που συμφωνούν",
                     React.createElement("i", { className: "fa fa-thumbs-o-up" })
                 ),

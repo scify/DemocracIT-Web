@@ -425,9 +425,8 @@
             var date =moment(this.props.dateAdded).format('llll');
             return (
                 <div className="options">
-                    <div className={agreeClasses} onClick={this.handleLikeComment}>
+                    <div className={agreeClasses}>
                         Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
-
                     </div><span className="c"> ({this.state.likeCounter})</span>
                     <div className={disagreeClasses}>
                         Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
