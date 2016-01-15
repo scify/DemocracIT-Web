@@ -54,6 +54,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
+                    console.log(data);
                     instance.state.allComments = data;
                     instance.state.topComments = instance.findTopComments(data);
                     instance.state.comments =instance.state.topComments;
@@ -165,8 +166,8 @@
             var topClasses = classNames({hide: this.state.totalCommentsCount==0});
             var commendBoxclasses = classNames("commentBox",{ hide :!this.state.display});
             var loadAllClasses =classNames("load-all",{ hide :!this.shouldDisplayLoadMoreOption()});
-
             return (
+
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments}
                                        count={this.state.totalCommentsCount}
@@ -248,6 +249,7 @@
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
         },
         render: function() {
+            //console.log(this.props.data);
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
                 var commentFromDB = this.props.data;
             } else {
@@ -283,7 +285,7 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsEnabled id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -294,7 +296,7 @@
 
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
             } else if(this.props.parent == "reporterUserStats") {
-                options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsDisabled dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
                 if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
@@ -331,7 +333,7 @@
         }
     });
 
-    var DisplayForConsultation = React.createClass({
+    var CommentActionsEnabled = React.createClass({
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,
@@ -409,7 +411,7 @@
             );
         }
     });
-    var DisplayForReporter = React.createClass({
+    var CommentActionsDisabled = React.createClass({
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,

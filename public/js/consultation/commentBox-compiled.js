@@ -54,6 +54,7 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
+                    console.log(data);
                     instance.state.allComments = data;
                     instance.state.topComments = instance.findTopComments(data);
                     instance.state.comments = instance.state.topComments;
@@ -151,7 +152,6 @@
             var topClasses = classNames({ hide: this.state.totalCommentsCount == 0 });
             var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
             var loadAllClasses = classNames("load-all", { hide: !this.shouldDisplayLoadMoreOption() });
-
             return React.createElement(
                 "div",
                 { className: topClasses },
@@ -243,6 +243,7 @@
             $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
         },
         render: function render() {
+            //console.log(this.props.data);
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 var commentFromDB = this.props.data;
             } else {
@@ -298,7 +299,7 @@
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                options = React.createElement(CommentActionsEnabled, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
@@ -331,7 +332,7 @@
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
             } else if (this.props.parent == "reporterUserStats") {
-                options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                options = React.createElement(CommentActionsDisabled, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 commentBody = React.createElement(
                     "div",
                     { className: "htmlText" },
@@ -431,8 +432,8 @@
         }
     });
 
-    var DisplayForConsultation = React.createClass({
-        displayName: "DisplayForConsultation",
+    var CommentActionsEnabled = React.createClass({
+        displayName: "CommentActionsEnabled",
 
         getInitialState: function getInitialState() {
             return {
@@ -544,8 +545,8 @@
             );
         }
     });
-    var DisplayForReporter = React.createClass({
-        displayName: "DisplayForReporter",
+    var CommentActionsDisabled = React.createClass({
+        displayName: "CommentActionsDisabled",
 
         getInitialState: function getInitialState() {
             return {
