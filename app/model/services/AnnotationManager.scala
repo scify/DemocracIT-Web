@@ -105,6 +105,11 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     commentsRepository.rateComment(user_id,comment_id,liked)
   }
 
+  def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Comment = {
+    val comment = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
+    comment
+  }
+
   def howManyLikesToday(user_id:UUID): Int ={
     val answer = commentsRepository.howManyLikesToday(user_id)
     answer

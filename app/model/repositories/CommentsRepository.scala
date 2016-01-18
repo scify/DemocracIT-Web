@@ -264,6 +264,65 @@ class CommentsRepository {
     }
   }
 
+  def saveCommentReply(replyText:String, parentId:Long, articleId:Long, discussionthreadclientid:Long, userId:UUID):Comment = {
+    DB.withConnection { implicit c =>
+      val commentId = SQL"""
+          INSERT INTO public.comments
+                      (
+                      url_source,
+                      article_id,
+                      parent_id,
+                      "comment",
+                      source_type_id,
+                      discussion_thread_id,
+                      user_id,
+                      date_added,
+                      revision,
+                      depth,
+                      annotatedtext)
+          VALUES
+                    (
+                      NULL,
+                      $articleId,
+                      $parentId,
+                      $replyText,
+                      1,
+                      $discussionthreadclientid,
+                      $userId::uuid,
+                      now(),
+                      1,
+                      1,
+                      NULL)
+                  """.executeInsert()
+
+      val commentFromDB:Comment =
+        SQL"""
+             with ratingCounter as
+          (
+           select cr.comment_id,
+          	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+          	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+           from comment_rating cr
+                  inner join comments c on cr.comment_id  = $commentId
+          group by cr.comment_id
+         )
+          select c.*, u.fullName,u.avatarurl,null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,
+                           counter.likes,
+                            counter.dislikes,
+                            cr.liked as userrating
+                       from public.comments c
+                                             inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                             inner join public.articles a on a.id = c.article_id
+                                             inner join account.user u on u.id = c.user_id
+                                             left outer join public.comment_rating cr on cr.user_id = CAST($userId as UUID)  and cr.comment_id = c.id
+                                             left outer join ratingCounter counter on counter.comment_id = c.id
+                    where c.id =$commentId
+                     order by c.date_added desc, c.id desc
+           """.as(CommentsParser.Parse.single)
+      commentFromDB
+    }
+  }
+
   def getOPenGovCommentsForArticle(articleId: Long):List[Comment] = {
     DB.withConnection { implicit c =>
 

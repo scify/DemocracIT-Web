@@ -76,6 +76,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
             }
             $(articleDiv).find(".ann").each(function(i,ann){
+                //userDefined is true when the user is logged in. We need to parse it to the comment box
+                //to know whether the user can post a reply or not.
+                var userDefined = true;
+                if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
+                    userDefined = false;
+                }
                 var annId = $(ann).data("id");
                 commentBoxProperties.discussionthreadclientid = getDiscussionThreadClientId(articleid,annId );
                 commentBoxProperties.discussionthreadid = getDiscussionThreadId.call(instance,articleid,annId );
@@ -85,6 +91,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
+                commentBoxProperties.userDefined = userDefined;
 
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body

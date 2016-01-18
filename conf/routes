@@ -19,6 +19,7 @@ POST        /signUp                                       @controllers.SignUpCon
 POST        /annotation/save                              @controllers.AnnotationController.annotatePost
 POST        /annotation/extractTags                       @controllers.AnnotationController.extractTags
 POST        /comments/rate                                @controllers.AnnotationController.rateComment
+POST        /comment/reply/save                           @controllers.AnnotationController.saveReply
 #GET         /search
 
 GET         /consultation/reporter/:consultationId        @controllers.ConsultationController.getReporterPage(consultationId :Long)

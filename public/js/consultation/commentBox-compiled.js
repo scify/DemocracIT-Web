@@ -177,7 +177,8 @@
                     React.createElement(scify.CommentList, {
                         consultationEndDate: this.props.consultationEndDate,
                         data: this.state.comments,
-                        parent: this.props.parent }),
+                        parent: this.props.parent,
+                        userDefined: this.props.userDefined }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -219,7 +220,7 @@
         render: function render() {
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(scify.Comment, { parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
+                return React.createElement(scify.Comment, { userDefined: instance.props.userDefined, parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
 
             return React.createElement(
@@ -303,7 +304,7 @@
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = React.createElement(CommentActionsEnabled, { handleReply: this.handleReply, source: this.props.data.source.commentSource, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
@@ -409,7 +410,8 @@
                 " ",
                 taggedTopicsContainer
             );
-            var replyBox = React.createElement(scify.ReplyBox, { parentId: this.props.data.id, display: this.state.displayReplyBox });
+            console.log(this.props);
+            var replyBox = React.createElement(scify.ReplyBox, { discussionthreadclientid: this.props.data.discussionThread.id, userId: this.props.data.userId, parentId: this.props.data.id, articleId: this.props.data.articleId, display: this.state.displayReplyBox });
             return React.createElement(
                 "div",
                 { className: "comment" },
@@ -505,7 +507,7 @@
         },
 
         render: function render() {
-            var replyClasses = classNames("reply", { hide: this.state.source == 2 }); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var replyClasses = classNames("reply", { hide: this.state.source == 2 || !this.props.userDefined }); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
