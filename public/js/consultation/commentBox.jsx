@@ -249,7 +249,6 @@
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
         },
         handleReply: function() {
-            console.log("sdfsdfsdf");
             this.state.displayReplyBox = !this.state.displayReplyBox;
             this.setState(this.state);
         },
@@ -290,7 +289,6 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                console.log(this.handleReply);
                 options = <CommentActionsEnabled handleReply={this.handleReply} source={this.props.data.source.commentSource} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
