@@ -23,6 +23,9 @@ POST        /reset                                        @controllers.PasswordC
 GET         /reset/:token                                 @controllers.PasswordChangeController.specifyResetPassword(token)
 POST        /reset/                                       @controllers.PasswordChangeController.handleResetPassword
 
+GET         /change                                       @controllers.PasswordChangeController.startChangePassword
+POST        /change                                       @controllers.PasswordChangeController.handleChangePassword
+
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
 POST        /annotation/save                              @controllers.AnnotationController.annotatePost

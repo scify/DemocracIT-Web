@@ -29,16 +29,16 @@ object Mailer {
     )
   }
 
-  def forgotPasswordUnknowAddress (email: String)(implicit mailService:MailService) {
-
-    def getText()(implicit messages: Messages): String = {
-      views.html.emails.unknownEmail.render(messages)
-    }
-
-    mailService.sendEmailAsync(email)(
-      subject = Messages("mail.forgotpwd.subject"),
-      bodyHtml = views.html.emails.unknownEmail.apply(),
-      bodyText = getText()
-    )
-  }
+//  def forgotPasswordUnknowAddress (email: String)(implicit mailService:MailService) {
+//
+//    def getText()(implicit messages: Messages): String = {
+//      views.html.account.unknownEmail.render(messages)
+//    }
+//
+//    mailService.sendEmailAsync(email)(
+//      subject = Messages("mail.forgotpwd.subject"),
+//      bodyHtml = views.html.emails.unknownEmail.apply(),
+//      bodyText = getText()
+//    )
+//  }
 }
