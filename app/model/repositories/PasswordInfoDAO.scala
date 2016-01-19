@@ -47,7 +47,11 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    */
   def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
     Future.successful {
-      val dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+      var dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+
+      if (dbloginInfo.isEmpty)
+        dbloginInfo  = Some(AccountRepository.saveLoginInfo(loginInfo))
+
       this.savePasswordInfo(authInfo,dbloginInfo.get.id)
     }
   }

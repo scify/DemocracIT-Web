@@ -39,18 +39,18 @@ class AccountController @Inject() (val messagesApi: MessagesApi,
     }
   }
 
-  /**
-   * Handles the Sign Up action.
-   *
-   * @return The result to display.
-   */
-  //todo: handle returnUrl from query string and redirect there
-  def signUp = UserAwareAction.async { implicit request =>
-    request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
-      case None => Future.successful(Ok(views.html.account.signUp(SignUpForm.form,socialProviderRegistry)))
-    }
-  }
+//  /**
+//   * Handles the Sign Up action.
+//   *
+//   * @return The result to display.
+//   */
+//  //todo: handle returnUrl from query string and redirect there
+//  def signUp = UserAwareAction.async { implicit request =>
+//    request.identity match {
+//      case Some(user) => Future.successful(Redirect(routes.HomeController.index()))
+//      case None => Future.successful(Ok(views.html.account.signUp(SignUpForm.form,socialProviderRegistry)))
+//    }
+//  }
 
   /**
    * Handles the Sign Out action.

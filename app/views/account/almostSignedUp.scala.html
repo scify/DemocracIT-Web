@@ -1,0 +1,22 @@
+@(signUpData: model.viewmodels.forms.SignUpForm.SignUpData)(implicit messages: Messages)
+
+
+@js ={
+
+}
+@css = {
+
+}
+
+@layout("H εγγραφή σας σχεδόν ολοκληρώθηκε",css,js,None) {
+    <div class="user col-md-6 col-md-offset-3">
+        <div class="row data">
+            <div class="col-md-12">
+                <div class="row">
+                    <p>Thank you for sign up!</p>
+                    <p>We've just send you an email to '@signUpData.email' . Please follow its instructions to complete your new account.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

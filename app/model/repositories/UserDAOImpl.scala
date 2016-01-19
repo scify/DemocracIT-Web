@@ -56,7 +56,7 @@ class UserDAOImpl extends UserDAO {
 
     if (!dBLoginInfo.isDefined) {
       //login info is like facebook with user's email address, twitter with user
-      dBLoginInfo = Some(this.saveLoginInfo(user.loginInfo))
+      dBLoginInfo = Some(AccountRepository.saveLoginInfo(user.loginInfo))
     }
 
     this.saveUserAndUpdateLoginInfo(user,dBLoginInfo.get,roleId)
@@ -94,18 +94,7 @@ class UserDAOImpl extends UserDAO {
     }
   }
 
-  private def saveLoginInfo(loginInfo:LoginInfo):DBLoginInfo = {
 
-    DB.withConnection { implicit c =>
-      val id =SQL"""
-                INSERT INTO account.logininfo (providerid, providerkey)
-                VALUES (${loginInfo.providerID}, ${loginInfo.providerKey})
-              """.executeInsert(scalar[Long].single)
-
-      new DBLoginInfo(id,loginInfo.providerID,loginInfo.providerKey)
-    }
-
-  }
 
   private def updateUser(user:User): User =
   {

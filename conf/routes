@@ -9,11 +9,23 @@ GET         /header                                       @controllers.HomeContr
 GET         /userProfile                                  @controllers.UserProfileController.getUserPage()
 
 GET         /signIn                                       @controllers.AccountController.signIn(returnUrl:Option[String])
-GET         /signUp                                       @controllers.AccountController.signUp
+# GET         /signUp                                       @controllers.AccountController.signUp
 GET         /signOut                                      @controllers.AccountController.signOut
 GET         /authenticate/:provider                       @controllers.SocialAuthController.authenticate(provider)
 POST        /authenticate/credentials                     @controllers.CredentialsAuthController.authenticate
-POST        /signUp                                       @controllers.SignUpController.signUp
+
+GET         /signup                                       @controllers.SignUpController.signUpRequest
+POST        /signup                                       @controllers.SignUpController.signUpRequestRegistration
+GET         /signup/:token                                @controllers.SignUpController.signUpCompletion(token)
+
+GET         /reset                                        @controllers.PasswordChangeController.startResetPassword
+POST        /reset                                        @controllers.PasswordChangeController.handleStartResetPassword
+GET         /reset/:token                                 @controllers.PasswordChangeController.specifyResetPassword(token)
+POST        /reset/                                       @controllers.PasswordChangeController.handleResetPassword
+
+GET         /change                                       @controllers.PasswordChangeController.startChangePassword
+POST        /change                                       @controllers.PasswordChangeController.handleChangePassword
+
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
 POST        /annotation/save                              @controllers.AnnotationController.annotatePost
