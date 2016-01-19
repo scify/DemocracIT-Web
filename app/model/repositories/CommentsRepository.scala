@@ -647,7 +647,7 @@ class CommentsRepository {
               select t.id,t.tagid, t.typeid, count(*) as numberOfComments from public.comments c
                 inner join public.articles a on a.id = c.article_id
                 inner join public.discussion_thread t on t.id = c.discussion_thread_id
-                where a.consultation_id = $consultationId
+                where a.consultation_id = $consultationId and c.parent_id is null
               group by t.id,t.tagid
               """.as(DiscussionThreadWithCommentsCountParser.Parse *)
     }
