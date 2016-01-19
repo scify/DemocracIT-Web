@@ -54,7 +54,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    console.log(data);
                     instance.state.allComments = data;
                     instance.state.topComments = instance.findTopComments(data);
                     instance.state.comments = instance.state.topComments;
@@ -235,10 +234,18 @@
         displayName: "Comment",
 
         getInitialState: function getInitialState() {
+            function sortByKey(array, key) {
+                return array.sort(function (a, b) {
+                    var x = a[key];var y = b[key];
+                    return x > y ? -1 : x < y ? 1 : 0;
+                });
+            }
+            if (this.props.data.commentReplies.length > 1) sortByKey(this.props.data.commentReplies, "dateAdded");
             return {
                 likeCounter: this.props.data.likesCounter,
                 dislikeCounter: this.props.data.dislikesCounter,
-                liked: this.props.data.loggedInUserRating //if not null it means has liked/disliked this comment
+                liked: this.props.data.loggedInUserRating, //if not null it means has liked/disliked this comment
+                comment: this.props.data
             };
         },
         componentDidMount: function componentDidMount() {
@@ -246,6 +253,11 @@
         },
         handleReply: function handleReply() {
             this.state.displayReplyBox = !this.state.displayReplyBox;
+            this.setState(this.state);
+        },
+        handleSavedComment: function handleSavedComment(comment) {
+            //add the new comment to the list of replies
+            this.state.comment.commentReplies.unshift(comment);
             this.setState(this.state);
         },
         render: function render() {
@@ -305,13 +317,13 @@
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                console.log(this.props);
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
                     React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
                 );
+                //Setting the comment to state because we may want to change the replies later
 
                 if (this.props.data.profileUrl) commenterName = React.createElement(
                     "span",
@@ -337,12 +349,12 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
-                var replyBox = React.createElement(scify.ReplyBox, { discussionthreadclientid: this.props.data.discussionThread.id, userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId, display: this.state.displayReplyBox });
+                var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment, discussionthreadclientid: this.props.data.discussionThread.id, userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId, display: this.state.displayReplyBox });
                 var replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
                     userId: this.props.userId,
                     data: this.props.data.commentReplies,
                     parent: "comment",
-                    userDefined: this.props.userDefined });
+                    userDefined: this.props.userDefined, updateComments: this.handleSavedComment });
                 var commentClassNames = "comment";
             } else if (this.props.parent == "reporterUserStats") {
 
@@ -382,7 +394,6 @@
                 var replyBox = React.createElement("div", null);
                 var commentClassNames = "comment";
             } else if (this.props.parent == "comment") {
-                console.log(this.props);
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: 2, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",

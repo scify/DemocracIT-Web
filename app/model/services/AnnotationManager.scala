@@ -106,8 +106,8 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
   }
 
   def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Long = {
-    val comment = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
-    comment
+    val commentId = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
+    commentId
   }
 
   def howManyLikesToday(user_id:UUID): Int ={
@@ -153,6 +153,7 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
   }
 
   /** Function which returns the comment from a list of comments by comment id
+    *
     * @param comments the list od comments
     * @param id id of the comment we want
     */

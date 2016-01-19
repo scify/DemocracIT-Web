@@ -1,6 +1,6 @@
 package controllers
 
-import java.util.UUID
+import java.util.{Calendar, UUID}
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
@@ -13,6 +13,7 @@ import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import utils.ImplicitReadWrites.FormErrorWrites
+import utils.ImplicitReadWrites.commentsWrites
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       val env: Environment[User, CookieAuthenticator],
@@ -77,7 +78,12 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val discussionthreadclientid = (parameterList \ "discussionthreadclientid").asOpt[Long].get
 
     //val comment = new Comment()
-    Ok(Json.toJson(annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)))
+    val today = Calendar.getInstance.getTime
+    val emptyAnnotationTags:List[AnnotationTags] = Nil
+    val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
+    val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, "NAME HERE", None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None)
+
+    Ok(Json.toJson(comment))
 
   }
   
