@@ -261,7 +261,7 @@
             this.setState(this.state);
         },
         render: function render() {
-            //console.log(this.props.data);
+            console.log(this.props.data);
             if (this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -317,6 +317,7 @@
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
+                console.log(this.props);
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
@@ -350,11 +351,15 @@
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
                 var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment, discussionthreadclientid: this.props.data.discussionThread.id, userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId, display: this.state.displayReplyBox });
-                var replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
-                    userId: this.props.userId,
-                    data: this.props.data.commentReplies,
-                    parent: "comment",
-                    userDefined: this.props.userDefined, updateComments: this.handleSavedComment });
+                var replies = React.createElement("div", null);
+                if (this.props.data.commentReplies.length > 0) {
+                    replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
+                        userId: this.props.userId,
+                        data: this.props.data.commentReplies,
+                        parent: "comment",
+                        userDefined: this.props.userDefined,
+                        updateComments: this.handleSavedComment });
+                }
                 var commentClassNames = "comment";
             } else if (this.props.parent == "reporterUserStats") {
 
@@ -476,6 +481,7 @@
                     "Απαντήσεις σε αυτό το σχόλιο:"
                 );
             }
+            console.log("here");
             return React.createElement(
                 "div",
                 { className: commentClassNames },
@@ -577,6 +583,7 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
+            console.log(this.props);
             return React.createElement(
                 "div",
                 null,

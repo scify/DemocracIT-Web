@@ -151,14 +151,15 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }
         },
 
-        createListOfCommentsPerArticle = function(){
+        createListOfCommentsPerArticle = function(instance){
             var domElementOpenGovComments = document.getElementById("commentsOpenGov");
             var domElementDITComments = document.getElementById("commentsDIT");
             if (domElementOpenGovComments) {
-                window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementOpenGovComments);
+                window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
             }
             if (domElementDITComments) {
-                window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementDITComments);
+                console.log(instance.commentListProperties);
+                window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
             }
         },
         createListOfCommentsByAnnId = function() {
@@ -345,11 +346,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         },
         rateFinalLawFile = function(instance) {
             var userId = instance.userId;
-            console.log(userId);
-            console.log(instance.ratingUsers);
-            console.log(instance.finalLawId);
             var userRate = checkRatingUsers(instance.ratingUsers, userId);
-            console.log("userRate: " + userRate);
             if(userRate) {
                 if(userRate.liked) {
                     $( "#rateApprove").addClass("liked");
@@ -558,8 +555,18 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var article = $(this).closest(".article");
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");
-    }
-
+    },
+    createCommentListParams = function(instance) {
+        var userDefined = true;
+        if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
+            userDefined = false;
+        }
+        instance.commentListProperties = {
+            userId : instance.userId,
+            userDefined : userDefined,
+            consultationEndDate:instance.consultationEndDate
+        }
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -580,7 +587,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleInnerChart", "Προβλήματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα ανά άρθρο)", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
         }
         createUserBox(this);
-        createListOfCommentsPerArticle();
+        createCommentListParams(instance);
+        createListOfCommentsPerArticle(instance);
         createListOfCommentsByAnnId();
         createListOfCommentsByProblemId();
         createListOfCommentsByAnnIdPerArticle();
@@ -593,6 +601,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         getParameterPointToFinalLaw();
         expandArticleOnClick();
         finalLawModalHandler();
+
     };
 
     return {

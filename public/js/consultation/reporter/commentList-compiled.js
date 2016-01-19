@@ -34,7 +34,7 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    //console.log(data);
+                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -137,6 +137,8 @@
             //return promise;
         },
         render: function render() {
+            //console.log(this.props);
+            //console.log(this.state.comments);
             if (this.state.display) {
                 if (this.state.busy) {
                     return React.createElement(
@@ -145,7 +147,7 @@
                         React.createElement(scify.ReactLoader, { display: this.state.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { data: this.state.comments, parent: "reporter" });
+                return React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate, userId: this.props.userId, userDefined: this.props.userDefined, data: this.state.comments, parent: "reporter" });
             } else {
                 return React.createElement("div", null);
             }

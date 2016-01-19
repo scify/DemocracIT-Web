@@ -1,7 +1,7 @@
 package model.services
 
 import java.util.{Date, UUID}
-import model.dtos.{User, ConsFinalLawRatingUsers, ConsultationFinalLaw, CommentWithArticleName}
+import model.dtos._
 import model.repositories._
 import model.viewmodels._
 import play.api.libs.json.JsValue
@@ -82,6 +82,19 @@ class ReporterManager {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getDITCommentsForArticle(articleId)
+    for(comment <- comments) {
+      //if the comment has a parentId, it is a reply
+      if(comment.parentId.isDefined){
+        //get the parentId of the comment
+        val parentId = comment.parentId.get
+        //get the parent comment
+        val parentComment = getCommentById(comments, parentId).asInstanceOf[Comment]
+        //append the reply to the list of replies of the parent comment
+        parentComment.commentReplies = comment :: parentComment.commentReplies
+        //exclude (delete) reply from list of comments (only parent comments or comments with no replies should be in this list)
+        comments = comments.filterNot(element => element == comment)
+      }
+    }
     comments
   }
 
@@ -163,5 +176,20 @@ class ReporterManager {
     val formatOutgoing = new java.text.SimpleDateFormat("dd MMM yyyy HH:mm aaa")
     val dateFormated = formatOutgoing.format(formatIncomming.parse(date.toString))
     dateFormated
+  }
+
+  /** Function which returns the comment from a list of comments by comment id
+    *
+    * @param comments the list od comments
+    * @param id id of the comment we want
+    */
+  def getCommentById(comments:List[Comment], id:Long):Any = {
+    var commentFound:Any = Nil
+    for(comment <- comments) {
+      if(comment.id.get == id) {
+        commentFound = comment
+      }
+    }
+    commentFound
   }
 }
