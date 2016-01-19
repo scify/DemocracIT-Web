@@ -105,7 +105,7 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     commentsRepository.rateComment(user_id,comment_id,liked)
   }
 
-  def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Comment = {
+  def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Long = {
     val comment = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
     comment
   }
@@ -132,8 +132,16 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
          c
        }
     }
-    else
-      comments =commentsRepository.getComments(discussionthreadclientid,pageSize,user_id)
+    else {
+      comments = commentsRepository.getComments(discussionthreadclientid, pageSize, user_id)
+      //search comments to distiguish the ones that are comment replies
+      for(comment <- comments) {
+        //if the comment has a parentId, it is a reply
+        if(comment.parentId.isDefined) {
+          val parentId = comment.parentId
+        }
+      }
+    }
 
     comments
   }

@@ -38,6 +38,7 @@
                     instance.setState(instance.state);
                 },
                 success: function success(comment) {
+                    //instance.props.onReplySuccess(comment);
                     console.log(comment);
                 },
                 complete: function complete() {
@@ -46,13 +47,26 @@
             });
         },
         render: function render() {
+            console.log(this.props.userId);
             if (this.props.display) {
-                return React.createElement('form', { className: 'ContactForm', onSubmit: this.handleReplySave }, React.createElement('textarea', {
-                    className: 'replyInput',
-                    type: 'text',
-                    placeholder: 'θα ήθελα να δηλώσω...',
-                    name: 'replyTextArea' + this.props.parentId
-                }), React.createElement('button', { type: 'submit', className: 'btn blue replyBtn' }, 'Καταχώρηση'));
+                if (this.props.userId) {
+                    return React.createElement('form', { className: 'ContactForm', onSubmit: this.handleReplySave }, React.createElement('textarea', {
+                        className: 'replyInput',
+                        type: 'text',
+                        placeholder: 'θα ήθελα να δηλώσω...',
+                        name: 'replyTextArea' + this.props.parentId
+                    }), React.createElement('button', {
+                        type: 'submit',
+                        className: 'btn blue replyBtn'
+                    }, 'Καταχώρηση'));
+                } else {
+                    //displayNotLoggedIn();
+                    return React.createElement(
+                        'div',
+                        null,
+                        'not logged in'
+                    );
+                }
             } else {
                 return React.createElement('div', null);
             }

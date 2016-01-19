@@ -34,7 +34,9 @@
                     instance.setState(instance.state);
                 },
                 success : function(comment){
-                    console.log(comment)
+                    //instance.props.onReplySuccess(comment);
+                    console.log(comment);
+
                 },
                 complete: function(){
                     instance.state.displayLoader=false;
@@ -42,23 +44,35 @@
             });
         },
         render: function() {
-            if(this.props.display) {
-                return (
-                    React.createElement('form', {className: 'ContactForm', onSubmit:this.handleReplySave},
-                        React.createElement('textarea', {
-                            className:'replyInput',
-                            type: 'text',
-                            placeholder: "θα ήθελα να δηλώσω...",
-                            name:"replyTextArea" + this.props.parentId
-                        }),
-                        React.createElement('button', {type: 'submit', className:'btn blue replyBtn'}, "Καταχώρηση")
+            console.log(this.props.userId);
+            if (this.props.display) {
+                if(this.props.userId) {
+                    return (
+                        React.createElement('form', {className: 'ContactForm', onSubmit: this.handleReplySave},
+                            React.createElement('textarea', {
+                                className: 'replyInput',
+                                type: 'text',
+                                placeholder: "θα ήθελα να δηλώσω...",
+                                name: "replyTextArea" + this.props.parentId
+                            }),
+                            React.createElement('button', {
+                                type: 'submit',
+                                className: 'btn blue replyBtn'
+                            }, "Καταχώρηση")
+                        )
                     )
-                );
+                } else {
+                    //displayNotLoggedIn();
+                    return (
+                        <div>not logged in</div>
+                    );
+                }
             } else {
                 return (
                     <div></div>
                 );
             }
+
         }
 
     });

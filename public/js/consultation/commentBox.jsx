@@ -179,6 +179,7 @@
                         </div>
                         <scify.CommentList
                             consultationEndDate={this.props.consultationEndDate}
+                            userId = {this.props.userId}
                             data={this.state.comments}
                             parent={this.props.parent}
                             userDefined={this.props.userDefined}/>
@@ -227,7 +228,7 @@
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <scify.Comment userDefined={instance.props.userDefined} parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
+                    <scify.Comment userId={instance.props.userId} userDefined={instance.props.userDefined} parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
                 );
             });
 
@@ -319,8 +320,8 @@
             }
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-            console.log(this.props);
-            var replyBox = <scify.ReplyBox discussionthreadclientid={this.props.data.discussionThread.id} userId={this.props.data.userId} parentId={this.props.data.id} articleId={this.props.data.articleId} display={this.state.displayReplyBox}/>;
+            //console.log(this.props);
+            var replyBox = <scify.ReplyBox discussionthreadclientid={this.props.data.discussionThread.id} userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId} display={this.state.displayReplyBox}/>;
             return (
                 <div className="comment">
                     {avatarDiv}
@@ -402,7 +403,7 @@
         },
 
         render: function() {
-            var replyClasses = classNames("reply",{hide: this.state.source ==2 || !this.props.userDefined})//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var replyClasses = classNames("reply",{hide: this.state.source ==2})//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');

@@ -13,7 +13,6 @@ import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import utils.ImplicitReadWrites.FormErrorWrites
-import utils.ImplicitReadWrites.commentsWrites
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       val env: Environment[User, CookieAuthenticator],
@@ -47,7 +46,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
      annotation => {
 
        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
-       val comment = Comment(None, annotation.articleId, CommentSource.OpenGov,
+       val comment = Comment(None, annotation.articleId, None, CommentSource.OpenGov,
                            annotation.body,
                            annotation.userAnnotatedText,
                            Some(request.identity.userID),
@@ -76,6 +75,8 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val replyText = (parameterList \ "replyText").asOpt[String].get
     val userId = (parameterList \ "userId").asOpt[UUID].get
     val discussionthreadclientid = (parameterList \ "discussionthreadclientid").asOpt[Long].get
+
+    //val comment = new Comment()
     Ok(Json.toJson(annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)))
 
   }
