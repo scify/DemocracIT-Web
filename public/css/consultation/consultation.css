@@ -766,4 +766,11 @@ a.load {
   position: absolute;
   margin-top: 70px; }
 
+.replyComment {
+  margin-left: 40px; }
+
+.replyTitle {
+  margin-top: 30px;
+  margin-bottom: 10px; }
+
 /*# sourceMappingURL=consultation.css.map */

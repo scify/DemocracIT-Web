@@ -54,7 +54,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    //console.log(data);
+                    console.log(data);
                     instance.state.allComments = data;
                     instance.state.topComments = instance.findTopComments(data);
                     instance.state.comments =instance.state.topComments;
@@ -256,7 +256,7 @@
         },
         render: function() {
             //console.log(this.props.data);
-            if(this.props.parent == "consultation" || this.props.parent == "reporter") {
+            if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
                 var commentFromDB = this.props.data.comment;
@@ -291,6 +291,7 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
+                console.log(this.props);
                 options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
@@ -298,16 +299,38 @@
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-
-
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                var replyBox = <scify.ReplyBox discussionthreadclientid={this.props.data.discussionThread.id} userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId} display={this.state.displayReplyBox}/>;
+                var replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
+                                                 userId = {this.props.userId}
+                                                 data={this.props.data.commentReplies}
+                                                 parent="comment"
+                                                 userDefined={this.props.userDefined}/>
+                var commentClassNames="comment";
             } else if(this.props.parent == "reporterUserStats") {
+
                 options = <CommentActionsDisabled dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
                 if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
                 else
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
+                var replyBox = <div></div>;
+                var commentClassNames="comment";
+            } else if(this.props.parent == "comment") {
+                console.log(this.props);
+                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
+
+                if (this.props.data.profileUrl)
+                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
+                else
+                    commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                var replyBox = <div></div>;
+                var replies = <div></div>;
+                var commentClassNames="comment replyComment";
+
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null) {
@@ -321,9 +344,11 @@
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
             //console.log(this.props);
-            var replyBox = <scify.ReplyBox discussionthreadclientid={this.props.data.discussionThread.id} userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId} display={this.state.displayReplyBox}/>;
+            if(this.props.data.commentReplies.length > 0) {
+                var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
+            }
             return (
-                <div className="comment">
+                <div className={commentClassNames}>
                     {avatarDiv}
                     <div className='body'>
                         {commenterName}
@@ -336,6 +361,8 @@
                         <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
                      </div>
                         {replyBox}
+                        {replyTitle}
+                        {replies}
                 </div>
             );
         }

@@ -29,7 +29,7 @@ case class Comment(var id:Option[Long],
                    likesCounter: Int,
                    dislikesCounter:Int,
                    loggedInUserRating: Option[Boolean],
-                   commentReplies:List[Comment] = Nil
+                   var commentReplies:List[Comment] = Nil
                   )
 
 

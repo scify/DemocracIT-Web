@@ -134,15 +134,36 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     }
     else {
       comments = commentsRepository.getComments(discussionthreadclientid, pageSize, user_id)
-      //search comments to distiguish the ones that are comment replies
+      //search comments to distinguish the ones that are comment replies
       for(comment <- comments) {
         //if the comment has a parentId, it is a reply
-        if(comment.parentId.isDefined) {
-          val parentId = comment.parentId
+        if(comment.parentId.isDefined){
+          //get the parentId of the comment
+          val parentId = comment.parentId.get
+          //get the parent comment
+          val parentComment = getCommentById(comments, parentId).asInstanceOf[Comment]
+          //append the reply to the list of replies of the parent comment
+          parentComment.commentReplies = comment :: parentComment.commentReplies
+          //exclude (delete) reply from list of comments (only parent comments or comments with no replies should be in this list)
+          comments = comments.filterNot(element => element == comment)
         }
       }
     }
-
     comments
   }
+
+  /** Function which returns the comment from a list of comments by comment id
+    * @param comments the list od comments
+    * @param id id of the comment we want
+    */
+  def getCommentById(comments:List[Comment], id:Long):Any = {
+    var commentFound:Any = Nil
+    for(comment <- comments) {
+      if(comment.id.get == id) {
+        commentFound = comment
+      }
+    }
+    commentFound
+  }
+
 }
