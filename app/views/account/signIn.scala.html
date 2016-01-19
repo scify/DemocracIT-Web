@@ -1,4 +1,4 @@
-@(signInForm: Form[model.viewmodels.forms.SignInForm.SignUpData],returnUrl:Option[String], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
+@(signInForm: Form[model.viewmodels.forms.SignInForm.Data],returnUrl:Option[String], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
 @import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
 @import b3.inline.fieldConstructor
 
@@ -21,6 +21,7 @@
             @helper.CSRF.formField
             @b3.email(signInForm("email"), '_hiddenLabel -> messages("email"), 'placeholder -> messages("email"), 'class -> "form-control input-lg")
             @b3.password(signInForm("password"), '_hiddenLabel -> messages("password"), 'placeholder -> messages("password"), 'class -> "form-control input-lg")
+            <a href="@routes.PasswordChangeController.startResetPassword">@Messages("forgot.password")</a>
             @b3.checkbox(signInForm("rememberMe"), '_text -> messages("remember.me"), 'checked -> true)
             <input type="hidden" name="returnUrl" value="@returnUrl.getOrElse("")"/>
 
@@ -32,7 +33,7 @@
         }
 
         <div>
-            <p class="not-a-member">@messages("not.a.member") <a href="@routes.AccountController.signUp">@messages("sign.up.now")</a></p>
+            <p class="not-a-member">@messages("not.a.member") <a href="@routes.SignUpController.signUpRequest">@messages("sign.up.now")</a></p>
         </div>
 
         @if(socialProviders.providers.nonEmpty) {
