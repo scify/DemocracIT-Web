@@ -240,7 +240,7 @@
                     return x > y ? -1 : x < y ? 1 : 0;
                 });
             }
-            if (this.props.data.commentReplies.length > 1) sortByKey(this.props.data.commentReplies, "dateAdded");
+            if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 1) sortByKey(this.props.data.commentReplies, "dateAdded");
             return {
                 likeCounter: this.props.data.likesCounter,
                 dislikeCounter: this.props.data.dislikesCounter,
@@ -483,7 +483,7 @@
                 taggedTopicsContainer
             );
             //console.log(this.props);
-            if (this.props.data.commentReplies.length > 0) {
+            if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 0) {
                 var replyTitle = React.createElement(
                     "div",
                     { className: "replyTitle" },

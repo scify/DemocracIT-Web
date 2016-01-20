@@ -247,8 +247,9 @@
                 });
 
             }
-            if(this.props.data.commentReplies.length > 1)
-                sortByKey(this.props.data.commentReplies, 'dateAdded');
+            if(this.props.data.commentReplies!= undefined)
+                if(this.props.data.commentReplies.length > 1)
+                    sortByKey(this.props.data.commentReplies, 'dateAdded');
             return {
                         likeCounter: this.props.data.likesCounter,
                         dislikeCounter: this.props.data.dislikesCounter,
@@ -372,9 +373,10 @@
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
             //console.log(this.props);
-            if(this.props.data.commentReplies.length > 0) {
-                var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
-            }
+            if(this.props.data.commentReplies!= undefined)
+                if(this.props.data.commentReplies.length > 0) {
+                    var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
+                }
             return (
                 <div className={commentClassNames}>
                     {avatarDiv}

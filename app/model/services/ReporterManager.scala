@@ -67,7 +67,7 @@ class ReporterManager {
     val commentsRepository = new CommentsRepository()
     var comments:List[CommentWithArticleName] = Nil
     val loggedInUserId = if (loggedInUser.isDefined) Some(loggedInUser.get.userID) else None
-    comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id,loggedInUserId);
+    comments = commentsRepository.getCommentsForConsultationByUserId(consultationId, user_id,loggedInUserId)
     comments
   }
 
@@ -82,6 +82,24 @@ class ReporterManager {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getDITCommentsForArticle(articleId)
+    comments = distinguishCommentsAndReplies(comments)
+    comments
+  }
+
+  def getCommentsByAnnId(annId: Long, consultationId: Long): List[model.dtos.Comment] = {
+    val commentsRepository = new CommentsRepository()
+    var comments:List[model.dtos.Comment] = Nil
+    comments = commentsRepository.getCommentsByAnnId(annId: Long, consultationId: Long)
+    comments = distinguishCommentsAndReplies(comments)
+    comments
+  }
+
+  /** Function which distinguishes the comments from their replies and folds the replies into the comments
+    * @param comments the list od comments
+    * @return the new list with comment and folded commentReplies
+    */
+  def distinguishCommentsAndReplies(comments:List[Comment]):List[Comment] = {
+    var commentsFolded:List[Comment] = comments
     for(comment <- comments) {
       //if the comment has a parentId, it is a reply
       if(comment.parentId.isDefined){
@@ -92,23 +110,18 @@ class ReporterManager {
         //append the reply to the list of replies of the parent comment
         parentComment.commentReplies = comment :: parentComment.commentReplies
         //exclude (delete) reply from list of comments (only parent comments or comments with no replies should be in this list)
-        comments = comments.filterNot(element => element == comment)
+        commentsFolded = commentsFolded.filterNot(element => element == comment)
       }
     }
-    comments
+    commentsFolded
   }
 
-  def getCommentsByAnnId(annId: Long, consultationId: Long): List[model.dtos.Comment] = {
-    val commentsRepository = new CommentsRepository()
-    var comments:List[model.dtos.Comment] = Nil
-    comments = commentsRepository.getCommentsByAnnId(annId: Long, consultationId: Long)
-    comments
-  }
 
   def getCommentsByAnnIdPerArticle(annId: Long, articleId: Long): List[model.dtos.Comment] = {
     val commentsRepository = new CommentsRepository()
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getCommentsByAnnIdPerArticle(annId: Long, articleId: Long)
+    comments = distinguishCommentsAndReplies(comments)
     comments
   }
 
@@ -129,6 +142,7 @@ class ReporterManager {
     var comments:List[model.dtos.Comment] = Nil
     comments = commentsRepository.getDITCommentsForConsultation(consultationId: Long)
     var commentsToString = "Comment body, Annotated Text, Commenter Name, Date Added" + sys.props("line.separator")
+    comments = distinguishCommentsAndReplies(comments)
     for (comment <- comments) {
       commentsToString += '"' + comment.body + '"' + "," + '"' + comment.userAnnotatedText.get + '"'  +  "," + comment.fullName + "," + '"' + prettyDateFormat(comment.dateAdded) + '"'
       for(annotationTag <- comment.annotationTagTopics) {
