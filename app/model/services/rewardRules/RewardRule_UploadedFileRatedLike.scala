@@ -1,6 +1,8 @@
-package model.services
+package model.services.rewardRules
 
 import java.util.UUID
+
+import model.services.GamificationEngineTrait
 
 
 class RewardRule_UploadedFileRatedLike() extends RewardRuleTrait{

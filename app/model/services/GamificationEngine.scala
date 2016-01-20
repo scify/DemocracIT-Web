@@ -4,6 +4,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 import model.repositories.GamificationRepository
+import model.services.rewardRules.RewardRuleTrait
 
 
 class GamificationEngine @Inject()(val rules: Set[RewardRuleTrait] ) extends GamificationEngineTrait{

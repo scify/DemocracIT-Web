@@ -1,6 +1,7 @@
 package modules
 
 import com.google.inject.AbstractModule
+import model.services.rewardRules._
 import model.services._
 import net.codingwell.scalaguice.{ScalaModule, ScalaMultibinder}
 

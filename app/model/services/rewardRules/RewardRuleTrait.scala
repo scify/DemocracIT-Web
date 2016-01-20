@@ -1,4 +1,4 @@
-package model.services
+package model.services.rewardRules
 
 import java.util.UUID
 

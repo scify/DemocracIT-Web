@@ -1,7 +1,8 @@
-package model.services
+package model.services.rewardRules
 
 import java.util.UUID
-import javax.inject.Inject
+
+import model.services.GamificationEngineTrait
 
 
 class RewardRule_UploadFinalLaw() extends RewardRuleTrait{
