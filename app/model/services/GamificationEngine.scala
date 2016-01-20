@@ -24,8 +24,9 @@ class GamificationEngine @Inject()(val rules: Set[RewardRuleTrait] ) extends Gam
     } else if(relatedData.isInstanceOf[Long]) {
       itemId = relatedData
       gamificationRepository.savePoints(user_id, action_id, rule.head.getPoints(user_id), itemId)
+    } else {
+      gamificationRepository.savePoints(user_id, action_id, rule.head.getPoints(user_id), None)
     }
-
     0
   }
 }
