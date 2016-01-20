@@ -245,6 +245,7 @@
                     var x = a[key]; var y = b[key];
                     return ((x > y) ? -1 : ((x < y) ? 1 : 0));
                 });
+
             }
             if(this.props.data.commentReplies.length > 1)
                 sortByKey(this.props.data.commentReplies, 'dateAdded');
@@ -252,7 +253,8 @@
                         likeCounter: this.props.data.likesCounter,
                         dislikeCounter: this.props.data.dislikesCounter,
                         liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
-                        comment: this.props.data
+                        comment: this.props.data,
+                        displayReplyBox: false
                     };
 
         },
@@ -269,7 +271,6 @@
             this.setState(this.state);
         },
         render: function() {
-            console.log(this.props.data);
             if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -305,17 +306,23 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                console.log(this.props);
                 options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-                //Setting the comment to state because we may want to change the replies later
 
                 if (this.props.data.profileUrl)
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
-                var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment} discussionthreadclientid={this.props.data.discussionThread.id} userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId} display={this.state.displayReplyBox}/>;
+                console.log("this.handleSavedComment: " + this.handleSavedComment);
+                console.log("this.props.data.discussionThread.id: " + this.props.data.discussionThread.id);
+                console.log("this.props.userId: " + this.props.userId);
+                console.log("articleId: " + this.props.data.articleId);
+                console.log("parentId: " + this.props.data.id);
+                console.log("display: " + this.state.displayReplyBox);
+                var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment} discussionthreadclientid={this.props.data.discussionThread.id}
+                                               userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId}
+                                               display={this.state.displayReplyBox}/>;
                 var replies = <div></div>;
                 if(this.props.data.commentReplies.length > 0) {
                     replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
@@ -365,7 +372,7 @@
             if(this.props.data.commentReplies.length > 0) {
                 var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
             }
-            console.log("here");
+            console.log(replyBox);
             return (
                 <div className={commentClassNames}>
                     {avatarDiv}
@@ -453,7 +460,6 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
-            console.log(this.props);
             return (
                 <div>
                     <div className="options">

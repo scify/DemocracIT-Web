@@ -245,7 +245,8 @@
                 likeCounter: this.props.data.likesCounter,
                 dislikeCounter: this.props.data.dislikesCounter,
                 liked: this.props.data.loggedInUserRating, //if not null it means has liked/disliked this comment
-                comment: this.props.data
+                comment: this.props.data,
+                displayReplyBox: false
             };
         },
         componentDidMount: function componentDidMount() {
@@ -261,7 +262,6 @@
             this.setState(this.state);
         },
         render: function render() {
-            console.log(this.props.data);
             if (this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -317,14 +317,12 @@
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                console.log(this.props);
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource, id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
                     React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
                 );
-                //Setting the comment to state because we may want to change the replies later
 
                 if (this.props.data.profileUrl) commenterName = React.createElement(
                     "span",
@@ -350,7 +348,15 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
-                var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment, discussionthreadclientid: this.props.data.discussionThread.id, userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId, display: this.state.displayReplyBox });
+                console.log("this.handleSavedComment: " + this.handleSavedComment);
+                console.log("this.props.data.discussionThread.id: " + this.props.data.discussionThread.id);
+                console.log("this.props.userId: " + this.props.userId);
+                console.log("articleId: " + this.props.data.articleId);
+                console.log("parentId: " + this.props.data.id);
+                console.log("display: " + this.state.displayReplyBox);
+                var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment, discussionthreadclientid: this.props.data.discussionThread.id,
+                    userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId,
+                    display: this.state.displayReplyBox });
                 var replies = React.createElement("div", null);
                 if (this.props.data.commentReplies.length > 0) {
                     replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
@@ -481,7 +487,7 @@
                     "Απαντήσεις σε αυτό το σχόλιο:"
                 );
             }
-            console.log("here");
+            console.log(replyBox);
             return React.createElement(
                 "div",
                 { className: commentClassNames },
@@ -583,7 +589,6 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
-            console.log(this.props);
             return React.createElement(
                 "div",
                 null,

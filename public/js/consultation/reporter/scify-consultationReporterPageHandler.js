@@ -158,35 +158,35 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
             }
             if (domElementDITComments) {
-                console.log(instance.commentListProperties);
+                //console.log(instance.commentListProperties);
                 window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
             }
         },
-        createListOfCommentsByAnnId = function() {
+        createListOfCommentsByAnnId = function(instance) {
             var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
             if (domElementCommentsByAnnId) {
-                window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnId);
+                window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnId);
             }
 
         },
 
-        createListOfCommentsByProblemId = function() {
+        createListOfCommentsByProblemId = function(instance) {
             var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
             if (domElementCommentsByProblemId) {
-                window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemId);
+                window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemId);
             }
 
         },
-        createListOfCommentsByAnnIdPerArticle = function() {
+        createListOfCommentsByAnnIdPerArticle = function(instance) {
             var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
             if (domElementCommentsByAnnIdPerArticle) {
-                window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByAnnIdPerArticle);
+                window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
             }
         },
-        createListOfCommentsByProblemIdPerArticle = function() {
+        createListOfCommentsByProblemIdPerArticle = function(instance) {
             var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
             if (domElementCommentsByProblemIdPerArticle) {
-                window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, null), domElementCommentsByProblemIdPerArticle);
+                window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
             }
         },
         createArticleWordCloudChart = function() {
@@ -589,10 +589,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createUserBox(this);
         createCommentListParams(instance);
         createListOfCommentsPerArticle(instance);
-        createListOfCommentsByAnnId();
-        createListOfCommentsByProblemId();
-        createListOfCommentsByAnnIdPerArticle();
-        createListOfCommentsByProblemIdPerArticle();
+        createListOfCommentsByAnnId(instance);
+        createListOfCommentsByProblemId(instance);
+        createListOfCommentsByAnnIdPerArticle(instance);
+        createListOfCommentsByProblemIdPerArticle(instance);
         createArticleWordCloudChart(instance);
         attachTooltips();
         createFinalLawUpload(instance);
