@@ -40,7 +40,6 @@
                 },
                 success: function success(comment) {
                     instance.props.onReplySuccess(comment);
-                    //console.log(comment);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -63,12 +62,12 @@
                             className: 'btn blue replyBtn'
                         }, 'Καταχώρηση'));
                     } else {
-                        //displayNotLoggedIn();
-                        return React.createElement(
-                            'div',
-                            null,
-                            'not logged in'
-                        );
+                        swal({
+                            title: 'Είσοδος',
+                            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a>',
+                            html: true
+                        });
+                        return React.createElement('div', null);
                     }
                 } else {
                     return React.createElement(

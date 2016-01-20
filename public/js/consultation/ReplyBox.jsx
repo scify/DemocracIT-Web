@@ -36,8 +36,6 @@
                 },
                 success : function(comment){
                     instance.props.onReplySuccess(comment);
-                    //console.log(comment);
-
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -65,9 +63,13 @@
                             )
                         )
                     } else {
-                        //displayNotLoggedIn();
+                        swal({
+                            title: "Είσοδος",
+                            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a>',
+                            html: true
+                        });
                         return (
-                            <div>not logged in</div>
+                            <div></div>
                         );
                     }
                 } else {
