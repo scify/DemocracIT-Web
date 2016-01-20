@@ -299,7 +299,7 @@ a.load {
 .commentBox .comment .options a {
   cursor: pointer; }
 
-.commentBox .comment .options .reply {
+.comment .options .reply {
   margin-right: 15px; }
 
 .commentBox .comment .options .reply .fa {

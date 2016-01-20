@@ -348,15 +348,18 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
-                console.log("this.handleSavedComment: " + this.handleSavedComment);
-                console.log("this.props.data.discussionThread.id: " + this.props.data.discussionThread.id);
-                console.log("this.props.userId: " + this.props.userId);
-                console.log("articleId: " + this.props.data.articleId);
-                console.log("parentId: " + this.props.data.id);
-                console.log("display: " + this.state.displayReplyBox);
-                var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment, discussionthreadclientid: this.props.data.discussionThread.id,
-                    userId: this.props.userId, parentId: this.props.data.id, articleId: this.props.data.articleId,
-                    display: this.state.displayReplyBox });
+
+                //we should create a reply box only for comments from DemocracIT
+                if (this.props.data.source.commentSource == 1) {
+                    var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
+                        discussionthreadclientid: this.props.data.discussionThread.id,
+                        userId: this.props.userId, parentId: this.props.data.id,
+                        articleId: this.props.data.articleId,
+                        display: this.state.displayReplyBox });
+                } else {
+                    var replyBox = React.createElement("div", null);
+                }
+
                 var replies = React.createElement("div", null);
                 if (this.props.data.commentReplies.length > 0) {
                     replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
@@ -487,7 +490,6 @@
                     "Απαντήσεις σε αυτό το σχόλιο:"
                 );
             }
-            console.log(replyBox);
             return React.createElement(
                 "div",
                 { className: commentClassNames },

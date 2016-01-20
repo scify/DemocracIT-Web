@@ -152,6 +152,7 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     comments
   }
 
+
   /** Function which returns the comment from a list of comments by comment id
     *
     * @param comments the list od comments
@@ -166,5 +167,6 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     }
     commentFound
   }
+
 
 }

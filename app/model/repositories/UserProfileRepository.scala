@@ -41,4 +41,16 @@ class UserProfileRepository {
     }
 
   }
+
+  /** Function which returns the user full name based on user id
+    * @param userId user id
+    */
+  def getUserFullNameById(userId: UUID):String = {
+    DB.withConnection { implicit c =>
+      val result:String = SQL"""
+            select fullname from account.user where id = CAST($userId as UUID)
+            """.as(SqlParser.str("fullname").single)
+      result
+    }
+  }
 }

@@ -50,7 +50,6 @@
             });
         },
         render: function render() {
-            console.log(this.props);
             if (this.props.display) {
                 if (!this.state.busy) {
                     if (this.props.userId) {

@@ -314,15 +314,18 @@
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
-                console.log("this.handleSavedComment: " + this.handleSavedComment);
-                console.log("this.props.data.discussionThread.id: " + this.props.data.discussionThread.id);
-                console.log("this.props.userId: " + this.props.userId);
-                console.log("articleId: " + this.props.data.articleId);
-                console.log("parentId: " + this.props.data.id);
-                console.log("display: " + this.state.displayReplyBox);
-                var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment} discussionthreadclientid={this.props.data.discussionThread.id}
-                                               userId={this.props.userId} parentId={this.props.data.id} articleId={this.props.data.articleId}
-                                               display={this.state.displayReplyBox}/>;
+
+                //we should create a reply box only for comments from DemocracIT
+                if(this.props.data.source.commentSource == 1) {
+                    var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
+                                                   discussionthreadclientid={this.props.data.discussionThread.id}
+                                                   userId={this.props.userId} parentId={this.props.data.id}
+                                                   articleId={this.props.data.articleId}
+                                                   display={this.state.displayReplyBox}/>;
+                } else {
+                    var replyBox =<div></div>;
+                }
+
                 var replies = <div></div>;
                 if(this.props.data.commentReplies.length > 0) {
                     replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
@@ -372,7 +375,6 @@
             if(this.props.data.commentReplies.length > 0) {
                 var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
             }
-            console.log(replyBox);
             return (
                 <div className={commentClassNames}>
                     {avatarDiv}

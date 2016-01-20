@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
-import model.services.{AnnotationManager, GamificationEngineTrait}
+import model.services.{UserProfileManager, AnnotationManager, GamificationEngineTrait}
 import model.viewmodels.forms.{RateCommentForm, _}
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
@@ -77,11 +77,11 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val userId = (parameterList \ "userId").asOpt[UUID].get
     val discussionthreadclientid = (parameterList \ "discussionthreadclientid").asOpt[Long].get
 
-    //val comment = new Comment()
     val today = Calendar.getInstance.getTime
     val emptyAnnotationTags:List[AnnotationTags] = Nil
     val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
-    val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, "NAME HERE", None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None)
+    val userManager = new UserProfileManager()
+    val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None)
 
     Ok(Json.toJson(comment))
 
