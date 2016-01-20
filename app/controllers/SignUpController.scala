@@ -143,13 +143,14 @@ class SignUpController @Inject() (
           for {
             avatar <- avatarService.retrieveURL(tokenUser.email)
             user <- userService.save(user.copy(avatarURL = avatar))
-            //authInfo <- authInfoRepository.add(loginInfo, authInfo)
             authenticator <- env.authenticatorService.create(loginInfo)
             value <- env.authenticatorService.init(authenticator)
             result <- env.authenticatorService.embed(value, Redirect(routes.HomeController.index()))
+
           } yield {
             env.eventBus.publish(SignUpEvent(user, request, request2Messages))
             env.eventBus.publish(LoginEvent(user, request, request2Messages))
+            tokenService.consume(tokenUser.id)
             result
           }
         case unknown => Future.failed(new RuntimeException(s"authInfoRepository.find(loginInfo) returned an unexpected type $unknown"))
