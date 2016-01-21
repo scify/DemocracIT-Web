@@ -1,15 +1,15 @@
-package utils
-
+package model.services
 
 import model.viewmodels.forms.SignUpForm.SignUpData
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.twirl.api.Html
+import utils.MailService
 
 import scala.language.implicitConversions
 
-object Mailer {
+object MailerManager {
 
   implicit def html2String (html: Html): String = html.toString
 

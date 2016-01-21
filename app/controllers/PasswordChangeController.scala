@@ -13,7 +13,7 @@ import com.mohiva.play.silhouette.api.util.{Credentials, PasswordInfo, PasswordH
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import controllers.PasswordChangeController.ChangeInfo
 import model.dtos.User
-import model.services.{TokenUser, TokenService, UserService}
+import model.services.{MailerManager, TokenUser, TokenService, UserService}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
@@ -21,7 +21,7 @@ import play.api.i18n.{ MessagesApi, Messages }
 import play.api.mvc._
 import play.api.{Logger}
 import play.api.libs.concurrent.Execution.Implicits._
-import utils.{MailService, Mailer}
+import utils.MailService
 
 import scala.language.postfixOps
 import scala.concurrent.Future
@@ -80,7 +80,7 @@ class PasswordChangeController @Inject() (
           case Some(user) => {
             val token = TokenUser(email)
             tokenService.create(token)
-            Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(token.id).absoluteURL())(mailService)
+            MailerManager.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(token.id).absoluteURL())(mailService)
             Future.successful(Ok(views.html.account.sentResetPassword(email)))
           }
           case None => {

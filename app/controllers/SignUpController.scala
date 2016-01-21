@@ -11,12 +11,12 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers._
 import model.dtos.User
 import model.viewmodels.forms.SignUpForm
-import model.services.{TokenUser, TokenService, UserService}
+import model.services.{MailerManager, TokenUser, TokenService, UserService}
 
 import play.api.i18n.{MessagesApi, Messages}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Result, Action}
-import utils.{Mailer, MailService}
+import utils.MailService
 
 import scala.concurrent.Future
 import scala.reflect.ClassTag
@@ -103,7 +103,7 @@ class SignUpController @Inject() (
     */
   def signUpRequestRegistration = Action.async { implicit request =>
     SignUpForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.account.signUp(form,socialProviderRegistry))),
+      validationData => Future.successful(BadRequest(views.html.account.signUp(validationData,socialProviderRegistry))),
       signUpData => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, signUpData.email)
 
@@ -116,7 +116,7 @@ class SignUpController @Inject() (
             authInfoRepository.save(loginInfo, authInfo)
             val token = TokenUser(signUpData.email, true, signUpData.firstName, signUpData.lastName)
             tokenService.create(token)
-            utils.Mailer.welcome(signUpData, link = routes.SignUpController.signUpCompletion(token.id).absoluteURL())(mailService)
+            MailerManager.welcome(signUpData, link = routes.SignUpController.signUpCompletion(token.id).absoluteURL())(mailService)
             Future.successful(Ok(views.html.account.almostSignedUp(signUpData)))
 
           case unknown => Future.failed(new RuntimeException(s"userService.retrieve(loginInfo) returned an unexpected type $unknown"))
