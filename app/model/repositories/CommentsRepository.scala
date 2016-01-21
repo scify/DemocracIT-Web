@@ -724,7 +724,8 @@ class CommentsRepository {
                       date_added,
                       revision,
                       depth,
-                      annotatedtext)
+                      annotatedtext,
+                      emotion_id)
           VALUES
                     (
                       NULL,
@@ -737,7 +738,8 @@ class CommentsRepository {
                       now(),
                       ${comment.revision},
                       ${comment.depth},
-                      ${comment.userAnnotatedText})
+                      ${comment.userAnnotatedText},
+                      ${comment.emotionId})
                   """.executeInsert()
 
 

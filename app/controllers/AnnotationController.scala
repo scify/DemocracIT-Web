@@ -45,7 +45,6 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-
        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
        val comment = Comment(None, annotation.articleId, None, CommentSource.OpenGov,
                            annotation.body,
@@ -59,7 +58,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
                            "",
                           annotation.annotationTagProblems.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,2)).toList,
                           annotation.annotationTagTopics.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,1)).toList,
-                          Some(discussionthread),0,0,None)
+                          Some(discussionthread),0,0,None,Nil,annotation.emotionId)
 
        val savedComment = annotationManager.saveComment(comment)
        Ok(Json.toJson(savedComment))
@@ -81,7 +80,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val emptyAnnotationTags:List[AnnotationTags] = Nil
     val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
     val userManager = new UserProfileManager()
-    val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None)
+    val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None,Nil,None)
 
     Ok(Json.toJson(comment))
 

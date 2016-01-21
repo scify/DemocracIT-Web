@@ -87,7 +87,8 @@
                 userAnnotatedText: data.userAnnotatedText,
                 body: data.body,
                 annotationTagTopics: data.annotationTagTopics,
-                annotationTagProblems: data.annotationTagProblems
+                annotationTagProblems: data.annotationTagProblems,
+                emotionId: data.emotionId
             };
 
             //todo: cancel any previous events

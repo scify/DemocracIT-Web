@@ -283,7 +283,18 @@ scify.Annotator.prototype = (function(){
 
 
         },
+        handleEmotion = function(instance) {
+            console.log("here");
+            $(".emotionItem").click(function() {
+                var emotionId = $(this).attr('data-id');
+                $(".emotionItem").removeClass("clicked");
+                $("#emotion" + emotionId).addClass("clicked");
+                $('input[name=emotionId]').val(emotionId);
+                console.log("emotion: " + $('input[name=emotionId]').val());
+            });
+        },
         init = function(){
+            var instance = this;
             createAnnotatableAreas();
             attachAnnotationPrompts();
             attachAnnotationEvents();
@@ -307,6 +318,8 @@ scify.Annotator.prototype = (function(){
             });
 
             $("#toolbar-modal").find("form").submit(handleAnnotationSave.bind(this));
+
+            handleEmotion(instance);
 
         };
 

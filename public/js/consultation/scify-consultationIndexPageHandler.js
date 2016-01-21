@@ -126,6 +126,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
+        console.log(data);
         getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
      },
     replaceRelevantLaws = function(relevantLaws) {
