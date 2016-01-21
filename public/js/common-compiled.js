@@ -24,11 +24,7 @@ scify.ReactLoader = React.createClass({
     var handleAjaxLoginErrors = function handleAjaxLoginErrors(event, request, settings) {
         if (request.status == 401) {
 
-            swal({
-                title: "Είσοδος",
-                text: "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"" + request.responseJSON + "\">συνδεδεμένοι</a>",
-                html: true
-            });
+            displayNotLoggedIn();
         }
 
         if (request.status == 403) {
@@ -37,6 +33,13 @@ scify.ReactLoader = React.createClass({
                 text: response.body,
                 html: true });
         }
+    },
+        displayNotLoggedIn = function displayNotLoggedIn() {
+        swal({
+            title: "Είσοδος",
+            text: "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"" + request.responseJSON + "\">συνδεδεμένοι</a>",
+            html: true
+        });
     },
         initToolTips = function initToolTips() {
         $("[data-toggle=\"tooltip\"]").tooltip();

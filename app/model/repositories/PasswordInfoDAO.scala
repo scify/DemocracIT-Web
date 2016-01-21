@@ -8,8 +8,7 @@ import play.api.db.DB
 import play.api.libs.concurrent.Execution.Implicits._
 import java.util.UUID
 import com.mohiva.play.silhouette.api.LoginInfo
-import model.User
-import model.dtos.{DBPasswordInfo, DBLoginInfo}
+import model.dtos.{User, DBPasswordInfo, DBLoginInfo}
 import model.repositories.anorm._
 import play.api.db.DB
 import scala.collection.mutable
@@ -48,7 +47,11 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
    */
   def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
     Future.successful {
-      val dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+      var dbloginInfo = AccountRepository.findLoginInfo(loginInfo)
+
+      if (dbloginInfo.isEmpty)
+        dbloginInfo  = Some(AccountRepository.saveLoginInfo(loginInfo))
+
       this.savePasswordInfo(authInfo,dbloginInfo.get.id)
     }
   }

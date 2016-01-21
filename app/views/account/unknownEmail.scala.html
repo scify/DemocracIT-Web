@@ -1,0 +1,23 @@
+@()(implicit messages: Messages)
+
+@js = {
+
+}
+@css = {
+
+}
+
+@layout("Ανάκτηση κωδικού", css, js, None) {
+    <fieldset class="col-md-6 col-md-offset-3">
+        <legend>Το email σας δεν βρέθηκε</legend>
+        <div class="user col-md-6 col-md-offset-3">
+            <div class="row data">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p>Δεν υπάρχει χρήστης με τη συγκεκριμένη διεύθυνση email. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+}

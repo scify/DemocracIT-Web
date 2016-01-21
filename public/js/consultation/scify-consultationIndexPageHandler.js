@@ -5,8 +5,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                consultationIsActive,
                                                imagesPath,
                                                consultationEndDate){
-    console.log(userId);
-    console.log(finalLawUserId);
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
@@ -78,6 +76,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
             }
             $(articleDiv).find(".ann").each(function(i,ann){
+                //userDefined is true when the user is logged in. We need to parse it to the comment box
+                //to know whether the user can post a reply or not.
+                var userDefined = true;
+                if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
+                    userDefined = false;
+                }
                 var annId = $(ann).data("id");
                 commentBoxProperties.discussionthreadclientid = getDiscussionThreadClientId(articleid,annId );
                 commentBoxProperties.discussionthreadid = getDiscussionThreadId.call(instance,articleid,annId );
@@ -87,6 +91,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
+                commentBoxProperties.userDefined = userDefined;
 
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
@@ -327,6 +332,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     },
+    finalLawModalHandler = function() {
+        $( "#finalLawModalBtn" ).click(function() {
+            console.log("wsadfrs");
+            $(".modal-body .container .consultationText div").first().find(".show-hide").click();
+            $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
+            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
+        });
+    },
     deleteFinalLawHandler = function(instance) {
 
         $( "#deleteFinalLaw" ).click(function() {
@@ -338,7 +351,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
-                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
@@ -388,7 +401,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
-
+        finalLawModalHandler();
     };
 
     return {

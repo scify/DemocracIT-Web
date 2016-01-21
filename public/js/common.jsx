@@ -22,11 +22,7 @@ var handleAjaxLoginErrors = function(event, request, settings){
         if (request.status == 401)
         {
 
-            swal({
-                title: "Είσοδος",
-                text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="'+request.responseJSON+'">συνδεδεμένοι</a>',
-                html: true
-            });
+            displayNotLoggedIn();
         }
 
         if (request.status == 403)
@@ -36,6 +32,13 @@ var handleAjaxLoginErrors = function(event, request, settings){
                 text: response.body,
                 html: true});
         }
+    },
+    displayNotLoggedIn = function() {
+        swal({
+            title: "Είσοδος",
+            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="'+request.responseJSON+'">συνδεδεμένοι</a>',
+            html: true
+        });
     },
     initToolTips = function(){
         $('[data-toggle="tooltip"]').tooltip()

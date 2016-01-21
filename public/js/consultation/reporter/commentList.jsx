@@ -30,7 +30,7 @@
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    //console.log(data);
+                    console.log(data);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -133,6 +133,8 @@
             //return promise;
         },
         render: function() {
+            //console.log(this.props);
+            //console.log(this.state.comments);
             if(this.state.display) {
                 if (this.state.busy) {
                     return (
@@ -142,7 +144,7 @@
                     );
                 }
                 return (
-                    <scify.CommentList data={this.state.comments} parent="reporter"/>
+                    <scify.CommentList consultationEndDate={this.props.consultationEndDate} userId = {this.props.userId} userDefined={this.props.userDefined} data={this.state.comments} parent="reporter"/>
                 );
             } else {
                 return (

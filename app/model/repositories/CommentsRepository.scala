@@ -43,6 +43,39 @@ class CommentsRepository {
 
   }
 
+  def howManyLikesToday(userId:UUID):Int = {
+    DB.withConnection { implicit c =>
+      val answer:Int = SQL"""
+            select count(*) as numberOfCommentLikes from comment_rating where user_id = cast($userId as uuid)
+            and date_part('year',date_added) = date_part('year',now())
+            and date_part('month',date_added) = date_part('month',now())
+            and date_part('day',date_added) = date_part('day',now())""".as(SqlParser.int("numberOfCommentLikes").single)
+      answer
+    }
+  }
+
+  def howManyCommentsToday(userId:UUID):Int = {
+    DB.withConnection { implicit c =>
+      val answer:Int = SQL"""
+            select count(*) as numberOfComments from comments where user_id = cast($userId as uuid)
+            and date_part('year',date_added) = date_part('year',now())
+            and date_part('month',date_added) = date_part('month',now())
+            and date_part('day',date_added) = date_part('day',now())""".as(SqlParser.int("numberOfComments").single)
+      answer
+    }
+  }
+
+
+
+  def cancelLikeReward(userId:UUID, comment_id:Long):Unit = {
+    DB.withConnection { implicit c =>
+      SQL"""
+            delete from user_awards
+            where user_id = cast($userId as UUID) and cast(related_data as Bigint) = $comment_id
+              """.execute()
+    }
+  }
+
   def getCommentsByAnnId (annId:Long,
                           consultationId :Long):List[Comment]  = {
 
@@ -50,29 +83,49 @@ class CommentsRepository {
       val comments:List[Comment]=
         SQL"""
                with ratingCounter as
-                                   (
-                                    select cr.comment_id,
-                                   	sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
-                                   	sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
-                                    from comment_rating cr
-                                        inner join comments c on cr.comment_id  = c.id
-                                        inner join public.articles a on a.id = c.article_id
-                                     where a.consultation_id = $consultationId
-                                  group by cr.comment_id
-                                 )
-              select  c.*,ann.description,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
-                      cr.liked as userrating,
-                      counter.likes,
-                      counter.dislikes
-              from comments c
-                   inner join public.articles a on a.id = c.article_id
-                   inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                   inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
-                   inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
-                   inner join account.user u on u.id = c.user_id
-                   left outer join public.comment_rating cr on cr.comment_id = c.id
-                   left outer join ratingCounter counter on counter.comment_id = c.id
-              where a.consultation_id = $consultationId and ann.id = $annId""".as(CommentsParser.Parse *)
+               (
+                  select cr.comment_id,
+                  sum(case when CAST(cr.liked as INT) =1 then 1 else 0 end) as likes,
+                  sum(case when CAST(cr.liked as INT) =0 then 1 else 0 end) as dislikes
+                  from comment_rating cr
+                  inner join comments c on cr.comment_id  = c.id
+                  inner join public.articles a on a.id = c.article_id
+                  where a.consultation_id = $consultationId
+                  group by cr.comment_id
+             ),
+            topLevelComments as (
+
+                  select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                          cr.liked as userrating,
+                          counter.likes,
+                          counter.dislikes
+                  from comments c
+                       inner join public.articles a on a.id = c.article_id
+                       inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                       inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
+                       inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
+                       inner join account.user u on u.id = c.user_id
+                       left outer join public.comment_rating cr on cr.comment_id = c.id
+                       left outer join ratingCounter counter on counter.comment_id = c.id
+                       where a.consultation_id = $consultationId and ann.id = $annId
+             ),
+           replies as (
+                  select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                                    cr.liked as userrating,
+                                    counter.likes,
+                                    counter.dislikes
+                 from comments c
+                      inner join public.articles a on a.id = c.article_id
+                      inner join  topLevelComments tlc on c.parent_id = tlc.id
+                      inner join account.user u on u.id = c.user_id
+                      inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                      left outer join public.comment_rating cr on cr.comment_id = c.id
+                      left outer join ratingCounter counter on counter.comment_id = c.id
+                 where a.consultation_id = $consultationId
+          )
+          select  * from topLevelComments
+          union
+          select  * from replies""".as(CommentsParser.Parse *)
 
 
       comments
@@ -95,19 +148,39 @@ class CommentsRepository {
                                         inner join public.articles a on a.id = c.article_id
                                      where c.article_id = $articleId
                                   group by cr.comment_id
-                                 )
-              select  c.*,ann.description,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
-                      cr.liked as userrating,
-                      counter.likes,
-                      counter.dislikes
-              from comments c
-                   inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
-                   inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                   inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
-                   inner join account.user u on u.id = c.user_id
-                   left outer join public.comment_rating cr on cr.comment_id = c.id
-                   left outer join ratingCounter counter on counter.comment_id = c.id
-              where c.article_id = $articleId and ann.id = $annId""".as(CommentsParser.Parse *)
+                                 ),
+           topLevelComments as (
+                             select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                                     cr.liked as userrating,
+                                     counter.likes,
+                                     counter.dislikes
+                             from comments c
+                                  inner join public.articles a on a.id = c.article_id
+                                  inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                  inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
+                                  inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
+                                  inner join account.user u on u.id = c.user_id
+                                  left outer join public.comment_rating cr on cr.comment_id = c.id
+                                  left outer join ratingCounter counter on counter.comment_id = c.id
+                                  where a.id = $articleId and ann.id = $annId
+                        ),
+           replies as (
+                             select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                                               cr.liked as userrating,
+                                               counter.likes,
+                                               counter.dislikes
+                            from comments c
+                                 inner join public.articles a on a.id = c.article_id
+                                 inner join  topLevelComments tlc on c.parent_id = tlc.id
+                                 inner join account.user u on u.id = c.user_id
+                                 inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                                 left outer join public.comment_rating cr on cr.comment_id = c.id
+                                 left outer join ratingCounter counter on counter.comment_id = c.id
+                            where a.id = $articleId
+                     )
+                     select  * from topLevelComments
+                     union
+                     select  * from replies""".as(CommentsParser.Parse *)
 
 
       comments
@@ -228,6 +301,41 @@ class CommentsRepository {
       comments
 
 
+    }
+  }
+
+  def saveCommentReply(replyText:String, parentId:Long, articleId:Long, discussionthreadclientid:Long, userId:UUID):Long = {
+    DB.withConnection { implicit c =>
+      val commentId:Option[Long] = SQL"""
+          INSERT INTO public.comments
+                      (
+                      url_source,
+                      article_id,
+                      parent_id,
+                      "comment",
+                      source_type_id,
+                      discussion_thread_id,
+                      user_id,
+                      date_added,
+                      revision,
+                      depth,
+                      annotatedtext)
+          VALUES
+                    (
+                      NULL,
+                      $articleId,
+                      $parentId,
+                      $replyText,
+                      1,
+                      $discussionthreadclientid,
+                      $userId::uuid,
+                      now(),
+                      1,
+                      1,
+                      NULL)
+                  """.executeInsert()
+
+      commentId.get
     }
   }
 
@@ -447,7 +555,7 @@ class CommentsRepository {
                                                      select a.id, count(*) as comments_num
                                                      			from comments c inner join public.articles a on a.id = c.article_id
                                                      					inner join public.consultation con on con.id = a.consultation_id
-                                                     			where a.consultation_id = $consultationId
+                                                     			where a.consultation_id = $consultationId  and c.parent_id is null
                                                      			group by a.id
                                                      )
                                                      select a.id as article_id, a.consultation_id, a.body as article_body, a.title as article_title, a.art_order, ac.comments_num as comment_num
@@ -474,7 +582,7 @@ class CommentsRepository {
                                             select c.*
                                             from comments c inner join public.articles a on a.id = c.article_id
                                             inner join public.consultation con on con.id = a.consultation_id
-                                            where a.consultation_id = $consultation_id
+                                            where a.consultation_id = $consultation_id  and c.parent_id is null
                                           )
                                         select articles.title as article_title,
                                               articles.id as article_id,
@@ -579,7 +687,7 @@ class CommentsRepository {
               select t.id,t.tagid, t.typeid, count(*) as numberOfComments from public.comments c
                 inner join public.articles a on a.id = c.article_id
                 inner join public.discussion_thread t on t.id = c.discussion_thread_id
-                where a.consultation_id = $consultationId
+                where a.consultation_id = $consultationId and c.parent_id is null
               group by t.id,t.tagid
               """.as(DiscussionThreadWithCommentsCountParser.Parse *)
     }

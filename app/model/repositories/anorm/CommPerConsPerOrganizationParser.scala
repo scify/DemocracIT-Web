@@ -13,7 +13,7 @@ object CommPerConsPerOrganizationParser{
     str("organizationName") ~
     str("commentWindow") ~
     int("numberOfConsultations") ~
-      str("groupTitle") ~
+      get[Option[String]]("groupTitle") ~
       str("cons_ids")map
       {
         case organizationId ~ organizationName ~ commentWindow ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
