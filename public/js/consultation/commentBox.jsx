@@ -318,6 +318,7 @@
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
                 //we should create a reply box only for comments from DemocracIT
+                //console.log(this.props.data);
                 if(this.props.data.source.commentSource == 1) {
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
                                                    discussionthreadclientid={this.props.data.discussionThread.id}
@@ -327,7 +328,26 @@
                 } else {
                     var replyBox =<div></div>;
                 }
-
+                var emotion = <div></div>;
+                if(this.props.data.emotionId != undefined) {
+                    switch(this.props.data.emotionId) {
+                        case 1:
+                            emotion = <div className="userEmotion">Συναίσθημα: <img src="../assets/images/emoticons/emoticon-superhappy.png"></img></div>;
+                            break;
+                        case 2:
+                            emotion = <div className="userEmotion">Συναίσθημα: <img src="../assets/images/emoticons/emoticon-happy.png"></img></div>;
+                            break;
+                        case 3:
+                            emotion = <div className="userEmotion">Συναίσθημα: <img src="../assets/images/emoticons/emoticon-worried.png"></img></div>;
+                            break;
+                        case 4:
+                            emotion = <div className="userEmotion">Συναίσθημα: <img src="../assets/images/emoticons/emoticon-sad.png"></img></div>;
+                            break;
+                        case 5:
+                            emotion = <div className="userEmotion">Συναίσθημα: <img src="../assets/images/emoticons/emoticon-angry.png"></img></div>;
+                            break;
+                    }
+                }
                 var replies = <div></div>;
                 if(this.props.data.commentReplies.length > 0) {
                     replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
@@ -339,7 +359,7 @@
                 }
                 var commentClassNames="comment";
             } else if(this.props.parent == "reporterUserStats") {
-
+                var emotion = <div></div>;
                 options = <CommentActionsDisabled dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
                 if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
@@ -360,7 +380,7 @@
                 var replyBox = <div></div>;
                 var replies = <div></div>;
                 var commentClassNames="comment replyComment";
-
+                var emotion = <div></div>;
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null) {
@@ -388,6 +408,7 @@
                         {topicsHtml}
                     </div>
                     {options}
+                    {emotion}
                     <div className={iconsClasses}>
                         <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
                      </div>

@@ -351,6 +351,7 @@
                 );
 
                 //we should create a reply box only for comments from DemocracIT
+                //console.log(this.props.data);
                 if (this.props.data.source.commentSource == 1) {
                     var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
                         discussionthreadclientid: this.props.data.discussionThread.id,
@@ -360,7 +361,51 @@
                 } else {
                     var replyBox = React.createElement("div", null);
                 }
-
+                var emotion = React.createElement("div", null);
+                if (this.props.data.emotionId != undefined) {
+                    switch (this.props.data.emotionId) {
+                        case 1:
+                            emotion = React.createElement(
+                                "div",
+                                { className: "userEmotion" },
+                                "Συναίσθημα: ",
+                                React.createElement("img", { src: "../assets/images/emoticons/emoticon-superhappy.png" })
+                            );
+                            break;
+                        case 2:
+                            emotion = React.createElement(
+                                "div",
+                                { className: "userEmotion" },
+                                "Συναίσθημα: ",
+                                React.createElement("img", { src: "../assets/images/emoticons/emoticon-happy.png" })
+                            );
+                            break;
+                        case 3:
+                            emotion = React.createElement(
+                                "div",
+                                { className: "userEmotion" },
+                                "Συναίσθημα: ",
+                                React.createElement("img", { src: "../assets/images/emoticons/emoticon-worried.png" })
+                            );
+                            break;
+                        case 4:
+                            emotion = React.createElement(
+                                "div",
+                                { className: "userEmotion" },
+                                "Συναίσθημα: ",
+                                React.createElement("img", { src: "../assets/images/emoticons/emoticon-sad.png" })
+                            );
+                            break;
+                        case 5:
+                            emotion = React.createElement(
+                                "div",
+                                { className: "userEmotion" },
+                                "Συναίσθημα: ",
+                                React.createElement("img", { src: "../assets/images/emoticons/emoticon-angry.png" })
+                            );
+                            break;
+                    }
+                }
                 var replies = React.createElement("div", null);
                 if (this.props.data.commentReplies.length > 0) {
                     replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
@@ -372,7 +417,7 @@
                 }
                 var commentClassNames = "comment";
             } else if (this.props.parent == "reporterUserStats") {
-
+                var emotion = React.createElement("div", null);
                 options = React.createElement(CommentActionsDisabled, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
                 commentBody = React.createElement(
                     "div",
@@ -443,6 +488,7 @@
                 var replyBox = React.createElement("div", null);
                 var replies = React.createElement("div", null);
                 var commentClassNames = "comment replyComment";
+                var emotion = React.createElement("div", null);
             }
             if (this.props.parent == "reporter") {
                 if (this.props.data.userAnnotatedText != null) {
@@ -504,6 +550,7 @@
                     topicsHtml
                 ),
                 options,
+                emotion,
                 React.createElement(
                     "div",
                     { className: iconsClasses },
