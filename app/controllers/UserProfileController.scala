@@ -18,7 +18,7 @@ class UserProfileController @Inject()(val messagesApi: MessagesApi,
 
   def getUserPage() = UserAwareAction { implicit request =>
 
-    Ok(views.html.account.user_profile(userProfileManager.get(request.identity.get.userID)))
+    Ok(views.html.account.userProfile(userProfileManager.get(request.identity.get.userID)))
   }
 
 
