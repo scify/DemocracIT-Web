@@ -3,11 +3,11 @@ package model.repositories.anorm
 import anorm.SqlParser._
 import anorm._
 import com.mohiva.play.silhouette.api.LoginInfo
-import model.dtos.DBLoginInfo
+import model.dtos.{User, DBLoginInfo}
 
 object UserParser{
 
-  val Parse: RowParser[model.User] = {
+  val Parse: RowParser[User] = {
 
       get[java.util.UUID]("id") ~
       get[Option[String]]("firstName") ~
@@ -20,7 +20,7 @@ object UserParser{
       get[String]("providerKey") map
       {
         case id ~ firstName ~ lastName ~ fullName ~ role ~ email ~ avatarUrl ~ providerId ~ providerKey  =>
-          new model.User(id,new LoginInfo(providerId,providerKey) ,firstName,lastName,fullName,email,avatarUrl)
+          new User(id,new LoginInfo(providerId,providerKey) ,firstName,lastName,fullName,email,avatarUrl)
       }
   }
 }

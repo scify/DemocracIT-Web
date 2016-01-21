@@ -1,7 +1,6 @@
 package model.viewmodels
 
-import model.User
-import model.dtos.ConsultationsPerMonth
+import model.dtos.{User, ConsultationsPerMonth}
 import play.api.libs.json.Json
 import utils.ImplicitReadWrites._
 

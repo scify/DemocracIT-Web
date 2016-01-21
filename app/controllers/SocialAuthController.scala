@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers._
-import model.User
+import model.dtos.User
 import model.services.UserService
 import play.api.i18n.{ MessagesApi, Messages }
 import play.api.libs.concurrent.Execution.Implicits._
@@ -26,11 +26,11 @@ import scala.concurrent.Future
  */
 class SocialAuthController @Inject() (
                                        val messagesApi: MessagesApi,
-                                       val env: Environment[model.User, CookieAuthenticator],
+                                       val env: Environment[User, CookieAuthenticator],
                                        userService: UserService,
                                        authInfoRepository: AuthInfoRepository,
                                        socialProviderRegistry: SocialProviderRegistry)
-  extends Silhouette[model.User, CookieAuthenticator] with Logger {
+  extends Silhouette[User, CookieAuthenticator] with Logger {
 
   /**
    * Authenticates a user against a social provider.

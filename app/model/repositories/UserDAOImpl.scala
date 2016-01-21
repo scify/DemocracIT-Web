@@ -2,8 +2,7 @@ package model.repositories
 
 import java.util.UUID
 import com.mohiva.play.silhouette.api.LoginInfo
-import model.User
-import model.dtos.DBLoginInfo
+import model.dtos.{User, DBLoginInfo}
 import model.repositories.anorm._
 import play.api.db.DB
 import scala.collection.mutable
@@ -44,10 +43,10 @@ class UserDAOImpl extends UserDAO {
    * @param user The user to save.
    * @return The saved user.
    */
-  def save(user: model.User) = Future.successful{
+  def save(user: User) = Future.successful{
     SaveUser(user,1) //todo: make role_ids enum
   }
-  def update(user:model.User) = Future.successful{
+  def update(user:User) = Future.successful{
     updateUser(user)
   }
 
@@ -57,7 +56,7 @@ class UserDAOImpl extends UserDAO {
 
     if (!dBLoginInfo.isDefined) {
       //login info is like facebook with user's email address, twitter with user
-      dBLoginInfo = Some(this.saveLoginInfo(user.loginInfo))
+      dBLoginInfo = Some(AccountRepository.saveLoginInfo(user.loginInfo))
     }
 
     this.saveUserAndUpdateLoginInfo(user,dBLoginInfo.get,roleId)
@@ -95,20 +94,9 @@ class UserDAOImpl extends UserDAO {
     }
   }
 
-  private def saveLoginInfo(loginInfo:LoginInfo):DBLoginInfo = {
 
-    DB.withConnection { implicit c =>
-      val id =SQL"""
-                INSERT INTO account.logininfo (providerid, providerkey)
-                VALUES (${loginInfo.providerID}, ${loginInfo.providerKey})
-              """.executeInsert(scalar[Long].single)
 
-      new DBLoginInfo(id,loginInfo.providerID,loginInfo.providerKey)
-    }
-
-  }
-
-  private def updateUser(user:model.User): model.User =
+  private def updateUser(user:User): User =
   {
     DB.withConnection() { implicit c =>
       SQL"""
@@ -127,7 +115,7 @@ class UserDAOImpl extends UserDAO {
       user
     }
   }
-  private def saveUserAndUpdateLoginInfo(user:model.User, dbloginInfo:DBLoginInfo, roleid:Int):User= {
+  private def saveUserAndUpdateLoginInfo(user:User, dbloginInfo:DBLoginInfo, roleid:Int):User= {
     DB.withTransaction(){ implicit c =>
 
           SQL"""

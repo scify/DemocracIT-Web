@@ -8,15 +8,15 @@ import utils.ImplicitReadWrites._
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 case class ReporterViewModel(consultation:model.dtos.Consultation,
-                               user: Option[model.User],
-                               relevantMaterials: Seq[RelevantMaterial],
-                               commentsPerArticle:  Seq[Article],
-                               annotationTagWithComments: Seq[AnnotationTagWithComments],
-                               annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
-                               relevantLaws: Seq[RelevantLaws],
-                               userCommentStats: Seq[UserCommentStats],
-                               finalLaw: Option[ConsultationFinalLaw],
-                               ratingUsers: Seq[ConsFinalLawRatingUsers]
+                             user: Option[User],
+                             relevantMaterials: Seq[RelevantMaterial],
+                             commentsPerArticle:  Seq[Article],
+                             annotationTagWithComments: Seq[AnnotationTagWithComments],
+                             annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
+                             relevantLaws: Seq[RelevantLaws],
+                             userCommentStats: Seq[UserCommentStats],
+                             finalLaw: Option[ConsultationFinalLaw],
+                             ratingUsers: Seq[ConsFinalLawRatingUsers]
                               )
 {
   def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()

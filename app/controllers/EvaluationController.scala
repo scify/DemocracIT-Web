@@ -5,15 +5,16 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
+import model.dtos.User
 import model.services.EvaluationManager
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import utils.ImplicitReadWrites._
 
-class EvaluationController @Inject()  ( val messagesApi: MessagesApi,
-                                        val env: Environment[model.User, CookieAuthenticator],
-                                        socialProviderRegistry: SocialProviderRegistry)
-                                        extends Silhouette[model.User, CookieAuthenticator] {
+class EvaluationController @Inject()  (val messagesApi: MessagesApi,
+                                       val env: Environment[User, CookieAuthenticator],
+                                       socialProviderRegistry: SocialProviderRegistry)
+                                        extends Silhouette[User, CookieAuthenticator] {
   val evaluationManager = new EvaluationManager
 
   def getEvaluationPage() = UserAwareAction { implicit request =>

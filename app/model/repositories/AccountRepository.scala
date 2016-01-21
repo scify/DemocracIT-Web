@@ -26,4 +26,17 @@ object AccountRepository
 
     }
   }
+
+   def saveLoginInfo(loginInfo:LoginInfo):DBLoginInfo = {
+
+    DB.withConnection { implicit c =>
+      val id =SQL"""
+                INSERT INTO account.logininfo (providerid, providerkey)
+                VALUES (${loginInfo.providerID}, ${loginInfo.providerKey})
+              """.executeInsert(scalar[Long].single)
+
+      new DBLoginInfo(id,loginInfo.providerID,loginInfo.providerKey)
+    }
+
+  }
 }

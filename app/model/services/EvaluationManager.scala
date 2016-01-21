@@ -1,6 +1,6 @@
 package model.services
 
-import model.User
+import model.dtos.User
 import model.repositories.EvaluationRepository
 import model.viewmodels.EvaluationViewModel
 

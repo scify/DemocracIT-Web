@@ -1,8 +1,8 @@
-package model
+package model.dtos
 
 import java.util.UUID
 
-import com.mohiva.play.silhouette.api.{LoginInfo, Identity}
+import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 
 /**
  * The user object.

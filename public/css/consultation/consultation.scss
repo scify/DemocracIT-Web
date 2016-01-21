@@ -399,6 +399,14 @@ a.load {
 {
   cursor:pointer;
 }
+.comment .options .reply
+{
+  margin-right: 15px;
+}
+.commentBox .comment .options .reply .fa
+{
+  margin-left: 0px;
+}
 .commentBox .comment .options .c {
   margin-right:20px;
   margin-left:5px;
@@ -957,4 +965,26 @@ margin-top: 10px;
 
 #deleteFinalLaw:hover {
   cursor: pointer;
+}
+
+.replyInput {
+  margin-top:20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  height:100px;
+  width: 50%;
+}
+
+.replyBtn {
+  position: absolute;
+  margin-top: 70px;
+}
+
+.replyComment {
+  margin-left: 40px;
+}
+
+.replyTitle {
+  margin-top: 30px;
+  margin-bottom: 10px;
 }

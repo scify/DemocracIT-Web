@@ -13,8 +13,8 @@ object ConsDurationPerOrganizationParser{
       str("organizationName") ~
       str("periods") ~
       int("numberOfConsultations")~
-      str("groupTitle")~
-        str("cons_ids")map
+      get[Option[String]]("groupTitle")~
+      str("cons_ids")map
       {
         case organizationId ~ organizationName ~ periods ~ numberOfConsultations ~ groupTitle ~ cons_ids =>
           new ConsDurationsPerOrganization(organizationId, organizationName, periods, numberOfConsultations, groupTitle, cons_ids)
