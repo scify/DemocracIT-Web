@@ -63,7 +63,7 @@ class PasswordChangeController @Inject() (
   ) verifying(Messages("passwords.not.equal"), passwords => passwords._2 == passwords._1 ))
 
   private def notFoundDefault (implicit request: RequestHeader) =
-    Future.successful(NotFound(views.html.account.invalidToken()))
+    Future.successful(NotFound(views.html.account.invalidToken("Θα πρέπει να στείλετε ξανά αίτημα ανάκτησης του κωδικού σας.")))
 
   def startResetPassword = Action.async { implicit request =>
     Future.successful(Ok(views.html.account.startResetPassword(pwResetForm)))

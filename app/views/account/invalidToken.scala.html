@@ -1,4 +1,4 @@
-@()(implicit messages: Messages)
+@(msg: String )(implicit messages: Messages)
 
 @js ={
 
@@ -7,14 +7,17 @@
 
 }
 @layout("Ενεργοποίηση λογαριασμού",css,js,None) {
-    <div class="user col-md-6 col-md-offset-3">
-        <div class="row data">
-            <div class="col-md-12">
-                <div class="row">
-                    <p>There is a problem with the link you clicked on!</p>
-                    <p>The link you used to reach this page is no longer valid. Please re-request the link from our site to try again.</p>
+    <fieldset class="col-md-6 col-md-offset-3">
+        <legend>Αποτυχία επεξεργασίας</legend>
+        <div class="user col-md-6 col-md-offset-3">
+            <div class="row data">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p>Ο σύνδεσμος που επιλέξατε δεν είναι πλεόν ενεργός</p>
+                        <p>msg</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </fieldset>
 }

@@ -16,7 +16,7 @@ object Mailer {
   def welcome(signUpData: SignUpData, link: String)(implicit mailService:MailService) {
     mailService.sendEmailAsync(signUpData.email)(
       subject = Messages("mail.welcome.subject"),
-      bodyHtml = link,
+      bodyHtml = Messages("mail.welcome.body",link),
       bodyText = link
     )
   }
@@ -24,7 +24,7 @@ object Mailer {
   def forgotPassword (email: String, link: String)(implicit mailService:MailService) {
     mailService.sendEmailAsync(email)(
       subject = Messages("mail.forgotpwd.subject"),
-      bodyHtml = link,
+      bodyHtml = Messages("mail.forgotpwd.body", link),
       bodyText = link
     )
   }
