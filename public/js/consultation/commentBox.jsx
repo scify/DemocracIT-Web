@@ -499,7 +499,7 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                emotion = <span className="userEmotion">Συναίσθημα: <img src={imageWithPath}></img></span>;
+                emotion = <span className="userEmotion">Το κείμενο που σχολίασα με έκανε να νιώθω: <img src={imageWithPath}></img></span>;
             }
             return (
                 <div className="optionsContainer">
@@ -552,7 +552,7 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                emotion = <span className="userEmotion">Συναίσθημα: <img src={imageWithPath}></img></span>;
+                emotion = <span className="userEmotion">Το κείμενο που σχολίασα με έκανε να νιώθω: <img src={imageWithPath}></img></span>;
             }
             return (
                 <div className="optionsContainerDisabled">
