@@ -71,7 +71,7 @@ class CommentsRepository {
     DB.withConnection { implicit c =>
       SQL"""
             delete from user_awards
-            where user_id = cast($userId as UUID) and cast(related_data as Bigint) = $comment_id
+            where user_id = cast($userId as UUID) and related_data = cast($comment_id as text)
               """.execute()
     }
   }
