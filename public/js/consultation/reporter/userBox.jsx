@@ -60,7 +60,7 @@
             return (
                 <div className="" onClick={this.refreshComments}>
                     <a>{this.props.user.first_name} {this.props.user.last_name}</a>
-                    <scify.InfoBox display={this.state.display} busy={this.state.busy} data={this.state.comments}/>
+                    <scify.InfoBox imagesPath = {this.props.imagesPath} display={this.state.display} busy={this.state.busy} data={this.state.comments}/>
                 </div>
             );
         }
@@ -86,7 +86,7 @@
                     );
                 }
                 return (
-                    <scify.CommentList data={this.props.data} parent="reporterUserStats"/>
+                    <scify.CommentList imagesPath = {this.props.imagesPath} data={this.props.data} parent="reporterUserStats"/>
                 );
             } else {
                 return (

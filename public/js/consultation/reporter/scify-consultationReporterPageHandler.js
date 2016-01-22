@@ -1,4 +1,4 @@
-scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,ratingUsers,finalLawUserId,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,ratingUsers,imagesPath,finalLawUserId,userId,fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
@@ -11,6 +11,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
     this.ratingUsers = [];
+    this.imagesPath = imagesPath;
     for (var i=0; i<ratingUsers.length; i++) {
         this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
     }
@@ -318,7 +319,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     consultationid          : instance.consultationid,
                     userId                  : userId,
                     user                    : userObj,
-                    commentsCount : $(userDiv).data("count")
+                    commentsCount : $(userDiv).data("count"),
+                    imagesPath : instance.imagesPath
                 };
                 var domElementToAddComponent = document.getElementById("box_" + userId);
                 scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
@@ -564,7 +566,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         instance.commentListProperties = {
             userId : instance.userId,
             userDefined : userDefined,
-            consultationEndDate:instance.consultationEndDate
+            consultationEndDate:instance.consultationEndDate,
+            imagesPath: instance.imagesPath
         }
     },
     init = function(){

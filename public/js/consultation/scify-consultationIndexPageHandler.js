@@ -30,6 +30,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.consultationEndDate = consultationEndDate;
 
     this.tutorialAnnotator = null;
+    this.imagesPath = imagesPath;
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -92,6 +93,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
                 commentBoxProperties.userDefined = userDefined;
+                commentBoxProperties.imagesPath = instance.imagesPath;
 
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
@@ -126,6 +128,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
+        console.log(data);
         getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
      },
     replaceRelevantLaws = function(relevantLaws) {

@@ -147,7 +147,7 @@
                         React.createElement(scify.ReactLoader, { display: this.state.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate, userId: this.props.userId, userDefined: this.props.userDefined, data: this.state.comments, parent: "reporter" });
+                return React.createElement(scify.CommentList, { imagesPath: this.props.imagesPath, consultationEndDate: this.props.consultationEndDate, userId: this.props.userId, userDefined: this.props.userDefined, data: this.state.comments, parent: "reporter" });
             } else {
                 return React.createElement("div", null);
             }

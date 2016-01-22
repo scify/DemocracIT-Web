@@ -88,7 +88,8 @@
                 userAnnotatedText: data.userAnnotatedText,
                 body : data.body,
                 annotationTagTopics : data.annotationTagTopics,
-                annotationTagProblems : data.annotationTagProblems
+                annotationTagProblems : data.annotationTagProblems,
+                emotionId : data.emotionId
             };
 
             //todo: cancel any previous events
@@ -181,7 +182,8 @@
                             userId = {this.props.userId}
                             data={this.state.comments}
                             parent={this.props.parent}
-                            userDefined={this.props.userDefined}/>
+                            userDefined={this.props.userDefined}
+                            imagesPath = {this.props.imagesPath}/>
                         <CommentForm />
                     </div>
                 </div>
@@ -227,7 +229,9 @@
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <scify.Comment userId={instance.props.userId} userDefined={instance.props.userDefined} parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
+                    <scify.Comment imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
+                                   userDefined={instance.props.userDefined} parent={instance.props.parent}
+                                   consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
                 );
             });
 
@@ -307,7 +311,11 @@
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
+                                                 id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
+                                                 dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating}
+                                                 emotionId={this.props.data.emotionId} imagesPath={this.props.imagesPath}/>;
+
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -316,7 +324,6 @@
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
-                //we should create a reply box only for comments from DemocracIT
                 if(this.props.data.source.commentSource == 1) {
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
                                                    discussionthreadclientid={this.props.data.discussionThread.id}
@@ -338,8 +345,7 @@
                 }
                 var commentClassNames="comment";
             } else if(this.props.parent == "reporterUserStats") {
-
-                options = <CommentActionsDisabled dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.comment.emotionId}/>;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
                 if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
@@ -348,7 +354,7 @@
                 var replyBox = <div></div>;
                 var commentClassNames="comment";
             } else if(this.props.parent == "comment") {
-                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsEnabled imagesPath={this.props.imagesPath} userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -359,7 +365,6 @@
                 var replyBox = <div></div>;
                 var replies = <div></div>;
                 var commentClassNames="comment replyComment";
-
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null) {
@@ -464,8 +469,31 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
+            var emotion = <span></span>;
+            if(this.props.emotionId != undefined) {
+                var image="";
+                switch(this.props.emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png"
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                emotion = <span className="userEmotion">Συναίσθημα: <img src={imageWithPath}></img></span>;
+            }
             return (
-                <div>
+                <div className="optionsContainer">
                     <div className="options">
                         <a className={agreeClasses} onClick={this.handleLikeComment}>
                             Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
@@ -476,6 +504,7 @@
                         </a> <span className="c"> ({this.state.dislikeCounter})</span>
                         <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
+                        {emotion}
                     </div>
                 </div>
             );
@@ -493,15 +522,41 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
+            var emotion = <span></span>;
+            if(this.props.emotionId != undefined) {
+                var image="";
+                switch(this.props.emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png"
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                emotion = <span className="userEmotion">Συναίσθημα: <img src={imageWithPath}></img></span>;
+            }
             return (
-                <div className="options">
-                    <div className={agreeClasses}>
-                        Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
-                    </div><span className="c"> ({this.state.likeCounter})</span>
-                    <div className={disagreeClasses}>
-                        Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
-                    </div> <span className="c"> ({this.state.dislikeCounter})</span>
-                    <span className="date">{date}</span>
+                <div className="optionsContainerDisabled">
+                    <div className="options">
+                        <div className={agreeClasses}>
+                            Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
+                        </div><span className="c"> ({this.state.likeCounter})</span>
+                        <div className={disagreeClasses}>
+                            Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
+                        </div> <span className="c"> ({this.state.dislikeCounter})</span>
+                        <span className="date">{date}</span>
+                        {emotion}
+                    </div>
                 </div>
             );
         }

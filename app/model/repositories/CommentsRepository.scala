@@ -71,7 +71,7 @@ class CommentsRepository {
     DB.withConnection { implicit c =>
       SQL"""
             delete from user_awards
-            where user_id = cast($userId as UUID) and cast(related_data as Bigint) = $comment_id
+            where user_id = cast($userId as UUID) and related_data = cast($comment_id as text)
               """.execute()
     }
   }
@@ -216,6 +216,7 @@ class CommentsRepository {
                    left outer join public.comment_rating cr on cr.user_id = CAST($user_id as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
+              order by c.date_added desc, c.id
            """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
@@ -724,7 +725,8 @@ class CommentsRepository {
                       date_added,
                       revision,
                       depth,
-                      annotatedtext)
+                      annotatedtext,
+                      emotion_id)
           VALUES
                     (
                       NULL,
@@ -737,7 +739,8 @@ class CommentsRepository {
                       now(),
                       ${comment.revision},
                       ${comment.depth},
-                      ${comment.userAnnotatedText})
+                      ${comment.userAnnotatedText},
+                      ${comment.emotionId})
                   """.executeInsert()
 
 
