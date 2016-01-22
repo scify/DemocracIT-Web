@@ -7,18 +7,19 @@ import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
-import model.services.{UserProfileManager, AnnotationManager, GamificationEngineTrait}
+import model.services.{MailerManager, UserProfileManager, AnnotationManager, GamificationEngineTrait}
 import model.viewmodels.forms.{RateCommentForm, _}
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import utils.ImplicitReadWrites.FormErrorWrites
 import utils.ImplicitReadWrites.commentsWrites
+import utils.MailService
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       val env: Environment[User, CookieAuthenticator],
                                       socialProviderRegistry: SocialProviderRegistry,
-                                      val gamificationEngine:GamificationEngineTrait)
+                                      val gamificationEngine:GamificationEngineTrait, mailService: MailService)
               extends Silhouette[User, CookieAuthenticator] {
 
   var annotationManager = new AnnotationManager(gamificationEngine)
@@ -86,16 +87,23 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
     val annotationId = (parameterList \ "annotationId").asOpt[String].get
     val consultationId = (parameterList \ "consultationId").asOpt[Long].get
+
+    sendEmailToCommenter(commenterId, consultationId, articleId, annotationId, commentId, replyText)
+    Ok(Json.toJson(comment))
+
+  }
+
+  def sendEmailToCommenter(userId:UUID, consultationId:Long, articleId:Long, annotationId:String, commentId:Long, commentText:String): Unit = {
     var linkToShowComment = ""
+    val userProfileManager = new UserProfileManager()
+    val userEmail = userProfileManager.getUserEmailById(userId)
     if(play.Play.application().configuration().getString("application.state") == "development") {
       linkToShowComment += "http://localhost:9000/consultation/"
     } else {
       linkToShowComment += "http://democracit.org/consultation/"
     }
-    linkToShowComment += consultationId + "#articleid=" + articleId + "&annid=" + annotationId + "&commentid=" + parentId
-    val link = linkToShowComment
-    Ok(Json.toJson(comment))
-
+    linkToShowComment += consultationId + "#articleid=" + articleId + "&annid=" + annotationId + "&commentid=" + commentId
+    MailerManager.sendEmailToCommenter(userEmail, commentText, linkToShowComment)(mailService)
   }
   
   def extractTags() = SecuredAction { implicit request =>

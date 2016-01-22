@@ -26,4 +26,10 @@ class UserProfileManager {
     userFullName
   }
 
+  def getUserEmailById(userId:UUID):String = {
+    var userEmail = ""
+    val userProfileRepository = new UserProfileRepository()
+    userEmail = userProfileRepository.getUserEmailById(userId)
+    userEmail
+  }
 }

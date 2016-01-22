@@ -15,7 +15,6 @@
             var parentId = this.props.parentId;
             var articleId = this.props.articleId;
             var discussionthreadclientid = this.props.discussionthreadclientid;
-            console.log(this.props);
             var replyText = $('textarea[name=replyTextArea' + this.props.parentId + ']').val();
             var comment = {
                 'articleId': articleId,

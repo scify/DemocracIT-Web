@@ -371,7 +371,6 @@
                 );
 
                 if (this.props.data.source.commentSource == 1) {
-                    console.log(this.props);
                     var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
                         discussionthreadclientid: this.props.data.discussionThread.id,
                         commenterId: this.props.data.userId,

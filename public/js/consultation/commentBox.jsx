@@ -338,7 +338,6 @@
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
                 if(this.props.data.source.commentSource == 1) {
-                    console.log(this.props);
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
                                                    discussionthreadclientid={this.props.data.discussionThread.id}
                                                    commenterId={this.props.data.userId}

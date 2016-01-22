@@ -53,4 +53,13 @@ class UserProfileRepository {
       result
     }
   }
+
+  def getUserEmailById(userId: UUID):String = {
+    DB.withConnection { implicit c =>
+      val result:String = SQL"""
+            select email from account.user where id = CAST($userId as UUID)
+            """.as(SqlParser.str("email").single)
+      result
+    }
+  }
 }

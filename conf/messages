@@ -2,6 +2,8 @@ mail.welcome.subject = Ενεργοποιείστε το λογαριασμό σ
 mail.welcome.body = Πατήστε στο ακόλουθο link για να ενεργοποιήσετε τον λογαριασμό σας στο democracit! <br> <a href={0}>{0}</a>
 mail.forgotpwd.subject = Ανάκτηση κωδικού στο democracit
 mail.forgotpwd.body =  Πατήστε στο ακόλουθο link για να τροποποίησετε τον κωδικό σας στο democracit! <br> <a href={0}>{0}</a>
+mail.replyToCommenter.subject = Απάντηση σε σχόλιο σας στο democracit
+mail.replyToCommenter.body = Ένας χρήστης σχολίασε στο σχόλιο σας στο democracit: <br> {0} <br> Δείτε το σχόλιο εδω: <a href={1}>{1}</a>
 specify.password.title= Αλλαγή κωδικού
 reset.password.email.sent= Ελεγξτέ το email σας!
 specify.password.button= Αλλαγή κωδικού
