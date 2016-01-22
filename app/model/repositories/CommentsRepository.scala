@@ -216,6 +216,7 @@ class CommentsRepository {
                    left outer join public.comment_rating cr on cr.user_id = CAST($user_id as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
+              order by c.date_added desc, c.id
            """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
