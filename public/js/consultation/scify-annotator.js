@@ -273,6 +273,9 @@ scify.Annotator.prototype = (function(){
             var form = $("#toolbar-modal").find("form");
             var data = collectAnnotatorData(e);
             data.action = form.attr("action");
+            //reset emotion hidden field
+            $(".emotionItem").removeClass("clicked");
+            $('input[name=emotionId]').val("");
 
             if (formIsValid(data))
             {
