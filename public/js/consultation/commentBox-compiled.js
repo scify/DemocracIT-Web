@@ -176,6 +176,8 @@
                     ),
                     React.createElement(scify.CommentList, {
                         consultationEndDate: this.props.consultationEndDate,
+                        annotationId: this.props.annotationId,
+                        consultationId: this.props.consultationId,
                         userId: this.props.userId,
                         data: this.state.comments,
                         parent: this.props.parent,
@@ -225,7 +227,9 @@
             var commentNodes = this.props.data.map(function (comment) {
                 return React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
                     userDefined: instance.props.userDefined, parent: instance.props.parent,
-                    consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
+                    consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
+                    annotationId: instance.props.annotationId,
+                    consultationId: instance.props.consultationId });
             });
 
             return React.createElement(
@@ -367,11 +371,15 @@
                 );
 
                 if (this.props.data.source.commentSource == 1) {
+                    console.log(this.props);
                     var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
                         discussionthreadclientid: this.props.data.discussionThread.id,
+                        commenterId: this.props.data.userId,
                         userId: this.props.userId, parentId: this.props.data.id,
                         articleId: this.props.data.articleId,
-                        display: this.state.displayReplyBox });
+                        display: this.state.displayReplyBox,
+                        annotationId: this.props.annotationId,
+                        consultationId: this.props.consultationId });
                 } else {
                     var replyBox = React.createElement("div", null);
                 }

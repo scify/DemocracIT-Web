@@ -74,6 +74,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val parentId = (parameterList \ "parentId").asOpt[Long].get
     val replyText = (parameterList \ "replyText").asOpt[String].get
     val userId = (parameterList \ "userId").asOpt[UUID].get
+
     val discussionthreadclientid = (parameterList \ "discussionthreadclientid").asOpt[Long].get
 
     val today = Calendar.getInstance.getTime
@@ -81,7 +82,18 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
     val userManager = new UserProfileManager()
     val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None,Nil,None)
-
+    //TODO: Send email to commenter
+    val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
+    val annotationId = (parameterList \ "annotationId").asOpt[String].get
+    val consultationId = (parameterList \ "consultationId").asOpt[Long].get
+    var linkToShowComment = ""
+    if(play.Play.application().configuration().getString("application.state") == "development") {
+      linkToShowComment += "http://localhost:9000/consultation/"
+    } else {
+      linkToShowComment += "http://democracit.org/consultation/"
+    }
+    linkToShowComment += consultationId + "#articleid=" + articleId + "&annid=" + annotationId + "&commentid=" + parentId
+    val link = linkToShowComment
     Ok(Json.toJson(comment))
 
   }

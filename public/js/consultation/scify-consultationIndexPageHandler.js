@@ -98,6 +98,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
                 commentBoxProperties.userDefined = userDefined;
                 commentBoxProperties.imagesPath = instance.imagesPath;
+                commentBoxProperties.annotationId = annId;
+                commentBoxProperties.consultationId = instance.consultationid;
 
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
@@ -394,10 +396,24 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     openArticleAndCommentFromURL = function() {
         var articleId = getHashValue("articleid");
         var annId = getHashValue("annid");
+        console.log(articleId);
+        console.log(annId);
         if(articleId != undefined)
             $('[data-target="#body-' + articleId + '"]').click();
-        if(annId != undefined)
-            $('[data-id="' + annId + '"]').next().find(".load")[0].click();
+        if(annId != undefined) {
+            //if for part of article
+            if ($('[data-id="' + annId + '"]').next().find(".load").length > 0) {
+                $('[data-id="' + annId + '"]').next().find(".load")[0].click();
+            } else if($('#body-' + articleId).find(".load").length > 0) {
+                //if for whole article (comment on article title)
+                $('#body-' + articleId).find(".load")[0].click();
+            }
+        }
+
+        console.log($('[data-id="' + annId + '"]').next().find(".load"));
+        console.log($('#body-' + articleId).find(".load"));
+
+
     },
     init = function(){
         var instance= this;

@@ -18,7 +18,10 @@
                 'replyText': replyText,
                 'parentId': parentId,
                 'userId': this.props.userId,
-                'discussionthreadclientid':discussionthreadclientid
+                'discussionthreadclientid':discussionthreadclientid,
+                'commenterId':this.props.commenterId,
+                'annotationId': this.props.annotationId,
+                'consultationId': this.props.consultationId
             };
             this.saveComment("/comment/reply/save", comment);
         },

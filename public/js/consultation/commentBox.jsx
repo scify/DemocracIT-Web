@@ -179,6 +179,8 @@
                         </div>
                         <scify.CommentList
                             consultationEndDate={this.props.consultationEndDate}
+                            annotationId = {this.props.annotationId}
+                            consultationId = {this.props.consultationId}
                             userId = {this.props.userId}
                             data={this.state.comments}
                             parent={this.props.parent}
@@ -232,7 +234,9 @@
                 return (
                     <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
                                    userDefined={instance.props.userDefined} parent={instance.props.parent}
-                                   consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
+                                   consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment}
+                                   annotationId = {instance.props.annotationId}
+                                   consultationId = {instance.props.consultationId}/>
                 );
             });
 
@@ -334,11 +338,15 @@
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
                 if(this.props.data.source.commentSource == 1) {
+                    console.log(this.props);
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
                                                    discussionthreadclientid={this.props.data.discussionThread.id}
+                                                   commenterId={this.props.data.userId}
                                                    userId={this.props.userId} parentId={this.props.data.id}
                                                    articleId={this.props.data.articleId}
-                                                   display={this.state.displayReplyBox}/>;
+                                                   display={this.state.displayReplyBox}
+                                                   annotationId = {this.props.annotationId}
+                                                   consultationId = {this.props.consultationId}/>;
                 } else {
                     var replyBox =<div></div>;
                 }
