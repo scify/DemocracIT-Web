@@ -144,7 +144,7 @@
                     );
                 }
                 return (
-                    <scify.CommentList consultationEndDate={this.props.consultationEndDate} userId = {this.props.userId} userDefined={this.props.userDefined} data={this.state.comments} parent="reporter"/>
+                    <scify.CommentList imagesPath={this.props.imagesPath} consultationEndDate={this.props.consultationEndDate} userId = {this.props.userId} userDefined={this.props.userDefined} data={this.state.comments} parent="reporter"/>
                 );
             } else {
                 return (

@@ -28,6 +28,7 @@
         var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
                                                                 '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
                                                                 @Html(vm.ratingUsersToJson()),
+                                                                '@routes.Assets.at("images")',
                                                                 '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
                                                                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),

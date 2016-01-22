@@ -362,11 +362,9 @@ legend {
 .emotionMsg {
   margin-bottom: 5px; }
 
-.userEmotion {
-  margin-top: 7px; }
-
 .userEmotion img {
-  height: 25px; }
+  height: 25px;
+  margin-left: 5px; }
 
 .comment .date {
   margin-right: 20px; }
