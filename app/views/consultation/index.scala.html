@@ -54,18 +54,18 @@
 
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                @defining(if (vm.consultation.isActive) "Συμμετοχή στη διαβούλευση" else "Άρθρα της διαβούλευσης") { consultationArticlesTab=>
-                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTab</a></li>
+                @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTab=>
+                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@messages("consultation.index.articles")</a></li>
                 }
-                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
-                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
+                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.related")</a></li>
+                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">@messages("consultation.index.comment.analyze")</a></li>
+                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.compare")</a></li>}
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
                     <div class="sub-toolbar clearfix">
-                        <div id="tutorial"><a>Δείξε μου πώς λειτουργεί</a></div>
-                        <div id="consWordCloud"><button class="wordCloudBtn" type="button" data-toggle="modal" data-target="#consWordCloudModal">Σύννεφο λέξεων</button></div>
+                        <div id="tutorial"><a>@messages("consultation.index.tutorial")</a></div>
+                        <div id="consWordCloud"><button class="wordCloudBtn" type="button" data-toggle="modal" data-target="#consWordCloudModal">@messages("consultation.index.wordcloud")</button></div>
                     </div>
                         <!-- Modal -->
                     <div id="consWordCloudModal" class="modal fade" role="dialog">
@@ -74,10 +74,10 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Βλέπετε το Σύννεφο λέξεων της διαβούλευσης</h4>
+                                    <h4 class="modal-title">@messages("consultation.index.wordcloud.text.1")</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="explanation"><p>Το Σύννεφο λέξεων για αυτή τη διαβούλευση έχει παραχθεί μετά από επεξεργασία των σχολίων που την αφορούν.</p></div>
+                                    <div class="explanation"><p>@messages("consultation.index.wordcloud.text.2")</p></div>
                                     <div id="wordCloudDiv">
                                     </div>
                                     <div id="wordCloudChart"></div>
@@ -93,7 +93,7 @@
                         <div data-id="@article.id"  class="row article">
                             <div class="col-md-12">
                                 <div class="title">
-                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
+                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>@messages("close")</span><span>@messages("close")</span></a>
                                     <span class="article-title-text">@article.title</span>
                                 </div>
                                 <div id="body-@article.id" class="collapse" style="height:0;" >
@@ -112,7 +112,7 @@
                 @if(!vm.relevantLaws.isEmpty) {
                     @defining(vm.groupLaws()) { groupLaws =>
                         <div class="sub-toolbar">
-                            @groupLaws.length αναφορές σε νόμους
+                            @groupLaws.length  @messages("consultation.index.references")
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -120,8 +120,8 @@
                                 <table class="table table-striped table-condensed">
                                     <thead><tr>
                                         <th>#</th>
-                                        <th>Αναφορά</th>
-                                        <th>Περιγραφή</th>
+                                        <th>@messages("consultation.index.reference")</th>
+                                        <th>@messages("consultation.index.description")</th>
                                     </tr>
                                     </thead>
 
@@ -153,32 +153,29 @@
                         </div>
                     }
                 } else {
-                    <div class="noStats">Αυτή ή διαβούλευση δεν περιέχει σχετικούς νόμους.</div>
+                    <div class="noStats">@messages("consultation.index.nolaw")</div>
                     }
                 </div>
                 <div role="tabpanel" class="tab-pane" id="finalLaw">
                     @if(vm.finalLaw.isEmpty) {
                         @if(vm.user.isDefined) {
                             <div class="notLoggedIn info">
-                                Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
-                                νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:</div>
+                                @messages("consultation.index.nolaw.yet")</div>
                             <form class="dropzone" id="finalLawDropZone"></form>
 
                         } else {
                             <div class="notLoggedIn info">
-                                Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό
-                                νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a></div>
+                                @messages("consultation.index.uploadfinal")</div>
                         }
                     } else {
                         <div class="finalLaw">
                             @if(vm.user.isDefined) {
                                 @if(vm.finalLaw.get.user_id.toString.equals(vm.user.get.userID.toString)) {
                                     <div class="title marginBottom">
-                                        Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw">
-                                        εδώ</a></div>
+                                        @messages("consultation.index.uploaded.delete")</div>
                                 }
                             }
-                            <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
+                            <div class="title">@messages("consultation.index.compare")</div>
                             <div class="container">
                                 <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
                             </div>
@@ -189,7 +186,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Αριστερά, βλέπετε το κείμενο της διαβούλευσης. Δεξιά, τον τελικό νόμο</h4>
+                                        <h4 class="modal-title">@messages("consultation.index.hint")</h4>
                                     </div>
                                     <div class="modal-body">
                                         <div class="container">
@@ -210,8 +207,8 @@
                                             </div>
                                             <div id="finalLawDiv">
                                                 <div class="stats">
-                                                    <div id="rateApprove" class="statRow"><a class="rateFinalLaw">Συμφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
-                                                    <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">Διαφωνώ με την ακεραιότητα του άρθρου <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
+                                                    <div id="rateApprove" class="statRow"><a class="rateFinalLaw">@messages("consultation.index.approve") <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
+                                                    <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">@messages("consultation.index.disapprove") <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
                                                     <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
                                                     </div>
                                                 @vm.finalLaw.get.file_text
@@ -228,7 +225,7 @@
                                                             </div>
 
                                                             <div class="modal-footer">
-                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="myFunction()">Κλείσιμο</button>
+                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="myFunction()">@messages("close")</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -242,7 +239,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">@messages("close")</button>
                                     </div>
                                 </div>
 
@@ -250,24 +247,23 @@
                         </div>
                     }
                     <div class="finalLawExplanation">
-                        <button class="finalLawBtn finalLawExplanationBtn" type="button" data-toggle="modal" data-target="#finalLawExplanationModal">Επεξήγηση</button>
+                        <button class="finalLawBtn finalLawExplanationBtn" type="button" data-toggle="modal" data-target="#finalLawExplanationModal">@messages("explain")</button>
                         <div id="finalLawExplanationModal" class="modal fade consFinalLawModal" role="dialog">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Πώς  λειτουργεί η Σύγκριση με τον τελικό νόμο <i class="fa fa-question-circle"></i></h4>
+                                        <h4 class="modal-title">@messages("consultation.explain.header")@messages("consultation.explain.header") <i class="fa fa-question-circle"></i></h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="msg"><div class="number">1</div>Όταν μια διαβούλευση έχει λήξει και ο τελικός νόμος που την αφορά γίνει διαθέσιμος, οι χρήστες μπορούν να τον ανεβάσουν εδώ (σε μορφή .pdf ή .txt),
-                                            έτσι ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί ότι το αρχείο που έχει ανέβει ως τελικός νόμος για
-                                            μια διαβούλευση δεν είναι σωστό (ελλειπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχείου. Αντίστοιχα, άν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
-                                            ανενεργό και η διαδικασία μεταφόρτωσης του τελικού νόμου από τους χρήστες ξεκινά από την αρχή.
+                                        <div class="msg"><div class="number">1</div>@messages("consultation.explain.1")<br><br>
+                                            <div class="number">2</div>@messages("consultation.explain.header")
+                                            <br><br><div class="number">3</div>
                                         </div>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">@messages("close")</button>
                                     </div>
                                 </div>
                             </div>

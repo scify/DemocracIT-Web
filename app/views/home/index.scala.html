@@ -154,12 +154,12 @@
         <div class="container">
             <div id="in-progress">
                 <h2>@messages("index.inprogress")</h2>
-                @displayConsultation(viewmodel.activeConsultations, "index.deadline")
+                @displayConsultation(viewmodel.activeConsultations, messages("index.deadline"))
             </div>
             <hr/>
             <div id="recent">
                 <h2>@messages("index.finished")</h2>
-                @displayConsultation(viewmodel.recentConsultations, "index.closed" )
+                @displayConsultation(viewmodel.recentConsultations, messages("index.closed") )
             </div>
         </div>
     </div>
