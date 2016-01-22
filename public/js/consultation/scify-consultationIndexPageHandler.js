@@ -72,6 +72,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
                 parent: "consultation"
             };
+
+
+            commentBoxProperties.scrollToComment = callAfterCommentHasLoaded;
+
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
             if (domElementToAddComponent) {
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
@@ -128,7 +132,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
-        console.log(data);
         getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
      },
     replaceRelevantLaws = function(relevantLaws) {
@@ -168,7 +171,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 return array[i];
         }
         return false;
-    }
+    },
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
         var userRate = checkRatingUsers(instance.ratingUsers, userId);
@@ -320,7 +323,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     getParameterPointToFinalLaw = function () {
         var parameter = getParameterByName("target");
-        console.log(parameter);
         if(parameter == "finalLaw") {
             console.log("scroll");
             $('html, body').animate({
@@ -379,7 +381,24 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 console.log("You pressed Cancel!");
             }
         });
-    }
+    },
+    getHashValue = function(key) {
+            var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+            return matches ? matches[1] : null;
+    },
+    callAfterCommentHasLoaded = function() {
+        var commentId = getHashValue("commentid");
+        if(commentId != undefined)
+            $("html, body").animate({ scrollTop: $('#' + commentId).offset().top -50 }, 500);
+    },
+    openArticleAndCommentFromURL = function() {
+        var articleId = getHashValue("articleid");
+        var annId = getHashValue("annid");
+        if(articleId != undefined)
+            $('[data-target="#body-' + articleId + '"]').click();
+        if(annId != undefined)
+            $('[data-id="' + annId + '"]').next().find(".load")[0].click();
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -405,6 +424,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
         finalLawModalHandler();
+        openArticleAndCommentFromURL();
     };
 
     return {

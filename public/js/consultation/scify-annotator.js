@@ -220,7 +220,6 @@ scify.Annotator.prototype = (function(){
             data.annotationTagTopics = extractSelectedTags($("#annotationTagTopicId"));
 
             data.userAnnotatedText = form.find("blockquote").html();  // the text in the document user annotated
-            console.log(data);
             return data;
         },
         hideToolBar = function(){
@@ -287,13 +286,11 @@ scify.Annotator.prototype = (function(){
 
         },
         handleEmotion = function(instance) {
-            console.log("here");
             $(".emotionItem").click(function() {
                 var emotionId = $(this).attr('data-id');
                 $(".emotionItem").removeClass("clicked");
                 $("#emotion" + emotionId).addClass("clicked");
                 $('input[name=emotionId]').val(emotionId);
-                console.log("emotion: " + $('input[name=emotionId]').val());
             });
         },
         init = function(){

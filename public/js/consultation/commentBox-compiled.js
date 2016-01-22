@@ -180,7 +180,8 @@
                         data: this.state.comments,
                         parent: this.props.parent,
                         userDefined: this.props.userDefined,
-                        imagesPath: this.props.imagesPath }),
+                        imagesPath: this.props.imagesPath,
+                        scrollToComment: this.props.scrollToComment }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -222,7 +223,7 @@
         render: function render() {
             var instance = this;
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(scify.Comment, { imagesPath: instance.props.imagesPath, userId: instance.props.userId,
+                return React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
                     userDefined: instance.props.userDefined, parent: instance.props.parent,
                     consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
             });
@@ -253,8 +254,16 @@
                 displayReplyBox: false
             };
         },
+
         componentDidMount: function componentDidMount() {
             $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
+            if (this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
+                this.props.scrollToComment();
+            }
+        },
+        getHashValue: function getHashValue(key) {
+            var matches = location.hash.match(new RegExp(key + "=([^&]*)"));
+            return matches ? matches[1] : null;
         },
         handleReply: function handleReply() {
             this.state.displayReplyBox = !this.state.displayReplyBox;
@@ -498,7 +507,7 @@
             }
             return React.createElement(
                 "div",
-                { className: commentClassNames },
+                { className: commentClassNames, id: this.props.data.id },
                 avatarDiv,
                 React.createElement(
                     "div",
