@@ -88,7 +88,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val annotationId = (parameterList \ "annotationId").asOpt[String].get
     val consultationId = (parameterList \ "consultationId").asOpt[Long].get
 
-    sendEmailToCommenter(commenterId, consultationId, articleId, annotationId, commentId, replyText)
+    sendEmailToCommenter(commenterId, consultationId, articleId, annotationId, parentId, replyText)
     Ok(Json.toJson(comment))
 
   }
