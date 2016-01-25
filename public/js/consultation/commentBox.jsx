@@ -276,8 +276,6 @@
             if(this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
                 this.props.scrollToComment();
             }
-            console.log(instance.props.data.id);
-            console.log($("#shareComment-" + instance.props.data.id).length);
             $("#shareComment-" + instance.props.data.id).click(function() {
                 console.log(instance.props);
                 var commentId = $(this).attr('id').split('-')[1];
@@ -308,7 +306,6 @@
             this.setState(this.state);
         },
         render: function() {
-            console.log(this.props);
             if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
