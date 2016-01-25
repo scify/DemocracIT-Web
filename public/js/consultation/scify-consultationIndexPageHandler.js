@@ -102,6 +102,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.imagesPath = instance.imagesPath;
                 commentBoxProperties.annotationId = annId;
                 commentBoxProperties.consultationId = instance.consultationid;
+                commentBoxProperties.appState = instance.appState;
 
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body

@@ -186,7 +186,8 @@
                             parent={this.props.parent}
                             userDefined={this.props.userDefined}
                             imagesPath = {this.props.imagesPath}
-                            scrollToComment={this.props.scrollToComment}/>
+                            scrollToComment={this.props.scrollToComment}
+                            appState={this.props.appState}/>
                         <CommentForm />
                     </div>
                 </div>
@@ -230,13 +231,15 @@
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
+
             var commentNodes = this.props.data.map(function (comment) {
                 return (
                     <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
                                    userDefined={instance.props.userDefined} parent={instance.props.parent}
                                    consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment}
                                    annotationId = {instance.props.annotationId}
-                                   consultationId = {instance.props.consultationId}/>
+                                   consultationId = {instance.props.consultationId}
+                                   appState={instance.props.appState}/>
                 );
             });
 
@@ -266,14 +269,30 @@
                         comment: this.props.data,
                         displayReplyBox: false
                     };
-
         },
-
         componentDidMount : function(){
+            var instance = this;
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
             if(this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
                 this.props.scrollToComment();
             }
+            console.log(instance.props.data.id);
+            console.log($("#shareComment-" + instance.props.data.id).length);
+            $("#shareComment-" + instance.props.data.id).click(function() {
+                console.log(instance.props);
+                var commentId = $(this).attr('id').split('-')[1];
+                var longUrl ="";
+                $("#shareComment-"+commentId).prev().toggleClass('shareArticleHiddenComment');
+                if(instance.props.appState == "development") {
+                    longUrl = "http://localhost:9000/consultation/";
+                } else {
+                    longUrl = "http://democracit.org/consultation/";
+                }
+                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + instance.props.annotationId;
+                //show the extra div
+                if($("#shareComment-"+commentId).prev().find(".shareUrl").length == 0)
+                    $("#shareComment-"+commentId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
+            });
         },
         getHashValue : function(key) {
             var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
@@ -289,6 +308,7 @@
             this.setState(this.state);
         },
         render: function() {
+            console.log(this.props);
             if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -335,7 +355,16 @@
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+
+                var shareBtn = <div><span className="shareSpanComment shareArticleHiddenComment">
+                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
+                    span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
+                    <i className="fa fa-link"></i>
+                </span></div>;
+
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
+                    <span className="partName">Σχόλιο: </span>
+                    <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
                 if(this.props.data.source.commentSource == 1) {
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
@@ -402,7 +431,7 @@
                 <div className={commentClassNames} id={this.props.data.id}>
                     {avatarDiv}
                     <div className='body'>
-                        {commenterName}
+                        {commenterName}{shareBtn}
                         {commentBody}
                         {annotatedText}
                         {topicsHtml}
