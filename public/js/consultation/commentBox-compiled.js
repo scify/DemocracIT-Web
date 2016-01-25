@@ -381,7 +381,7 @@
 
                 var shareBtn = React.createElement(
                     "div",
-                    null,
+                    { className: "shareLink" },
                     React.createElement(
                         "span",
                         { className: "shareSpanComment shareArticleHiddenComment" },
@@ -478,7 +478,7 @@
                 );
                 var shareBtn = React.createElement(
                     "div",
-                    null,
+                    { className: "shareLink" },
                     React.createElement(
                         "span",
                         { className: "shareSpanComment shareArticleHiddenComment" },

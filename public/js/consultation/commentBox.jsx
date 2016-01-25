@@ -356,7 +356,7 @@
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
 
-                var shareBtn = <div><span className="shareSpanComment shareArticleHiddenComment">
+                var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
                     Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
                     span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
                     <i className="fa fa-link"></i>
@@ -405,7 +405,7 @@
             } else if(this.props.parent == "comment") {
                 options = <CommentActionsEnabled imagesPath={this.props.imagesPath} userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-                var shareBtn = <div><span className="shareSpanComment shareArticleHiddenComment">
+                var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
                     Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
                     span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
                     <i className="fa fa-link"></i>
