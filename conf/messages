@@ -5,7 +5,7 @@ mail.forgotpwd.body =  Πατήστε στο ακόλουθο link για να �
 mail.replyToCommenter.subject = Απάντηση σε σχόλιο σας στο democracit
 mail.replyToCommenter.body = Ένας χρήστης σχολίασε το σχόλιο σας στο democracit: <br> {0} <br> Δείτε το σχόλιο εδω: <a href={1}>{1}</a>
 specify.password.title= Αλλαγή κωδικού
-reset.password.email.sent= Ελεγξτέ το email σας!
+reset.password.email.sent= Ελέγξτε το email σας!
 specify.password.button= Αλλαγή κωδικού
 forgot.password = Κλικ εδώ αν δε θυμάστε τον κωδικό σας!
 forgot.password.reset.title = Αλλαγή κωδικού
