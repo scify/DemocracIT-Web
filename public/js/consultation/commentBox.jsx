@@ -506,7 +506,7 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                emotion = <span className="userEmotion">Το κείμενο που σχολίασα με έκανε να νιώθω: <img src={imageWithPath}></img></span>;
+                emotion = <span className="userEmotion">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></span>;
             }
             return (
                 <div className="optionsContainer">

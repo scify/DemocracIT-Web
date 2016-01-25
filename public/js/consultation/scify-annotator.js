@@ -151,7 +151,7 @@ scify.Annotator.prototype = (function(){
             }
         },
         displayToolBar = function(e,selectedText){
-
+            e.preventDefault();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
 
@@ -198,6 +198,8 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='articleid']").val(articleid);
             toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
             toolbar.find("blockquote").text(selectedText);
+
+
         },
         collectAnnotatorData = function(e){
             e.preventDefault();

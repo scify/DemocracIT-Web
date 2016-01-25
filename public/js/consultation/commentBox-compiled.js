@@ -637,7 +637,7 @@
                 emotion = React.createElement(
                     "span",
                     { className: "userEmotion" },
-                    "Το κείμενο που σχολίασα με έκανε να νιώθω: ",
+                    "Ο χρήστης εκδήλωσε το συναίσθημα: ",
                     React.createElement("img", { src: imageWithPath })
                 );
             }

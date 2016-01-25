@@ -369,4 +369,10 @@ legend {
 .comment .date {
   margin-right: 20px; }
 
+.smallLink {
+  font-size: 11px; }
+
+.smallLink a {
+  color: #49c0f4 !important; }
+
 /*# sourceMappingURL=common.css.map */
