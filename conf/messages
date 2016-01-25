@@ -1,4 +1,4 @@
-mail.welcome.subject = Ενεργοποιείστε το λογαριασμό σας στο democracit
+mail.welcome.subject = Ενεργοποιήστε το λογαριασμό σας στο democracit
 mail.welcome.body = Πατήστε στο ακόλουθο link για να ενεργοποιήσετε τον λογαριασμό σας στο democracit! <br> <a href={0}>{0}</a>
 mail.forgotpwd.subject = Ανάκτηση κωδικού στο democracit
 mail.forgotpwd.body =  Πατήστε στο ακόλουθο link για να τροποποίησετε τον κωδικό σας στο democracit! <br> <a href={0}>{0}</a>
