@@ -394,26 +394,23 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             $("html, body").animate({ scrollTop: $('#' + commentId).offset().top -50 }, 500);
     },
     openArticleAndCommentFromURL = function() {
+        //get URL parameters
         var articleId = getHashValue("articleid");
         var annId = getHashValue("annid");
-        console.log(articleId);
-        console.log(annId);
-        if(articleId != undefined)
+        if(articleId != undefined) {
+            //open relevant article
             $('[data-target="#body-' + articleId + '"]').click();
+        }
         if(annId != undefined) {
-            //if for part of article
+            //check the DOM tree to see if the requested annotation belongs to part of article
             if ($('[data-id="' + annId + '"]').next().find(".load").length > 0) {
+                //if length > 0 , the annotation belongs to part of article
                 $('[data-id="' + annId + '"]').next().find(".load")[0].click();
             } else if($('#body-' + articleId).find(".load").length > 0) {
-                //if for whole article (comment on article title)
+                //if not, the annotation is for the whole article (comment on article title)
                 $('#body-' + articleId).find(".load")[0].click();
             }
         }
-
-        console.log($('[data-id="' + annId + '"]').next().find(".load"));
-        console.log($('#body-' + articleId).find(".load"));
-
-
     },
     init = function(){
         var instance= this;
