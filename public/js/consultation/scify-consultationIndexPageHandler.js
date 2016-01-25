@@ -4,6 +4,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                relevantLaws,
                                                consultationIsActive,
                                                imagesPath,
+                                               appState,
                                                consultationEndDate){
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
@@ -12,6 +13,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.userId = userId;
     this.fullName = fullName;
     this.imagesPath = imagesPath;
+    this.appState = appState;
     this.discussionThreads ={};
     this.ratingUsers = [];
     for (var i=0; i<ratingUsers.length; i++) {
@@ -73,7 +75,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 parent: "consultation"
             };
 
-
+            //define function to use after the comment has loaded
             commentBoxProperties.scrollToComment = callAfterCommentHasLoaded;
 
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
@@ -397,6 +399,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //get URL parameters
         var articleId = getHashValue("articleid");
         var annId = getHashValue("annid");
+        var commentId = getHashValue("commentid");
         if(articleId != undefined) {
             //open relevant article
             $('[data-target="#body-' + articleId + '"]').click();
@@ -410,7 +413,50 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 //if not, the annotation is for the whole article (comment on article title)
                 $('#body-' + articleId).find(".load")[0].click();
             }
+
         }
+        //TODO: check if annid null, then scroll to article
+        if(annId == null && commentId == null) {
+            if(articleId != null)
+                $("html, body").animate({ scrollTop: $('#article_' + articleId).offset().top }, 500);
+            else
+                $(".article-title-text").first().trigger("click");
+        }
+    },
+    handleArticleShare = function(instance) {
+        $(".shareBtn").click(function(){
+            var articleId = $(this).attr('id').split('-')[1];
+            //var annId = $(this).prev().prev().find(".ann").attr("data-id");
+            var longUrl ="";
+            if(instance.appState == "development") {
+                longUrl = "http://localhost:9000/consultation/";
+            } else {
+                longUrl = "http://democracit.org/consultation/";
+            }
+            longUrl += instance.consultationid + "#articleid=" + articleId;
+            //TODO: use Url shortener
+            //show the extra div
+            $("#share-"+articleId).prev().toggleClass('shareArticleHidden');
+            //if the url has not yet been added, we add it to the div
+            if($("#share-"+articleId).prev().find(".shareUrl").length == 0)
+                $("#share-"+articleId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
+        });
+    },
+    getShortUrl = function(long_url, login, api_key)
+    {
+        $.getJSON(
+            "http://api.bitly.com/v3/shorten?callback=?",
+            {
+                "format": "json",
+                "apiKey": api_key,
+                "login": login,
+                "longUrl": long_url
+            },
+            function(response)
+            {
+                return response.data.url;
+            }
+        );
     },
     init = function(){
         var instance= this;
@@ -422,7 +468,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
-        $(".article-title-text").first().trigger("click");
 
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
@@ -438,6 +483,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         getParameterPointToFinalLaw();
         finalLawModalHandler();
         openArticleAndCommentFromURL();
+        handleArticleShare(instance);
     };
 
     return {

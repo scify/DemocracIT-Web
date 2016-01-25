@@ -32,6 +32,7 @@
                                                                 @Html(vm.relevantLawsToJson()),
                                                                 @Html(vm.consultation.isActive.toString),
                                                                 '@routes.Assets.at("images")',
+                                                                '@play.Play.application().configuration().getString("application.state")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -91,13 +92,17 @@
                         </div>
                     </div>
                     @for(article <- vm.consultation.articles) {
-                        <div data-id="@article.id"  class="row article">
+                        <div data-id="@article.id"  class="row article" id="article_@article.id">
                             <div class="col-md-12">
                                 <div class="title">
                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                     <span class="article-title-text">@article.title</span>
+                                    <span class="shareSpan shareArticleHidden">Κάντε αντιγραφή τον παρακάτω σύνδεσμο:<br></span>
+                                    <span class="shareBtn" id="share-@article.id">
+                                        <i class="fa fa-link"></i>
+                                    </span>
                                 </div>
-                                <div id="body-@article.id" class="collapse" style="height:0;" >
+                                <div id="body-@article.id" class="collapse" style="height:0;">
                                     <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                                     <div class="article-body">
                                     @Html(article.body)

@@ -160,7 +160,7 @@ h2 {
   display: block; }
 
 .article-title-text .ann {
-  width: 90%; }
+  width: 94%; }
 
 .ann {
   display: inline-block;
@@ -772,5 +772,46 @@ a.load {
 .replyTitle {
   margin-top: 20px;
   margin-bottom: 10px; }
+
+.shareArticleHidden {
+  visibility: hidden; }
+
+.shareSpan {
+  top: 30px;
+  position: absolute;
+  background-color: lightgrey;
+  width: auto;
+  right: 15px;
+  height: auto;
+  padding: 8px;
+  z-index: 100; }
+
+.shareSpan:after, .shareSpan:before {
+  bottom: 100%;
+  left: 80%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.shareSpan:after {
+  border-color: rgba(217, 215, 215, 0);
+  border-bottom-color: lightgrey;
+  border-width: 10px;
+  margin-left: -10px; }
+
+.shareSpan:before {
+  border-color: rgba(40, 47, 51, 0);
+  border-bottom-color: lightgrey;
+  border-width: 13px;
+  margin-left: -13px; }
+
+.fa-link {
+  color: #337ab7; }
+
+.fa-link:hover {
+  cursor: pointer; }
 
 /*# sourceMappingURL=consultation.css.map */
