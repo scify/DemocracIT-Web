@@ -376,7 +376,7 @@ legend {
   color: #49c0f4 !important; }
 
 .shareArticleHidden, .shareArticleHiddenComment {
-  visibility: hidden; }
+  display: none; }
 
 .shareSpan, .shareSpanComment {
   top: 30px;
@@ -429,6 +429,7 @@ legend {
 .shareBtnComment {
   margin-top: -18px;
   position: relative;
-  float: right; }
+  float: right;
+  height: 10px; }
 
 /*# sourceMappingURL=common.css.map */

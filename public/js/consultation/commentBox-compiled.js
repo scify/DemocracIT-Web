@@ -426,7 +426,11 @@
                         data: this.props.data.commentReplies,
                         parent: "comment",
                         userDefined: this.props.userDefined,
-                        updateComments: this.handleSavedComment });
+                        updateComments: this.handleSavedComment,
+                        annotationId: this.props.annotationId,
+                        appState: this.props.appState,
+                        consultationId: this.props.consultationId,
+                        scrollToComment: this.props.scrollToComment });
                 }
                 var commentClassNames = "comment";
             } else if (this.props.parent == "reporterUserStats") {
@@ -471,6 +475,20 @@
                     "div",
                     { className: "avatar" },
                     React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
+                );
+                var shareBtn = React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "span",
+                        { className: "shareSpanComment shareArticleHiddenComment" },
+                        "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
+                    ),
+                    React.createElement(
+                        "span",
+                        { className: "shareBtnComment", id: "shareComment-" + this.props.data.id },
+                        React.createElement("i", { className: "fa fa-link" })
+                    )
                 );
 
                 if (this.props.data.profileUrl) commenterName = React.createElement(

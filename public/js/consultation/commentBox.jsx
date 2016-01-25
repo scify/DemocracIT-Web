@@ -386,7 +386,11 @@
                                                      data={this.props.data.commentReplies}
                                                      parent="comment"
                                                      userDefined={this.props.userDefined}
-                                                     updateComments={this.handleSavedComment}/>;
+                                                     updateComments={this.handleSavedComment}
+                                                     annotationId = {this.props.annotationId}
+                                                     appState = {this.props.appState}
+                                                     consultationId = {this.props.consultationId}
+                                                     scrollToComment={this.props.scrollToComment}/>;
                 }
                 var commentClassNames="comment";
             } else if(this.props.parent == "reporterUserStats") {
@@ -401,6 +405,11 @@
             } else if(this.props.parent == "comment") {
                 options = <CommentActionsEnabled imagesPath={this.props.imagesPath} userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
+                var shareBtn = <div><span className="shareSpanComment shareArticleHiddenComment">
+                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
+                    span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
+                    <i className="fa fa-link"></i>
+                </span></div>;
 
                 if (this.props.data.profileUrl)
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;

@@ -449,7 +449,7 @@ legend {
 }
 
 .shareArticleHidden, .shareArticleHiddenComment {
-  visibility: hidden;
+  display: none;
 }
 
 .shareSpan, .shareSpanComment {
@@ -506,8 +506,8 @@ legend {
 }
 
 .shareBtnComment {
-  //bottom: 25px;
   margin-top: -18px;
   position: relative;
   float: right;
+  height: 10px;
 }
