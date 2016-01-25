@@ -415,7 +415,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
 
         }
-        //TODO: check if annid null, then scroll to article
         if(annId == null && commentId == null) {
             if(articleId != null)
                 $("html, body").animate({ scrollTop: $('#article_' + articleId).offset().top }, 500);
