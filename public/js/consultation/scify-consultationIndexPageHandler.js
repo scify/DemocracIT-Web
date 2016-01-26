@@ -459,7 +459,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     openCommentFormForEdit = function(e,comment){
         //clear annotation toolbar , populate fields and open.
-         this.annotator.openForEdit(comment);
+        //console.log(e);
+        //console.log(comment);
+         this.annotator.openForEdit(e, comment);
     },
     init = function(){
         var instance= this;

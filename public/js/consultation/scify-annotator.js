@@ -199,7 +199,47 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
             toolbar.find("blockquote").text(selectedText);
 
+        },
+        displayToolbarForEdit = function(e, comment) {
+            console.log(comment);
+            e.preventDefault();
+            var target = $(e.target),
+                toolbar = $("#toolbar-modal");
+            resetForm();
+            var selectedText = comment.userAnnotatedText;
 
+            var topicsLabel=  $("#tag-topics-label").find("span");
+            var topicsTagTooltip =$("#tag-topics-label").find("i");
+            var problemsLabel = $("#tag-problem-label").find("span");
+
+            $("#myModalLabel").text("Τροποποιήστε το σχόλιό σας:");
+            topicsLabel.text(topicsLabel.data("text"));
+            topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
+            topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
+            problemsLabel.text(problemsLabel.data("text"));
+            toolbar.find("input[name='discussionroomtypeid']").val(2);
+            toolbar.find("blockquote").show();
+
+            $("#toolbar-modal").modal("show");
+            fetchTopicTagsForUserSelection(selectedText);
+
+            toolbar.find("input[name='annText']").val(selectedText);
+            var parent = target.closest(".ann")
+            var annid=parent.data("id");
+            var articleid=target.closest(".article").data("id");
+            toolbar.find("input[name='articleid']").val(articleid);
+            toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
+            toolbar.find("blockquote").text(selectedText);
+            toolbar.find("textarea[name='body']").val(comment.body);
+            toolbar.find("li[data-id=" + comment.emotionId + "]").addClass("clicked");
+            toolbar.find("input[name='emotionId']").val(comment.emotionId);
+            comment.annotationTagProblems.forEach(function(annotationTagProblem) {
+                console.log(annotationTagProblem);
+                //console.log(toolbar.find("#annotationTagProblemId").find("option[value=" + annotationTagProblem.id + "]"));
+                toolbar.find("#annotationTagProblemId").find("option[value=" + annotationTagProblem.id + "]");
+                //$("#annotationTagProblemId").select2("val", annotationTagProblem.description);
+            });
+            $("#annotationTagProblemId").select2("data", { id: 1, text: "Some Text" });
         },
         collectAnnotatorData = function(e){
             e.preventDefault();
@@ -283,9 +323,6 @@ scify.Annotator.prototype = (function(){
                 hideToolBar();
                 this.onCommentSubmitHandler(data);
             }
-
-
-
         },
         handleEmotion = function(instance) {
             $(".emotionItem").click(function() {
@@ -295,8 +332,8 @@ scify.Annotator.prototype = (function(){
                 $('input[name=emotionId]').val(emotionId);
             });
         },
-        openForEdit = function(comment){
-
+        openForEdit = function(e, comment){
+            displayToolbarForEdit(e, comment);
         },
         init = function(){
             var instance = this;
@@ -331,6 +368,7 @@ scify.Annotator.prototype = (function(){
     return {
         init:init,
         hideToolBar : hideToolBar,
-        collectAnnotatorData : collectAnnotatorData
+        collectAnnotatorData : collectAnnotatorData,
+        openForEdit: openForEdit
     }
 })();

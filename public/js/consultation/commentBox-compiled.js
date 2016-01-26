@@ -124,12 +124,6 @@
                 }
             });
         },
-        userClickedToEditHisComment: function userClickedToEditHisComment(comment) {
-            //notify page that the comment is about to be edited.
-
-            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
-            $("body").trigger("editcomment", comment);
-        },
         setVisibibility: function setVisibibility(display) {
             this.state.display = display;
             this.setState(this.state);
@@ -301,7 +295,24 @@
             this.state.comment.commentReplies.unshift(comment);
             this.setState(this.state);
         },
+        handleEditComment: function handleEditComment() {
+            var commentToBeEdited = this.props.data;
+            //console.log(commentToBeEdited);
+            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
+            $("body").trigger("editcomment", commentToBeEdited);
+        },
         render: function render() {
+            var userId = this.props.userId;
+            var commenterId = this.props.data.userId;
+            var editIcon = React.createElement("span", null);
+            //if the logged in user is the same as the commenter user, the edit comment icon is populated
+            if (userId == commenterId) {
+                editIcon = React.createElement(
+                    "span",
+                    { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
+                    React.createElement("i", { className: "fa fa-pencil-square-o" })
+                );
+            }
             if (this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -606,6 +617,7 @@
                     "div",
                     { className: "body" },
                     commenterName,
+                    editIcon,
                     shareBtn,
                     commentBody,
                     emotion,

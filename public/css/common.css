@@ -434,4 +434,14 @@ legend {
 .shareLink {
   float: right; }
 
+.editIcon {
+  padding-left: 20px;
+  font-size: 1.5em;
+  margin-top: -4px;
+  position: absolute; }
+
+.editIcon:hover {
+  cursor: pointer;
+  color: #337ab7; }
+
 /*# sourceMappingURL=common.css.map */
