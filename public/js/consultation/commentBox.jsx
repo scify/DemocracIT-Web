@@ -132,6 +132,12 @@
             });
 
         },
+        userClickedToEditHisComment: function(comment){
+            //notify page that the comment is about to be edited.
+
+            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
+            $("body").trigger("editcomment",comment);
+        },
         setVisibibility : function(display){
             this.state.display=display;
             this.setState(this.state);
@@ -340,6 +346,32 @@
                 });
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
+            var emotion = <span></span>;
+            var emotionId = this.props.data.emotionId;
+            if(emotionId == undefined && this.props.data.comment != null)
+                emotionId = this.props.data.comment.emotionId
+            if(emotionId != undefined) {
+                var image="";
+                switch(emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png"
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
+            }
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
                                                  id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
@@ -375,7 +407,6 @@
                 } else {
                     var replyBox =<div></div>;
                 }
-
                 var replies = <div></div>;
                 if(this.props.data.commentReplies.length > 0) {
                     replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
@@ -439,6 +470,7 @@
                     <div className='body'>
                         {commenterName}{shareBtn}
                         {commentBody}
+                        {emotion}
                         {annotatedText}
                         {topicsHtml}
                     </div>
@@ -520,29 +552,7 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
-            var emotion = <span></span>;
-            if(this.props.emotionId != undefined) {
-                var image="";
-                switch(this.props.emotionId) {
-                    case 1:
-                        image = "/emoticons/emoticon-superhappy.png";
-                        break;
-                    case 2:
-                        image = "/emoticons/emoticon-happy.png"
-                        break;
-                    case 3:
-                        image = "/emoticons/emoticon-worried.png";
-                        break;
-                    case 4:
-                        image = "/emoticons/emoticon-sad.png";
-                        break;
-                    case 5:
-                        image = "/emoticons/emoticon-angry.png";
-                        break;
-                }
-                var imageWithPath = this.props.imagesPath + image;
-                emotion = <span className="userEmotion">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></span>;
-            }
+
             return (
                 <div className="optionsContainer">
                     <div className="options">
@@ -555,7 +565,6 @@
                         </a> <span className="c"> ({this.state.dislikeCounter})</span>
                         <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
                         <span className="date">{date}</span>
-                        {emotion}
                     </div>
                 </div>
             );
@@ -573,29 +582,6 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
-            var emotion = <span></span>;
-            if(this.props.emotionId != undefined) {
-                var image="";
-                switch(this.props.emotionId) {
-                    case 1:
-                        image = "/emoticons/emoticon-superhappy.png";
-                        break;
-                    case 2:
-                        image = "/emoticons/emoticon-happy.png"
-                        break;
-                    case 3:
-                        image = "/emoticons/emoticon-worried.png";
-                        break;
-                    case 4:
-                        image = "/emoticons/emoticon-sad.png";
-                        break;
-                    case 5:
-                        image = "/emoticons/emoticon-angry.png";
-                        break;
-                }
-                var imageWithPath = this.props.imagesPath + image;
-                emotion = <span className="userEmotion">Το κείμενο που σχολίασα με έκανε να νιώθω: <img src={imageWithPath}></img></span>;
-            }
             return (
                 <div className="optionsContainerDisabled">
                     <div className="options">
@@ -606,7 +592,6 @@
                             Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
                         </div> <span className="c"> ({this.state.dislikeCounter})</span>
                         <span className="date">{date}</span>
-                        {emotion}
                     </div>
                 </div>
             );

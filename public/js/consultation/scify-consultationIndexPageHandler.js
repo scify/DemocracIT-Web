@@ -442,8 +442,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $("#share-"+articleId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
         });
     },
-    getShortUrl = function(long_url, login, api_key)
-    {
+    getShortUrl = function(long_url, login, api_key) {
         $.getJSON(
             "http://api.bitly.com/v3/shorten?callback=?",
             {
@@ -458,6 +457,10 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
         );
     },
+    openCommentFormForEdit = function(e,comment){
+        //clear annotation toolbar , populate fields and open.
+         this.annotator.openForEdit(comment);
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -468,7 +471,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
-
+        $("body").on("editcomment",openCommentFormForEdit.bind(this));
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
 

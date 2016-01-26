@@ -124,6 +124,12 @@
                 }
             });
         },
+        userClickedToEditHisComment: function userClickedToEditHisComment(comment) {
+            //notify page that the comment is about to be edited.
+
+            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
+            $("body").trigger("editcomment", comment);
+        },
         setVisibibility: function setVisibibility(display) {
             this.state.display = display;
             this.setState(this.state);
@@ -350,6 +356,36 @@
             });
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
+            var emotion = React.createElement("span", null);
+            var emotionId = this.props.data.emotionId;
+            if (emotionId == undefined && this.props.data.comment != null) emotionId = this.props.data.comment.emotionId;
+            if (emotionId != undefined) {
+                var image = "";
+                switch (emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png";
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                emotion = React.createElement(
+                    "div",
+                    { className: "userEmotion htmlText" },
+                    "Ο χρήστης εκδήλωσε το συναίσθημα: ",
+                    React.createElement("img", { src: imageWithPath })
+                );
+            }
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
                     id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter,
@@ -415,7 +451,6 @@
                 } else {
                     var replyBox = React.createElement("div", null);
                 }
-
                 var replies = React.createElement("div", null);
                 if (this.props.data.commentReplies.length > 0) {
                     replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
@@ -573,6 +608,7 @@
                     commenterName,
                     shareBtn,
                     commentBody,
+                    emotion,
                     annotatedText,
                     topicsHtml
                 ),
@@ -665,34 +701,7 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
-            var emotion = React.createElement("span", null);
-            if (this.props.emotionId != undefined) {
-                var image = "";
-                switch (this.props.emotionId) {
-                    case 1:
-                        image = "/emoticons/emoticon-superhappy.png";
-                        break;
-                    case 2:
-                        image = "/emoticons/emoticon-happy.png";
-                        break;
-                    case 3:
-                        image = "/emoticons/emoticon-worried.png";
-                        break;
-                    case 4:
-                        image = "/emoticons/emoticon-sad.png";
-                        break;
-                    case 5:
-                        image = "/emoticons/emoticon-angry.png";
-                        break;
-                }
-                var imageWithPath = this.props.imagesPath + image;
-                emotion = React.createElement(
-                    "span",
-                    { className: "userEmotion" },
-                    "Ο χρήστης εκδήλωσε το συναίσθημα: ",
-                    React.createElement("img", { src: imageWithPath })
-                );
-            }
+
             return React.createElement(
                 "div",
                 { className: "optionsContainer" },
@@ -736,8 +745,7 @@
                         "span",
                         { className: "date" },
                         date
-                    ),
-                    emotion
+                    )
                 )
             );
         }
@@ -756,34 +764,6 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
-            var emotion = React.createElement("span", null);
-            if (this.props.emotionId != undefined) {
-                var image = "";
-                switch (this.props.emotionId) {
-                    case 1:
-                        image = "/emoticons/emoticon-superhappy.png";
-                        break;
-                    case 2:
-                        image = "/emoticons/emoticon-happy.png";
-                        break;
-                    case 3:
-                        image = "/emoticons/emoticon-worried.png";
-                        break;
-                    case 4:
-                        image = "/emoticons/emoticon-sad.png";
-                        break;
-                    case 5:
-                        image = "/emoticons/emoticon-angry.png";
-                        break;
-                }
-                var imageWithPath = this.props.imagesPath + image;
-                emotion = React.createElement(
-                    "span",
-                    { className: "userEmotion" },
-                    "Το κείμενο που σχολίασα με έκανε να νιώθω: ",
-                    React.createElement("img", { src: imageWithPath })
-                );
-            }
             return React.createElement(
                 "div",
                 { className: "optionsContainerDisabled" },
@@ -821,8 +801,7 @@
                         "span",
                         { className: "date" },
                         date
-                    ),
-                    emotion
+                    )
                 )
             );
         }

@@ -215,7 +215,7 @@ scify.Annotator.prototype = (function(){
                     });
                 });
                 return tags;
-            }
+            };
 
             //data.annotationTagText = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
             data.annotationTagProblems = extractSelectedTags($("#annotationTagProblemId")) //tag text of the problem user selected
@@ -294,6 +294,9 @@ scify.Annotator.prototype = (function(){
                 $("#emotion" + emotionId).addClass("clicked");
                 $('input[name=emotionId]').val(emotionId);
             });
+        },
+        openForEdit = function(comment){
+
         },
         init = function(){
             var instance = this;
