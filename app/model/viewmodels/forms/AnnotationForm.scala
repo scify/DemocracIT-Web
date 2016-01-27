@@ -28,7 +28,9 @@ object AnnotationForm {
           "value" -> optional(longNumber)
         )(AnnotationTagFormModel.apply)(AnnotationTagFormModel.unapply)
       ),
-      "emotionId" ->optional(number)
+      "emotionId" ->optional(number),
+      "commentId" ->optional(longNumber),
+      "revision" ->optional(number)
     )(AnnotationFormModel.apply)(AnnotationFormModel.unapply)
   )
 
@@ -45,6 +47,8 @@ object AnnotationForm {
           discusionThreadText:String,
           annotationTagTopics:Seq[AnnotationTagFormModel],
           annotationTagProblems:Seq[AnnotationTagFormModel],
-          emotionId:Option[Int]
+          emotionId:Option[Int],
+          commentId:Option[Long],
+          revision:Option[Int]
     )
 }

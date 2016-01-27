@@ -28,6 +28,7 @@ POST        /change                                       @controllers.PasswordC
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
 POST        /annotation/save                              @controllers.AnnotationController.annotatePost
+POST        /annotation/update                            @controllers.AnnotationController.updatePost
 POST        /annotation/extractTags                       @controllers.AnnotationController.extractTags
 POST        /comments/rate                                @controllers.AnnotationController.rateComment
 POST        /comment/reply/save                           @controllers.AnnotationController.saveReply

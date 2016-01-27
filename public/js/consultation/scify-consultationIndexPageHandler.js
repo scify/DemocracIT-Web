@@ -60,6 +60,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance = this;
         //todo: load existing rooms from database
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
+        var annCounter = 0;
         $(".article").each(function(index,articleDiv){
             var articleid =$(articleDiv).data("id");
 
@@ -85,6 +86,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             $(articleDiv).find(".ann").each(function(i,ann){
                 //userDefined is true when the user is logged in. We need to parse it to the comment box
                 //to know whether the user can post a reply or not.
+                //console.log(annCounter);
+
                 var userDefined = true;
                 if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
                     userDefined = false;
@@ -103,7 +106,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.annotationId = annId;
                 commentBoxProperties.consultationId = instance.consultationid;
                 commentBoxProperties.appState = instance.appState;
-
+                commentBoxProperties.annId = annCounter;
+                annCounter++;
                 var commentBox = $('<div class="commentbox-wrap"></div>')
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
                 {
@@ -137,7 +141,16 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
-        getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        //if the form was opened for edit the comment, the forEdit input value is 1, else 0
+        if(data.forEdit == "0")
+            getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        else {
+            data.action = "/annotation/update";
+            console.log(data);
+            //getDiscussionRoom(data.articleid, data.discussionroomannotationtagid);
+            getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action,data);
+        }
+
      },
     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {

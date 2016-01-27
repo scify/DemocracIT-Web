@@ -50,6 +50,19 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     comment
   }
 
+  def updateComment(comment:Comment): Comment = {
+
+    if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <= 0) {
+      // retrieve the article name from database
+      // compare the article name with comment.discussionThread.get.text
+      // if it is the same , discussionThread.get.typeid = "Whole article"
+      comment.discussionThread.get.id = commentsRepository.saveDiscussionThread(comment.discussionThread.get.clientId, comment.discussionThread.get.text, comment.discussionThread.get.discussion_thread_type_id)
+    }
+    commentsRepository.saveUpdatedComment(comment, comment.discussionThread.get.id.get)
+
+    comment
+  }
+
   private def awardPointsForComment(comment: Comment): Unit = {
     if(comment.userId.isDefined) {
       //check how many comments has the user entered today

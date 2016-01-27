@@ -68,6 +68,39 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
 
   }
 
+  def updatePost() =  SecuredAction { implicit request =>
+
+    import utils.ImplicitReadWrites._
+    val e =1
+    AnnotationForm.form.bindFromRequest.fold(
+      form => {
+        UnprocessableEntity(Json.toJson(form.errors))
+      },
+      annotation => {
+        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+
+        val comment = Comment(annotation.commentId, annotation.articleId, None, CommentSource.OpenGov,
+          annotation.body,
+          annotation.userAnnotatedText,
+          Some(request.identity.userID),
+          request.identity.fullName.get,
+          request.identity.avatarURL,
+          None,
+          DateTime.now().toDate,
+          annotation.revision.getOrElse(1),
+          "",
+          annotation.annotationTagProblems.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,2)).toList,
+          annotation.annotationTagTopics.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,1)).toList,
+          Some(discussionthread),0,0,None,Nil,annotation.emotionId)
+
+        val savedComment = annotationManager.updateComment(comment)
+        Ok(Json.toJson(savedComment))
+        //Ok(Json.toJson(""))
+      }
+    )
+
+  }
+
   def saveReply() =  SecuredAction { implicit request =>
     val test = request
     val parameterList = Json.parse(request.body.asJson.get.toString)

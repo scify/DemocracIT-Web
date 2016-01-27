@@ -201,7 +201,6 @@ scify.Annotator.prototype = (function(){
 
         },
         displayToolbarForEdit = function(e, comment) {
-            console.log(comment);
             e.preventDefault();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -222,19 +221,23 @@ scify.Annotator.prototype = (function(){
 
             $("#toolbar-modal").modal("show");
             fetchTopicTagsForUserSelection(selectedText);
-
+            console.log(comment);
+            toolbar.find("input[name='revision']").val(comment.revision);
+            console.log(toolbar.find("input[name='revision']").val());
             toolbar.find("input[name='annText']").val(selectedText);
-            var parent = target.closest(".ann")
-            var annid=parent.data("id");
-            var articleid=target.closest(".article").data("id");
+            var articleid= comment.articleId;
             toolbar.find("input[name='articleid']").val(articleid);
-            toolbar.find("input[name='discussionroomannotationtagid']").val(annid);
+            toolbar.find("input[name='commentId']").val(comment.id);
+            toolbar.find("input[name='discussionroomannotationtagid']").val(comment.annId);
             toolbar.find("blockquote").text(selectedText);
             toolbar.find("textarea[name='body']").val(comment.body);
+            toolbar.find("input[name='forEdit']").val(1);
             toolbar.find("li[data-id=" + comment.emotionId + "]").addClass("clicked");
             toolbar.find("input[name='emotionId']").val(comment.emotionId);
 
             setSelectedAnnotationsAndProblems(toolbar, comment.annotationTagTopics, comment.annotationTagProblems);
+            comment.annotationTagTopics = {};
+            comment.annotationTagProblems = {};
         },
         setSelectedAnnotationsAndProblems = function(toolbar, annotationTagTopics, annotationTagProblems) {
             annotationTagProblems.forEach(function(annotationTagProblem) {
@@ -245,6 +248,7 @@ scify.Annotator.prototype = (function(){
             });
             $('#annotationTagProblemId').select2();
             $('#annotationTagTopicId').select2();
+
         },
         collectAnnotatorData = function(e){
             e.preventDefault();
@@ -281,9 +285,12 @@ scify.Annotator.prototype = (function(){
             if ($("#toolbar").hasClass("logged-in"))
             {
                 $("#annotationTagTopicId").select2("val","");
+                $("#toolbar").find("input[name='forEdit']").val(0);
                 $("#annotationTagTopicId").find(".text-tag").remove(); //remove options related to the user's selected text
                 $("#annotationTagProblemId").select2("val","");
                 $("#toolbar").find("textarea").val("");
+                $("#toolbar").find("input[name='emotionid']").val("");
+                $("#toolbar").find("input[name='revision']").val("");
             }
         },
         destroyAnnotationTopicTagsSelect = function(){

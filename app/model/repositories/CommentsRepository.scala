@@ -286,7 +286,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where t.tagid =$discussionthreadclientid
                             """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
@@ -402,7 +402,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where c.article_id = $articleId
                             """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
@@ -482,7 +482,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     inner join public.articles a on a.id = c.article_id
                                     where a.consultation_id = $consultationId
@@ -708,6 +708,82 @@ class CommentsRepository {
 
   }
 
+  def saveOldComment(commentId: Long) = {
+    DB.withTransaction() { implicit c =>
+      //we store the old comment at comment_history table, retrieve the id of the comment_history row
+      val commentHistoryId = SQL"""
+          INSERT INTO public.comment_history (
+                         		comment_parent_id,
+                             url_source,
+                             article_id,
+                             parent_id,
+                             "comment",
+                             source_type_id,
+                             discussion_thread_id,
+                             user_id,
+                             date_added,
+                             revision,
+                             depth,
+                             annotatedtext,
+                             emotion_id) select * from comments where id=$commentId""".execute()
+    }
+  }
+
+  def updateComment(comment: Comment) ={
+    DB.withTransaction() { implicit c =>
+      SQL"""UPDATE public.comments
+           SET "comment" = ${comment.body},
+               date_added = now(),
+               revision = ${comment.revision + 1},
+               emotion_id = ${comment.emotionId}
+           WHERE id = ${comment.id}
+         """.execute()
+      val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
+
+      for (annotation <- annotationTags )
+      {
+        if (annotation.id == -1)
+        {
+          //if it already exists we request the id, else save and retrieve it
+          val annotationid: Long= SQL"""
+                                     with existing as (
+                                          SELECT id FROM annotation_tag WHERE description = ${annotation.description}
+                                     ),
+                                     new as (
+                                         INSERT INTO annotation_tag   (description,type_id,date_added,status_id)
+                                         SELECT ${annotation.description} as description,
+                                                ${annotation.type_id} as type_id ,
+                                                now() as date_added,
+                                                2 as status_id
+                                         WHERE NOT EXISTS ( select id from existing)
+                                         returning id
+                                     )
+                                     select id from new
+                                      union all
+                                     select id from existing
+
+                                """.as(SqlParser.long("id").single) // .executeInsert()
+
+          annotation.id = annotationid
+        }
+
+        SQL"""
+              INSERT INTO public.annotation_comment
+                          (public_comment_id,annotation_tag_id, comment_revision)
+              VALUES
+              (${comment.id},${annotation.id}, ${comment.revision + 1})
+            """.execute()
+
+      }
+    }
+  }
+
+  def saveUpdatedComment(comment: Comment, discussionThreadId:Long) = {
+    saveOldComment(comment.id.get)
+    updateComment(comment)
+  }
+
+
   def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
     DB.withTransaction() { implicit c =>
 
@@ -775,9 +851,9 @@ class CommentsRepository {
 
         SQL"""
               INSERT INTO public.annotation_comment
-                          (public_comment_id,annotation_tag_id)
+                          (public_comment_id,annotation_tag_id, comment_revision)
               VALUES
-              ($commentId,${annotation.id})
+              ($commentId,${annotation.id},${comment.revision})
             """.execute()
 
       }
