@@ -233,13 +233,18 @@ scify.Annotator.prototype = (function(){
             toolbar.find("textarea[name='body']").val(comment.body);
             toolbar.find("li[data-id=" + comment.emotionId + "]").addClass("clicked");
             toolbar.find("input[name='emotionId']").val(comment.emotionId);
-            comment.annotationTagProblems.forEach(function(annotationTagProblem) {
-                console.log(annotationTagProblem);
-                //console.log(toolbar.find("#annotationTagProblemId").find("option[value=" + annotationTagProblem.id + "]"));
-                toolbar.find("#annotationTagProblemId").find("option[value=" + annotationTagProblem.id + "]");
-                //$("#annotationTagProblemId").select2("val", annotationTagProblem.description);
+
+            setSelectedAnnotationsAndProblems(toolbar, comment.annotationTagTopics, comment.annotationTagProblems);
+        },
+        setSelectedAnnotationsAndProblems = function(toolbar, annotationTagTopics, annotationTagProblems) {
+            annotationTagProblems.forEach(function(annotationTagProblem) {
+                toolbar.find("#annotationTagProblemId").find("option[value=" + annotationTagProblem.id + "]").attr('selected', 'selected');
             });
-            $("#annotationTagProblemId").select2("data", { id: 1, text: "Some Text" });
+            annotationTagTopics.forEach(function(annotationTagTopic) {
+                toolbar.find("#annotationTagTopicId").find("option[value=" + annotationTagTopic.id + "]").attr('selected', 'selected');
+            });
+            $('#annotationTagProblemId').select2();
+            $('#annotationTagTopicId').select2();
         },
         collectAnnotatorData = function(e){
             e.preventDefault();
