@@ -23,7 +23,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    //console.log(data);
                     var index = 0;
                     /*18 is the number of months we are querying for
                     * so, we iterate through the dataset, with an iteration gap of 18*/
@@ -140,7 +139,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    //console.log(data);
                     var dataForDuration = [];
                     var chartId = "consDurationChartForAll";
                     var chartTitle = "Κατανομή Διαβουλεύσεων";
@@ -312,7 +310,6 @@
                 /*Remove current list*/
                 $("#consList").remove();
                 var selection = chart.getSelection();
-                console.log(dataForChart[selection[0].row]);
                 var cons_ids = dataForChart[selection[0].row][4];
                 /*Create new element for the list*/
                 $("#" + chartId).after("<div id=\"consList\"></div>");
