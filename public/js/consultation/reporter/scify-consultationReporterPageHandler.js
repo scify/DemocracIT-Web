@@ -114,451 +114,450 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                     $(".relevantLaw #" + $(this).context.id + " .childLaws").hide("fast");
                 }
             });
-        },
-
-        loadListOfCommentsPerArticle = function(articleId) {
-            $(".commentsTabs").css("display","block");
-            window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
-            window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
-
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
-
-        },
-
-        loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
-            if(typeOfAnn == "annotation") {
-                window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
-                $('html, body').animate({
-                    scrollTop: 800
-                }, 1000);
-            } else if(typeOfAnn == "problem") {
-                window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
-                $('html, body').animate({
-                    scrollTop: 800
-                }, 1000);
-            }
-        },
-        loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
-            if(typeOfAnn == "annotation") {
-                window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-                $('html, body').animate({
-                    scrollTop: 800
-                }, 1000);
-            } else if(typeOfAnn == "problem") {
-                window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-                $('html, body').animate({
-                    scrollTop: 800
-                }, 1000);
-            }
-        },
-
-        createListOfCommentsPerArticle = function(instance){
-            var domElementOpenGovComments = document.getElementById("commentsOpenGov");
-            var domElementDITComments = document.getElementById("commentsDIT");
-            if (domElementOpenGovComments) {
-                window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
-            }
-            if (domElementDITComments) {
-                //console.log(instance.commentListProperties);
-                window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
-            }
-        },
-        createListOfCommentsByAnnId = function(instance) {
-            var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
-            if (domElementCommentsByAnnId) {
-                window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnId);
-            }
-
-        },
-
-        createListOfCommentsByProblemId = function(instance) {
-            var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
-            if (domElementCommentsByProblemId) {
-                window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemId);
-            }
-
-        },
-        createListOfCommentsByAnnIdPerArticle = function(instance) {
-            var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
-            if (domElementCommentsByAnnIdPerArticle) {
-                window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
-            }
-        },
-        createListOfCommentsByProblemIdPerArticle = function(instance) {
-            var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
-            if (domElementCommentsByProblemIdPerArticle) {
-                window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
-            }
-        },
-        createArticleWordCloudChart = function() {
-
-            var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
-            if (domElementArticleWordCloud) {
-                window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
-            }
-
-        },
-        loadArticleWordCloud = function(articleId, commentsNum) {
-            window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
-        },
-        createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
-            function drawMultSeries() {
-                var data = new google.visualization.DataTable();
-
-                data.addColumn('string', strName);
-                data.addColumn('number', numName);
-                data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
-                if(chartType == "bar") {
-                    data.addColumn({type:'number', role:'scope'});
-                    data.addColumn({type:'number', role:'annotation','p': {'html': true}});
-                }
-                data.addColumn({type: 'number', role:'scope'});
-                data.addRows(dataForChart);
-
-                var numRows = dataForChart.length;
-                var expectedHeight = numRows * 20;
-                if(expectedHeight < 400) {
-                    expectedHeight = 600;
-                }
-                var chartHeight = expectedHeight - 80;
-                var options = {
-                    tooltip: {isHtml: true},
-                    'displayAnnotations': true,
-                    'title': chartName,
-                    'height': expectedHeight,
-                    'width':'1000',
-                    'chartArea': {width: chartWidth,'height': chartHeight,left:'300'},
-                    'hAxis': {
-                        title: xName,
-                        minValue: 0
-                    },
-                    animation:{
-                        duration: 3000,
-                        easing: 'out',
-                        startup: true
-                    },
-                    'is3D':true,
-                    'vAxis': {
-                        title: yName
-                    },
-                    legend: {position: 'right',alignment:'start'},
-                    'fontSize' : 15
-                };
-
-                var chart;
-                switch(chartType) {
-                    case 'bar':
-                        chart = new google.visualization.BarChart(document.getElementById(chartId));
-                        break;
-                    case 'pie':
-                        chart = new google.visualization.PieChart(document.getElementById(chartId));
-                        break;
-                    default:
-                        break
-                }
-                chart.draw(data, options);
-                // When a row is selected, the listener is triggered.
-                google.visualization.events.addListener(chart, 'select', function() {
-                    switch (chartId) {
-                        case "commentsPerArticleInnerChart":
-                            var selection = chart.getSelection();
-                            var articleId = dataForChart[selection[0].row][3];
-                            var commentsNum = dataForChart[selection[0].row][4];
-                            loadListOfCommentsPerArticle(articleId);
-                            instance.articleId = articleId;
-                            loadArticleWordCloud(instance.articleId, commentsNum);
-
-                            //sets the selection to null again
-                            chart.setSelection();
-                            break;
-                        case "annotationsForConsultationInnerChart":
-                            var selection = chart.getSelection();
-                            var annTagId = dataForChart[selection[0].row][3];
-                            loadListOfCommentsByAnnId(annTagId, instance.consultationId, "annotation");
-                            //sets the selection to null again
-                            chart.setSelection();
-                            break;
-                        case "annotationProblemsForConsultationInnerChart":
-                            var selection = chart.getSelection();
-                            var annTagId = dataForChart[selection[0].row][3];
-                            loadListOfCommentsByAnnId(annTagId, instance.consultationId, "problem");
-                            //sets the selection to null again
-                            chart.setSelection();
-                            break;
-                        case "annotationsPerArticleInnerChart":
-                            var selection = chart.getSelection();
-                            var articleId = dataForChart[selection[0].row][3];
-                            var annTagId = dataForChart[selection[0].row][5];
-                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "annotation");
-                            //sets the selection to null again
-                            chart.setSelection();
-                            break;
-                        case "annotationProblemsPerArticleInnerChart":
-                            var selection = chart.getSelection();
-                            var articleId = dataForChart[selection[0].row][3];
-                            var annTagId = dataForChart[selection[0].row][5];
-                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "problem");
-                            //sets the selection to null again
-                            chart.setSelection();
-                            break;
-                        default:
-                            break;
-
-                    }
-                });
-            }
-            google.setOnLoadCallback(drawMultSeries);
-        },
-        createUserBox = function (instance) {
-
-            scify.userBoxes = {};
-            $(".statsForUser").each(function(index,userDiv) {
-                var userId = $(userDiv).data("id");
-                var userObj = getUserById(userId);
-                var userBoxProperties = {
-                    consultationid          : instance.consultationId,
-                    userId                  : userId,
-                    user                    : userObj,
-                    commentsCount : $(userDiv).data("count"),
-                    imagesPath : instance.imagesPath
-                };
-                var domElementToAddComponent = document.getElementById("box_" + userId);
-                scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
-            });
-        },
-        attachTooltips = function () {
-            $("#usersStatsTooltip").attr('title', 'Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια');
-            $('#usersStatsTooltip').click(function () {
-                $('#usersStatsTooltip').mouseover();
-            });
-        },
-        refreshLikeDislikeLinks = function(elementId){
-            if($(elementId).hasClass("liked")) {
-                $(elementId+ " a").css("color","grey");
-            } else if($(elementId).hasClass("disliked")){
-                $(elementId + " a").css("color","#337ab7");
-            }
-        },
-        checkRatingUsers = function(array, user_id) {
-            for(var i=0; i<array.length; i++) {
-                if(array[i].userId == user_id)
-                    return array[i];
-            }
-            return false;
-        },
-        rateFinalLawFile = function(instance) {
-            var userId = instance.userId;
-            var userRate = checkRatingUsers(instance.ratingUsers, userId);
-            if(userRate) {
-                if(userRate.liked) {
-                    $( "#rateApprove").addClass("liked");
-                    refreshLikeDislikeLinks("#rateApprove");
-                } else {
-                    $( "#rateDisapprove").addClass("liked");
-                    refreshLikeDislikeLinks("#rateDisapprove");
-                }
-            }
-
-            var consultationId = instance.consultationId;
-            var finalLawId = instance.finalLawId;
-            var liked = false;
-            $( "#rateApprove a" ).click(function() {
-                if(userId == "") {
-                    $(".noRateBtn").trigger( "click" );
-                }
-                else if(userId == instance.finalLawUserId) {
-                    $(".noRateBtn").trigger( "click" );
-                    $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-                }
-                else {
-                    if($( "#rateDisapprove").hasClass("liked")) {
-                        $( "#rateDisapprove a").trigger("click");
-                        return;
-                    }
-                    else if(!$( "#rateApprove").hasClass("liked")) {
-                        $( "#rateApprove").removeClass("disliked");
-                        $( "#rateApprove").addClass("liked");
-                        liked = true;
-                    } else {
-                        $( "#rateApprove").removeClass("liked");
-                        $( "#rateApprove").addClass("disliked");
-                        liked = false;
-                    }
-                    $.ajax({
-                        type: 'POST',
-                        url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 0 + "/" + userId + "/" + liked,
-                        beforeSend: function () {
-                        },
-                        success: function (returnData) {
-                            if(liked) {
-                                $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
-                            } else {
-                                $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) - 1);
-                            }
-                            refreshLikeDislikeLinks("#rateApprove");
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        },
-                        complete: function () {
-                        }
-                    });
-
-                }
-            });
-
-            $( "#rateDisapprove a" ).click(function() {
-                if(userId == "") {
-                    $(".noRateBtn").trigger( "click" );
-                }
-                else if(userId == instance.finalLawUserId) {
-                    $(".noRateBtn").trigger( "click" );
-                    $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
-                }
-                else {
-                    if($( "#rateApprove").hasClass("liked")) {
-                        $( "#rateApprove a").trigger("click");
-                        return;
-                    }
-                    else if(!$( "#rateDisapprove").hasClass("liked")) {
-                        $( "#rateDisapprove").removeClass("disliked");
-                        $( "#rateDisapprove").addClass("liked");
-                        liked = true;
-                    } else {
-                        $( "#rateDisapprove").removeClass("liked");
-                        $( "#rateDisapprove").addClass("disliked");
-                        liked = false;
-                    }
-                    $.ajax({
-                        type: 'POST',
-                        url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 1 + "/" + userId + "/" + liked,
-                        beforeSend: function () {
-                        },
-                        success: function (returnData) {
-                            //console.log($("#rateApprove .counter").html());
-                            if(liked) {
-                                $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
-                            } else {
-                                $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) - 1);
-                            }
-                            refreshLikeDislikeLinks("#rateDisapprove");
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        },
-                        complete: function () {
-                        }
-                    });
-
-                }
-            });
-        },
-        createFinalLawUpload = function(instance) {
-            // "myAwesomeDropzone" is the camelized version of the HTML element's ID
-            Dropzone.options.finalLawDropZone = {
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 10, // MB
-                url: "/consultation/finalLawUpload/" + instance.consultationId + "/" + instance.userId,
-                uploadMultiple: false,
-                maxFiles: 1,
-                acceptedFiles: "application/pdf,text/plain",
-                dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ",
-                dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
-                accept: function(file, done) {
-                    $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
-                    if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
-                        done("Naha, you don't.");
-                    }
-                    else { done(); }
-                },
-                init: function() {
-                    this.on("error", function(file,errorMessage) {
-                        $(".dz-error-message").css("opacity",1);
-                    });
-                    this.on("addedfile", function() {
-                        /*If more than one file, we ceep the latest one*/
-                        if (this.files[1]!=null){
-                            this.removeFile(this.files[0]);
-                        }
-                    });
-                    this.on('success', function() {
-                        $("#finalLawDropZone").find("waiting-msg").remove();
-                        //console.log("success");
-                        setTimeout(function (){
-                            var url = window.location.href;
-                            if(url.indexOf("?target=finalLaw") == -1)
-                                url += '?target=finalLaw';
-                            window.location.href = url;
-                        }, 500);
-                    });
-                }
-            };
-        },
-        getParameterPointToFinalLaw = function () {
-            var parameter = getParameterByName("target");
-            //console.log(parameter);
-            if(parameter == "finalLaw") {
-                $('html, body').animate({
-                    scrollTop: 500
-                }, 1000);
-                $(".finalLawLi a").trigger("click");
-            }
-        },
-        getParameterByName = function(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        },
-        finalLawModalHandler = function() {
-            $( "#finalLawModalBtn" ).click(function() {
-                //console.log("wsadfrs");
-                $(".modal-body .container .consultationText div").first().find(".show-hide").click();
-                $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
-                //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
-            });
-        },
-        deleteFinalLawHandler = function(instance) {
-
-            $( "#deleteFinalLaw" ).click(function() {
-                var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
-                if (answer == true) {
-                    //console.log("You pressed OK!");
-                    var finalLawId = instance.finalLawId;
-                    //console.log(finalLawId);
-                    $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
-                    $.ajax({
-                        type: 'GET',
-                        url: "/consultation/finallaw/delete/" + finalLawId,
-                        beforeSend: function () {
-                        },
-                        success: function (returnData) {
-                            //console.log(returnData);
-                            setTimeout(function (){
-                                //$("#deleteLaw").find(".loaderSmall").remove();
-                                var url = window.location.href;
-                                if(url.indexOf("?target=finalLaw") == -1)
-                                    url += '?target=finalLaw';
-                                window.location.href = url;
-                            }, 200);
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        },
-                        complete: function () {
-                            console.log("complete");
-
-                        }
-                    });
-                }
-            });
         }
     var expandArticleOnClick = function(){
         var article = $(this).closest(".article");
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");
+    },
+    loadListOfCommentsPerArticle = function(articleId) {
+        $(".commentsTabs").css("display","block");
+        window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
+        window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
+
+        $('html, body').animate({
+            scrollTop: 800
+        }, 1000);
+
+    },
+
+    loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
+        if(typeOfAnn == "annotation") {
+            window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        } else if(typeOfAnn == "problem") {
+            window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        }
+    },
+    loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
+        if(typeOfAnn == "annotation") {
+            window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        } else if(typeOfAnn == "problem") {
+            window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        }
+    },
+
+    createListOfCommentsPerArticle = function(instance){
+        var domElementOpenGovComments = document.getElementById("commentsOpenGov");
+        var domElementDITComments = document.getElementById("commentsDIT");
+        if (domElementOpenGovComments) {
+            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
+        }
+        if (domElementDITComments) {
+            //console.log(instance.commentListProperties);
+            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
+        }
+    },
+    createListOfCommentsByAnnId = function(instance) {
+        var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
+        if (domElementCommentsByAnnId) {
+            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnId);
+        }
+
+    },
+
+    createListOfCommentsByProblemId = function(instance) {
+        var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
+        if (domElementCommentsByProblemId) {
+            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemId);
+        }
+
+    },
+    createListOfCommentsByAnnIdPerArticle = function(instance) {
+        var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
+        if (domElementCommentsByAnnIdPerArticle) {
+            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
+        }
+    },
+    createListOfCommentsByProblemIdPerArticle = function(instance) {
+        var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
+        if (domElementCommentsByProblemIdPerArticle) {
+            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
+        }
+    },
+    createArticleWordCloudChart = function() {
+
+        var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
+        if (domElementArticleWordCloud) {
+            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+        }
+
+    },
+    loadArticleWordCloud = function(articleId, commentsNum) {
+        window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
+    },
+    createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
+        function drawMultSeries() {
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', strName);
+            data.addColumn('number', numName);
+            data.addColumn({type:'string', role:'tooltip','p': {'html': true}});
+            if(chartType == "bar") {
+                data.addColumn({type:'number', role:'scope'});
+                data.addColumn({type:'number', role:'annotation','p': {'html': true}});
+            }
+            data.addColumn({type: 'number', role:'scope'});
+            data.addRows(dataForChart);
+
+            var numRows = dataForChart.length;
+            var expectedHeight = numRows * 20;
+            if(expectedHeight < 400) {
+                expectedHeight = 600;
+            }
+            var chartHeight = expectedHeight - 80;
+            var options = {
+                tooltip: {isHtml: true},
+                'displayAnnotations': true,
+                'title': chartName,
+                'height': expectedHeight,
+                'width':'1000',
+                'chartArea': {width: chartWidth,'height': chartHeight,left:'300'},
+                'hAxis': {
+                    title: xName,
+                    minValue: 0
+                },
+                animation:{
+                    duration: 3000,
+                    easing: 'out',
+                    startup: true
+                },
+                'is3D':true,
+                'vAxis': {
+                    title: yName
+                },
+                legend: {position: 'right',alignment:'start'},
+                'fontSize' : 15
+            };
+
+            var chart;
+            switch(chartType) {
+                case 'bar':
+                    chart = new google.visualization.BarChart(document.getElementById(chartId));
+                    break;
+                case 'pie':
+                    chart = new google.visualization.PieChart(document.getElementById(chartId));
+                    break;
+                default:
+                    break
+            }
+            chart.draw(data, options);
+            // When a row is selected, the listener is triggered.
+            google.visualization.events.addListener(chart, 'select', function() {
+                switch (chartId) {
+                    case "commentsPerArticleInnerChart":
+                        var selection = chart.getSelection();
+                        var articleId = dataForChart[selection[0].row][3];
+                        var commentsNum = dataForChart[selection[0].row][4];
+                        loadListOfCommentsPerArticle(articleId);
+                        instance.articleId = articleId;
+                        loadArticleWordCloud(instance.articleId, commentsNum);
+
+                        //sets the selection to null again
+                        chart.setSelection();
+                        break;
+                    case "annotationsForConsultationInnerChart":
+                        var selection = chart.getSelection();
+                        var annTagId = dataForChart[selection[0].row][3];
+                        loadListOfCommentsByAnnId(annTagId, instance.consultationId, "annotation");
+                        //sets the selection to null again
+                        chart.setSelection();
+                        break;
+                    case "annotationProblemsForConsultationInnerChart":
+                        var selection = chart.getSelection();
+                        var annTagId = dataForChart[selection[0].row][3];
+                        loadListOfCommentsByAnnId(annTagId, instance.consultationId, "problem");
+                        //sets the selection to null again
+                        chart.setSelection();
+                        break;
+                    case "annotationsPerArticleInnerChart":
+                        var selection = chart.getSelection();
+                        var articleId = dataForChart[selection[0].row][3];
+                        var annTagId = dataForChart[selection[0].row][5];
+                        loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "annotation");
+                        //sets the selection to null again
+                        chart.setSelection();
+                        break;
+                    case "annotationProblemsPerArticleInnerChart":
+                        var selection = chart.getSelection();
+                        var articleId = dataForChart[selection[0].row][3];
+                        var annTagId = dataForChart[selection[0].row][5];
+                        loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "problem");
+                        //sets the selection to null again
+                        chart.setSelection();
+                        break;
+                    default:
+                        break;
+
+                }
+            });
+        }
+        google.setOnLoadCallback(drawMultSeries);
+    },
+    createUserBox = function (instance) {
+
+        scify.userBoxes = {};
+        $(".statsForUser").each(function(index,userDiv) {
+            var userId = $(userDiv).data("id");
+            var userObj = getUserById(userId);
+            var userBoxProperties = {
+                consultationid          : instance.consultationId,
+                userId                  : userId,
+                user                    : userObj,
+                commentsCount : $(userDiv).data("count"),
+                imagesPath : instance.imagesPath
+            };
+            var domElementToAddComponent = document.getElementById("box_" + userId);
+            scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
+        });
+    },
+    attachTooltips = function () {
+        $("#usersStatsTooltip").attr('title', 'Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια');
+        $('#usersStatsTooltip').click(function () {
+            $('#usersStatsTooltip').mouseover();
+        });
+    },
+    refreshLikeDislikeLinks = function(elementId){
+        if($(elementId).hasClass("liked")) {
+            $(elementId+ " a").css("color","grey");
+        } else if($(elementId).hasClass("disliked")){
+            $(elementId + " a").css("color","#337ab7");
+        }
+    },
+    checkRatingUsers = function(array, user_id) {
+        for(var i=0; i<array.length; i++) {
+            if(array[i].userId == user_id)
+                return array[i];
+        }
+        return false;
+    },
+    rateFinalLawFile = function(instance) {
+        var userId = instance.userId;
+        var userRate = checkRatingUsers(instance.ratingUsers, userId);
+        if(userRate) {
+            if(userRate.liked) {
+                $( "#rateApprove").addClass("liked");
+                refreshLikeDislikeLinks("#rateApprove");
+            } else {
+                $( "#rateDisapprove").addClass("liked");
+                refreshLikeDislikeLinks("#rateDisapprove");
+            }
+        }
+
+        var consultationId = instance.consultationId;
+        var finalLawId = instance.finalLawId;
+        var liked = false;
+        $( "#rateApprove a" ).click(function() {
+            if(userId == "") {
+                $(".noRateBtn").trigger( "click" );
+            }
+            else if(userId == instance.finalLawUserId) {
+                $(".noRateBtn").trigger( "click" );
+                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+            }
+            else {
+                if($( "#rateDisapprove").hasClass("liked")) {
+                    $( "#rateDisapprove a").trigger("click");
+                    return;
+                }
+                else if(!$( "#rateApprove").hasClass("liked")) {
+                    $( "#rateApprove").removeClass("disliked");
+                    $( "#rateApprove").addClass("liked");
+                    liked = true;
+                } else {
+                    $( "#rateApprove").removeClass("liked");
+                    $( "#rateApprove").addClass("disliked");
+                    liked = false;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 0 + "/" + userId + "/" + liked,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        if(liked) {
+                            $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) + 1);
+                        } else {
+                            $("#rateApprove .counter").html(parseInt($("#rateApprove .counter").html()) - 1);
+                        }
+                        refreshLikeDislikeLinks("#rateApprove");
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                    }
+                });
+
+            }
+        });
+
+        $( "#rateDisapprove a" ).click(function() {
+            if(userId == "") {
+                $(".noRateBtn").trigger( "click" );
+            }
+            else if(userId == instance.finalLawUserId) {
+                $(".noRateBtn").trigger( "click" );
+                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+            }
+            else {
+                if($( "#rateApprove").hasClass("liked")) {
+                    $( "#rateApprove a").trigger("click");
+                    return;
+                }
+                else if(!$( "#rateDisapprove").hasClass("liked")) {
+                    $( "#rateDisapprove").removeClass("disliked");
+                    $( "#rateDisapprove").addClass("liked");
+                    liked = true;
+                } else {
+                    $( "#rateDisapprove").removeClass("liked");
+                    $( "#rateDisapprove").addClass("disliked");
+                    liked = false;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "/consultation/finallaw/rate/" + consultationId + "/" + parseInt(finalLawId) + "/" + 1 + "/" + userId + "/" + liked,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        //console.log($("#rateApprove .counter").html());
+                        if(liked) {
+                            $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) + 1);
+                        } else {
+                            $("#rateDisapprove .counter").html(parseInt($("#rateDisapprove .counter").html()) - 1);
+                        }
+                        refreshLikeDislikeLinks("#rateDisapprove");
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                    }
+                });
+
+            }
+        });
+    },
+    createFinalLawUpload = function(instance) {
+        // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+        Dropzone.options.finalLawDropZone = {
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: 10, // MB
+            url: "/consultation/finalLawUpload/" + instance.consultationId + "/" + instance.userId,
+            uploadMultiple: false,
+            maxFiles: 1,
+            acceptedFiles: "application/pdf,text/plain",
+            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ",
+            dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
+            accept: function(file, done) {
+                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
+                if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
+                    done("Naha, you don't.");
+                }
+                else { done(); }
+            },
+            init: function() {
+                this.on("error", function(file,errorMessage) {
+                    $(".dz-error-message").css("opacity",1);
+                });
+                this.on("addedfile", function() {
+                    /*If more than one file, we ceep the latest one*/
+                    if (this.files[1]!=null){
+                        this.removeFile(this.files[0]);
+                    }
+                });
+                this.on('success', function() {
+                    $("#finalLawDropZone").find("waiting-msg").remove();
+                    //console.log("success");
+                    setTimeout(function (){
+                        var url = window.location.href;
+                        if(url.indexOf("?target=finalLaw") == -1)
+                            url += '?target=finalLaw';
+                        window.location.href = url;
+                    }, 500);
+                });
+            }
+        };
+    },
+    getParameterPointToFinalLaw = function () {
+        var parameter = getParameterByName("target");
+        //console.log(parameter);
+        if(parameter == "finalLaw") {
+            $('html, body').animate({
+                scrollTop: 500
+            }, 1000);
+            $(".finalLawLi a").trigger("click");
+        }
+    },
+    getParameterByName = function(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    },
+    finalLawModalHandler = function() {
+        $( "#finalLawModalBtn" ).click(function() {
+            //console.log("wsadfrs");
+            $(".modal-body .container .consultationText div").first().find(".show-hide").click();
+            $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
+            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
+        });
+    },
+    deleteFinalLawHandler = function(instance) {
+
+        $( "#deleteFinalLaw" ).click(function() {
+            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
+            if (answer == true) {
+                //console.log("You pressed OK!");
+                var finalLawId = instance.finalLawId;
+                //console.log(finalLawId);
+                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
+                $.ajax({
+                    type: 'GET',
+                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    beforeSend: function () {
+                    },
+                    success: function (returnData) {
+                        //console.log(returnData);
+                        setTimeout(function (){
+                            //$("#deleteLaw").find(".loaderSmall").remove();
+                            var url = window.location.href;
+                            if(url.indexOf("?target=finalLaw") == -1)
+                                url += '?target=finalLaw';
+                            window.location.href = url;
+                        }, 200);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function () {
+                        console.log("complete");
+
+                    }
+                });
+            }
+        });
     },
     createCommentListParams = function(instance) {
         var userDefined = true;

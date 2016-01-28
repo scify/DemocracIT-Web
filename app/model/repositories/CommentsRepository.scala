@@ -65,8 +65,6 @@ class CommentsRepository {
     }
   }
 
-
-
   def cancelLikeReward(userId:UUID, comment_id:Long):Unit = {
     DB.withConnection { implicit c =>
       SQL"""
@@ -782,7 +780,6 @@ class CommentsRepository {
     saveOldComment(comment.id.get)
     updateComment(comment)
   }
-
 
   def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
     DB.withTransaction() { implicit c =>
