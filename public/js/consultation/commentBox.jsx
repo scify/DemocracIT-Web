@@ -89,7 +89,7 @@
                 body : data.body,
                 annotationTagTopics : data.annotationTagTopics,
                 annotationTagProblems : data.annotationTagProblems,
-                emotionId : data.emotionId,
+                emotionId : data.emotionId
             };
 
             //todo: cancel any previous events
@@ -134,7 +134,6 @@
         },
         updateComment : function(url,data){
             var instance = this;
-            console.log(data);
             var postedData = {
                 commentId: data.commentId,
                 consultationId : this.props.consultationid,
@@ -295,7 +294,6 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
-                //console.log(comment);
                 return (
                     <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
                                    userDefined={instance.props.userDefined} parent={instance.props.parent}
@@ -342,8 +340,13 @@
                 this.props.scrollToComment();
             }
             $("#shareComment-" + instance.props.data.id).click(function() {
-                console.log(instance.props);
                 var commentId = $(this).attr('id').split('-')[1];
+                var annotationId = instance.props.annotationId;
+                //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
+                //we need to get it from the comment object
+                if(annotationId == undefined) {
+                    annotationId = instance.props.data.discussionThread.text.split('-')[1];
+                }
                 var longUrl ="";
                 $("#shareComment-"+commentId).prev().toggleClass('shareArticleHiddenComment');
                 if(instance.props.appState == "development") {
@@ -351,7 +354,7 @@
                 } else {
                     longUrl = "http://democracit.org/consultation/";
                 }
-                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + instance.props.annotationId;
+                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + annotationId;
                 //show the extra div
                 if($("#shareComment-"+commentId).prev().find(".shareUrl").length == 0)
                     $("#shareComment-"+commentId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
@@ -373,7 +376,6 @@
         handleEditComment: function(){
             var commentToBeEdited = this.props.data;
             commentToBeEdited.annId = "ann-" + this.props.annId;
-            //console.log(commentToBeEdited);
             //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
             $("body").trigger("editcomment", commentToBeEdited);
         },
@@ -381,9 +383,10 @@
             var userId = this.props.userId;
             var commenterId = this.props.data.userId;
             var editIcon = <span></span>;
-            //console.log(this.props.data);
             //if the logged in user is the same as the commenter user, the edit comment icon is populated
-            if(userId == commenterId) {
+            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
+            //we only present the edit icon in the Consultation index page (not the reporter page)
+            if(userId == commenterId && userId != undefined && this.props.parent == "consultation") {
                 editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
             }
             if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
@@ -446,6 +449,25 @@
                 var imageWithPath = this.props.imagesPath + image;
                 emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
             }
+            var shareBtn = <span></span>;
+
+            var commentSource = this.props.data.source;
+
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if(commentSource != undefined) {
+                if(commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    //if we call commentBox from reporterUserStats tab, the comment id is nested in the data.comment object
+                    if (commentIdForShare == undefined)
+                        commentIdForShare = this.props.data.comment.id;
+                    shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
+                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
+                        span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
+                    <i className="fa fa-link"></i>
+                </span></div>;
+                }
+            }
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
                                                  id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
@@ -458,12 +480,6 @@
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-
-                var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
-                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
-                    span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
-                    <i className="fa fa-link"></i>
-                </span></div>;
 
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
                     <span className="partName">Σχόλιο: </span>
@@ -507,11 +523,6 @@
             } else if(this.props.parent == "comment") {
                 options = <CommentActionsEnabled imagesPath={this.props.imagesPath} userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-                var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
-                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
-                    span className="shareBtnComment" id={"shareComment-" + this.props.data.id}>
-                    <i className="fa fa-link"></i>
-                </span></div>;
 
                 if (this.props.data.profileUrl)
                     commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
@@ -533,7 +544,6 @@
             }
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-            //console.log(this.props);
             if(this.props.data.commentReplies!= undefined)
                 if(this.props.data.commentReplies.length > 0) {
                     var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;

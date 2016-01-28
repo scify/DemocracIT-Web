@@ -95,7 +95,7 @@ class CommentsRepository {
              ),
             topLevelComments as (
 
-                  select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                  select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                           cr.liked as userrating,
                           counter.likes,
                           counter.dislikes
@@ -110,7 +110,7 @@ class CommentsRepository {
                        where a.consultation_id = $consultationId and ann.id = $annId
              ),
            replies as (
-                  select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                  select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                     cr.liked as userrating,
                                     counter.likes,
                                     counter.dislikes
@@ -150,7 +150,7 @@ class CommentsRepository {
                                   group by cr.comment_id
                                  ),
            topLevelComments as (
-                             select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                             select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                      cr.liked as userrating,
                                      counter.likes,
                                      counter.dislikes
@@ -165,7 +165,7 @@ class CommentsRepository {
                                   where a.id = $articleId and ann.id = $annId
                         ),
            replies as (
-                             select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                             select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                                cr.liked as userrating,
                                                counter.likes,
                                                counter.dislikes
@@ -205,7 +205,7 @@ class CommentsRepository {
                                      where a.consultation_id = $consultation_id
                                   group by cr.comment_id
                                  )
-              select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,
+              select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                       cr.liked as userrating,
                       counter.likes,
                       counter.dislikes
@@ -222,7 +222,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join articles a on a.id = c.article_id
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where c.user_id = CAST($user_id as UUID) and a.consultation_id = $consultation_id
@@ -269,7 +269,7 @@ class CommentsRepository {
            where t.tagid =$discussionthreadclientid
           group by cr.comment_id
          )
-          select c.*, u.fullName,u.avatarurl,null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,
+          select c.*, u.fullName,u.avatarurl,null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating
@@ -354,7 +354,7 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,'' as discussion_thread_tag_id,
                              counter.likes,
                              counter.dislikes, false as userrating
                        from public.comments c
@@ -387,7 +387,7 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                    select c.*, u.fullname, u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
+                    select c.*, u.fullname, u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                             counter.likes,
                             counter.dislikes,
                             cr.liked as userrating from comments c
@@ -465,7 +465,7 @@ class CommentsRepository {
                                     where a.consultation_id = $consultationId
                     group by cr.comment_id
                    )
-                     select  c.*,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
+                     select  c.*,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                      cr.liked as userrating,
                      counter.likes,
                      counter.dislikes
@@ -631,7 +631,7 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,null as discussion_thread_type_id,
+                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,null as discussion_thread_type_id,'' as discussion_thread_tag_id,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes

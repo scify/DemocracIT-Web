@@ -19,6 +19,7 @@ object CommentsParser{
       int("source_type_id") ~
       get[Option[Long]]("discussion_thread_id") ~
       get[Option[Int]]("discussion_thread_type_id") ~
+      get[Option[String]]("discussion_thread_tag_id") ~
       get[Option[java.util.UUID]]("user_id") ~
       str("fullName") ~
       get[Option[String]]("avatarUrl") ~
@@ -32,10 +33,10 @@ object CommentsParser{
       get[Option[Boolean]]("userrating") ~
       get[Option[Int]]("emotion_id") map
       {
-        case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~ discussion_thread_type_id ~
+        case id ~  article_id ~ parent_id ~ comment ~ source_type_id ~ discussion_thread_id ~ discussion_thread_type_id ~ discussion_thread_tag_id ~
           user_id ~ full_name ~ avatarUrl ~ profileUrl ~ date_added ~ revision ~depth ~ annotatedText  ~ likes ~ dislikes ~ userrating ~ emotionId=>
 
-          val discussionThread = if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id, discussion_thread_type_id.get,"","",None)) else None
+          val discussionThread = if (discussion_thread_id.isDefined) Some(DiscussionThread(discussion_thread_id, discussion_thread_type_id.get,"",discussion_thread_tag_id.get,None)) else None
           new Comment(Some(id),
             article_id,
             parent_id,

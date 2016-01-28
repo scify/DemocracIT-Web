@@ -126,7 +126,6 @@
         },
         updateComment: function updateComment(url, data) {
             var instance = this;
-            console.log(data);
             var postedData = {
                 commentId: data.commentId,
                 consultationId: this.props.consultationid,
@@ -282,7 +281,6 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
-                //console.log(comment);
                 return React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
                     userDefined: instance.props.userDefined, parent: instance.props.parent,
                     consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
@@ -326,8 +324,13 @@
                 this.props.scrollToComment();
             }
             $("#shareComment-" + instance.props.data.id).click(function () {
-                console.log(instance.props);
                 var commentId = $(this).attr("id").split("-")[1];
+                var annotationId = instance.props.annotationId;
+                //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
+                //we need to get it from the comment object
+                if (annotationId == undefined) {
+                    annotationId = instance.props.data.discussionThread.text.split("-")[1];
+                }
                 var longUrl = "";
                 $("#shareComment-" + commentId).prev().toggleClass("shareArticleHiddenComment");
                 if (instance.props.appState == "development") {
@@ -335,7 +338,7 @@
                 } else {
                     longUrl = "http://democracit.org/consultation/";
                 }
-                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + instance.props.annotationId;
+                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + annotationId;
                 //show the extra div
                 if ($("#shareComment-" + commentId).prev().find(".shareUrl").length == 0) $("#shareComment-" + commentId).prev().append("<div class=\"shareUrl\"><a href=\"" + longUrl + "\">" + longUrl + "</a></div>");
             });
@@ -356,7 +359,6 @@
         handleEditComment: function handleEditComment() {
             var commentToBeEdited = this.props.data;
             commentToBeEdited.annId = "ann-" + this.props.annId;
-            //console.log(commentToBeEdited);
             //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
             $("body").trigger("editcomment", commentToBeEdited);
         },
@@ -364,9 +366,10 @@
             var userId = this.props.userId;
             var commenterId = this.props.data.userId;
             var editIcon = React.createElement("span", null);
-            //console.log(this.props.data);
             //if the logged in user is the same as the commenter user, the edit comment icon is populated
-            if (userId == commenterId) {
+            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
+            //we only present the edit icon in the Consultation index page (not the reporter page)
+            if (userId == commenterId && userId != undefined && this.props.parent == "consultation") {
                 editIcon = React.createElement(
                     "span",
                     { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
@@ -457,6 +460,33 @@
                     React.createElement("img", { src: imageWithPath })
                 );
             }
+            var shareBtn = React.createElement("span", null);
+
+            var commentSource = this.props.data.source;
+
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if (commentSource != undefined) {
+                if (commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    //if we call commentBox from reporterUserStats tab, the comment id is nested in the data.comment object
+                    if (commentIdForShare == undefined) commentIdForShare = this.props.data.comment.id;
+                    shareBtn = React.createElement(
+                        "div",
+                        { className: "shareLink" },
+                        React.createElement(
+                            "span",
+                            { className: "shareSpanComment shareArticleHiddenComment" },
+                            "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
+                        ),
+                        React.createElement(
+                            "span",
+                            { className: "shareBtnComment", id: "shareComment-" + commentIdForShare },
+                            React.createElement("i", { className: "fa fa-link" })
+                        )
+                    );
+                }
+            }
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
                 options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
                     id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter,
@@ -481,21 +511,6 @@
                     "span",
                     { className: "commentAuthor" },
                     this.props.data.fullName
-                );
-
-                var shareBtn = React.createElement(
-                    "div",
-                    { className: "shareLink" },
-                    React.createElement(
-                        "span",
-                        { className: "shareSpanComment shareArticleHiddenComment" },
-                        "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
-                    ),
-                    React.createElement(
-                        "span",
-                        { className: "shareBtnComment", id: "shareComment-" + this.props.data.id },
-                        React.createElement("i", { className: "fa fa-link" })
-                    )
                 );
 
                 commentBody = React.createElement(
@@ -579,20 +594,6 @@
                     { className: "avatar" },
                     React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
                 );
-                var shareBtn = React.createElement(
-                    "div",
-                    { className: "shareLink" },
-                    React.createElement(
-                        "span",
-                        { className: "shareSpanComment shareArticleHiddenComment" },
-                        "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
-                    ),
-                    React.createElement(
-                        "span",
-                        { className: "shareBtnComment", id: "shareComment-" + this.props.data.id },
-                        React.createElement("i", { className: "fa fa-link" })
-                    )
-                );
 
                 if (this.props.data.profileUrl) commenterName = React.createElement(
                     "span",
@@ -661,7 +662,6 @@
                 " ",
                 taggedTopicsContainer
             );
-            //console.log(this.props);
             if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 0) {
                 var replyTitle = React.createElement(
                     "div",

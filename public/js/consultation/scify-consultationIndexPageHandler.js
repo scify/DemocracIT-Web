@@ -86,8 +86,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             $(articleDiv).find(".ann").each(function(i,ann){
                 //userDefined is true when the user is logged in. We need to parse it to the comment box
                 //to know whether the user can post a reply or not.
-                //console.log(annCounter);
-
                 var userDefined = true;
                 if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
                     userDefined = false;
@@ -108,7 +106,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.appState = instance.appState;
                 commentBoxProperties.annId = annCounter;
                 annCounter++;
-                var commentBox = $('<div class="commentbox-wrap"></div>')
+                var commentBox = $('<div class="commentbox-wrap"></div>');
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
                 {
                     commentBoxProperties.isdiscussionForTheWholeArticle=true;
@@ -148,7 +146,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             data.action = "/annotation/update";
             console.log(data);
             //getDiscussionRoom(data.articleid, data.discussionroomannotationtagid);
-            getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action,data);
+            getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action, data);
         }
 
      },
