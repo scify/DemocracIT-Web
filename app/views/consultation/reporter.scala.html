@@ -37,6 +37,7 @@
                                                                 @Html(vm.annotationsForConsultationToJson(2)),
                                                                 @Html(vm.annotationsPerArticleToJson(1)),
                                                                 @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
+                                                                '@play.Play.application().configuration().getString("application.state")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();

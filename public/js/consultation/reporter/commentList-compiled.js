@@ -34,7 +34,6 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -63,7 +62,7 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    //console.log(data);
+                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -147,7 +146,7 @@
                         React.createElement(scify.ReactLoader, { display: this.state.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { imagesPath: this.props.imagesPath, consultationEndDate: this.props.consultationEndDate, userId: this.props.userId, userDefined: this.props.userDefined, data: this.state.comments, parent: "reporter" });
+                return React.createElement(scify.CommentList, { appState: this.props.appState, consultationId: this.props.consultationId, imagesPath: this.props.imagesPath, consultationEndDate: this.props.consultationEndDate, userId: this.props.userId, userDefined: this.props.userDefined, data: this.state.comments, parent: "reporter" });
             } else {
                 return React.createElement("div", null);
             }

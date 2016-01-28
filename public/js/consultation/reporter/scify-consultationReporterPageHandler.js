@@ -4,14 +4,16 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
                                                   annotationProblemsForConsultation,
                                                   annotationsPerArticle,
                                                   annotationProblemsPerArticle, commenters,
+                                                  appState,
                                                   consultationEndDate){
-    this.consultationid= consultationid;
+    this.consultationId= consultationid;
     this.userId = userId;
     this.fullName = fullName;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
     this.ratingUsers = [];
     this.imagesPath = imagesPath;
+    this.appState = appState;
     for (var i=0; i<ratingUsers.length; i++) {
         this.ratingUsers[i] = {userId: ratingUsers[i].user_id, liked: ratingUsers[i].liked};
     }
@@ -274,14 +276,14 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                         case "annotationsForConsultationInnerChart":
                             var selection = chart.getSelection();
                             var annTagId = dataForChart[selection[0].row][3];
-                            loadListOfCommentsByAnnId(annTagId, instance.consultationid, "annotation");
+                            loadListOfCommentsByAnnId(annTagId, instance.consultationId, "annotation");
                             //sets the selection to null again
                             chart.setSelection();
                             break;
                         case "annotationProblemsForConsultationInnerChart":
                             var selection = chart.getSelection();
                             var annTagId = dataForChart[selection[0].row][3];
-                            loadListOfCommentsByAnnId(annTagId, instance.consultationid, "problem");
+                            loadListOfCommentsByAnnId(annTagId, instance.consultationId, "problem");
                             //sets the selection to null again
                             chart.setSelection();
                             break;
@@ -289,7 +291,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             var selection = chart.getSelection();
                             var articleId = dataForChart[selection[0].row][3];
                             var annTagId = dataForChart[selection[0].row][5];
-                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationid, "annotation");
+                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "annotation");
                             //sets the selection to null again
                             chart.setSelection();
                             break;
@@ -297,7 +299,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                             var selection = chart.getSelection();
                             var articleId = dataForChart[selection[0].row][3];
                             var annTagId = dataForChart[selection[0].row][5];
-                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationid, "problem");
+                            loadListOfCommentsByAnnIdPerArticle(annTagId, articleId, instance.consultationId, "problem");
                             //sets the selection to null again
                             chart.setSelection();
                             break;
@@ -316,7 +318,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 var userId = $(userDiv).data("id");
                 var userObj = getUserById(userId);
                 var userBoxProperties = {
-                    consultationid          : instance.consultationid,
+                    consultationid          : instance.consultationId,
                     userId                  : userId,
                     user                    : userObj,
                     commentsCount : $(userDiv).data("count"),
@@ -359,7 +361,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 }
             }
 
-            var consultationId = instance.consultationid;
+            var consultationId = instance.consultationId;
             var finalLawId = instance.finalLawId;
             var liked = false;
             $( "#rateApprove a" ).click(function() {
@@ -458,7 +460,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             Dropzone.options.finalLawDropZone = {
                 paramName: "file", // The name that will be used to transfer the file
                 maxFilesize: 10, // MB
-                url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
+                url: "/consultation/finalLawUpload/" + instance.consultationId + "/" + instance.userId,
                 uploadMultiple: false,
                 maxFiles: 1,
                 acceptedFiles: "application/pdf,text/plain",
@@ -567,7 +569,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             userId : instance.userId,
             userDefined : userDefined,
             consultationEndDate:instance.consultationEndDate,
-            imagesPath: instance.imagesPath
+            imagesPath: instance.imagesPath,
+            consultationId: instance.consultationId,
+            appState: instance.appState
         }
     },
     init = function(){
