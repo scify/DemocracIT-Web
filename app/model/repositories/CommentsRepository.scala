@@ -512,7 +512,7 @@ class CommentsRepository {
                             )
                             select ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
                               from annotation_comment ann_comm
-                              inner join comm on ann_comm.public_comment_id = comm.id
+                              inner join comm on ann_comm.public_comment_id = comm.id  and comm.revision = ann_comm.comment_revision
                               inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                               group by ann_comm.annotation_tag_id,annotation_tag.id
                             """.as(AnnotationTagWithCommentsParser.Parse  *)
@@ -590,7 +590,7 @@ class CommentsRepository {
                                               annotation_tag.type_id,
                                               count(ann_comm.annotation_tag_id) as comments_num
                                         from annotation_comment ann_comm
-                                        inner join comm on ann_comm.public_comment_id = comm.id
+                                        inner join comm on ann_comm.public_comment_id = comm.id  and comm.revision = ann_comm.comment_revision
                                         inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                                         inner join articles on articles.id = comm.article_id
                                         group by ann_comm.annotation_tag_id,annotation_tag.id, articles.id
