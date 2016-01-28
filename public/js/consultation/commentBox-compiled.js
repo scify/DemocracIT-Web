@@ -381,6 +381,7 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
+            console.log(commentFromDB);
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                     return React.createElement(

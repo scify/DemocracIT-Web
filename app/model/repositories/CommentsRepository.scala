@@ -100,7 +100,7 @@ class CommentsRepository {
                   from comments c
                        inner join public.articles a on a.id = c.article_id
                        inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                       inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
+                       inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id and c.revision = ann_comm.comment_revision
                        inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
                        inner join account.user u on u.id = c.user_id
                        left outer join public.comment_rating cr on cr.comment_id = c.id
