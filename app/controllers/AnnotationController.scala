@@ -79,7 +79,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
       annotation => {
         val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
 
-        val comment = Comment(annotation.commentId, annotation.articleId, None, CommentSource.OpenGov,
+        val comment = Comment(annotation.commentId, annotation.articleId, None, CommentSource.Democracit,
           annotation.body,
           annotation.userAnnotatedText,
           Some(request.identity.userID),

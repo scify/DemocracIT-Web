@@ -397,6 +397,7 @@
             if(userId == commenterId && userId != undefined && this.props.parent == "consultation") {
                 editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
             }
+
             if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
@@ -464,7 +465,7 @@
             var shareBtn = <span></span>;
 
             var commentSource = this.props.data.source;
-
+            console.log(commentSource);
             //we only present the share button to the comments from DemocracIT (comment source ID is 1)
             //we do not present the share button in the userCommentStats tab in reporter page
             if(commentSource != undefined) {
