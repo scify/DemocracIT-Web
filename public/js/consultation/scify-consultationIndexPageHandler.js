@@ -402,8 +402,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     callAfterCommentHasLoaded = function() {
         var commentId = getHashValue("commentid");
-        if(commentId != undefined)
-            $("html, body").animate({ scrollTop: $('#' + commentId).offset().top -50 }, 500);
+        if(commentId != undefined) {
+            $("html, body").animate({scrollTop: $('#' + commentId).offset().top - 50}, 500);
+            $("#" + commentId).addClass("targetDiv");
+            setTimeout(function () {
+                $("#" + commentId).removeClass("targetDiv");
+            },1000);
+        }
     },
     openArticleAndCommentFromURL = function() {
         //get URL parameters
@@ -426,8 +431,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         }
         if(annId == null && commentId == null) {
-            if(articleId != null)
-                $("html, body").animate({ scrollTop: $('#article_' + articleId).offset().top }, 500);
+            if(articleId != null) {
+                $("html, body").animate({scrollTop: $('#article_' + articleId).offset().top}, 500);
+                $('#article_' + articleId).addClass("targetDiv");
+                setTimeout(function () {
+                    $('#article_' + articleId).removeClass("targetDiv");
+                },1000);
+            }
             else
                 $(".article-title-text").first().trigger("click");
         }
