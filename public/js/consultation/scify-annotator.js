@@ -155,14 +155,17 @@ scify.Annotator.prototype = (function(){
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
             //check if for the whole article
-            console.log(target);
             var articleTitleDiv = $(target).parent().parent().parent();
             if($(articleTitleDiv).hasClass("article-title-text")) {
                 console.log("article");
-                //check if open/close article button is closed. If it is, open it manually
+                //check if open/close article button is closed. If it is, open it
                 if($(articleTitleDiv).prev().hasClass("collapsed")) {
+                    console.log("einai kleisto");
+                    console.log($(articleTitleDiv).prev());
                     setTimeout( function() {
-                    $(articleTitleDiv).prev().trigger("click")}, 600);
+                        console.log("sdfsdf");
+                        e.stopPropagation();
+                    $(articleTitleDiv).prev().trigger("click")}, 500);
                 }
             }
 
@@ -231,9 +234,7 @@ scify.Annotator.prototype = (function(){
 
             $("#toolbar-modal").modal("show");
             fetchTopicTagsForUserSelection(selectedText);
-            console.log(comment);
             toolbar.find("input[name='revision']").val(comment.revision);
-            console.log(toolbar.find("input[name='revision']").val());
             toolbar.find("input[name='annText']").val(selectedText);
             var articleid= comment.articleId;
             toolbar.find("input[name='articleid']").val(articleid);
@@ -246,8 +247,6 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='emotionId']").val(comment.emotionId);
 
             setSelectedAnnotationsAndProblems(toolbar, comment.annotationTagTopics, comment.annotationTagProblems);
-            comment.annotationTagTopics = {};
-            comment.annotationTagProblems = {};
         },
         setSelectedAnnotationsAndProblems = function(toolbar, annotationTagTopics, annotationTagProblems) {
             annotationTagProblems.forEach(function(annotationTagProblem) {

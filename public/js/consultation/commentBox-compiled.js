@@ -159,8 +159,9 @@
                 success: function success(comment) {
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
                     instance.state.totalCommentsCount = instance.state.totalCommentsCount;
-
                     if (instance.commentsLoadedFromServer()) {
+                        //remove old comment from list of comments
+                        instance.state.allComments.splice($.inArray(comment, instance.state.allComments), 1);
                         //update the revision for the front end (the repository will update it for the back-end)
                         comment.revision += 1;
                         instance.state.allComments.unshift(comment);
@@ -387,6 +388,7 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
+            console.log(commentFromDB);
             var commentEdited = React.createElement("span", null);
             if (commentFromDB.revision > 1) {
                 commentEdited = React.createElement(
