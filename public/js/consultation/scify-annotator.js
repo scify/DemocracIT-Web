@@ -247,6 +247,7 @@ scify.Annotator.prototype = (function(){
             toolbar.find("input[name='emotionId']").val(comment.emotionId);
 
             setSelectedAnnotationsAndProblems(toolbar, comment.annotationTagTopics, comment.annotationTagProblems);
+            //comment.annotationTagTopics
         },
         setSelectedAnnotationsAndProblems = function(toolbar, annotationTagTopics, annotationTagProblems) {
             annotationTagProblems.forEach(function(annotationTagProblem) {

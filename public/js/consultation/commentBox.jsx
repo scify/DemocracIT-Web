@@ -177,6 +177,9 @@
                         //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
                         if (!instance.topCommentsAreDisplayed())
                             instance.state.comments.unshift(comment);
+                        //scroll to the top of article where the new edited comment will be
+                        var idToScroll = "ann-" + comment.discussionThread.clientId.split('-')[1];
+                        $("html, body").animate({ scrollTop: $("div[data-id='" + idToScroll + "']").offset().top }, 1000);
                     }
                 },
                 complete: function(){
@@ -399,7 +402,6 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
-            console.log(commentFromDB);
             var commentEdited = <span></span>;
             if(commentFromDB.revision > 1) {
                 commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
