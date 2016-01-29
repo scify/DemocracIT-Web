@@ -450,4 +450,8 @@ legend {
   font-size: 1em;
   position: absolute; }
 
+.reporterUserStats .comment .editedComment {
+  margin-left: 0px;
+  position: relative; }
+
 /*# sourceMappingURL=common.css.map */
