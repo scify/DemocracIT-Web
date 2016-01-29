@@ -38,7 +38,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
 scify.ConsultationIndexPageHandler.prototype = function(){
 
     var expandArticleOnClick = function(){
-        console.log("anoigw article");
         var article = $(this).closest(".article");
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");
@@ -355,7 +354,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     finalLawModalHandler = function() {
         $( "#finalLawModalBtn" ).click(function() {
-            console.log("wsadfrs");
             $(".modal-body .container .consultationText div").first().find(".show-hide").click();
             $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
             //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});

@@ -151,11 +151,20 @@ scify.Annotator.prototype = (function(){
             }
         },
         displayToolBar = function(e,selectedText){
-            console.log("anoigw form");
             e.stopPropagation();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
-
+            //check if for the whole article
+            console.log(target);
+            var articleTitleDiv = $(target).parent().parent().parent();
+            if($(articleTitleDiv).hasClass("article-title-text")) {
+                console.log("article");
+                //check if open/close article button is closed. If it is, open it manually
+                if($(articleTitleDiv).prev().hasClass("collapsed")) {
+                    setTimeout( function() {
+                    $(articleTitleDiv).prev().trigger("click")}, 600);
+                }
+            }
 
             resetForm();
 
