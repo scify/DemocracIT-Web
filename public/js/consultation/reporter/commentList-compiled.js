@@ -92,7 +92,6 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    //console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -136,8 +135,6 @@
             //return promise;
         },
         render: function render() {
-            //console.log(this.props);
-            //console.log(this.state.comments);
             if (this.state.display) {
                 if (this.state.busy) {
                     return React.createElement(

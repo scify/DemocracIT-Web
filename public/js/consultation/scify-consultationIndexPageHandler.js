@@ -143,9 +143,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         if(data.forEdit == "0")
             getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
         else {
+            //set the appropriate route for edit
             data.action = "/annotation/update";
-            console.log(data);
-            //getDiscussionRoom(data.articleid, data.discussionroomannotationtagid);
             getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action, data);
         }
 

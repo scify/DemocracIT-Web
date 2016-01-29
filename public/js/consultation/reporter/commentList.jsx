@@ -88,7 +88,6 @@
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    //console.log(data);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -132,8 +131,6 @@
             //return promise;
         },
         render: function() {
-            //console.log(this.props);
-            //console.log(this.state.comments);
             if(this.state.display) {
                 if (this.state.busy) {
                     return (

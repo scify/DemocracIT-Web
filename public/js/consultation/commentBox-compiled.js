@@ -283,14 +283,18 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
-                    userDefined: instance.props.userDefined, parent: instance.props.parent,
-                    consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
-                    annotationId: instance.props.annotationId,
-                    consultationId: instance.props.consultationId,
-                    appState: instance.props.appState,
-                    annId: instance.props.annId,
-                    revision: comment.revision });
+                return React.createElement(
+                    "div",
+                    { className: instance.props.parent },
+                    React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
+                        userDefined: instance.props.userDefined, parent: instance.props.parent,
+                        consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
+                        annotationId: instance.props.annotationId,
+                        consultationId: instance.props.consultationId,
+                        appState: instance.props.appState,
+                        annId: instance.props.annId,
+                        revision: comment.revision })
+                );
             });
 
             return React.createElement(
@@ -480,8 +484,6 @@
             if (commentSource != undefined) {
                 if (commentSource.commentSource == 1) {
                     var commentIdForShare = this.props.data.id;
-                    //if we call commentBox from reporterUserStats tab, the comment id is nested in the data.comment object
-                    if (commentIdForShare == undefined) commentIdForShare = this.props.data.comment.id;
                     shareBtn = React.createElement(
                         "div",
                         { className: "shareLink" },

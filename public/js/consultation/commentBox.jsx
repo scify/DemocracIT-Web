@@ -297,6 +297,7 @@
 
             var commentNodes = this.props.data.map(function (comment) {
                 return (
+                    <div className={instance.props.parent}>
                     <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
                                    userDefined={instance.props.userDefined} parent={instance.props.parent}
                                    consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment}
@@ -305,6 +306,7 @@
                                    appState={instance.props.appState}
                                    annId={instance.props.annId}
                                    revision={comment.revision}/>
+                    </div>
                 );
             });
 
@@ -465,9 +467,6 @@
             if(commentSource != undefined) {
                 if(commentSource.commentSource == 1) {
                     var commentIdForShare = this.props.data.id;
-                    //if we call commentBox from reporterUserStats tab, the comment id is nested in the data.comment object
-                    if (commentIdForShare == undefined)
-                        commentIdForShare = this.props.data.comment.id;
                     shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
                     Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
                         span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
