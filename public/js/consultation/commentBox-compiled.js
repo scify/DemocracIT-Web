@@ -169,7 +169,7 @@
                         if (!instance.topCommentsAreDisplayed()) instance.state.comments.unshift(comment);
                         //scroll to the top of article where the new edited comment will be
                         var idToScroll = "ann-" + comment.discussionThread.clientId.split("-")[1];
-                        $("html, body").animate({ scrollTop: $("div[data-id='" + idToScroll + "']").offset().top }, 1000);
+                        $("html, body").animate({ scrollTop: $("div[data-id='" + idToScroll + "']").offset().top }, 700);
                     }
                 },
                 complete: function complete() {
