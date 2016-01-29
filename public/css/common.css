@@ -437,11 +437,17 @@ legend {
 .editIcon {
   padding-left: 20px;
   font-size: 1.5em;
-  margin-top: -4px;
   position: absolute; }
 
 .editIcon:hover {
   cursor: pointer;
   color: #337ab7; }
+
+.comment .editedComment {
+  margin-left: 70px;
+  font-style: italic;
+  opacity: 0.5;
+  font-size: 1em;
+  position: absolute; }
 
 /*# sourceMappingURL=common.css.map */

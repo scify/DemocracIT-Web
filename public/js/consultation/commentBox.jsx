@@ -170,6 +170,8 @@
 
                     if (instance.commentsLoadedFromServer())
                     {
+                        //update the revision for the front end (the repository will update it for the back-end)
+                        comment.revision += 1;
                         instance.state.allComments.unshift(comment);
                         //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
                         if (!instance.topCommentsAreDisplayed())
@@ -395,6 +397,10 @@
                 var commentFromDB = this.props.data.comment;
             }
             console.log(commentFromDB);
+            var commentEdited = <span></span>;
+            if(commentFromDB.revision > 1) {
+                commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
+            }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                 return (
@@ -553,7 +559,7 @@
                 <div className={commentClassNames} id={this.props.data.id}>
                     {avatarDiv}
                     <div className='body'>
-                        {commenterName}{editIcon}{shareBtn}
+                        {commenterName}{editIcon}{commentEdited}{shareBtn}
                         {commentBody}
                         {emotion}
                         {annotatedText}

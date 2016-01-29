@@ -161,6 +161,8 @@
                     instance.state.totalCommentsCount = instance.state.totalCommentsCount;
 
                     if (instance.commentsLoadedFromServer()) {
+                        //update the revision for the front end (the repository will update it for the back-end)
+                        comment.revision += 1;
                         instance.state.allComments.unshift(comment);
                         //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
                         if (!instance.topCommentsAreDisplayed()) instance.state.comments.unshift(comment);
@@ -382,6 +384,14 @@
                 var commentFromDB = this.props.data.comment;
             }
             console.log(commentFromDB);
+            var commentEdited = React.createElement("span", null);
+            if (commentFromDB.revision > 1) {
+                commentEdited = React.createElement(
+                    "span",
+                    { className: "editedComment" },
+                    "Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο"
+                );
+            }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
                     return React.createElement(
@@ -679,6 +689,7 @@
                     { className: "body" },
                     commenterName,
                     editIcon,
+                    commentEdited,
                     shareBtn,
                     commentBody,
                     emotion,

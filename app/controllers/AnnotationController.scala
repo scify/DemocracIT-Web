@@ -95,7 +95,6 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
 
         val savedComment = annotationManager.updateComment(comment)
         Ok(Json.toJson(savedComment))
-        //Ok(Json.toJson(""))
       }
     )
 
