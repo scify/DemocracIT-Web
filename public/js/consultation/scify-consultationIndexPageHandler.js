@@ -38,6 +38,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
 scify.ConsultationIndexPageHandler.prototype = function(){
 
     var expandArticleOnClick = function(){
+        console.log("anoigw article");
         var article = $(this).closest(".article");
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");

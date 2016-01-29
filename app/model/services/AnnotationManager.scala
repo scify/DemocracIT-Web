@@ -7,10 +7,11 @@ import model.repositories._
 import play.api.Play.current
 import play.api.libs.json.JsArray
 import play.api.libs.ws.WS
+import utils.MailService
 
 import scala.concurrent.Await
 
-class AnnotationManager (gamificationEngine: GamificationEngineTrait){
+class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailService: MailService){
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
@@ -100,9 +101,25 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     action_ids
   }
 
-  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]) = {
+  def sendEmailToCommenterForLike(userId:UUID, consultationId:Long, articleId:Long, annotationId:String, commentId:Long): Unit = {
+    var linkToShowComment = ""
+    val userProfileManager = new UserProfileManager()
+    val userEmail = userProfileManager.getUserEmailById(userId)
+    if(play.Play.application().configuration().getString("application.state") == "development") {
+      linkToShowComment += "http://localhost:9000/consultation/"
+    } else {
+      linkToShowComment += "http://democracit.org/consultation/"
+    }
+    linkToShowComment += consultationId + "#articleid=" + articleId + "&annid=" + annotationId + "&commentid=" + commentId
+    MailerManager.sendEmailToCommenterForLike(userEmail, linkToShowComment)(mailService)
+  }
+
+  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean], commenterId: String, annId:String, articleId:Long, consultationId:Long) = {
     if(liked != None) {
       //if the user has liked and has less than 10 likes today
+      if(liked.get) {
+        sendEmailToCommenterForLike(user_id, consultationId, articleId, annId, comment_id)
+      }
       if(liked.get && howManyLikesToday(user_id) < 10) {
         gamificationEngine.rewardUser(user_id,GamificationEngineTrait.LIKE_COMMENT, comment_id)
         //if the user is disliking

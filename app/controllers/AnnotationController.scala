@@ -22,7 +22,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
                                       val gamificationEngine:GamificationEngineTrait, mailService: MailService)
               extends Silhouette[User, CookieAuthenticator] {
 
-  var annotationManager = new AnnotationManager(gamificationEngine)
+  var annotationManager = new AnnotationManager(gamificationEngine, mailService)
 
   def rateComment() = SecuredAction { implicit request =>
 
@@ -31,7 +31,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
           UnprocessableEntity(Json.toJson(form.errors))
         },
         rating => {
-          annotationManager.rateComment(request.identity.userID,rating.comment_id,rating.liked)
+          annotationManager.rateComment(request.identity.userID,rating.comment_id,rating.liked, rating.commenterId, rating.annId, rating.articleId, rating.consultationId)
           Created("")
         }
       )

@@ -151,7 +151,8 @@ scify.Annotator.prototype = (function(){
             }
         },
         displayToolBar = function(e,selectedText){
-            e.preventDefault();
+            console.log("anoigw form");
+            e.stopPropagation();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
 

@@ -398,7 +398,6 @@
             } else {
                 var commentFromDB = this.props.data.comment;
             }
-            console.log(commentFromDB);
             var commentEdited = <span></span>;
             if(commentFromDB.revision > 1) {
                 commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
@@ -478,7 +477,9 @@
                 options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
                                                  id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
                                                  dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating}
-                                                 emotionId={this.props.data.emotionId} imagesPath={this.props.imagesPath}/>;
+                                                 emotionId={this.props.data.emotionId} imagesPath={this.props.imagesPath}
+                                                 consultationId={this.props.consultationId}
+                                                 comment={commentFromDB}/>;
 
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
@@ -527,7 +528,13 @@
                 var replyBox = <div></div>;
                 var commentClassNames="comment";
             } else if(this.props.parent == "comment") {
-                options = <CommentActionsEnabled imagesPath={this.props.imagesPath} userDefined={this.props.userDefined} handleReply={this.handleReply} source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsEnabled comment={commentFromDB} imagesPath={this.props.imagesPath}
+                                                 userDefined={this.props.userDefined} handleReply={this.handleReply}
+                                                 source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded}
+                                                 likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter}
+                                                 loggedInUserRating={this.props.loggedInUserRating}
+                                                 comment={commentFromDB}
+                                                 consultationId={this.props.consultationId}/>;
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -590,10 +597,15 @@
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
+            console.log(instance.props);
             $.ajax({
+
                 method: "POST",
                 url: "/comments/rate",
-                data: { comment_id : this.props.id , liked : instance.state.liked},
+                data: { comment_id : this.props.id , liked : instance.state.liked, commenterId:instance.props.comment.userId,
+                    annId:instance.props.comment.discussionThread.text.split('-')[1],
+                    articleId:instance.props.comment.articleId,
+                    consultationId:instance.props.consultationId},
                 beforeSend:function(){},
                 success : function(response){},
                 complete: function(){
@@ -614,7 +626,7 @@
                 this.state.dislikeCounter= this.state.dislikeCounter-1;
 
             if (newLikeStatus===true)
-                this.state.likeCounter = this.state.likeCounter + 1
+                this.state.likeCounter = this.state.likeCounter + 1;
 
             this.state.liked= newLikeStatus;
             this.postRateCommentAndRefresh();

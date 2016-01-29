@@ -11,16 +11,17 @@ import model.services.{GamificationEngineTrait, AnnotationManager, ConsultationM
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
+import utils.MailService
 
 
 class ReporterController  @Inject()  (val messagesApi: MessagesApi,
                                       val env: Environment[User, CookieAuthenticator],
                                       socialProviderRegistry: SocialProviderRegistry,
-                                      val gamificationEngine:GamificationEngineTrait)
+                                      val gamificationEngine:GamificationEngineTrait, mailService: MailService)
                         extends Silhouette[User, CookieAuthenticator] {
 
   val consultationManager = new ConsultationManager(gamificationEngine)
-  private val commentManager = new AnnotationManager(gamificationEngine)
+  private val commentManager = new AnnotationManager(gamificationEngine, mailService)
   private val reporterManager = new ReporterManager()
 
   def getCommentsForConsultationByUserId(consultationId:Long,

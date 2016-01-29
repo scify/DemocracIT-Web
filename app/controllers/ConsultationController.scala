@@ -15,18 +15,18 @@ import play.api.cache.Cached
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
-
+import utils.MailService
 
 
 class ConsultationController  @Inject() (val cached: Cached, val messagesApi: MessagesApi,
                                          val env: Environment[User, CookieAuthenticator],
                                          socialProviderRegistry: SocialProviderRegistry,
-                                         val gamificationEngine:GamificationEngineTrait)
+                                         val gamificationEngine:GamificationEngineTrait, mailService: MailService)
 
   extends Silhouette[User, CookieAuthenticator] {
 
   private val consultationManager = new ConsultationManager(gamificationEngine)
-  private val commentManager = new AnnotationManager(gamificationEngine)
+  private val commentManager = new AnnotationManager(gamificationEngine, mailService)
   private val reporterManager = new ReporterManager()
 
   def displayAll() = //cached("displayall") {
