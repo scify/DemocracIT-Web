@@ -161,9 +161,12 @@
                     instance.state.totalCommentsCount = instance.state.totalCommentsCount;
                     if (instance.commentsLoadedFromServer()) {
                         //remove old comment from list of comments
-                        instance.state.allComments.splice($.inArray(comment, instance.state.allComments), 1);
+                        var oldComment = instance.state.allComments.splice($.inArray(comment, instance.state.allComments), 1);
+                        // update the new comment to include the replies of the old comment
+                        comment.commentReplies = oldComment[0].commentReplies;
                         //update the revision for the front end (the repository will update it for the back-end)
                         comment.revision += 1;
+                        //put the new comment at the beggining of the commentBox
                         instance.state.allComments.unshift(comment);
                         //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
                         if (!instance.topCommentsAreDisplayed()) instance.state.comments.unshift(comment);
@@ -482,7 +485,6 @@
             var shareBtn = React.createElement("span", null);
 
             var commentSource = this.props.data.source;
-            console.log(commentSource);
             //we only present the share button to the comments from DemocracIT (comment source ID is 1)
             //we do not present the share button in the userCommentStats tab in reporter page
             if (commentSource != undefined) {
