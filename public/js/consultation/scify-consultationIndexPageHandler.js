@@ -479,14 +479,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //clear annotation toolbar , populate fields and open.
         //console.log(e);
         //console.log(comment);
-         this.annotator.openForEdit(e, comment);
+         this.commentAnnotator.openForEdit(e, comment);
     },
     init = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator(false, handleAnnotationSave);
-        this.annotator.init();
+        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
+        this.commentAnnotator.init();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
