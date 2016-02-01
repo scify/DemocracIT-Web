@@ -12,6 +12,8 @@
             var articleId = this.props.articleId;
             var discussionthreadclientid = this.props.discussionthreadclientid;
             var replyText = $('textarea[name=replyTextArea' + this.props.parentId +']').val();
+            var annotationId = this.props.annotationId;
+            console.log(this.props);
             var comment = {
                 'articleId': articleId,
                 'replyText': replyText,
@@ -19,7 +21,7 @@
                 'userId': this.props.userId,
                 'discussionthreadclientid':discussionthreadclientid,
                 'commenterId':this.props.commenterId,
-                'annotationId': this.props.annotationId,
+                'annotationId': annotationId,
                 'consultationId': this.props.consultationId
             };
             this.saveComment("/comment/reply/save", comment);
@@ -47,6 +49,7 @@
             });
         },
         render: function() {
+            console.log(this.props);
             if (this.props.display) {
                 if(!this.state.busy) {
                     if (this.props.userId) {

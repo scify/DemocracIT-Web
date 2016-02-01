@@ -214,6 +214,7 @@
             var topClasses = classNames({ hide: this.state.totalCommentsCount == 0 });
             var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
             var loadAllClasses = classNames("load-all", { hide: !this.shouldDisplayLoadMoreOption() });
+            var consultationId = this.props.consultationId;
             return React.createElement(
                 "div",
                 { className: topClasses },
@@ -547,13 +548,15 @@
                 );
 
                 if (this.props.data.source.commentSource == 1) {
+                    console.log(this.props.data.discussionThread.text);
+                    console.log(this.props.data.discussionThread.text.split(this.props.data.articleId)[1]);
                     var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
                         discussionthreadclientid: this.props.data.discussionThread.id,
                         commenterId: this.props.data.userId,
                         userId: this.props.userId, parentId: this.props.data.id,
                         articleId: this.props.data.articleId,
                         display: this.state.displayReplyBox,
-                        annotationId: this.props.annotationId,
+                        annotationId: this.props.data.discussionThread.text.split(this.props.data.articleId)[1],
                         consultationId: this.props.consultationId });
                 } else {
                     var replyBox = React.createElement("div", null);
@@ -745,15 +748,25 @@
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
+            var annId = "0";
+            if (instance.props.comment.discussionThread != undefined) {
+                annId = instance.props.comment.discussionThread.text.split("-")[1];
+            }
             console.log(instance.props);
+            var data = {
+                comment_id: instance.props.id, liked: instance.state.liked,
+                commenterId: instance.props.comment.userId,
+                annId: annId,
+                articleId: instance.props.comment.articleId,
+                consultationId: instance.props.consultationId
+            };
+            console.log(data);
             $.ajax({
 
                 method: "POST",
                 url: "/comments/rate",
-                data: { comment_id: this.props.id, liked: instance.state.liked, commenterId: instance.props.comment.userId,
-                    annId: instance.props.comment.discussionThread.text.split("-")[1],
-                    articleId: instance.props.comment.articleId,
-                    consultationId: instance.props.consultationId },
+
+                data: data,
                 beforeSend: function beforeSend() {},
                 success: function success(response) {},
                 complete: function complete() {

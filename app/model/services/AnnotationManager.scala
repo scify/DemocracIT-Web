@@ -114,11 +114,11 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
     MailerManager.sendEmailToCommenterForLike(userEmail, linkToShowComment)(mailService)
   }
 
-  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean], commenterId: String, annId:String, articleId:Long, consultationId:Long) = {
+  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean], commenterId:Option[UUID], annId:String, articleId:Long, consultationId:Option[Long]) = {
     if(liked != None) {
       //if the user has liked and has less than 10 likes today
-      if(liked.get) {
-        sendEmailToCommenterForLike(user_id, consultationId, articleId, annId, comment_id)
+      if(liked.get && commenterId.isDefined) {
+        sendEmailToCommenterForLike(commenterId.get, consultationId.get, articleId, annId, comment_id)
       }
       if(liked.get && howManyLikesToday(user_id) < 10) {
         gamificationEngine.rewardUser(user_id,GamificationEngineTrait.LIKE_COMMENT, comment_id)
