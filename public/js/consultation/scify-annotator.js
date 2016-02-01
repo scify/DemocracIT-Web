@@ -150,25 +150,25 @@ scify.Annotator.prototype = (function(){
                 });
             }
         },
+        openArticleBodyIfClosed = function(targetElement) {
+            //check if open/close article button is closed. If it is, open it after a time interval
+            if($(targetElement).prev().hasClass("collapsed")) {
+                console.log($(targetElement).prev());
+                setTimeout( function() {
+                    $(targetElement).prev().trigger("click")}, 500);
+            }
+        },
         displayToolBar = function(e,selectedText){
             e.stopPropagation();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
-            //check if for the whole article
-            var articleTitleDiv = $(target).parent().parent().parent();
-            if($(articleTitleDiv).hasClass("article-title-text")) {
-                console.log("article");
-                //check if open/close article button is closed. If it is, open it
-                if($(articleTitleDiv).prev().hasClass("collapsed")) {
-                    console.log("einai kleisto");
-                    console.log($(articleTitleDiv).prev());
-                    setTimeout( function() {
-                        console.log("sdfsdf");
-                        e.stopPropagation();
-                    $(articleTitleDiv).prev().trigger("click")}, 500);
-                }
-            }
 
+            var articleTitleDiv = $(target).parent().parent().parent();
+            //check if for the whole article
+            if($(articleTitleDiv).hasClass("article-title-text")) {
+                //call function to open article div if closed
+                openArticleBodyIfClosed(articleTitleDiv);
+            }
             resetForm();
 
             if (target.hasClass("ann-icon") || target.parent().hasClass("ann-icon")){

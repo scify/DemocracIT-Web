@@ -445,7 +445,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     handleArticleShare = function(instance) {
         $(".shareBtn").click(function(){
             var articleId = $(this).attr('id').split('-')[1];
-            //var annId = $(this).prev().prev().find(".ann").attr("data-id");
             var longUrl ="";
             if(instance.appState == "development") {
                 longUrl = "http://localhost:9000/consultation/";
