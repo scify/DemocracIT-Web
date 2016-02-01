@@ -153,7 +153,6 @@ scify.Annotator.prototype = (function(){
         openArticleBodyIfClosed = function(targetElement) {
             //check if open/close article button is closed. If it is, open it after a time interval
             if($(targetElement).prev().hasClass("collapsed")) {
-                console.log($(targetElement).prev());
                 setTimeout( function() {
                     $(targetElement).prev().trigger("click")}, 500);
             }
