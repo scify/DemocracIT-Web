@@ -501,8 +501,6 @@
                     <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
                 if(this.props.data.source.commentSource == 1) {
-                    console.log(this.props.data.discussionThread.text);
-                    console.log(this.props.data.discussionThread.text.split(this.props.data.articleId)[1]);
                     var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
                                                    discussionthreadclientid={this.props.data.discussionThread.id}
                                                    commenterId={this.props.data.userId}
@@ -611,7 +609,6 @@
             if(instance.props.comment.discussionThread != undefined) {
                 annId = instance.props.comment.discussionThread.text.split('-')[1]
             }
-            console.log(instance.props);
             var data = {
                 comment_id : instance.props.id , liked : instance.state.liked,
                 commenterId:instance.props.comment.userId,
@@ -619,7 +616,6 @@
                 articleId:instance.props.comment.articleId,
                 consultationId:instance.props.consultationId
             };
-            console.log(data);
             $.ajax({
 
                 method: "POST",

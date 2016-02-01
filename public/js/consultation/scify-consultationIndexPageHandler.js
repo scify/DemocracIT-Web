@@ -509,6 +509,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         handleArticleShare(instance);
     };
 
+    //Test FB tracking code
+    fbq('track', 'ViewContent');
     return {
         init:init
     }
