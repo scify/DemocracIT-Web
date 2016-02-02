@@ -52,7 +52,7 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
   }
 
   def updateComment(comment:Comment): Comment = {
-    commentsRepository.saveUpdatedComment(comment, comment.discussionThread.get.id.get)
+    commentsRepository.saveUpdatedComment(comment)
     comment
   }
 

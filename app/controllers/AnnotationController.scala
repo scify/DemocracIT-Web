@@ -46,7 +46,10 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
        UnprocessableEntity(Json.toJson(form.errors))
      },
      annotation => {
-       val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+       val discussionthread =DiscussionThread(annotation.discussionThreadId,
+         annotation.discussionThreadTypeId.get,annotation.discussionThreadClientId.get,
+         annotation.discusionThreadText.get,None)
+
        val comment = Comment(None, annotation.articleId, None, CommentSource.OpenGov,
                            annotation.body,
                            annotation.userAnnotatedText,
@@ -77,8 +80,8 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
         UnprocessableEntity(Json.toJson(form.errors))
       },
       annotation => {
-        val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
-
+        //val discussionthread =DiscussionThread(annotation.discussionThreadId,annotation.discussionThreadTypeId,annotation.discussionThreadClientId,annotation.discusionThreadText,None)
+        //when updating a comment, we do not need to specify a new discussion thread (there is one existing)
         val comment = Comment(annotation.commentId, annotation.articleId, None, CommentSource.Democracit,
           annotation.body,
           annotation.userAnnotatedText,
@@ -91,7 +94,7 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
           "",
           annotation.annotationTagProblems.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,2)).toList,
           annotation.annotationTagTopics.map(a => AnnotationTags(a.value.getOrElse(-1),a.text,1)).toList,
-          Some(discussionthread),0,0,None,Nil,annotation.emotionId)
+          None,0,0,None,Nil,annotation.emotionId)
 
         val savedComment = annotationManager.updateComment(comment)
         Ok(Json.toJson(savedComment))
