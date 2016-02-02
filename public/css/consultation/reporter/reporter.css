@@ -121,7 +121,7 @@
   background-color: lightcoral; }
 
 .comment .tag.topic span {
-  background-color: lightblue; }
+  background-color: greenyellow; }
 
 .comment .tag {
   margin-bottom: 5px;
@@ -167,7 +167,8 @@
 
 .statsTooltip {
   margin-left: 5px;
-  color: #428bca; }
+  color: #428bca;
+  z-index: 100; }
 
 .explanation {
   margin-top: 20px;
