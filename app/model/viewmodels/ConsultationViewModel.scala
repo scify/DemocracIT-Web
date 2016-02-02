@@ -23,7 +23,15 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
   def discussionThreadsToJson():String =Json.toJson(discussionThreads).toString()
   def relevantLawsToJson():String =Json.toJson(this.distinctLaws(false)).toString()
   def ratingUsersToJson():String = Json.toJson(ratingUsers).toString()
-
+  //we ned to change the directory of the file, because according to the routse file
+  //everything that is stored in there should begin with "assets". So if the final law file is stored in
+  //  public/files/file we need to cast it into /assets/files/file
+  def getFinalLawRelativePath():String = {
+    if(play.Play.application().configuration().getString("application.state") == "production")
+      "http://democracit.org/" + finalLaw.get.file_path.replaceAll("public", "assets")
+    else
+      "http://localhost:9000/" + finalLaw.get.file_path.replaceAll("public", "assets")
+  }
   def distinctLaws(ignoreCharacters:Boolean = true):Seq[RelevantLaws] = {
 
     if (_distinctLaws ==Nil)

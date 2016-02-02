@@ -462,6 +462,7 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
+                console.log(imageWithPath);
                 emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
             }
             var shareBtn = <span></span>;

@@ -474,6 +474,7 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
+                console.log(imageWithPath);
                 emotion = React.createElement(
                     "div",
                     { className: "userEmotion htmlText" },
