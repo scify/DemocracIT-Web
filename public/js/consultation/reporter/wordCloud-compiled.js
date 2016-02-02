@@ -18,7 +18,8 @@
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId) {
-            //console.log("getWordCloudFromServer");
+            console.log("getWordCloudFromServe r");
+
             var instance = this;
             var promise = $.ajax({
                 method: "POST",
