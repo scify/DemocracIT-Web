@@ -156,7 +156,7 @@
                     /*console.log(instance.state);
                     console.log(instance.props);
                     console.log(comment);*/
-                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+                    console.log(comment);
                     if (instance.commentsLoadedFromServer()) {
                         //search for the old comment in the comments array
                         for (var commentIndex = 0; commentIndex < instance.state.allComments.length; commentIndex++) {
@@ -167,6 +167,7 @@
                                 comment.commentReplies = oldComment.commentReplies;
                                 //store the discussionThread object of the old comment to the new one
                                 comment.discussionThread = oldComment.discussionThread;
+                                instance.state.discussionthreadid = oldComment.discussionThread.id; //set discussion thread to state
                                 //store the new comment where the old one was
                                 instance.state.allComments[commentIndex] = comment;
                             }
