@@ -173,17 +173,20 @@
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
                     if (instance.commentsLoadedFromServer())
                     {
-                        //remove old comment from list of comments
-                        var oldComment = instance.state.allComments.splice($.inArray(comment, instance.state.allComments),1);
-                        // update the new comment to include the replies of the old comment
-                        comment.commentReplies = oldComment[0].commentReplies;
-                        //update the revision for the front end (the repository will update it for the back-end)
-                        comment.revision += 1;
-                        //put the new comment at the beggining of the commentBox
-                        instance.state.allComments.unshift(comment);
-                        //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
-                        if (!instance.topCommentsAreDisplayed())
-                            instance.state.comments.unshift(comment);
+                        //search for the old comment in the comments array
+                        for(var commentIndex=0; commentIndex<instance.state.allComments.length; commentIndex++) {
+                            //the new edited comment has the same id with the old version
+                            if(instance.state.allComments[commentIndex].id == comment.id) {
+                                var oldComment = instance.state.allComments[commentIndex];
+                                //store the replies of the old comment to the new one
+                                comment.commentReplies = oldComment.commentReplies;
+                                //store the discussionThread object of the old comment to the new one
+                                comment.discussionThread = oldComment.discussionThread;
+                                //store the new comment where the old one was
+                                instance.state.allComments[commentIndex] = comment;
+                            }
+                        }
+
                     }
                 },
                 complete: function(){
