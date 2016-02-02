@@ -49,6 +49,7 @@ img, .btn, i, a {
 
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus
 {
+
   background-color:inherit;
   color:#777;
 }
@@ -102,7 +103,7 @@ img, .btn, i, a {
 
 #footer .program-info a
 {
-  margin-right:-4px;
+  margin-right:-6px;
 }
 
 #footer .program-info img
@@ -387,4 +388,162 @@ legend {
 
 .btn.red:hover {
   background-color: rgba(255, 0, 0, 0.85);
+}
+
+.emotionContainer .emotionList {
+  float: left;
+  padding-left: 0px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.emotionContainer .emotionList li {
+  float: left;
+  list-style-type: none;
+  margin-right: 5px;
+  padding: 5px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.emotionContainer .emotionList li:hover  {
+  background-color: #2b669a;
+  transition: background-color 0.5s ease;
+}
+
+.emotionContainer .emotionList .clicked  {
+  background-color: #2b669a;
+  transition: background-color 0.5s ease;
+}
+
+
+.emotionContainer .emotionList li img{
+  height: 40px;
+}
+
+#save-annotation {
+  float: left;
+  margin-left: 65px;
+}
+
+.emotionMsg {
+  margin-bottom: 5px;
+}
+
+
+.userEmotion img{
+  height:25px;
+  margin-left: 5px;
+}
+
+.comment .date {
+  margin-right: 20px;
+}
+
+.smallLink {
+  font-size: 11px;
+}
+
+.smallLink a {
+  color: #49c0f4 !important;
+}
+
+.shareArticleHidden, .shareArticleHiddenComment {
+  display: none;
+}
+
+.shareSpan, .shareSpanComment {
+  top:30px;
+  position: absolute;
+  background-color: lightgrey;
+  width: auto;
+  right: 15px;
+  height: auto;
+  padding: 8px;
+  z-index: 100;
+}
+.shareSpan:after, .shareSpan:before {
+  bottom: 100%;
+  left: 80%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.shareSpanComment:after, .shareSpanComment:before {
+  bottom: 100%;
+  left: 90%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.shareSpan:after, .shareSpanComment:after {
+  border-color: rgba(217, 215, 215, 0);
+  border-bottom-color: lightgrey;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.shareSpan:before, .shareSpanComment:before {
+  border-color: rgba(40, 47, 51, 0);
+  border-bottom-color: lightgrey;
+  border-width: 13px;
+  margin-left: -13px;
+}
+
+.fa-link {
+  color: #337ab7;
+}
+
+.fa-link:hover {
+  cursor: pointer;
+}
+
+.shareBtnComment {
+  position: relative;
+  float: right;
+  height: 10px;
+}
+
+.shareLink {
+  float: right;
+}
+
+.editIcon {
+  padding-left: 20px;
+  font-size: 1.5em;
+  //margin-top: -4px;
+  position: absolute;
+}
+
+.editIcon:hover {
+  cursor: pointer;
+  color: #337ab7;
+}
+.comment .editedComment {
+  margin-left: 70px;
+  font-style: italic;
+  opacity: 0.5;
+  font-size: 1em;
+  position: absolute;
+}
+
+.reporterUserStats .comment .editedComment {
+  margin-left: 0px;
+  position: relative;
+}
+
+
+.targetDiv {
+  background-color: lightsteelblue !important;
+}
+
+.finalLawFileContent {
+  margin-top: 50px;
 }

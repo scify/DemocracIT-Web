@@ -1,11 +1,15 @@
-@(signInForm: play.api.data.Form[model.viewmodels.forms.SignUpForm.Data], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
+@(signInForm: play.api.data.Form[model.viewmodels.forms.SignUpForm.SignUpData], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
 
 @import b3.inline.fieldConstructor
 @import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
 
 
-@js ={}
-@css = {}
+@js ={
+
+}
+@css = {
+
+}
 
 
 @layout("Εγγραφη",css,js,None) {
@@ -17,7 +21,7 @@
     }
     <fieldset class="col-md-6 col-md-offset-3">
         <legend>@messages("sign.up.account")</legend>
-        @helper.form(action = routes.SignUpController.signUp()) {
+        @helper.form(action = routes.SignUpController.signUpRequestRegistration()) {
             @helper.CSRF.formField
             @b3.text(signInForm("firstName"), '_hiddenLabel -> messages("first.name"), 'placeholder -> messages("first.name"), 'class -> "form-control input-lg")
             @b3.text(signInForm("lastName"), '_hiddenLabel -> messages("last.name"), 'placeholder -> messages("last.name"), 'class -> "form-control input-lg")

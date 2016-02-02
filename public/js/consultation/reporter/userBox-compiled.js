@@ -41,7 +41,6 @@
                 },
                 success: function success(data) {
                     instance.state.comments = data;
-                    console.log(data);
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -67,7 +66,7 @@
                     " ",
                     this.props.user.last_name
                 ),
-                React.createElement(scify.InfoBox, { display: this.state.display, busy: this.state.busy, data: this.state.comments })
+                React.createElement(scify.InfoBox, { imagesPath: this.props.imagesPath, display: this.state.display, busy: this.state.busy, data: this.state.comments })
             );
         }
     });
@@ -92,7 +91,7 @@
                         React.createElement(scify.ReactLoader, { display: this.props.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporterUserStats" });
+                return React.createElement(scify.CommentList, { imagesPath: this.props.imagesPath, data: this.props.data, parent: "reporterUserStats" });
             } else {
                 return React.createElement("div", null);
             }

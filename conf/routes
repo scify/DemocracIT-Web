@@ -6,18 +6,32 @@
 GET         /                                             @controllers.HomeController.index
 GET         /footer                                       @controllers.HomeController.footer
 GET         /header                                       @controllers.HomeController.header
+GET         /userProfile                                  @controllers.UserProfileController.getUserPage()
 
 GET         /signIn                                       @controllers.AccountController.signIn(returnUrl:Option[String])
-GET         /signUp                                       @controllers.AccountController.signUp
 GET         /signOut                                      @controllers.AccountController.signOut
 GET         /authenticate/:provider                       @controllers.SocialAuthController.authenticate(provider)
 POST        /authenticate/credentials                     @controllers.CredentialsAuthController.authenticate
-POST        /signUp                                       @controllers.SignUpController.signUp
+
+GET         /signup                                       @controllers.SignUpController.signUpRequest
+POST        /signup                                       @controllers.SignUpController.signUpRequestRegistration
+GET         /signup/:token                                @controllers.SignUpController.signUpCompletion(token)
+
+GET         /reset                                        @controllers.PasswordChangeController.startResetPassword
+POST        /reset                                        @controllers.PasswordChangeController.handleStartResetPassword
+GET         /reset/:token                                 @controllers.PasswordChangeController.specifyResetPassword(token)
+POST        /reset/                                       @controllers.PasswordChangeController.handleResetPassword
+
+GET         /change                                       @controllers.PasswordChangeController.startChangePassword
+POST        /change                                       @controllers.PasswordChangeController.handleChangePassword
+
 
 #GET         /ajax/usertoken                       @controllers.AccountController.tokenRetrieve
 POST        /annotation/save                              @controllers.AnnotationController.annotatePost
+POST        /annotation/update                            @controllers.AnnotationController.updatePost
 POST        /annotation/extractTags                       @controllers.AnnotationController.extractTags
 POST        /comments/rate                                @controllers.AnnotationController.rateComment
+POST        /comment/reply/save                           @controllers.AnnotationController.saveReply
 #GET         /search
 
 GET         /consultation/reporter/:consultationId        @controllers.ConsultationController.getReporterPage(consultationId :Long)
@@ -45,7 +59,7 @@ GET         /evaluator/comments/organization              @controllers.Evaluatio
 POST        /evaluator/consultations/get                  @controllers.EvaluationController.getConsultations()
 POST        /consultation/finalLawUpload/:consultationId/:userId                  @controllers.ConsultationController.uploadFinalLaw(consultationId: Long, userId:java.util.UUID)
 POST        /consultation/finallaw/rate/:consultationId/:finallawid/:attitude/:userId/:liked     @controllers.ConsultationController.rateFinalLaw(userId:java.util.UUID, consultationId: Long, finallawid:Long, attitude: Int, liked:Boolean)
-GET         /consultation/finallaw/delete/:finallawid     @controllers.ConsultationController.deleteFinalLaw(finallawid:Long)
+GET         /consultation/finallaw/delete/:finallawid/:userId     @controllers.ConsultationController.deleteFinalLaw(finallawid:Long, userId:java.util.UUID)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                 controllers.Assets.at(path="/public", file)

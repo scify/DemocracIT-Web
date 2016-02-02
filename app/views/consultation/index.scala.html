@@ -14,8 +14,10 @@
     <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
     <script src="@routes.Assets.at("js/consultation/intro.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/ReplyBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-tutorialAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/scify-commentAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/wordCloud-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
@@ -31,6 +33,7 @@
                                                                 @Html(vm.relevantLawsToJson()),
                                                                 @Html(vm.consultation.isActive.toString),
                                                                 '@routes.Assets.at("images")',
+                                                                '@play.Play.application().configuration().getString("application.state")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -90,13 +93,17 @@
                         </div>
                     </div>
                     @for(article <- vm.consultation.articles) {
-                        <div data-id="@article.id"  class="row article">
+                        <div data-id="@article.id"  class="row article" id="article_@article.id">
                             <div class="col-md-12">
                                 <div class="title">
                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                     <span class="article-title-text">@article.title</span>
+                                    <span class="shareSpan shareArticleHidden">Κάντε αντιγραφή τον παρακάτω σύνδεσμο:<br></span>
+                                    <span class="shareBtn" id="share-@article.id">
+                                        <i class="fa fa-link"></i>
+                                    </span>
                                 </div>
-                                <div id="body-@article.id" class="collapse" style="height:0;" >
+                                <div id="body-@article.id" class="collapse" style="height:0;">
                                     <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                                     <div class="article-body">
                                     @Html(article.body)
@@ -180,7 +187,7 @@
                             }
                             <div class="title">Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:</div>
                             <div class="container">
-                                <button class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
+                                <button id="finalLawModalBtn" class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
                             </div>
                         </div>
                         <div id="finalLawModal" class="modal fade" role="dialog">
@@ -233,13 +240,13 @@
                                                             </div>
 
                                                             <div class="modal-footer">
-                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="myFunction()">Κλείσιμο</button>
+                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="closeInnerModal()">Κλείσιμο</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <script>
-                                                    myFunction = function(){
+                                                    closeInnerModal = function(){
                                                         $("#noRateModal").modal('hide')
                                                     }
                                                 </script>
@@ -265,8 +272,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="msg"><div class="number">1</div>Όταν μια διαβούλευση έχει λήξει και ο τελικός νόμος που την αφορά γίνει διαθέσιμος, οι χρήστες μπορούν να τον ανεβάσουν εδώ (σε μορφή .pdf ή .txt),
-                                            έτσι ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί ότι το αρχείο που έχει ανέβει ως τελικός νόμος για
-                                            μια διαβούλευση δεν είναι σωστό (ελλειπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχείου. Αντίστοιχα, άν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
+                                            ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί ότι το αρχείο που έχει ανέβει ως τελικός νόμος για
+                                            μια διαβούλευση δεν είναι σωστό (ελλιπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχείου. Αντίστοιχα, αν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
                                             ανενεργό και η διαδικασία μεταφόρτωσης του τελικού νόμου από τους χρήστες ξεκινά από την αρχή.
                                         </div>
                                     </div>
@@ -278,6 +285,15 @@
                             </div>
                         </div>
                     </div>
+                    @if(vm.finalLaw.isDefined) {
+                        <div class="finalLawFileContent">
+                            <div>
+                                <object data="@vm.getFinalLawRelativePath()" type="application/pdf" width="100%" height="800">
+                                    Δείτε το κείμενο του τελικού νόμου <a href="@vm.getFinalLawRelativePath()">εδώ</a>
+                                </object>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -6,19 +6,22 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import model.services.{AnnotationManager, ConsultationManager, ReporterManager}
+import model.dtos.User
+import model.services.{GamificationEngineTrait, AnnotationManager, ConsultationManager, ReporterManager}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
+import utils.MailService
 
 
-class ReporterController  @Inject()  ( val messagesApi: MessagesApi,
-                                   val env: Environment[model.User, CookieAuthenticator],
-                                   socialProviderRegistry: SocialProviderRegistry)
-                        extends Silhouette[model.User, CookieAuthenticator] {
+class ReporterController  @Inject()  (val messagesApi: MessagesApi,
+                                      val env: Environment[User, CookieAuthenticator],
+                                      socialProviderRegistry: SocialProviderRegistry,
+                                      val gamificationEngine:GamificationEngineTrait, mailService: MailService)
+                        extends Silhouette[User, CookieAuthenticator] {
 
-  val consultationManager = new ConsultationManager
-  private val commentManager = new AnnotationManager()
+  val consultationManager = new ConsultationManager(gamificationEngine)
+  private val commentManager = new AnnotationManager(gamificationEngine, mailService)
   private val reporterManager = new ReporterManager()
 
   def getCommentsForConsultationByUserId(consultationId:Long,

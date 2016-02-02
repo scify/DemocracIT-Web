@@ -87,7 +87,8 @@
                 userAnnotatedText: data.userAnnotatedText,
                 body: data.body,
                 annotationTagTopics: data.annotationTagTopics,
-                annotationTagProblems: data.annotationTagProblems
+                annotationTagProblems: data.annotationTagProblems,
+                emotionId: data.emotionId
             };
 
             //todo: cancel any previous events
@@ -110,6 +111,66 @@
                         instance.state.allComments.unshift(comment);
                         //if we have comments loaded, and all are displayed (not just the top comments) also display the new one
                         if (!instance.topCommentsAreDisplayed()) instance.state.comments.unshift(comment);
+                    }
+                },
+                complete: function complete() {
+
+                    if (instance.commentsLoadedFromServer()) {
+                        instance.state.busy = false;
+                        instance.setState(instance.state);
+                    } else {
+                        instance.getCommentsFromServer.call(instance);
+                    }
+                }
+            });
+        },
+        updateComment: function updateComment(url, data) {
+            var instance = this;
+            var postedData = {
+                commentId: data.commentId,
+                consultationId: this.props.consultationid,
+                articleId: this.props.articleid,
+                fullName: this.props.fullName,
+                dateAdded: new Date(),
+                userAnnotatedText: data.userAnnotatedText,
+                body: data.body,
+                annotationTagTopics: data.annotationTagTopics,
+                annotationTagProblems: data.annotationTagProblems,
+                emotionId: data.emotionId,
+                revision: data.revision
+            };
+
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: JSON.stringify(postedData),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function beforeSend() {
+                    instance.state.display = true;
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(comment) {
+                    /*console.log(instance.state);
+                    console.log(instance.props);
+                    console.log(comment);*/
+                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+                    if (instance.commentsLoadedFromServer()) {
+                        //search for the old comment in the comments array
+                        for (var commentIndex = 0; commentIndex < instance.state.allComments.length; commentIndex++) {
+                            //the new edited comment has the same id with the old version
+                            if (instance.state.allComments[commentIndex].id == comment.id) {
+                                var oldComment = instance.state.allComments[commentIndex];
+                                //store the replies of the old comment to the new one
+                                comment.commentReplies = oldComment.commentReplies;
+                                //store the discussionThread object of the old comment to the new one
+                                comment.discussionThread = oldComment.discussionThread;
+                                //store the new comment where the old one was
+                                instance.state.allComments[commentIndex] = comment;
+                            }
+                        }
                     }
                 },
                 complete: function complete() {
@@ -151,7 +212,7 @@
             var topClasses = classNames({ hide: this.state.totalCommentsCount == 0 });
             var commendBoxclasses = classNames("commentBox", { hide: !this.state.display });
             var loadAllClasses = classNames("load-all", { hide: !this.shouldDisplayLoadMoreOption() });
-
+            var consultationId = this.props.consultationId;
             return React.createElement(
                 "div",
                 { className: topClasses },
@@ -176,8 +237,16 @@
                     ),
                     React.createElement(scify.CommentList, {
                         consultationEndDate: this.props.consultationEndDate,
+                        annotationId: this.props.annotationId,
+                        consultationId: this.props.consultationId,
+                        userId: this.props.userId,
                         data: this.state.comments,
-                        parent: this.props.parent }),
+                        parent: this.props.parent,
+                        userDefined: this.props.userDefined,
+                        imagesPath: this.props.imagesPath,
+                        scrollToComment: this.props.scrollToComment,
+                        appState: this.props.appState,
+                        annId: this.props.annId }),
                     React.createElement(CommentForm, null)
                 )
             );
@@ -218,8 +287,20 @@
 
         render: function render() {
             var instance = this;
+
             var commentNodes = this.props.data.map(function (comment) {
-                return React.createElement(scify.Comment, { parent: instance.props.parent, consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment });
+                return React.createElement(
+                    "div",
+                    { className: instance.props.parent },
+                    React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
+                        userDefined: instance.props.userDefined, parent: instance.props.parent,
+                        consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
+                        annotationId: instance.props.annotationId,
+                        consultationId: instance.props.consultationId,
+                        appState: instance.props.appState,
+                        annId: instance.props.annId,
+                        revision: comment.revision })
+                );
             });
 
             return React.createElement(
@@ -233,20 +314,93 @@
         displayName: "Comment",
 
         getInitialState: function getInitialState() {
+            function sortByKey(array, key) {
+                return array.sort(function (a, b) {
+                    var x = a[key];var y = b[key];
+                    return x > y ? -1 : x < y ? 1 : 0;
+                });
+            }
+            if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 1) sortByKey(this.props.data.commentReplies, "dateAdded");
             return {
                 likeCounter: this.props.data.likesCounter,
                 dislikeCounter: this.props.data.dislikesCounter,
-                liked: this.props.data.loggedInUserRating //if not null it means has liked/disliked this comment
+                liked: this.props.data.loggedInUserRating, //if not null it means has liked/disliked this comment
+                comment: this.props.data,
+                displayReplyBox: false
             };
         },
         componentDidMount: function componentDidMount() {
+            var instance = this;
             $(React.findDOMNode(this)).find("[data-toggle=\"tooltip\"]").tooltip();
+            if (this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
+                this.props.scrollToComment();
+            }
+            $("#shareComment-" + instance.props.data.id).click(function () {
+                var commentId = $(this).attr("id").split("-")[1];
+                var annotationId = instance.props.annotationId;
+                //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
+                //we need to get it from the comment object
+                if (annotationId == undefined) {
+                    annotationId = instance.props.data.discussionThread.text.split("-")[1];
+                }
+                var longUrl = "";
+                $("#shareComment-" + commentId).prev().toggleClass("shareArticleHiddenComment");
+                if (instance.props.appState == "development") {
+                    longUrl = "http://localhost:9000/consultation/";
+                } else {
+                    longUrl = "http://democracit.org/consultation/";
+                }
+                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + annotationId;
+                //show the extra div
+                if ($("#shareComment-" + commentId).prev().find(".shareUrl").length == 0) $("#shareComment-" + commentId).prev().append("<div class=\"shareUrl\"><a href=\"" + longUrl + "\">" + longUrl + "</a></div>");
+            });
+        },
+        getHashValue: function getHashValue(key) {
+            var matches = location.hash.match(new RegExp(key + "=([^&]*)"));
+            return matches ? matches[1] : null;
+        },
+        handleReply: function handleReply() {
+            this.state.displayReplyBox = !this.state.displayReplyBox;
+            this.setState(this.state);
+        },
+        handleSavedComment: function handleSavedComment(comment) {
+            //add the new comment to the list of replies
+            this.state.comment.commentReplies.unshift(comment);
+            this.setState(this.state);
+        },
+        handleEditComment: function handleEditComment() {
+            var commentToBeEdited = this.props.data;
+            commentToBeEdited.annId = "ann-" + this.props.annId;
+            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
+            $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function render() {
-            if (this.props.parent == "consultation" || this.props.parent == "reporter") {
+            var userId = this.props.userId;
+            var commenterId = this.props.data.userId;
+            var editIcon = React.createElement("span", null);
+            //if the logged in user is the same as the commenter user, the edit comment icon is populated
+            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
+            //we only present the edit icon in the Consultation index page (not the reporter page)
+            if (userId == commenterId && userId != undefined && this.props.parent == "consultation") {
+                editIcon = React.createElement(
+                    "span",
+                    { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
+                    React.createElement("i", { className: "fa fa-pencil-square-o" })
+                );
+            }
+
+            if (this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
                 var commentFromDB = this.props.data.comment;
+            }
+            var commentEdited = React.createElement("span", null);
+            if (commentFromDB.revision > 1) {
+                commentEdited = React.createElement(
+                    "span",
+                    { className: "editedComment" },
+                    "Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο"
+                );
             }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
@@ -297,8 +451,69 @@
             });
 
             var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
+            var emotion = React.createElement("span", null);
+            var emotionId = this.props.data.emotionId;
+            if (emotionId == undefined && this.props.data.comment != null) emotionId = this.props.data.comment.emotionId;
+            if (emotionId != undefined) {
+                var image = "";
+                switch (emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png";
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                console.log(imageWithPath);
+                emotion = React.createElement(
+                    "div",
+                    { className: "userEmotion htmlText" },
+                    "Ο χρήστης εκδήλωσε το συναίσθημα: ",
+                    React.createElement("img", { src: imageWithPath })
+                );
+            }
+            var shareBtn = React.createElement("span", null);
+
+            var commentSource = this.props.data.source;
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if (commentSource != undefined) {
+                if (commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    shareBtn = React.createElement(
+                        "div",
+                        { className: "shareLink" },
+                        React.createElement(
+                            "span",
+                            { className: "shareSpanComment shareArticleHiddenComment" },
+                            "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
+                        ),
+                        React.createElement(
+                            "span",
+                            { className: "shareBtnComment", id: "shareComment-" + commentIdForShare },
+                            React.createElement("i", { className: "fa fa-link" })
+                        )
+                    );
+                }
+            }
             if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = React.createElement(DisplayForConsultation, { id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
+                    id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter,
+                    dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating,
+                    emotionId: this.props.data.emotionId, imagesPath: this.props.imagesPath,
+                    consultationId: this.props.consultationId,
+                    comment: commentFromDB });
+
                 avatarDiv = React.createElement(
                     "div",
                     { className: "avatar" },
@@ -330,8 +545,35 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
+
+                if (this.props.data.source.commentSource == 1) {
+                    var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
+                        discussionthreadclientid: this.props.data.discussionThread.id,
+                        commenterId: this.props.data.userId,
+                        userId: this.props.userId, parentId: this.props.data.id,
+                        articleId: this.props.data.articleId,
+                        display: this.state.displayReplyBox,
+                        annotationId: this.props.data.discussionThread.text.split(this.props.data.articleId)[1],
+                        consultationId: this.props.consultationId });
+                } else {
+                    var replyBox = React.createElement("div", null);
+                }
+                var replies = React.createElement("div", null);
+                if (this.props.data.commentReplies.length > 0) {
+                    replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
+                        userId: this.props.userId,
+                        data: this.props.data.commentReplies,
+                        parent: "comment",
+                        userDefined: this.props.userDefined,
+                        updateComments: this.handleSavedComment,
+                        annotationId: this.props.annotationId,
+                        appState: this.props.appState,
+                        consultationId: this.props.consultationId,
+                        scrollToComment: this.props.scrollToComment });
+                }
+                var commentClassNames = "comment";
             } else if (this.props.parent == "reporterUserStats") {
-                options = React.createElement(DisplayForReporter, { dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating });
+                options = React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.comment.emotionId });
                 commentBody = React.createElement(
                     "div",
                     { className: "htmlText" },
@@ -364,6 +606,49 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
                 );
+                var replyBox = React.createElement("div", null);
+                var commentClassNames = "comment";
+            } else if (this.props.parent == "comment") {
+                options = React.createElement(CommentActionsEnabled, { comment: commentFromDB, imagesPath: this.props.imagesPath,
+                    userDefined: this.props.userDefined, handleReply: this.handleReply,
+                    source: 2, id: this.props.data.id, dateAdded: this.props.data.dateAdded,
+                    likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter,
+                    loggedInUserRating: this.props.loggedInUserRating,
+                    comment: commentFromDB,
+                    consultationId: this.props.consultationId });
+                avatarDiv = React.createElement(
+                    "div",
+                    { className: "avatar" },
+                    React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
+                );
+
+                if (this.props.data.profileUrl) commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    React.createElement(
+                        "a",
+                        { target: "_blank", href: this.props.data.profileUrl },
+                        this.props.data.fullName
+                    )
+                );else commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    this.props.data.fullName
+                );
+                commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    React.createElement("i", { className: "fa fa-comment-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Σχόλιο: "
+                    ),
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
+                );
+                var replyBox = React.createElement("div", null);
+                var replies = React.createElement("div", null);
+                var commentClassNames = "comment replyComment";
             }
             if (this.props.parent == "reporter") {
                 if (this.props.data.userAnnotatedText != null) {
@@ -404,16 +689,26 @@
                 " ",
                 taggedTopicsContainer
             );
-
+            if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 0) {
+                var replyTitle = React.createElement(
+                    "div",
+                    { className: "replyTitle" },
+                    "Απαντήσεις σε αυτό το σχόλιο:"
+                );
+            }
             return React.createElement(
                 "div",
-                { className: "comment" },
+                { className: commentClassNames, id: this.props.data.id },
                 avatarDiv,
                 React.createElement(
                     "div",
                     { className: "body" },
                     commenterName,
+                    editIcon,
+                    commentEdited,
+                    shareBtn,
                     commentBody,
+                    emotion,
                     annotatedText,
                     topicsHtml
                 ),
@@ -426,29 +721,47 @@
                         { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
                         React.createElement("img", { src: "/assets/images/closed.gif" })
                     )
-                )
+                ),
+                replyBox,
+                replyTitle,
+                replies
             );
         }
     });
 
-    var DisplayForConsultation = React.createClass({
-        displayName: "DisplayForConsultation",
+    var CommentActionsEnabled = React.createClass({
+        displayName: "CommentActionsEnabled",
 
         getInitialState: function getInitialState() {
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked: this.props.loggedInUserRating //if not null it means has liked/disliked this comment
+                liked: this.props.loggedInUserRating, //if not null it means has liked/disliked this comment
+                source: this.props.source, //source =1 for democracIt, source = 2 for opengov
+                handleReply: this.props.handleReply
             };
         },
         postRateCommentAndRefresh: function postRateCommentAndRefresh() {
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
+            var annId = "0";
+            if (instance.props.comment.discussionThread != undefined) {
+                annId = instance.props.comment.discussionThread.text.split("-")[1];
+            }
+            var data = {
+                comment_id: instance.props.id, liked: instance.state.liked,
+                commenterId: instance.props.comment.userId,
+                annId: annId,
+                articleId: instance.props.comment.articleId,
+                consultationId: instance.props.consultationId
+            };
             $.ajax({
+
                 method: "POST",
                 url: "/comments/rate",
-                data: { comment_id: this.props.id, liked: instance.state.liked },
+
+                data: data,
                 beforeSend: function beforeSend() {},
                 success: function success(response) {},
                 complete: function complete() {
@@ -495,57 +808,63 @@
             this.state.liked = newLikeStatus;
             this.postRateCommentAndRefresh();
         },
+
         render: function render() {
-            var replyClasses = classNames("reply", "hide"); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var replyClasses = classNames("reply", { hide: this.state.source == 2 }); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
+
             return React.createElement(
                 "div",
-                { className: "options" },
+                { className: "optionsContainer" },
                 React.createElement(
-                    "a",
-                    { className: agreeClasses, onClick: this.handleLikeComment },
-                    "Συμφωνώ",
-                    React.createElement("i", { className: "fa fa-thumbs-o-up" })
-                ),
-                React.createElement(
-                    "span",
-                    { className: "c" },
-                    " (",
-                    this.state.likeCounter,
-                    ")"
-                ),
-                React.createElement(
-                    "a",
-                    { className: disagreeClasses, onClick: this.handleDislikeComment },
-                    "Διαφωνώ",
-                    React.createElement("i", { className: "fa fa-thumbs-o-down" })
-                ),
-                " ",
-                React.createElement(
-                    "span",
-                    { className: "c" },
-                    " (",
-                    this.state.dislikeCounter,
-                    ")"
-                ),
-                React.createElement(
-                    "a",
-                    { className: replyClasses, href: "#" },
-                    "Απάντηση ",
-                    React.createElement("i", { className: "fa fa-reply" })
-                ),
-                React.createElement(
-                    "span",
-                    { className: "date" },
-                    date
+                    "div",
+                    { className: "options" },
+                    React.createElement(
+                        "a",
+                        { className: agreeClasses, onClick: this.handleLikeComment },
+                        "Συμφωνώ",
+                        React.createElement("i", { className: "fa fa-thumbs-o-up" })
+                    ),
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.likeCounter,
+                        ")"
+                    ),
+                    React.createElement(
+                        "a",
+                        { className: disagreeClasses, onClick: this.handleDislikeComment },
+                        "Διαφωνώ",
+                        React.createElement("i", { className: "fa fa-thumbs-o-down" })
+                    ),
+                    " ",
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.dislikeCounter,
+                        ")"
+                    ),
+                    React.createElement(
+                        "a",
+                        { className: replyClasses, onClick: this.state.handleReply },
+                        "Απάντηση ",
+                        React.createElement("i", { className: "fa fa-reply" })
+                    ),
+                    React.createElement(
+                        "span",
+                        { className: "date" },
+                        date
+                    )
                 )
             );
         }
     });
-    var DisplayForReporter = React.createClass({
-        displayName: "DisplayForReporter",
+    var CommentActionsDisabled = React.createClass({
+        displayName: "CommentActionsDisabled",
 
         getInitialState: function getInitialState() {
             return {
@@ -560,38 +879,42 @@
             var date = moment(this.props.dateAdded).format("llll");
             return React.createElement(
                 "div",
-                { className: "options" },
+                { className: "optionsContainerDisabled" },
                 React.createElement(
                     "div",
-                    { className: agreeClasses, onClick: this.handleLikeComment },
-                    "Χρήστες που συμφωνούν",
-                    React.createElement("i", { className: "fa fa-thumbs-o-up" })
-                ),
-                React.createElement(
-                    "span",
-                    { className: "c" },
-                    " (",
-                    this.state.likeCounter,
-                    ")"
-                ),
-                React.createElement(
-                    "div",
-                    { className: disagreeClasses },
-                    "Χρήστες που διαφωνούν",
-                    React.createElement("i", { className: "fa fa-thumbs-o-down" })
-                ),
-                " ",
-                React.createElement(
-                    "span",
-                    { className: "c" },
-                    " (",
-                    this.state.dislikeCounter,
-                    ")"
-                ),
-                React.createElement(
-                    "span",
-                    { className: "date" },
-                    date
+                    { className: "options" },
+                    React.createElement(
+                        "div",
+                        { className: agreeClasses },
+                        "Χρήστες που συμφωνούν",
+                        React.createElement("i", { className: "fa fa-thumbs-o-up" })
+                    ),
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.likeCounter,
+                        ")"
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: disagreeClasses },
+                        "Χρήστες που διαφωνούν",
+                        React.createElement("i", { className: "fa fa-thumbs-o-down" })
+                    ),
+                    " ",
+                    React.createElement(
+                        "span",
+                        { className: "c" },
+                        " (",
+                        this.state.dislikeCounter,
+                        ")"
+                    ),
+                    React.createElement(
+                        "span",
+                        { className: "date" },
+                        date
+                    )
                 )
             );
         }

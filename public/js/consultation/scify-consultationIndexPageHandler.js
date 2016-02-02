@@ -4,9 +4,8 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                relevantLaws,
                                                consultationIsActive,
                                                imagesPath,
+                                               appState,
                                                consultationEndDate){
-    console.log(userId);
-    console.log(finalLawUserId);
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
     this.finalLawUserId = finalLawUserId;
@@ -14,6 +13,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.userId = userId;
     this.fullName = fullName;
     this.imagesPath = imagesPath;
+    this.appState = appState;
     this.discussionThreads ={};
     this.ratingUsers = [];
     for (var i=0; i<ratingUsers.length; i++) {
@@ -32,6 +32,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.consultationEndDate = consultationEndDate;
 
     this.tutorialAnnotator = null;
+    this.imagesPath = imagesPath;
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -59,6 +60,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance = this;
         //todo: load existing rooms from database
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
+        var annCounter = 0;
         $(".article").each(function(index,articleDiv){
             var articleid =$(articleDiv).data("id");
 
@@ -73,11 +75,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
                 parent: "consultation"
             };
+
+            //define function to use after the comment has loaded
+            commentBoxProperties.scrollToComment = callAfterCommentHasLoaded;
+
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
             if (domElementToAddComponent) {
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
             }
             $(articleDiv).find(".ann").each(function(i,ann){
+                //userDefined is true when the user is logged in. We need to parse it to the comment box
+                //to know whether the user can post a reply or not.
+                var userDefined = true;
+                if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
+                    userDefined = false;
+                }
                 var annId = $(ann).data("id");
                 commentBoxProperties.discussionthreadclientid = getDiscussionThreadClientId(articleid,annId );
                 commentBoxProperties.discussionthreadid = getDiscussionThreadId.call(instance,articleid,annId );
@@ -87,8 +99,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.fullName = instance.fullName;
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
-
-                var commentBox = $('<div class="commentbox-wrap"></div>')
+                commentBoxProperties.userDefined = userDefined;
+                commentBoxProperties.imagesPath = instance.imagesPath;
+                commentBoxProperties.annotationId = annId;
+                commentBoxProperties.consultationId = instance.consultationid;
+                commentBoxProperties.appState = instance.appState;
+                commentBoxProperties.annId = annCounter;
+                annCounter++;
+                var commentBox = $('<div class="commentbox-wrap"></div>');
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
                 {
                     commentBoxProperties.isdiscussionForTheWholeArticle=true;
@@ -121,7 +139,23 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
-        getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        if(data.annotationTagTopics.length > 0) {
+            //facebook tracking code for user annotation topic
+            fbq('track', 'AddToCart');
+        }
+        if(data.annotationTagProblems.length > 0) {
+            //facebook tracking code for user annotation problems
+            fbq('track', 'AddToWishlist');
+        }
+        //if the form was opened for edit the comment, the forEdit input value is 1, else 0
+        if(data.forEdit == "0")
+            getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        else {
+            //set the appropriate route for edit
+            data.action = "/annotation/update";
+            getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action, data);
+        }
+
      },
     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
@@ -160,7 +194,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 return array[i];
         }
         return false;
-    }
+    },
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
         var userRate = checkRatingUsers(instance.ratingUsers, userId);
@@ -312,7 +346,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     getParameterPointToFinalLaw = function () {
         var parameter = getParameterByName("target");
-        console.log(parameter);
         if(parameter == "finalLaw") {
             console.log("scroll");
             $('html, body').animate({
@@ -327,6 +360,13 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     },
+    finalLawModalHandler = function() {
+        $( "#finalLawModalBtn" ).click(function() {
+            $(".modal-body .container .consultationText div").first().find(".show-hide").click();
+            $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
+            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
+        });
+    },
     deleteFinalLawHandler = function(instance) {
 
         $( "#deleteFinalLaw" ).click(function() {
@@ -338,7 +378,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
-                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
@@ -363,19 +403,111 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 console.log("You pressed Cancel!");
             }
         });
-    }
+    },
+    getHashValue = function(key) {
+            var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+            return matches ? matches[1] : null;
+    },
+    callAfterCommentHasLoaded = function() {
+        var commentId = getHashValue("commentid");
+        if(commentId != undefined) {
+            $("html, body").animate({scrollTop: $('#' + commentId).offset().top - 50}, 500);
+            $("#" + commentId).addClass("targetDiv");
+            setTimeout(function () {
+                $("#" + commentId).removeClass("targetDiv");
+            },1000);
+        }
+    },
+    openArticleAndCommentFromURL = function() {
+        //get URL parameters
+        var articleId = getHashValue("articleid");
+        var annId = getHashValue("annid");
+        var commentId = getHashValue("commentid");
+        if(articleId != undefined) {
+            //open relevant article
+            $('[data-target="#body-' + articleId + '"]').click();
+        }
+        if(annId != undefined) {
+            //check the DOM tree to see if the requested annotation belongs to part of article
+            if ($('[data-id="' + annId + '"]').next().find(".load").length > 0) {
+                //if length > 0 , the annotation belongs to part of article
+                $('[data-id="' + annId + '"]').next().find(".load")[0].click();
+            } else if($('#body-' + articleId).find(".load").length > 0) {
+                //if not, the annotation is for the whole article (comment on article title)
+                $('#body-' + articleId).find(".load")[0].click();
+            }
+
+        }
+        if(annId == null && commentId == null) {
+            if(articleId != null) {
+                $("html, body").animate({scrollTop: $('#article_' + articleId).offset().top}, 500);
+                $('#article_' + articleId).addClass("targetDiv");
+                setTimeout(function () {
+                    $('#article_' + articleId).removeClass("targetDiv");
+                },1000);
+            }
+            else
+                $(".article-title-text").first().trigger("click");
+        }
+    },
+    handleArticleShare = function(instance) {
+        $(".shareBtn").click(function(){
+            var articleId = $(this).attr('id').split('-')[1];
+            var longUrl ="";
+            if(instance.appState == "development") {
+                longUrl = "http://localhost:9000/consultation/";
+            } else {
+                longUrl = "http://democracit.org/consultation/";
+            }
+            longUrl += instance.consultationid + "#articleid=" + articleId;
+            //TODO: use Url shortener
+            //show the extra div
+            $("#share-"+articleId).prev().toggleClass('shareArticleHidden');
+            //if the url has not yet been added, we add it to the div
+            if($("#share-"+articleId).prev().find(".shareUrl").length == 0)
+                $("#share-"+articleId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
+        });
+    },
+    getShortUrl = function(long_url, login, api_key) {
+        $.getJSON(
+            "http://api.bitly.com/v3/shorten?callback=?",
+            {
+                "format": "json",
+                "apiKey": api_key,
+                "login": login,
+                "longUrl": long_url
+            },
+            function(response)
+            {
+                return response.data.url;
+            }
+        );
+    },
+    openCommentFormForEdit = function(e,comment){
+        //clear annotation toolbar , populate fields and open.
+        //console.log(e);
+        //console.log(comment);
+         this.commentAnnotator.openForEdit(e, comment);
+    },
+        annotateFinalLaw = function(){
+            var finalLawAnn = new scify.Annotator("#finalLawDiv  .article-body,#finalLawDiv .article-title-text", "fl-ann");
+            finalLawAnn.init();
+            $("#finalLawDiv .fl-ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><input type='checkbox'></span>");
+
+        },
     init = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator(false, handleAnnotationSave);
-        this.annotator.init();
+        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
+        this.commentAnnotator.init();
+
+        annotateFinalLaw();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
-        $(".article-title-text").first().trigger("click");
-
+        $("body").on("editcomment",openCommentFormForEdit.bind(this));
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
 
@@ -388,7 +520,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
-
+        finalLawModalHandler();
+        openArticleAndCommentFromURL();
+        handleArticleShare(instance);
     };
 
     return {

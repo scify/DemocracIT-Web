@@ -172,7 +172,7 @@ scify.EvaluatorPageHandler.prototype = function(){
         createConsDurationPerOrganizationDiv();
         createConsDurationDiv();
         createConsCommPerOrganizationDiv();
-
+        fbq('track', 'InitiateCheckout');
     }
     return {
         init:init

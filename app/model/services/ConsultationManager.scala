@@ -2,9 +2,7 @@ package model.services
 
 import java.util
 import java.util.{UUID, Date}
-
-import model.User
-import model.dtos.{PlatformStats, _}
+import model.dtos._
 import model.repositories._
 import model.viewmodels._
 import org.scify.democracit.solr.DitSorlQuery
@@ -14,7 +12,7 @@ import play.api.libs.ws.WS
 
 import scala.concurrent.Await
 
-class ConsultationManager {
+class ConsultationManager (gamificationEngine: GamificationEngineTrait){
 
   private val commentsPageSize = 50
 
@@ -88,12 +86,45 @@ class ConsultationManager {
 
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean){
     val repository = new ConsultationRepository()
+    val uploader_id = UUID.fromString(repository.getFinalLawUploader(finalLawId))
+    rewardLawUploader(uploader_id, liked, attitude, userId)
+    if(!userHasRatedThisLaw(userId,finalLawId)) {
+      rewardUserWhoRated(userId)
+    }
     repository.rateFinalLaw(userId, consultationId, finalLawId, attitude, liked)
   }
 
-  def deleteFinalLaw(finalLawId: Long){
+  def userHasRatedThisLaw(userId:UUID, finalLawId:Long): Boolean = {
+    val repository = new GamificationRepository()
+    val hasUserRated = repository.userHasRatedThisLaw(userId,finalLawId)
+    hasUserRated
+  }
+
+  def rewardUserWhoRated(userId:UUID) = {
+    this.gamificationEngine.rewardUser(userId,GamificationEngineTrait.RATE_LAW, None)
+  }
+
+  def rewardLawUploader(user_id:UUID, liked:Boolean, attitude:Int, userThatPerformedAction:UUID) ={
+    val repository = new GamificationRepository()
+    var action_id = 0
+    if (liked && attitude == 0) {
+      // award user if the law is voted positively  +5
+      action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_LIKE
+      //gamification engine should save points
+      this.gamificationEngine.rewardUser(user_id, action_id, userThatPerformedAction)
+    } else if(liked && attitude == 1){
+      // punish the user if the low is voted negatively -5
+      action_id = GamificationEngineTrait.UPLOADED_FILE_RATED_DISLIKE
+      //gamification engine should save points
+      this.gamificationEngine.rewardUser(user_id, action_id, userThatPerformedAction)
+    }
+
+  }
+
+  def deleteFinalLaw(finalLawId: Long, userId:UUID){
     val repository = new ConsultationRepository()
     repository.deleteFinalLaw(finalLawId)
+    this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.REMOVE_UPLOADED_FILE, None)
   }
 
 
@@ -107,7 +138,7 @@ class ConsultationManager {
         response => {
           response.json
         }
-      },25 seconds)
+      },55 seconds)
 
     result
 
@@ -118,7 +149,7 @@ class ConsultationManager {
     if (s.size % 2 == 0) Math.ceil((lower.last + upper.head) / 2.0).asInstanceOf[Int]  else upper.head
   }
 
-  def getConsultationsForHomePage(user: Option[model.User]): HomeViewModel = {
+  def getConsultationsForHomePage(user: Option[User]): HomeViewModel = {
 
     val consultations = new ConsultationRepository().latestConsultations(10)
     val today = new Date();

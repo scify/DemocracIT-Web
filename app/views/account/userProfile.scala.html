@@ -1,0 +1,79 @@
+@import model.viewmodels.UserProfileViewModel
+@(vm: UserProfileViewModel)
+
+@js = {
+    <script src="@routes.Assets.at("js/evaluator/scify-evaluatorPageHandler.js")" ></script>
+    <script src="@routes.Assets.at("js/evaluator/consultationForChart-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/evaluator/evaluatorChart-compiled.js")" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+    {'modules':[{'name':'visualization','version':'1.1','packages':
+    ['corechart']}]}"></script>
+    <script>
+    $(function(){
+        @*var controller = new scify.EvaluatorPageHandler(@Html(vm.consultationsPerMonthToJson())*@
+                                                       @*);*@
+        @*controller.init();*@
+     })
+    </script>
+}
+
+@css = {
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/consultation/consultation.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/userProfile.css")">
+}
+
+@layout("DemocracIT", css, js,vm.user) {
+    <div  class="container">
+        <div class="profile">
+            <div class="user-profile">
+                @if(vm.hasImage()) {
+                    <img class="avatar" src="@vm.user.get.avatarURL" alt="Profile" />
+                } else {
+                    <img class="avatar" src="/assets/images/profile_default.jpg" alt="Profile" />
+                }
+                <div class="username">@vm.user.get.firstName @vm.user.get.lastName</div>
+                <div class="bio">
+                    (Πλήρες όνομα: @vm.user.get.fullName)
+                </div>
+                <div class="description">
+                    <div class="email">e-mail:</div> <a href="mailto:@vm.user.get.email">@vm.user.get.email</a>
+                </div>
+                <ul class="data">
+                    <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">@vm.totalUserPoints</span><i class="fa fa-heart pointIcon"></i>
+                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">Πώς υπολογίζονται οι πόντοι;</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="pointsExplanationModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                    <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Επεξήγηση συστήματος πόντων</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="msg">
+                            <div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Ανεβάσετε τον τελικό νόμο για μια διαβούλευση: <span class="explanationPoint">+10 πόντοι</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Ψηφίσετε θετικά ή αρνητικά για έναν τελικό νόμο που έχει ανεβάσει κάποιος άλλος χρήστης (μόνο μια φορά για κάθε τελικό νόμο): <span class="explanationPoint">+2 πόντοι</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Κάποιος τελικός νόμος που ανεβάσατε ψηφιστεί θετικά από κάποιον χρήστη: <span class="explanationPoint">+5 πόντοι</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Κάνετε like σε κάποιο σχόλιο (για μέχρι 10 likes ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Σχολιάσετε σε κάποιο άρθρο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Σχολιάσετε σε τμήμα κειμένου κάποιου άρθρου (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+2 πόντοι</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Στο σχόλιό σας επισυνάπτονται θέματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Στο σχόλιό σας επισυνάπτονται προβλήματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
+                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">Κάποιος τελικός νόμος που ανεβάσατε ψηφιστεί αρνητικά από κάποιον χρήστη: <span class="explanationPoint down">-7 πόντοι</span></div>
+                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">Διαγράψετε κάποιον τελικό νόμο που ανεβάσατε: <span class="explanationPoint down">-10 πόντοι</span></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

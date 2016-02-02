@@ -80,6 +80,7 @@ h2{
   padding-top: 20px;
   border-bottom: 1px solid gray;
   padding-bottom: 20px;
+  transition: background-color 1s ease-in-out;
 }
 
 .article-body
@@ -217,7 +218,7 @@ h2{
   display:block;
 }
 .article-title-text .ann {
-  width:90%;
+  width:94%;
 }
 
 .ann {
@@ -379,6 +380,7 @@ a.load {
   margin-bottom: 2px;
   border-radius: 6px;
   margin-top: 5px;
+  transition: background-color 1s ease-in-out;
 }
 
 
@@ -398,6 +400,14 @@ a.load {
 .commentBox .comment .options a
 {
   cursor:pointer;
+}
+.comment .options .reply
+{
+  margin-right: 15px;
+}
+.commentBox .comment .options .reply .fa
+{
+  margin-left: 0px;
 }
 .commentBox .comment .options .c {
   margin-right:20px;
@@ -460,7 +470,7 @@ a.load {
 
 .commentBox .comment .tag.topic span
 {
-  background-color:greenyellow;
+  background-color:lightblue;
 }
 .commentBox .comment .tag span
 {
@@ -957,4 +967,26 @@ margin-top: 10px;
 
 #deleteFinalLaw:hover {
   cursor: pointer;
+}
+
+.replyInput {
+  margin-top:20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  height:100px;
+  width: 50%;
+}
+
+.replyBtn {
+  position: absolute;
+  margin-top: 70px;
+}
+
+.replyComment {
+  margin-left: 40px;
+}
+
+.replyTitle {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }

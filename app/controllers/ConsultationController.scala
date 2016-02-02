@@ -1,5 +1,6 @@
 package controllers
 
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -14,16 +15,18 @@ import play.api.cache.Cached
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
+import utils.MailService
 
 
+class ConsultationController  @Inject() (val cached: Cached, val messagesApi: MessagesApi,
+                                         val env: Environment[User, CookieAuthenticator],
+                                         socialProviderRegistry: SocialProviderRegistry,
+                                         val gamificationEngine:GamificationEngineTrait, mailService: MailService)
 
-class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: MessagesApi,
-                                         val env: Environment[model.User, CookieAuthenticator],
-                                         socialProviderRegistry: SocialProviderRegistry)
-  extends Silhouette[model.User, CookieAuthenticator] {
+  extends Silhouette[User, CookieAuthenticator] {
 
-  private val consultationManager = new ConsultationManager()
-  private val commentManager = new AnnotationManager()
+  private val consultationManager = new ConsultationManager(gamificationEngine)
+  private val commentManager = new AnnotationManager(gamificationEngine, mailService)
   private val reporterManager = new ReporterManager()
 
   def displayAll() = //cached("displayall") {
@@ -43,6 +46,66 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
 
   //}
 
+  def parsePdfContent(filePath:String):String = {
+    var document:PDDocument = new PDDocument()
+    document = PDDocument.load(new File(filePath))
+    document.getClass()
+    var pdfContent = ""
+    if( !document.isEncrypted() ) {
+      val Tstripper:PDFTextStripper = new PDFTextStripper()
+      //fileContent  = Tstripper.getText(document);
+      for (a <- 1 to document.getNumberOfPages()) {
+        Tstripper.setStartPage(a)
+        Tstripper.setEndPage(a)
+        pdfContent += Tstripper.getText(document) + "<br><br><br>"
+
+      }
+    } else {
+      sys.error("File encrypted")
+    }
+    pdfContent
+  }
+
+  def formatFileContent(fileContent:String):String = {
+    var splitContent:Array[String] = fileContent.split("\\r?\\n")
+    var l = splitContent.length
+    var fileContentFinal = ""
+    var isFirstArticle = true
+    var htmlContent = ""
+    var articleNum = 1;
+    for(i <- splitContent){
+      if(i.length > 6) {
+        val v = i.substring(0,6)
+        if (i.substring(0, 6).equals("Άρθρο ")) {
+          if(isFirstArticle) {
+            htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
+              "<div class=\"col-md-12\"><div class=\"title\">" +
+              "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
+              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+            isFirstArticle = false
+          } else {
+            htmlContent = "</div></div></div></div><div data-id=" + articleNum + "  class=\"row article\">" +
+              "<div class=\"col-md-12\"><div class=\"title\">" +
+              "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
+              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+          }
+
+          var htmlContentAfter = "</span></div><div id=\"finalLawUploadedBody-" + articleNum + "\" class=\"collapse\" style=\"height:0;\" ><div class=\"article-body\">"
+          articleNum += 1
+          fileContentFinal += htmlContent + i + htmlContentAfter
+        }
+        else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
+          fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
+        } else{
+          fileContentFinal += i + "<br>"
+        }
+      } else
+        fileContentFinal += i + "<br>"
+    }
+    fileContentFinal += "</div></div></div></div></div>"
+    fileContentFinal
+  }
+
   def uploadFinalLaw(consultationId: Long, userId: java.util.UUID) = Action(parse.multipartFormData) { request =>
     request.body.file("file").map { finalLawFile =>
       import java.io.File
@@ -56,40 +119,13 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       if(extension.equals(".txt")) {
         fileContent = scala.io.Source.fromFile("public/files/finalLaw_" + consultationId + "_" + timestamp + extension).mkString
       } else if (extension.equals(".pdf")) {
-        var document:PDDocument = new PDDocument()
-        document = PDDocument.load(new File("public/files/finalLaw_" + consultationId + "_" + timestamp + extension))
-        document.getClass()
-          if( !document.isEncrypted() ) {
-            val Tstripper:PDFTextStripper = new PDFTextStripper()
-            //fileContent  = Tstripper.getText(document);
-            for (a <- 1 to document.getNumberOfPages()) {
-              Tstripper.setStartPage(a)
-              Tstripper.setEndPage(a)
-              fileContent += Tstripper.getText(document) + "<br><br><br>"
-
-            }
-          } else {
-            sys.error("File encrypted")
-          }
-        }
-      /*Get and format each line from the law file content*/
-      var splitContent:Array[String] = fileContent.split("\\r?\\n")
-      var l = splitContent.length
-      for(i <- splitContent){
-        if(i.length > 6) {
-          val v = i.substring(0,6)
-          if (i.substring(0, 6).equals("Άρθρο ")) {
-            fileContentFinal += "<br><br><div class='title'>" + i + "</div>"
-          }
-          else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
-            fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
-          } else{
-            fileContentFinal += i + "<br>"
-          }
-        } else
-          fileContentFinal += i + "<br>"
+        val filePath = "public/files/finalLaw_" + consultationId + "_" + timestamp + extension
+        fileContent = parsePdfContent(filePath)
       }
+      /*Get and format each line from the law file content*/
+      fileContentFinal = formatFileContent(fileContent)
       storeFinalLawInDB(consultationId, path, fileContentFinal, userId)
+      this.gamificationEngine.rewardUser(userId, GamificationEngineTrait.UPLOAD_FILE_ACTION_ID, None)
       Ok("File uploaded")
     }.getOrElse {
       Redirect("/").flashing(
@@ -103,8 +139,8 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
       Created("")
   }
 
-  def deleteFinalLaw(finalLawId: Long) = Action { implicit request =>
-    consultationManager.deleteFinalLaw(finalLawId)
+  def deleteFinalLaw(finalLawId: Long, userId:UUID) = Action { implicit request =>
+    consultationManager.deleteFinalLaw(finalLawId, userId)
     Created("")
   }
 
@@ -129,7 +165,7 @@ class ConsultationController  @Inject() (val cached: Cached ,val messagesApi: Me
   }
 
   def getConsultation(consultationId :Long) = UserAwareAction { implicit request =>
-
+        val e = env
         Ok(views.html.consultation.index(consultationManager.get(consultationId, request.identity)))
   }
 

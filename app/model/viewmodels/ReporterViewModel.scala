@@ -8,15 +8,15 @@ import utils.ImplicitReadWrites._
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 case class ReporterViewModel(consultation:model.dtos.Consultation,
-                               user: Option[model.User],
-                               relevantMaterials: Seq[RelevantMaterial],
-                               commentsPerArticle:  Seq[Article],
-                               annotationTagWithComments: Seq[AnnotationTagWithComments],
-                               annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
-                               relevantLaws: Seq[RelevantLaws],
-                               userCommentStats: Seq[UserCommentStats],
-                               finalLaw: Option[ConsultationFinalLaw],
-                               ratingUsers: Seq[ConsFinalLawRatingUsers]
+                             user: Option[User],
+                             relevantMaterials: Seq[RelevantMaterial],
+                             commentsPerArticle:  Seq[Article],
+                             annotationTagWithComments: Seq[AnnotationTagWithComments],
+                             annotationTagPerArticleWithComments: Seq[AnnotationTagPerArticleWithComments],
+                             relevantLaws: Seq[RelevantLaws],
+                             userCommentStats: Seq[UserCommentStats],
+                             finalLaw: Option[ConsultationFinalLaw],
+                             ratingUsers: Seq[ConsFinalLawRatingUsers]
                               )
 {
   def commentsPerArticleToJson():String =Json.toJson(commentsPerArticle).toString()
@@ -24,6 +24,13 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
   def annotationsForConsultationToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsForConsultation(type_of_ann)).toString()
   def annotationsPerArticleToJson(type_of_ann:Int):String =Json.toJson(getAnnotationsPerArticle(type_of_ann)).toString()
   def ratingUsersToJson():String = Json.toJson(ratingUsers).toString()
+
+  def getFinalLawRelativePath():String = {
+    if(play.Play.application().configuration().getString("application.state") == "production")
+      "http://democracit.org/" + finalLaw.get.file_path.replaceAll("public", "assets")
+    else
+      "http://localhost:9000/" + finalLaw.get.file_path.replaceAll("public", "assets")
+  }
 
   def totalComments:Int = {
     var total = 0

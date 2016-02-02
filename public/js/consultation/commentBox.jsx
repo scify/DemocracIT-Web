@@ -88,7 +88,8 @@
                 userAnnotatedText: data.userAnnotatedText,
                 body : data.body,
                 annotationTagTopics : data.annotationTagTopics,
-                annotationTagProblems : data.annotationTagProblems
+                annotationTagProblems : data.annotationTagProblems,
+                emotionId : data.emotionId
             };
 
             //todo: cancel any previous events
@@ -131,6 +132,73 @@
             });
 
         },
+        updateComment : function(url,data){
+            var instance = this;
+            var postedData = {
+                commentId: data.commentId,
+                consultationId : this.props.consultationid,
+                articleId: this.props.articleid,
+                fullName :this.props.fullName,
+                dateAdded : new Date(),
+                userAnnotatedText: data.userAnnotatedText,
+                body : data.body,
+                annotationTagTopics : data.annotationTagTopics,
+                annotationTagProblems : data.annotationTagProblems,
+                emotionId : data.emotionId,
+                revision: data.revision
+            };
+
+            //todo: cancel any previous events
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: JSON.stringify(postedData),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend:function(){
+                    instance.state.display=true;
+                    instance.state.busy=true;
+                    instance.setState(instance.state);
+                },
+                success : function(comment){
+                    /*console.log(instance.state);
+                    console.log(instance.props);
+                    console.log(comment);*/
+                    instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
+                    if (instance.commentsLoadedFromServer())
+                    {
+                        //search for the old comment in the comments array
+                        for(var commentIndex=0; commentIndex<instance.state.allComments.length; commentIndex++) {
+                            //the new edited comment has the same id with the old version
+                            if(instance.state.allComments[commentIndex].id == comment.id) {
+                                var oldComment = instance.state.allComments[commentIndex];
+                                //store the replies of the old comment to the new one
+                                comment.commentReplies = oldComment.commentReplies;
+                                //store the discussionThread object of the old comment to the new one
+                                comment.discussionThread = oldComment.discussionThread;
+                                //store the new comment where the old one was
+                                instance.state.allComments[commentIndex] = comment;
+                            }
+                        }
+
+                    }
+                },
+                complete: function(){
+
+                    if (instance.commentsLoadedFromServer())
+                    {
+                        instance.state.busy=false;
+                        instance.setState(instance.state);
+                    }
+                    else
+                    {
+                        instance.getCommentsFromServer.call(instance);
+                    }
+
+                }
+            });
+
+        },
         setVisibibility : function(display){
             this.state.display=display;
             this.setState(this.state);
@@ -165,8 +233,9 @@
             var topClasses = classNames({hide: this.state.totalCommentsCount==0});
             var commendBoxclasses = classNames("commentBox",{ hide :!this.state.display});
             var loadAllClasses =classNames("load-all",{ hide :!this.shouldDisplayLoadMoreOption()});
-
+            var consultationId = this.props.consultationId;
             return (
+
                 <div className={topClasses}>
                     <TotalCommentsLink onClick={this.refreshComments}
                                        count={this.state.totalCommentsCount}
@@ -178,8 +247,16 @@
                         </div>
                         <scify.CommentList
                             consultationEndDate={this.props.consultationEndDate}
+                            annotationId = {this.props.annotationId}
+                            consultationId = {this.props.consultationId}
+                            userId = {this.props.userId}
                             data={this.state.comments}
-                            parent={this.props.parent}/>
+                            parent={this.props.parent}
+                            userDefined={this.props.userDefined}
+                            imagesPath = {this.props.imagesPath}
+                            scrollToComment={this.props.scrollToComment}
+                            appState={this.props.appState}
+                            annId={this.props.annId}/>
                         <CommentForm />
                     </div>
                 </div>
@@ -223,9 +300,19 @@
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
+
             var commentNodes = this.props.data.map(function (comment) {
                 return (
-                    <scify.Comment parent={instance.props.parent} consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment} />
+                    <div className={instance.props.parent}>
+                    <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
+                                   userDefined={instance.props.userDefined} parent={instance.props.parent}
+                                   consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment}
+                                   annotationId = {instance.props.annotationId}
+                                   consultationId = {instance.props.consultationId}
+                                   appState={instance.props.appState}
+                                   annId={instance.props.annId}
+                                   revision={comment.revision}/>
+                    </div>
                 );
             });
 
@@ -238,20 +325,89 @@
     });
     window.scify.Comment = React.createClass({
         getInitialState: function(){
+            function sortByKey(array, key) {
+                return array.sort(function(a, b) {
+                    var x = a[key]; var y = b[key];
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
+
+            }
+            if(this.props.data.commentReplies!= undefined)
+                if(this.props.data.commentReplies.length > 1)
+                    sortByKey(this.props.data.commentReplies, 'dateAdded');
             return {
                         likeCounter: this.props.data.likesCounter,
                         dislikeCounter: this.props.data.dislikesCounter,
-                        liked : this.props.data.loggedInUserRating  //if not null it means has liked/disliked this comment
+                        liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                        comment: this.props.data,
+                        displayReplyBox: false
                     };
         },
         componentDidMount : function(){
+            var instance = this;
             $(React.findDOMNode(this)).find('[data-toggle="tooltip"]').tooltip();
+            if(this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
+                this.props.scrollToComment();
+            }
+            $("#shareComment-" + instance.props.data.id).click(function() {
+                var commentId = $(this).attr('id').split('-')[1];
+                var annotationId = instance.props.annotationId;
+                //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
+                //we need to get it from the comment object
+                if(annotationId == undefined) {
+                    annotationId = instance.props.data.discussionThread.text.split('-')[1];
+                }
+                var longUrl ="";
+                $("#shareComment-"+commentId).prev().toggleClass('shareArticleHiddenComment');
+                if(instance.props.appState == "development") {
+                    longUrl = "http://localhost:9000/consultation/";
+                } else {
+                    longUrl = "http://democracit.org/consultation/";
+                }
+                longUrl += instance.props.consultationId + "#commentid=" + commentId + "&articleid=" + instance.props.data.articleId + "&annid=" + annotationId;
+                //show the extra div
+                if($("#shareComment-"+commentId).prev().find(".shareUrl").length == 0)
+                    $("#shareComment-"+commentId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
+            });
+        },
+        getHashValue : function(key) {
+            var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+            return matches ? matches[1] : null;
+        },
+        handleReply: function() {
+            this.state.displayReplyBox = !this.state.displayReplyBox;
+            this.setState(this.state);
+        },
+        handleSavedComment: function(comment) {
+            //add the new comment to the list of replies
+            this.state.comment.commentReplies.unshift(comment);
+            this.setState(this.state);
+        },
+        handleEditComment: function(){
+            var commentToBeEdited = this.props.data;
+            commentToBeEdited.annId = "ann-" + this.props.annId;
+            //throw custom event on the body html passing the comment that will be edited. The comment should have its id populated
+            $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function() {
-            if(this.props.parent == "consultation" || this.props.parent == "reporter") {
+            var userId = this.props.userId;
+            var commenterId = this.props.data.userId;
+            var editIcon = <span></span>;
+            //if the logged in user is the same as the commenter user, the edit comment icon is populated
+            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
+            //we only present the edit icon in the Consultation index page (not the reporter page)
+            if(userId == commenterId && userId != undefined && this.props.parent == "consultation") {
+                editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
+            }
+
+            if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
                 var commentFromDB = this.props.data;
             } else {
                 var commentFromDB = this.props.data.comment;
+            }
+            var commentEdited = <span></span>;
+            if(commentFromDB.revision > 1) {
+                commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
             }
             var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
                 if (tag != undefined) {
@@ -282,8 +438,56 @@
                 });
 
             var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
+            var emotion = <span></span>;
+            var emotionId = this.props.data.emotionId;
+            if(emotionId == undefined && this.props.data.comment != null)
+                emotionId = this.props.data.comment.emotionId
+            if(emotionId != undefined) {
+                var image="";
+                switch(emotionId) {
+                    case 1:
+                        image = "/emoticons/emoticon-superhappy.png";
+                        break;
+                    case 2:
+                        image = "/emoticons/emoticon-happy.png"
+                        break;
+                    case 3:
+                        image = "/emoticons/emoticon-worried.png";
+                        break;
+                    case 4:
+                        image = "/emoticons/emoticon-sad.png";
+                        break;
+                    case 5:
+                        image = "/emoticons/emoticon-angry.png";
+                        break;
+                }
+                var imageWithPath = this.props.imagesPath + image;
+                console.log(imageWithPath);
+                emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
+            }
+            var shareBtn = <span></span>;
+
+            var commentSource = this.props.data.source;
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if(commentSource != undefined) {
+                if(commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
+                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
+                        span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
+                    <i className="fa fa-link"></i>
+                </span></div>;
+                }
+            }
             if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = <DisplayForConsultation id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
+                                                 id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
+                                                 dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating}
+                                                 emotionId={this.props.data.emotionId} imagesPath={this.props.imagesPath}
+                                                 consultationId={this.props.consultationId}
+                                                 comment={commentFromDB}/>;
+
                 avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
 
                 if (this.props.data.profileUrl)
@@ -291,15 +495,63 @@
                 else
                     commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
 
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
+                    <span className="partName">Σχόλιο: </span>
+                    <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
 
-                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                if(this.props.data.source.commentSource == 1) {
+                    var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
+                                                   discussionthreadclientid={this.props.data.discussionThread.id}
+                                                   commenterId={this.props.data.userId}
+                                                   userId={this.props.userId} parentId={this.props.data.id}
+                                                   articleId={this.props.data.articleId}
+                                                   display={this.state.displayReplyBox}
+                                                   annotationId = {this.props.data.discussionThread.text.split(this.props.data.articleId)[1]}
+                                                   consultationId = {this.props.consultationId}/>;
+                } else {
+                    var replyBox =<div></div>;
+                }
+                var replies = <div></div>;
+                if(this.props.data.commentReplies.length > 0) {
+                    replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
+                                                     userId={this.props.userId}
+                                                     data={this.props.data.commentReplies}
+                                                     parent="comment"
+                                                     userDefined={this.props.userDefined}
+                                                     updateComments={this.handleSavedComment}
+                                                     annotationId = {this.props.annotationId}
+                                                     appState = {this.props.appState}
+                                                     consultationId = {this.props.consultationId}
+                                                     scrollToComment={this.props.scrollToComment}/>;
+                }
+                var commentClassNames="comment";
             } else if(this.props.parent == "reporterUserStats") {
-                options = <DisplayForReporter dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} />;
+                options = <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.comment.emotionId}/>;
                 commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
                 if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
                 else
                     annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
+                var replyBox = <div></div>;
+                var commentClassNames="comment";
+            } else if(this.props.parent == "comment") {
+                options = <CommentActionsEnabled comment={commentFromDB} imagesPath={this.props.imagesPath}
+                                                 userDefined={this.props.userDefined} handleReply={this.handleReply}
+                                                 source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded}
+                                                 likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter}
+                                                 loggedInUserRating={this.props.loggedInUserRating}
+                                                 comment={commentFromDB}
+                                                 consultationId={this.props.consultationId}/>;
+                avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
+
+                if (this.props.data.profileUrl)
+                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
+                else
+                    commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                var replyBox = <div></div>;
+                var replies = <div></div>;
+                var commentClassNames="comment replyComment";
             }
             if(this.props.parent == "reporter") {
                 if(this.props.data.userAnnotatedText != null) {
@@ -312,13 +564,17 @@
             }
             if(taggedProblems.length > 0 || taggedTopics.length > 0)
                 topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-
+            if(this.props.data.commentReplies!= undefined)
+                if(this.props.data.commentReplies.length > 0) {
+                    var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
+                }
             return (
-                <div className="comment">
+                <div className={commentClassNames} id={this.props.data.id}>
                     {avatarDiv}
                     <div className='body'>
-                        {commenterName}
+                        {commenterName}{editIcon}{commentEdited}{shareBtn}
                         {commentBody}
+                        {emotion}
                         {annotatedText}
                         {topicsHtml}
                     </div>
@@ -326,28 +582,47 @@
                     <div className={iconsClasses}>
                         <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
                      </div>
+                        {replyBox}
+                        {replyTitle}
+                        {replies}
                 </div>
             );
         }
     });
 
-    var DisplayForConsultation = React.createClass({
+    var CommentActionsEnabled = React.createClass({
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked : this.props.loggedInUserRating  //if not null it means has liked/disliked this comment
+                liked : this.props.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                source: this.props.source, //source =1 for democracIt, source = 2 for opengov
+                handleReply: this.props.handleReply
             };
         },
         postRateCommentAndRefresh: function(){
             var instance = this;
             //todo: make ajax call and increment decremet the counters.
             //todo: cancel any previous events
+            var annId='0';
+            if(instance.props.comment.discussionThread != undefined) {
+                annId = instance.props.comment.discussionThread.text.split('-')[1]
+            }
+            var data = {
+                comment_id : instance.props.id , liked : instance.state.liked,
+                commenterId:instance.props.comment.userId,
+                annId: annId,
+                articleId:instance.props.comment.articleId,
+                consultationId:instance.props.consultationId
+            };
             $.ajax({
+
                 method: "POST",
                 url: "/comments/rate",
-                data: { comment_id : this.props.id , liked : instance.state.liked},
-                beforeSend:function(){},
+
+                data: data,
+                beforeSend:function(){
+                },
                 success : function(response){},
                 complete: function(){
                     instance.setState(instance.state);
@@ -367,7 +642,7 @@
                 this.state.dislikeCounter= this.state.dislikeCounter-1;
 
             if (newLikeStatus===true)
-                this.state.likeCounter = this.state.likeCounter + 1
+                this.state.likeCounter = this.state.likeCounter + 1;
 
             this.state.liked= newLikeStatus;
             this.postRateCommentAndRefresh();
@@ -389,27 +664,31 @@
             this.state.liked= newLikeStatus;
             this.postRateCommentAndRefresh();
         },
+
         render: function() {
-            var replyClasses = classNames("reply","hide" )//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
+            var replyClasses = classNames("reply",{hide: this.state.source ==2})//,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
-            return (
-                <div className="options">
-                    <a className={agreeClasses} onClick={this.handleLikeComment}>
-                        Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
 
-                    </a><span className="c"> ({this.state.likeCounter})</span>
-                    <a className={disagreeClasses} onClick={this.handleDislikeComment}>
-                        Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
-                    </a> <span className="c"> ({this.state.dislikeCounter})</span>
-                    <a className={replyClasses} href="#">Απάντηση <i className="fa fa-reply"></i></a>
-                    <span className="date">{date}</span>
+            return (
+                <div className="optionsContainer">
+                    <div className="options">
+                        <a className={agreeClasses} onClick={this.handleLikeComment}>
+                            Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+
+                        </a><span className="c"> ({this.state.likeCounter})</span>
+                        <a className={disagreeClasses} onClick={this.handleDislikeComment}>
+                            Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
+                        </a> <span className="c"> ({this.state.dislikeCounter})</span>
+                        <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
+                        <span className="date">{date}</span>
+                    </div>
                 </div>
             );
         }
     });
-    var DisplayForReporter = React.createClass({
+    var CommentActionsDisabled = React.createClass({
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,
@@ -422,15 +701,16 @@
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
             return (
-                <div className="options">
-                    <div className={agreeClasses} onClick={this.handleLikeComment}>
-                        Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
-
-                    </div><span className="c"> ({this.state.likeCounter})</span>
-                    <div className={disagreeClasses}>
-                        Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
-                    </div> <span className="c"> ({this.state.dislikeCounter})</span>
-                    <span className="date">{date}</span>
+                <div className="optionsContainerDisabled">
+                    <div className="options">
+                        <div className={agreeClasses}>
+                            Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
+                        </div><span className="c"> ({this.state.likeCounter})</span>
+                        <div className={disagreeClasses}>
+                            Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
+                        </div> <span className="c"> ({this.state.dislikeCounter})</span>
+                        <span className="date">{date}</span>
+                    </div>
                 </div>
             );
         }

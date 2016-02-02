@@ -76,18 +76,23 @@ class ConsultationRepository {
                         set liked = CAST($likedBit AS BIT)
                         where user_id = CAST($userId AS UUID)  and consultation_id = $consultationId;
 
-                INSERT INTO consultation_final_law_rating (user_id, consultation_id,liked,date_added, final_law_id)
-                        select CAST($userId AS UUID), $consultationId ,CAST($likedBit AS BIT) , now(), $finalLawId
+                INSERT INTO consultation_final_law_rating (user_id, consultation_id,liked,date_added, final_law_id, is_rating_active)
+                        select CAST($userId AS UUID), $consultationId ,CAST($likedBit AS BIT) , now(), $finalLawId, 1
                                where not exists (select 1 from consultation_final_law_rating where user_id = CAST($userId AS UUID) and consultation_id = $consultationId );
 
                   """.execute()
         } else {
           SQL( """update consultation_final_law set """ + column + """ = """ + column + """ - 1 where consultation_id =""" + consultationId + """ and id =""" + finalLawId).execute()
+//          SQL"""
+//               delete from consultation_final_law_rating
+//                      where user_id = CAST($userId AS UUID) and consultation_id = $consultationId ;
+//
+//              """.execute()
           SQL"""
-               delete from consultation_final_law_rating
-                      where user_id = CAST($userId AS UUID) and consultation_id = $consultationId ;
-
+               update consultation_final_law_rating set is_rating_active = 0
+                      where user_id = CAST($userId AS UUID) and final_law_id = $finalLawId
               """.execute()
+
         }
     }
   }
@@ -97,6 +102,15 @@ class ConsultationRepository {
       SQL"""
          update consultation_final_law set active = CAST(0 AS BIT) where id = $finalLawId
          """.execute()
+    }
+  }
+
+  def getFinalLawUploader(finalLawId: Long):String = {
+    DB.withConnection { implicit c =>
+      val userId:String = SQL"""
+         select cast(user_id as text) from consultation_final_law  where id = $finalLawId
+         """.as(SqlParser.str("user_id").single)
+      userId
     }
   }
 
@@ -159,9 +173,9 @@ class ConsultationRepository {
   def getFinalLawRatingUsers(consultationId:Long, finalLawId:BigInt): List[ConsFinalLawRatingUsers] = {
     DB.withConnection { implicit c =>
       SQL"""
-           select $finalLawId as final_law_id ,* from consultation_final_law_rating
+           select consultation_final_law_rating.user_id, final_law_id, consultation_final_law_rating.consultation_id, liked from consultation_final_law_rating
               inner join consultation_final_law law on law.id = consultation_final_law_rating.final_law_id
-           where consultation_final_law_rating.consultation_id = $consultationId and law.active = CAST(1 AS BIT)
+              where consultation_final_law_rating.consultation_id = $consultationId and law.active = CAST(1 AS BIT) and consultation_final_law_rating.is_rating_active = 1
          """.as(ConsFinalLawRatingUsersParser.Parse *)
     }
   }
