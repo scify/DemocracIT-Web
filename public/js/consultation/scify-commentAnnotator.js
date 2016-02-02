@@ -65,67 +65,6 @@ scify.CommentAnnotator.prototype = (function(){
             $("body").on("click",".ann-icon",displayToolBar.bind(instance));
 
         },
-        //recurseAllTextNodesAndApply = function(element,action){
-        //
-        //    if (element.className && element.className.indexOf("skip-ann")>=0)
-        //        return;
-        //
-        //    if (elementCanBeAnnotated(element))
-        //    {
-        //        action(element);
-        //        return; //dont allow iteration to children
-        //    }
-        //
-        //    if (element.childNodes.length > 0)
-        //        for (var i = 0; i < element.childNodes.length; i++)
-        //        {
-        //            recurseAllTextNodesAndApply(element.childNodes[i],action);
-        //        }
-        //},
-        //elementCanBeAnnotated= function(element) {
-        //    //an element can be annotated if its a #TEXT node with actual text
-        //    if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
-        //        return true;
-        //
-        //    //an element can be annotated if all it's children are #TEXT OR SUP nodes
-        //    var bannedNodeFound=false;
-        //    for (var i = 0; i < element.childNodes.length; i++) {
-        //        if ( element.childNodes[i].nodeName !="SUP" &&
-        //            element.childNodes[i].nodeName !="#text" &&
-        //            element.childNodes[i].nodeName !="STRONG" )
-        //        {
-        //            bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
-        //            break;
-        //        }
-        //    }
-        //    if (bannedNodeFound || element.textContent.trim().length==0)
-        //        return false;
-        //
-        //    return true;
-        //
-        //},
-        //createAnnotatableAreas = function() {
-        //    var counter=0;
-        //    var action = function(element)
-        //    {
-        //        if (element.nodeType == Node.TEXT_NODE)
-        //            $(element).wrap("<span data-id='ann-"+counter+"' class='ann'></span>");
-        //        else
-        //            $(element).html("<div data-id='ann-"+counter+"' class='ann'>"+ $(element).html() +"</div>");
-        //
-        //        counter++;
-        //    }
-        //    $(".article-body,.article-title-text").each(function(i,el){
-        //       // discard the br nodes
-        //       // var html = $(el).html();
-        //       //  html = html.replace(/<br>/g,"#brNode#").replace(/<br\/>/g,"#brNode#");
-        //       //  $(el).html(html);
-        //        recurseAllTextNodesAndApply(el,action );
-        //        //html= $(this).html().replace(/#brNode#/g,"<br>");
-        //        //$(this).html(html);
-        //    });
-        //
-        //},
         attachAnnotationPrompts= function(){
             $(".ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><i class='fa fa-pencil-square-o'></i></span>");
         },
@@ -204,7 +143,7 @@ scify.CommentAnnotator.prototype = (function(){
             fetchTopicTagsForUserSelection(selectedText);
 
             toolbar.find("input[name='annText']").val(selectedText);
-            var parent = target.closest(".ann")
+            var parent = target.closest(".ann");
             var annid=parent.data("id");
             var articleid=target.closest(".article").data("id");
             toolbar.find("input[name='articleid']").val(articleid);
@@ -213,6 +152,7 @@ scify.CommentAnnotator.prototype = (function(){
 
         },
         displayToolbarForEdit = function(e, comment) {
+            console.log(comment);
             e.preventDefault();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -358,7 +298,7 @@ scify.CommentAnnotator.prototype = (function(){
         },
         init = function(){
             var instance = this;
-            var annotatorAreaCreator = new scify.AnnotatorAreaCreator(".article-body,.article-title-text","ann");
+            var annotatorAreaCreator = new scify.Annotator("#consultation-body .article-body,#consultation-body .article-title-text","ann");
             annotatorAreaCreator.init();
             // createAnnotatableAreas();
             attachAnnotationPrompts();
