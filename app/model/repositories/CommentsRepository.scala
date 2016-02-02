@@ -723,7 +723,7 @@ class CommentsRepository {
                              revision,
                              depth,
                              annotatedtext,
-                             emotion_id) select * from comments where id=$commentId""".execute()
+                             emotion_id, updated_at) select *, now() as updated_at from comments where id=$commentId""".execute()
     }
   }
 
@@ -731,7 +731,6 @@ class CommentsRepository {
     DB.withTransaction() { implicit c =>
       SQL"""UPDATE public.comments
            SET "comment" = ${comment.body},
-               date_added = now(),
                revision = ${comment.revision + 1},
                emotion_id = ${comment.emotionId}
            WHERE id = ${comment.id}
