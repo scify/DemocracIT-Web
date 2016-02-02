@@ -776,7 +776,7 @@ class CommentsRepository {
     }
   }
 
-  def saveUpdatedComment(comment: Comment, discussionThreadId:Long) = {
+  def saveUpdatedComment(comment: Comment) = {
     saveOldComment(comment.id.get)
     updateComment(comment)
   }

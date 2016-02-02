@@ -139,6 +139,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
+        if(data.annotationTagTopics.length > 0) {
+            //facebook tracking code for user annotation topic
+            fbq('track', 'AddToCart');
+        }
+        if(data.annotationTagProblems.length > 0) {
+            //facebook tracking code for user annotation problems
+            fbq('track', 'AddToWishlist');
+        }
         //if the form was opened for edit the comment, the forEdit input value is 1, else 0
         if(data.forEdit == "0")
             getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
@@ -481,12 +489,20 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //console.log(comment);
          this.commentAnnotator.openForEdit(e, comment);
     },
+        annotateFinalLaw = function(){
+            var finalLawAnn = new scify.Annotator("#finalLawDiv  .article-body,#finalLawDiv .article-title-text", "fl-ann");
+            finalLawAnn.init();
+            $("#finalLawDiv .fl-ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><input type='checkbox'></span>");
+
+        },
     init = function(){
         var instance= this;
         moment.locale('el');
 
         this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
         this.commentAnnotator.init();
+
+        annotateFinalLaw();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
@@ -509,8 +525,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         handleArticleShare(instance);
     };
 
-    //Test FB tracking code
-    fbq('track', 'ViewContent');
     return {
         init:init
     }

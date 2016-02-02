@@ -608,6 +608,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         expandArticleOnClick();
         finalLawModalHandler();
 
+        //FB tracking code for visiting reporter page
+        fbq('track', 'ViewContent');
     };
 
     return {

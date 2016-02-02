@@ -1,9 +1,9 @@
 
-scify.AnnotatorAreaCreator = function(selectors, classForAnnotationArea){
+scify.Annotator = function(selectors, classForAnnotationArea){
     this.selectors = selectors;
     this.classForAnnotationArea= classForAnnotationArea;
 }
-scify.AnnotatorAreaCreator.prototype = (function(){
+scify.Annotator.prototype = (function(){
 
     var recurseAllTextNodesAndApply = function(element,action){
 
