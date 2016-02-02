@@ -156,12 +156,6 @@
                     /*console.log(instance.state);
                     console.log(instance.props);
                     console.log(comment);*/
-                    var dataDiscussionThread = {
-                        id: instance.props.discussionthreadid,
-                        clientId: instance.props.discussionthreadclientid,
-                        text: instance.props.discussionThreadText
-                    };
-                    comment.discussionThread = dataDiscussionThread;
                     instance.state.discussionthreadid = comment.discussionThread.id; //set discussion thread to state
                     if (instance.commentsLoadedFromServer()) {
                         //search for the old comment in the comments array
