@@ -413,7 +413,6 @@
             $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function() {
-            console.log(this.props);
             //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
             var iconsClasses = classNames("icons",
                 {
