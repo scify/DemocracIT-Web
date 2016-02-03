@@ -816,66 +816,31 @@
                     <scify.ReactLoader display={this.props.busy} />
                 );
             } else {
-                var commentClassNames="comment";
-                var commenterName, annotatedText,topicsHtml;
-                var emotion = <span></span>;
-
-                //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
-                var iconsClasses = classNames("icons",
-                    {
-                        hide: this.props.comment.source.commentSource == 2 ||
-                        this.props.comment.dateAdded < this.props.consultationEndDate
-                    });
-                var taggedProblems = this.props.comment.annotationTagProblems.map(function (tag) {
-                    if (tag != undefined) {
-                        return (
-                            <span className="tag pr"><span>{tag.description}</span></span>
-                        );
-                    }
-                });
-                var taggedTopics = this.props.comment.annotationTagTopics.map(function (tag) {
-                    if (tag != undefined) {
-                        return (
-                            <span className="tag topic"><span >{"#" + tag.description }</span></span>
-                        );
-                    }
-                });
-                var taggedProblemsContainer = this.props.comment.annotationTagProblems.length > 0 ?
-                    <span>Προβλήματα: { taggedProblems} </span> : "";
-                var taggedTopicsContainer = this.props.comment.annotationTagTopics.length > 0 ?
-                    <span>Κατηγορία: { taggedTopics} </span> : "";
-                if(taggedProblems.length > 0 || taggedTopics.length > 0)
-                    topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-
-                var avatarDiv =<div className='avatar'><img src={this.props.comment.avatarUrl ? this.props.comment.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-                var commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
-                    <span className="partName">Σχόλιο: </span>
-                    <span dangerouslySetInnerHTML={{__html: this.props.comment.body}}></span></div>;
-                if(this.props.comment.discussionThread.discussion_thread_type_id == 2)
-                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.comment.userAnnotatedText}}></span></div>;
-                else
-                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.comment.userAnnotatedText}}></span></div>;
-
-                if (this.props.comment.profileUrl)
-                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
-                else
-                    commenterName = <span className="commentAuthor">{this.props.comment.fullName}</span>;
                 return (
                     <div>
                         <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
                         <div className="annFinalLawComment">
-                            <div className={commentClassNames} id={this.props.comment.id}>
-                                {avatarDiv}
-                                <div className='body'>
-                                    {commenterName}
-                                    {commentBody}
-                                    {emotion}
-                                    {annotatedText}
-                                    {topicsHtml}
-                                </div>
-                                <div className={iconsClasses}>
-                                    <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
-                                </div>
+                            <div className='body'>
+                                <scify.Comment
+                                    imagesPath = {this.props.imagesPath}
+                                    key={this.props.comment.id}
+                                    data={this.props.comment}
+                                    shouldDisplayCommenterName={true}
+                                    shouldDisplayEditIcon={false}
+                                    shouldDisplayCommentEdited={true}
+                                    shouldDisplayShareBtn={true}
+                                    shouldDisplayCommentBody={true}
+                                    shouldDisplayEmotion={true}
+                                    shouldDisplayAnnotatedText={true}
+                                    shouldDisplayReplyBox={false}
+                                    shouldDisplayReplies={false}
+                                    optionsEnabled={true}
+                                    shouldDisplayTopics={true}
+                                    commentClassNames="comment"
+                                    shouldDisplayFinalLawAnnBtn={false}/>
+                            </div>
+                            <div className={iconsClasses}>
+                                <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
                             </div>
                         </div>
                     </div>
