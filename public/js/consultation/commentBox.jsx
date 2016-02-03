@@ -164,7 +164,6 @@
                     /*console.log(instance.state);
                     console.log(instance.props);
                     console.log(comment);*/
-                    console.log(comment);
                     if (instance.commentsLoadedFromServer())
                     {
                         //search for the old comment in the comments array
@@ -257,8 +256,20 @@
                             imagesPath = {this.props.imagesPath}
                             scrollToComment={this.props.scrollToComment}
                             appState={this.props.appState}
-                            annId={this.props.annId}/>
-                        <CommentForm />
+                            annId={this.props.annId}
+                            shouldDisplayCommenterName={this.props.shouldDisplayCommenterName}
+                            shouldDisplayEditIcon={this.props.shouldDisplayEditIcon}
+                            shouldDisplayCommentEdited={this.props.shouldDisplayCommentEdited}
+                            shouldDisplayShareBtn={this.props.shouldDisplayShareBtn}
+                            shouldDisplayCommentBody={this.props.shouldDisplayCommentBody}
+                            shouldDisplayEmotion={this.props.shouldDisplayEmotion}
+                            shouldDisplayAnnotatedText={this.props.shouldDisplayAnnotatedText}
+                            shouldDisplayReplyBox={this.props.shouldDisplayReplyBox}
+                            shouldDisplayReplies={this.props.shouldDisplayReplies}
+                            optionsEnabled={this.props.optionsEnabled}
+                            shouldDisplayTopics={this.props.shouldDisplayTopics}
+                            commentClassNames={this.props.commentClassNames}
+                            shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
                     </div>
                 </div>
 
@@ -289,15 +300,7 @@
                 return (<span></span>)
         }
     });
-    var CommentForm = React.createClass({
-        render: function() {
-            return (
-                <div className="commentForm">
 
-                </div>
-            );
-        }
-    });
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
@@ -305,14 +308,33 @@
             var commentNodes = this.props.data.map(function (comment) {
                 return (
                     <div className={instance.props.parent}>
-                    <scify.Comment scrollToComment={instance.props.scrollToComment} imagesPath = {instance.props.imagesPath} userId={instance.props.userId}
-                                   userDefined={instance.props.userDefined} parent={instance.props.parent}
-                                   consultationEndDate={instance.props.consultationEndDate} key={comment.id} data={comment}
+                    <scify.Comment scrollToComment={instance.props.scrollToComment}
+                                   imagesPath = {instance.props.imagesPath}
+                                   userId={instance.props.userId}
+                                   userDefined={instance.props.userDefined}
+                                   parent={instance.props.parent}
+                                   consultationEndDate={instance.props.consultationEndDate}
+                                   key={comment.id}
+                                   data={comment}
                                    annotationId = {instance.props.annotationId}
                                    consultationId = {instance.props.consultationId}
                                    appState={instance.props.appState}
                                    annId={instance.props.annId}
-                                   revision={comment.revision}/>
+                                   revision={comment.revision}
+                                   shouldDisplayCommenterName={instance.props.shouldDisplayCommenterName}
+                                   shouldDisplayEditIcon={instance.props.shouldDisplayEditIcon}
+                                   shouldDisplayCommentEdited={instance.props.shouldDisplayCommentEdited}
+                                   shouldDisplayShareBtn={instance.props.shouldDisplayShareBtn}
+                                   shouldDisplayCommentBody={instance.props.shouldDisplayCommentBody}
+                                   shouldDisplayEmotion={instance.props.shouldDisplayEmotion}
+                                   shouldDisplayAnnotatedText={instance.props.shouldDisplayAnnotatedText}
+                                   shouldDisplayReplyBox={instance.props.shouldDisplayReplyBox}
+                                   shouldDisplayReplies={instance.props.shouldDisplayReplies}
+                                   optionsEnabled={instance.props.optionsEnabled}
+                                   shouldDisplayTopics={instance.props.shouldDisplayTopics}
+                                   commentClassNames={instance.props.commentClassNames}
+                                   shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}/>
+
                     </div>
                 );
             });
@@ -391,60 +413,136 @@
             $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function() {
-
-            var userId = this.props.userId;
-            var commenterId = this.props.data.userId;
-            var editIcon = <span></span>;
-            //if the logged in user is the same as the commenter user, the edit comment icon is populated
-            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
-            //we only present the edit icon in the Consultation index page (not the reporter page)
-            if(userId == commenterId && userId != undefined && this.props.parent == "consultation") {
-                editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
-            }
-
-            if(this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
-                var commentFromDB = this.props.data;
-            } else {
-                var commentFromDB = this.props.data.comment;
-            }
-            var commentEdited = <span></span>;
-            if(commentFromDB.revision > 1) {
-                commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
-            }
-            var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
-                if (tag != undefined) {
-                return (
-                    <span className="tag pr"><span>{tag.description}</span></span>
-                );
-                }
-            });
-            var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
-                if (tag != undefined) {
-                    return (
-                        <span className="tag topic"><span >{"#" + tag.description }</span></span>
-                    );
-                }
-            });
-            var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ?
-                <span>Προβλήματα: { taggedProblems} </span> : "";
-            var taggedTopicsContainer = commentFromDB.annotationTagTopics.length > 0 ?
-                <span>Κατηγορία: { taggedTopics} </span> : "";
-
-            //todo: enable reply functionality, now its hidden
-
             //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
             var iconsClasses = classNames("icons",
                 {
-                    hide: commentFromDB.source.commentSource == 2 ||
-                    commentFromDB.dateAdded < this.props.consultationEndDate
+                    hide: this.props.data.source.commentSource == 2 ||
+                    this.props.data.dateAdded < this.props.consultationEndDate
                 });
-
-            var options,avatarDiv,commenterName,commentBody,annotatedText, topicsHtml;
-            var emotion = <span></span>;
+            var avatarDiv = <div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
+            var commentClassNames = this.props.commentClassNames;
+            return (
+                <div className={commentClassNames} id={this.props.data.id}>
+                    {avatarDiv}
+                    <div className='body'>
+                        {this.renderCommenterName(this.props.shouldDisplayCommenterName)}
+                        {this.renderEditIcon(this.props.shouldDisplayEditIcon)}
+                        {this.renderCommentEdited(this.props.shouldDisplayCommentEdited)}
+                        {this.renderShareBtn(this.props.shouldDisplayShareBtn)}
+                        {this.renderCommentBody(this.props.shouldDisplayCommentBody)}
+                        {this.renderEmotion(this.props.shouldDisplayEmotion)}
+                        {this.renderAnnotatedText(this.props.shouldDisplayAnnotatedText)}
+                        {this.renderTopicsHtml(this.props.shouldDisplayTopics)}
+                    </div>
+                    {this.renderOptions(this.props.optionsEnabled)}
+                    <div className={iconsClasses}>
+                        <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                     </div>
+                        {this.renderReplyBox(this.props.shouldDisplayReplyBox)}
+                        {this.renderReplies(this.props.shouldDisplayReplies)}
+                </div>
+            );
+        },
+        renderTopicsHtml: function(shouldDisplayTopics) {
+            if(shouldDisplayTopics) {
+                var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
+                    if (tag != undefined) {
+                        return (
+                            <span className="tag pr"><span>{tag.description}</span></span>
+                        );
+                    }
+                });
+                var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
+                    if (tag != undefined) {
+                        return (
+                            <span className="tag topic"><span >{"#" + tag.description }</span></span>
+                        );
+                    }
+                });
+                var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ?
+                    <span>Προβλήματα: { taggedProblems} </span> : "";
+                var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ?
+                    <span>Κατηγορία: { taggedTopics} </span> : "";
+                if (taggedProblems.length > 0 || taggedTopics.length > 0)
+                    var topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span
+                        className="partName">Θέματα: </span>{taggedTopicsContainer} {taggedProblemsContainer}</div>;
+                return (topicsHtml);
+            }
+        },
+        renderShareBtn: function(shouldDisplayShareBtn) {
+            var commentSource = this.props.data.source;
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if(commentSource != undefined && shouldDisplayShareBtn) {
+                if(commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
+                                        Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span>
+                                        <span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
+                                            <i className="fa fa-link"></i>
+                                        </span>
+                                   </div>;
+                    return(shareBtn);
+                }
+            }
+        },
+        renderCommentEdited: function(shouldDisplayCommentEdited){
+            if(shouldDisplayCommentEdited) {
+                if(this.props.data.revision > 1) {
+                    var commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
+                    return(commentEdited);
+                }
+            }
+        },
+        renderEditIcon: function(shouldDisplayEditIcon){
+            if(shouldDisplayEditIcon) {
+                var userId = this.props.userId;
+                var commenterId = this.props.data.userId;
+                if(userId == commenterId && userId != undefined) {
+                    var editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
+                    return(editIcon);
+                }
+            }
+        },
+        renderCommenterName: function(shouldDisplayCommenterName) {
+            if(shouldDisplayCommenterName) {
+                if (this.props.data.profileUrl)
+                    var commenterName = <span className="commentAuthor"><a target="_blank"
+                                                                       href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
+                else
+                    var commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
+                return(commenterName);
+            }
+        },
+        renderAvatar: function(shouldDisplayAvatar){
+            if(shouldDisplayAvatar) {
+                var avatarDiv = <div className='avatar'><img
+                    src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"}/>
+                </div>;
+                return (avatarDiv);
+            }
+        },
+        renderCommentBody: function(shouldDisplayCommentBody){
+            if(shouldDisplayCommentBody) {
+                var commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                return (commentBody);
+            }
+        },
+        renderAnnotatedText: function(shouldDisplayAnnotatedText){
+            if(shouldDisplayAnnotatedText) {
+                if(this.props.data.userAnnotatedText != null) {
+                    if(this.props.data.userAnnotatedText)
+                        if(this.props.data.discussionThread.discussion_thread_type_id == 2)
+                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                        else
+                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                }
+                return (annotatedText);
+            }
+        },
+        renderEmotion: function(shouldDisplayEmotion){
             var emotionId = this.props.data.emotionId;
-            if(emotionId == undefined && this.props.data.comment != null)
-                emotionId = this.props.data.comment.emotionId
-            if(emotionId != undefined) {
+            if(emotionId != undefined && shouldDisplayEmotion) {
                 var image="";
                 switch(emotionId) {
                     case 1:
@@ -464,139 +562,89 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                console.log(imageWithPath);
-                emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
+                var emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
+                return emotion;
             }
-            var shareBtn = <span></span>;
-
-            var commentSource = this.props.data.source;
-            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
-            //we do not present the share button in the userCommentStats tab in reporter page
-            if(commentSource != undefined) {
-                if(commentSource.commentSource == 1) {
-                    var commentIdForShare = this.props.data.id;
-                    shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
-                    Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span><
-                        span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
-                    <i className="fa fa-link"></i>
-                </span></div>;
-                }
-            }
-            if(this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = <CommentActionsEnabled userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
-                                                 id={this.props.data.id} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter}
-                                                 dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating}
-                                                 emotionId={this.props.data.emotionId} imagesPath={this.props.imagesPath}
-                                                 consultationId={this.props.consultationId}
-                                                 comment={commentFromDB}
-                                                 imagesPath={this.props.imagesPath}/>;
-
-                avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-
-                if (this.props.data.profileUrl)
-                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
-                else
-                    commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-
-                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
-                    <span className="partName">Σχόλιο: </span>
-                    <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
-
-                if(this.props.data.source.commentSource == 1) {
-                    var replyBox = <scify.ReplyBox onReplySuccess={this.handleSavedComment}
-                                                   discussionthreadclientid={this.props.data.discussionThread.id}
-                                                   commenterId={this.props.data.userId}
-                                                   userId={this.props.userId} parentId={this.props.data.id}
-                                                   articleId={this.props.data.articleId}
-                                                   display={this.state.displayReplyBox}
-                                                   annotationId = {this.props.data.discussionThread.text.split(this.props.data.articleId)[1]}
-                                                   consultationId = {this.props.consultationId}/>;
-                } else {
-                    var replyBox =<div></div>;
-                }
-                var replies = <div></div>;
-                if(this.props.data.commentReplies.length > 0) {
-                    replies = <scify.CommentList consultationEndDate={this.props.consultationEndDate}
-                                                     userId={this.props.userId}
-                                                     data={this.props.data.commentReplies}
-                                                     parent="comment"
-                                                     userDefined={this.props.userDefined}
-                                                     updateComments={this.handleSavedComment}
-                                                     annotationId = {this.props.annotationId}
-                                                     appState = {this.props.appState}
-                                                     consultationId = {this.props.consultationId}
-                                                     scrollToComment={this.props.scrollToComment}/>;
-                }
-                var commentClassNames="comment";
-            } else if(this.props.parent == "reporterUserStats") {
-                options = <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.comment.emotionId}/>;
-                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.comment.body}}></span></div>;
-                if(this.props.data.comment.discussionThread.discussion_thread_type_id == 2)
-                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
-                else
-                    annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.article_name}}></span></div>;
-                var replyBox = <div></div>;
-                var commentClassNames="comment";
-            } else if(this.props.parent == "comment") {
-                options = <CommentActionsEnabled comment={commentFromDB} imagesPath={this.props.imagesPath}
-                                                 userDefined={this.props.userDefined} handleReply={this.handleReply}
-                                                 source={2} id={this.props.data.id} dateAdded={this.props.data.dateAdded}
-                                                 likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter}
-                                                 loggedInUserRating={this.props.loggedInUserRating}
-                                                 comment={commentFromDB}
-                                                 consultationId={this.props.consultationId}
-                                                 imagesPath={this.props.imagesPath}/>;
-                avatarDiv =<div className='avatar'><img src={this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg"} /></div>;
-
-                if (this.props.data.profileUrl)
-                    commenterName = <span className="commentAuthor"><a target="_blank" href={this.props.data.profileUrl}>{this.props.data.fullName}</a></span>;
-                else
-                    commenterName = <span className="commentAuthor">{this.props.data.fullName}</span>;
-                commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
-                var replyBox = <div></div>;
-                var replies = <div></div>;
-                var commentClassNames="comment replyComment";
-            }
-            if(this.props.parent == "reporter") {
-                if(this.props.data.userAnnotatedText != null) {
-                    if(this.props.data.userAnnotatedText)
-                        if(this.props.data.discussionThread.discussion_thread_type_id == 2)
-                            annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
-                        else
-                            annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
-                }
-            }
-            if(taggedProblems.length > 0 || taggedTopics.length > 0)
-                topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span className="partName">Θέματα: </span> {taggedProblemsContainer} {taggedTopicsContainer}</div>;
-            if(this.props.data.commentReplies!= undefined)
-                if(this.props.data.commentReplies.length > 0) {
-                    var replyTitle = <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>;
-                }
-            return (
-                <div className={commentClassNames} id={this.props.data.id}>
-                    {avatarDiv}
-                    <div className='body'>
-                        {commenterName}{editIcon}{commentEdited}{shareBtn}
-                        {commentBody}
-                        {emotion}
-                        {annotatedText}
-                        {topicsHtml}
-                    </div>
-                    {options}
-                    <div className={iconsClasses}>
-                        <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
-                     </div>
-                        {replyBox}
-                        {replyTitle}
-                        {replies}
-                </div>
-            );
         },
-        renderBody : function(shouldDisplayBody){},
-        renderReplyBox: function(){},
-        renderReplies: function(){},
-        renderEmotion: function(){}
-
+        renderBody : function(shouldDisplayBody){
+            if(shouldDisplayBody) {
+                return (
+                    <div className="htmlText"><i className="fa fa-comment-o"></i>
+                        <span className="partName">Σχόλιο: </span>
+                        <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
+                    </div>
+                );
+            }
+        },
+        renderReplyBox: function(shouldDisplayReplyBox){
+            if(shouldDisplayReplyBox) {
+                return (
+                    <scify.ReplyBox onReplySuccess={this.handleSavedComment}
+                                    discussionthreadclientid={this.props.data.discussionThread.id}
+                                    commenterId={this.props.data.userId}
+                                    userId={this.props.userId} parentId={this.props.data.id}
+                                    articleId={this.props.data.articleId}
+                                    display={this.state.displayReplyBox}
+                                    annotationId = {this.props.data.discussionThread.text.split(this.props.data.articleId)[1]}
+                                    consultationId = {this.props.consultationId}/>
+                );
+            }
+        },
+        renderReplies: function(shouldDisplayReplies){
+            if(shouldDisplayReplies && this.props.data.commentReplies != undefined) {
+                if(this.props.data.commentReplies.length > 0)
+                    return (
+                        <div>
+                            <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>
+                            <scify.CommentList consultationEndDate={this.props.consultationEndDate}
+                                               userId={this.props.userId}
+                                               data={this.props.data.commentReplies}
+                                               userDefined={this.props.userDefined}
+                                               updateComments={this.handleSavedComment}
+                                               annotationId={this.props.annotationId}
+                                               appState={this.props.appState}
+                                               consultationId={this.props.consultationId}
+                                               scrollToComment={this.props.scrollToComment}
+                                               shouldDisplayCommenterName={true}
+                                               shouldDisplayEditIcon={false}
+                                               shouldDisplayCommentEdited={false}
+                                               shouldDisplayShareBtn={true}
+                                               shouldDisplayCommentBody={true}
+                                               shouldDisplayEmotion={false}
+                                               shouldDisplayAnnotatedText={false}
+                                               shouldDisplayReplyBox={false}
+                                               shouldDisplayReplies={false}
+                                               optionsEnabled={true}
+                                               shouldDisplayTopics={false}
+                                               commentClassNames="comment replyComment"
+                                               shouldDisplayFinalLawAnnBtn={false}/>
+                        </div>
+                    );
+            }
+        },
+        renderOptions: function(optionsEnabled){
+            if(optionsEnabled) {
+                return(
+                    <CommentActionsEnabled
+                        userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
+                        id={this.props.data.id}
+                        dateAdded={this.props.data.dateAdded}
+                        likeCounter={this.props.data.likesCounter}
+                        dislikeCounter={this.props.data.dislikesCounter}
+                        loggedInUserRating={this.props.loggedInUserRating}
+                        emotionId={this.props.data.emotionId}
+                        imagesPath={this.props.imagesPath}
+                        consultationId={this.props.consultationId}
+                        comment={this.props.data}
+                        imagesPath={this.props.imagesPath}
+                        shouldDisplayReplyBox={this.props.shouldDisplayReplyBox}
+                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
+                );
+            }
+            return (
+                <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.comment.emotionId}/>
+            );
+        }
     });
 
     var CommentActionsEnabled = React.createClass({
@@ -689,7 +737,10 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
-            console.log(this.props);
+            if(this.props.shouldDisplayReplyBox)
+                var replyLink = <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
+            if(this.props.shouldDisplayFinalLawAnnBtn)
+                var commentFinalLawAnnBtn = <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button" data-toggle="modal" data-target="#finalLawCommentModal">Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;</a>
             return (
                 <div>
                     <div className="optionsContainer">
@@ -701,10 +752,10 @@
                             <a className={disagreeClasses} onClick={this.handleDislikeComment}>
                                 Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
                             </a> <span className="c"> ({this.state.dislikeCounter})</span>
-                            <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
+                            {replyLink}
+                            {commentFinalLawAnnBtn}
                             <span className="date">{date}</span>
-                            <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button" data-toggle="modal" data-target="#finalLawCommentModal">Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;</a>
-                        </div>
+                            </div>
                     </div>
                     <div id="finalLawCommentModal" className="modal fade consFinalLawModal" role="dialog">
                         <div className="modal-dialog">
@@ -760,7 +811,6 @@
 
     var CommentAnnFinalLaw = React.createClass({
         render: function() {
-            console.log(this.props);
             if(this.props.busy) {
                 return (
                     <scify.ReactLoader display={this.props.busy} />
@@ -769,30 +819,7 @@
                 var commentClassNames="comment";
                 var commenterName, annotatedText,topicsHtml;
                 var emotion = <span></span>;
-                var emotionId = this.props.comment.emotionId;
-                if(emotionId != undefined) {
-                    var image="";
-                    switch(emotionId) {
-                        case 1:
-                            image = "/emoticons/emoticon-superhappy.png";
-                            break;
-                        case 2:
-                            image = "/emoticons/emoticon-happy.png"
-                            break;
-                        case 3:
-                            image = "/emoticons/emoticon-worried.png";
-                            break;
-                        case 4:
-                            image = "/emoticons/emoticon-sad.png";
-                            break;
-                        case 5:
-                            image = "/emoticons/emoticon-angry.png";
-                            break;
-                    }
-                    var imageWithPath = this.props.imagesPath + image;
-                    console.log(imageWithPath);
-                    emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
-                }
+
                 //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
                 var iconsClasses = classNames("icons",
                     {

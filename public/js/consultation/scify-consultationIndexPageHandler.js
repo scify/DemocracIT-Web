@@ -105,6 +105,20 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.consultationId = instance.consultationid;
                 commentBoxProperties.appState = instance.appState;
                 commentBoxProperties.annId = annCounter;
+                commentBoxProperties.shouldDisplayCommenterName = true;
+                commentBoxProperties.shouldDisplayEditIcon = true;
+                commentBoxProperties.shouldDisplayCommentEdited = true;
+                commentBoxProperties.shouldDisplayShareBtn = true;
+                commentBoxProperties.shouldDisplayCommentBody = true;
+                commentBoxProperties.shouldDisplayEmotion = true;
+                commentBoxProperties.shouldDisplayAnnotatedText = true;
+                commentBoxProperties.shouldDisplayReplyBox = true;
+                commentBoxProperties.shouldDisplayReplies = true;
+                commentBoxProperties.optionsEnabled = true;
+                commentBoxProperties.shouldDisplayTopics = true;
+                commentBoxProperties.shouldDisplayFinalLawAnnBtn = true;
+                commentBoxProperties.commentClassNames="comment";
+
                 annCounter++;
                 var commentBox = $('<div class="commentbox-wrap"></div>');
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body

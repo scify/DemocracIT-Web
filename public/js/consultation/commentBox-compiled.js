@@ -156,7 +156,6 @@
                     /*console.log(instance.state);
                     console.log(instance.props);
                     console.log(comment);*/
-                    console.log(comment);
                     if (instance.commentsLoadedFromServer()) {
                         //search for the old comment in the comments array
                         for (var commentIndex = 0; commentIndex < instance.state.allComments.length; commentIndex++) {
@@ -247,8 +246,20 @@
                         imagesPath: this.props.imagesPath,
                         scrollToComment: this.props.scrollToComment,
                         appState: this.props.appState,
-                        annId: this.props.annId }),
-                    React.createElement(CommentForm, null)
+                        annId: this.props.annId,
+                        shouldDisplayCommenterName: this.props.shouldDisplayCommenterName,
+                        shouldDisplayEditIcon: this.props.shouldDisplayEditIcon,
+                        shouldDisplayCommentEdited: this.props.shouldDisplayCommentEdited,
+                        shouldDisplayShareBtn: this.props.shouldDisplayShareBtn,
+                        shouldDisplayCommentBody: this.props.shouldDisplayCommentBody,
+                        shouldDisplayEmotion: this.props.shouldDisplayEmotion,
+                        shouldDisplayAnnotatedText: this.props.shouldDisplayAnnotatedText,
+                        shouldDisplayReplyBox: this.props.shouldDisplayReplyBox,
+                        shouldDisplayReplies: this.props.shouldDisplayReplies,
+                        optionsEnabled: this.props.optionsEnabled,
+                        shouldDisplayTopics: this.props.shouldDisplayTopics,
+                        commentClassNames: this.props.commentClassNames,
+                        shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn })
                 )
             );
         }
@@ -276,13 +287,7 @@
                 return React.createElement("span", null);
         }
     });
-    var CommentForm = React.createClass({
-        displayName: "CommentForm",
 
-        render: function render() {
-            return React.createElement("div", { className: "commentForm" });
-        }
-    });
     window.scify.CommentList = React.createClass({
         displayName: "CommentList",
 
@@ -293,14 +298,32 @@
                 return React.createElement(
                     "div",
                     { className: instance.props.parent },
-                    React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment, imagesPath: instance.props.imagesPath, userId: instance.props.userId,
-                        userDefined: instance.props.userDefined, parent: instance.props.parent,
-                        consultationEndDate: instance.props.consultationEndDate, key: comment.id, data: comment,
+                    React.createElement(scify.Comment, { scrollToComment: instance.props.scrollToComment,
+                        imagesPath: instance.props.imagesPath,
+                        userId: instance.props.userId,
+                        userDefined: instance.props.userDefined,
+                        parent: instance.props.parent,
+                        consultationEndDate: instance.props.consultationEndDate,
+                        key: comment.id,
+                        data: comment,
                         annotationId: instance.props.annotationId,
                         consultationId: instance.props.consultationId,
                         appState: instance.props.appState,
                         annId: instance.props.annId,
-                        revision: comment.revision })
+                        revision: comment.revision,
+                        shouldDisplayCommenterName: instance.props.shouldDisplayCommenterName,
+                        shouldDisplayEditIcon: instance.props.shouldDisplayEditIcon,
+                        shouldDisplayCommentEdited: instance.props.shouldDisplayCommentEdited,
+                        shouldDisplayShareBtn: instance.props.shouldDisplayShareBtn,
+                        shouldDisplayCommentBody: instance.props.shouldDisplayCommentBody,
+                        shouldDisplayEmotion: instance.props.shouldDisplayEmotion,
+                        shouldDisplayAnnotatedText: instance.props.shouldDisplayAnnotatedText,
+                        shouldDisplayReplyBox: instance.props.shouldDisplayReplyBox,
+                        shouldDisplayReplies: instance.props.shouldDisplayReplies,
+                        optionsEnabled: instance.props.optionsEnabled,
+                        shouldDisplayTopics: instance.props.shouldDisplayTopics,
+                        commentClassNames: instance.props.commentClassNames,
+                        shouldDisplayFinalLawAnnBtn: instance.props.shouldDisplayFinalLawAnnBtn })
                 );
             });
 
@@ -376,87 +399,233 @@
             $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function render() {
-
-            var userId = this.props.userId;
-            var commenterId = this.props.data.userId;
-            var editIcon = React.createElement("span", null);
-            //if the logged in user is the same as the commenter user, the edit comment icon is populated
-            //we only present the Edit option if the user is Logged in and it's id is equal to the comment's id
-            //we only present the edit icon in the Consultation index page (not the reporter page)
-            if (userId == commenterId && userId != undefined && this.props.parent == "consultation") {
-                editIcon = React.createElement(
-                    "span",
-                    { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
-                    React.createElement("i", { className: "fa fa-pencil-square-o" })
-                );
-            }
-
-            if (this.props.parent == "consultation" || this.props.parent == "reporter" || this.props.parent == "comment") {
-                var commentFromDB = this.props.data;
-            } else {
-                var commentFromDB = this.props.data.comment;
-            }
-            var commentEdited = React.createElement("span", null);
-            if (commentFromDB.revision > 1) {
-                commentEdited = React.createElement(
-                    "span",
-                    { className: "editedComment" },
-                    "Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο"
-                );
-            }
-            var taggedProblems = commentFromDB.annotationTagProblems.map(function (tag) {
-                if (tag != undefined) {
-                    return React.createElement(
-                        "span",
-                        { className: "tag pr" },
-                        React.createElement(
-                            "span",
-                            null,
-                            tag.description
-                        )
-                    );
-                }
-            });
-            var taggedTopics = commentFromDB.annotationTagTopics.map(function (tag) {
-                if (tag != undefined) {
-                    return React.createElement(
-                        "span",
-                        { className: "tag topic" },
-                        React.createElement(
-                            "span",
-                            null,
-                            "#" + tag.description
-                        )
-                    );
-                }
-            });
-            var taggedProblemsContainer = commentFromDB.annotationTagProblems.length > 0 ? React.createElement(
-                "span",
-                null,
-                "Προβλήματα: ",
-                taggedProblems,
-                " "
-            ) : "";
-            var taggedTopicsContainer = commentFromDB.annotationTagTopics.length > 0 ? React.createElement(
-                "span",
-                null,
-                "Κατηγορία: ",
-                taggedTopics,
-                " "
-            ) : "";
-
-            //todo: enable reply functionality, now its hidden
-
             //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
             var iconsClasses = classNames("icons", {
-                hide: commentFromDB.source.commentSource == 2 || commentFromDB.dateAdded < this.props.consultationEndDate
+                hide: this.props.data.source.commentSource == 2 || this.props.data.dateAdded < this.props.consultationEndDate
             });
-
-            var options, avatarDiv, commenterName, commentBody, annotatedText, topicsHtml;
-            var emotion = React.createElement("span", null);
+            var avatarDiv = React.createElement(
+                "div",
+                { className: "avatar" },
+                React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
+            );
+            var commentClassNames = this.props.commentClassNames;
+            return React.createElement(
+                "div",
+                { className: commentClassNames, id: this.props.data.id },
+                avatarDiv,
+                React.createElement(
+                    "div",
+                    { className: "body" },
+                    this.renderCommenterName(this.props.shouldDisplayCommenterName),
+                    this.renderEditIcon(this.props.shouldDisplayEditIcon),
+                    this.renderCommentEdited(this.props.shouldDisplayCommentEdited),
+                    this.renderShareBtn(this.props.shouldDisplayShareBtn),
+                    this.renderCommentBody(this.props.shouldDisplayCommentBody),
+                    this.renderEmotion(this.props.shouldDisplayEmotion),
+                    this.renderAnnotatedText(this.props.shouldDisplayAnnotatedText),
+                    this.renderTopicsHtml(this.props.shouldDisplayTopics)
+                ),
+                this.renderOptions(this.props.optionsEnabled),
+                React.createElement(
+                    "div",
+                    { className: iconsClasses },
+                    React.createElement(
+                        "a",
+                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
+                        React.createElement("img", { src: "/assets/images/closed.gif" })
+                    )
+                ),
+                this.renderReplyBox(this.props.shouldDisplayReplyBox),
+                this.renderReplies(this.props.shouldDisplayReplies)
+            );
+        },
+        renderTopicsHtml: function renderTopicsHtml(shouldDisplayTopics) {
+            if (shouldDisplayTopics) {
+                var taggedProblems = this.props.data.annotationTagProblems.map(function (tag) {
+                    if (tag != undefined) {
+                        return React.createElement(
+                            "span",
+                            { className: "tag pr" },
+                            React.createElement(
+                                "span",
+                                null,
+                                tag.description
+                            )
+                        );
+                    }
+                });
+                var taggedTopics = this.props.data.annotationTagTopics.map(function (tag) {
+                    if (tag != undefined) {
+                        return React.createElement(
+                            "span",
+                            { className: "tag topic" },
+                            React.createElement(
+                                "span",
+                                null,
+                                "#" + tag.description
+                            )
+                        );
+                    }
+                });
+                var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ? React.createElement(
+                    "span",
+                    null,
+                    "Προβλήματα: ",
+                    taggedProblems,
+                    " "
+                ) : "";
+                var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ? React.createElement(
+                    "span",
+                    null,
+                    "Κατηγορία: ",
+                    taggedTopics,
+                    " "
+                ) : "";
+                if (taggedProblems.length > 0 || taggedTopics.length > 0) var topicsHtml = React.createElement(
+                    "div",
+                    { className: "tags htmlText" },
+                    React.createElement("i", { className: "fa fa-thumb-tack" }),
+                    React.createElement(
+                        "span",
+                        {
+                            className: "partName" },
+                        "Θέματα: "
+                    ),
+                    taggedTopicsContainer,
+                    " ",
+                    taggedProblemsContainer
+                );
+                return topicsHtml;
+            }
+        },
+        renderShareBtn: function renderShareBtn(shouldDisplayShareBtn) {
+            var commentSource = this.props.data.source;
+            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
+            //we do not present the share button in the userCommentStats tab in reporter page
+            if (commentSource != undefined && shouldDisplayShareBtn) {
+                if (commentSource.commentSource == 1) {
+                    var commentIdForShare = this.props.data.id;
+                    var shareBtn = React.createElement(
+                        "div",
+                        { className: "shareLink" },
+                        React.createElement(
+                            "span",
+                            { className: "shareSpanComment shareArticleHiddenComment" },
+                            "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
+                        ),
+                        React.createElement(
+                            "span",
+                            { className: "shareBtnComment", id: "shareComment-" + commentIdForShare },
+                            React.createElement("i", { className: "fa fa-link" })
+                        )
+                    );
+                    return shareBtn;
+                }
+            }
+        },
+        renderCommentEdited: function renderCommentEdited(shouldDisplayCommentEdited) {
+            if (shouldDisplayCommentEdited) {
+                if (this.props.data.revision > 1) {
+                    var commentEdited = React.createElement(
+                        "span",
+                        { className: "editedComment" },
+                        "Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο"
+                    );
+                    return commentEdited;
+                }
+            }
+        },
+        renderEditIcon: function renderEditIcon(shouldDisplayEditIcon) {
+            if (shouldDisplayEditIcon) {
+                var userId = this.props.userId;
+                var commenterId = this.props.data.userId;
+                if (userId == commenterId && userId != undefined) {
+                    var editIcon = React.createElement(
+                        "span",
+                        { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
+                        React.createElement("i", { className: "fa fa-pencil-square-o" })
+                    );
+                    return editIcon;
+                }
+            }
+        },
+        renderCommenterName: function renderCommenterName(shouldDisplayCommenterName) {
+            if (shouldDisplayCommenterName) {
+                if (this.props.data.profileUrl) var commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    React.createElement(
+                        "a",
+                        { target: "_blank",
+                            href: this.props.data.profileUrl },
+                        this.props.data.fullName
+                    )
+                );else var commenterName = React.createElement(
+                    "span",
+                    { className: "commentAuthor" },
+                    this.props.data.fullName
+                );
+                return commenterName;
+            }
+        },
+        renderAvatar: function renderAvatar(shouldDisplayAvatar) {
+            if (shouldDisplayAvatar) {
+                var avatarDiv = React.createElement(
+                    "div",
+                    { className: "avatar" },
+                    React.createElement("img", {
+                        src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
+                );
+                return avatarDiv;
+            }
+        },
+        renderCommentBody: function renderCommentBody(shouldDisplayCommentBody) {
+            if (shouldDisplayCommentBody) {
+                var commentBody = React.createElement(
+                    "div",
+                    { className: "htmlText" },
+                    React.createElement("i", { className: "fa fa-comment-o" }),
+                    React.createElement(
+                        "span",
+                        { className: "partName" },
+                        "Σχόλιο: "
+                    ),
+                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
+                );
+                return commentBody;
+            }
+        },
+        renderAnnotatedText: function renderAnnotatedText(shouldDisplayAnnotatedText) {
+            if (shouldDisplayAnnotatedText) {
+                if (this.props.data.userAnnotatedText != null) {
+                    if (this.props.data.userAnnotatedText) if (this.props.data.discussionThread.discussion_thread_type_id == 2) var annotatedText = React.createElement(
+                        "div",
+                        { className: "htmlText" },
+                        React.createElement("i", { className: "fa fa-file-text-o" }),
+                        React.createElement(
+                            "span",
+                            { className: "partName" },
+                            "Τμήμα κειμένου: "
+                        ),
+                        React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
+                    );else var annotatedText = React.createElement(
+                        "div",
+                        { className: "htmlText" },
+                        React.createElement("i", { className: "fa fa-file-text-o" }),
+                        React.createElement(
+                            "span",
+                            { className: "partName" },
+                            "Όνομα άρθρου: "
+                        ),
+                        React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
+                    );
+                }
+                return annotatedText;
+            }
+        },
+        renderEmotion: function renderEmotion(shouldDisplayEmotion) {
             var emotionId = this.props.data.emotionId;
-            if (emotionId == undefined && this.props.data.comment != null) emotionId = this.props.data.comment.emotionId;
-            if (emotionId != undefined) {
+            if (emotionId != undefined && shouldDisplayEmotion) {
                 var image = "";
                 switch (emotionId) {
                     case 1:
@@ -476,68 +645,18 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                console.log(imageWithPath);
-                emotion = React.createElement(
+                var emotion = React.createElement(
                     "div",
                     { className: "userEmotion htmlText" },
                     "Ο χρήστης εκδήλωσε το συναίσθημα: ",
                     React.createElement("img", { src: imageWithPath })
                 );
+                return emotion;
             }
-            var shareBtn = React.createElement("span", null);
-
-            var commentSource = this.props.data.source;
-            //we only present the share button to the comments from DemocracIT (comment source ID is 1)
-            //we do not present the share button in the userCommentStats tab in reporter page
-            if (commentSource != undefined) {
-                if (commentSource.commentSource == 1) {
-                    var commentIdForShare = this.props.data.id;
-                    shareBtn = React.createElement(
-                        "div",
-                        { className: "shareLink" },
-                        React.createElement(
-                            "span",
-                            { className: "shareSpanComment shareArticleHiddenComment" },
-                            "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
-                        ),
-                        React.createElement(
-                            "span",
-                            { className: "shareBtnComment", id: "shareComment-" + commentIdForShare },
-                            React.createElement("i", { className: "fa fa-link" })
-                        )
-                    );
-                }
-            }
-            if (this.props.parent == "consultation" || this.props.parent == "reporter") {
-                options = React.createElement(CommentActionsEnabled, { userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
-                    id: this.props.data.id, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter,
-                    dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating,
-                    emotionId: this.props.data.emotionId, imagesPath: this.props.imagesPath,
-                    consultationId: this.props.consultationId,
-                    comment: commentFromDB,
-                    imagesPath: this.props.imagesPath });
-
-                avatarDiv = React.createElement(
-                    "div",
-                    { className: "avatar" },
-                    React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
-                );
-
-                if (this.props.data.profileUrl) commenterName = React.createElement(
-                    "span",
-                    { className: "commentAuthor" },
-                    React.createElement(
-                        "a",
-                        { target: "_blank", href: this.props.data.profileUrl },
-                        this.props.data.fullName
-                    )
-                );else commenterName = React.createElement(
-                    "span",
-                    { className: "commentAuthor" },
-                    this.props.data.fullName
-                );
-
-                commentBody = React.createElement(
+        },
+        renderBody: function renderBody(shouldDisplayBody) {
+            if (shouldDisplayBody) {
+                return React.createElement(
                     "div",
                     { className: "htmlText" },
                     React.createElement("i", { className: "fa fa-comment-o" }),
@@ -548,194 +667,74 @@
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
-
-                if (this.props.data.source.commentSource == 1) {
-                    var replyBox = React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
-                        discussionthreadclientid: this.props.data.discussionThread.id,
-                        commenterId: this.props.data.userId,
-                        userId: this.props.userId, parentId: this.props.data.id,
-                        articleId: this.props.data.articleId,
-                        display: this.state.displayReplyBox,
-                        annotationId: this.props.data.discussionThread.text.split(this.props.data.articleId)[1],
-                        consultationId: this.props.consultationId });
-                } else {
-                    var replyBox = React.createElement("div", null);
-                }
-                var replies = React.createElement("div", null);
-                if (this.props.data.commentReplies.length > 0) {
-                    replies = React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
+            }
+        },
+        renderReplyBox: function renderReplyBox(shouldDisplayReplyBox) {
+            if (shouldDisplayReplyBox) {
+                return React.createElement(scify.ReplyBox, { onReplySuccess: this.handleSavedComment,
+                    discussionthreadclientid: this.props.data.discussionThread.id,
+                    commenterId: this.props.data.userId,
+                    userId: this.props.userId, parentId: this.props.data.id,
+                    articleId: this.props.data.articleId,
+                    display: this.state.displayReplyBox,
+                    annotationId: this.props.data.discussionThread.text.split(this.props.data.articleId)[1],
+                    consultationId: this.props.consultationId });
+            }
+        },
+        renderReplies: function renderReplies(shouldDisplayReplies) {
+            if (shouldDisplayReplies && this.props.data.commentReplies != undefined) {
+                if (this.props.data.commentReplies.length > 0) return React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "div",
+                        { className: "replyTitle" },
+                        "Απαντήσεις σε αυτό το σχόλιο:"
+                    ),
+                    React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
                         userId: this.props.userId,
                         data: this.props.data.commentReplies,
-                        parent: "comment",
                         userDefined: this.props.userDefined,
                         updateComments: this.handleSavedComment,
                         annotationId: this.props.annotationId,
                         appState: this.props.appState,
                         consultationId: this.props.consultationId,
-                        scrollToComment: this.props.scrollToComment });
-                }
-                var commentClassNames = "comment";
-            } else if (this.props.parent == "reporterUserStats") {
-                options = React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.comment.emotionId });
-                commentBody = React.createElement(
-                    "div",
-                    { className: "htmlText" },
-                    React.createElement("i", { className: "fa fa-comment-o" }),
-                    React.createElement(
-                        "span",
-                        { className: "partName" },
-                        "Σχόλιο: "
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.comment.body } })
-                );
-                if (this.props.data.comment.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
-                    "div",
-                    { className: "htmlText" },
-                    React.createElement("i", { className: "fa fa-file-text-o" }),
-                    React.createElement(
-                        "span",
-                        { className: "partName" },
-                        "Τμήμα κειμένου: "
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
-                );else annotatedText = React.createElement(
-                    "div",
-                    { className: "htmlText" },
-                    React.createElement("i", { className: "fa fa-file-text-o" }),
-                    React.createElement(
-                        "span",
-                        { className: "partName" },
-                        "Όνομα άρθρου: "
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.article_name } })
-                );
-                var replyBox = React.createElement("div", null);
-                var commentClassNames = "comment";
-            } else if (this.props.parent == "comment") {
-                options = React.createElement(CommentActionsEnabled, { comment: commentFromDB, imagesPath: this.props.imagesPath,
-                    userDefined: this.props.userDefined, handleReply: this.handleReply,
-                    source: 2, id: this.props.data.id, dateAdded: this.props.data.dateAdded,
-                    likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter,
-                    loggedInUserRating: this.props.loggedInUserRating,
-                    comment: commentFromDB,
-                    consultationId: this.props.consultationId,
-                    imagesPath: this.props.imagesPath });
-                avatarDiv = React.createElement(
-                    "div",
-                    { className: "avatar" },
-                    React.createElement("img", { src: this.props.data.avatarUrl ? this.props.data.avatarUrl : "/assets/images/profile_default.jpg" })
-                );
-
-                if (this.props.data.profileUrl) commenterName = React.createElement(
-                    "span",
-                    { className: "commentAuthor" },
-                    React.createElement(
-                        "a",
-                        { target: "_blank", href: this.props.data.profileUrl },
-                        this.props.data.fullName
-                    )
-                );else commenterName = React.createElement(
-                    "span",
-                    { className: "commentAuthor" },
-                    this.props.data.fullName
-                );
-                commentBody = React.createElement(
-                    "div",
-                    { className: "htmlText" },
-                    React.createElement("i", { className: "fa fa-comment-o" }),
-                    React.createElement(
-                        "span",
-                        { className: "partName" },
-                        "Σχόλιο: "
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
-                );
-                var replyBox = React.createElement("div", null);
-                var replies = React.createElement("div", null);
-                var commentClassNames = "comment replyComment";
-            }
-            if (this.props.parent == "reporter") {
-                if (this.props.data.userAnnotatedText != null) {
-                    if (this.props.data.userAnnotatedText) if (this.props.data.discussionThread.discussion_thread_type_id == 2) annotatedText = React.createElement(
-                        "div",
-                        { className: "htmlText" },
-                        React.createElement("i", { className: "fa fa-file-text-o" }),
-                        React.createElement(
-                            "span",
-                            { className: "partName" },
-                            "Τμήμα κειμένου: "
-                        ),
-                        React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
-                    );else annotatedText = React.createElement(
-                        "div",
-                        { className: "htmlText" },
-                        React.createElement("i", { className: "fa fa-file-text-o" }),
-                        React.createElement(
-                            "span",
-                            { className: "partName" },
-                            "Όνομα άρθρου: "
-                        ),
-                        React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
-                    );
-                }
-            }
-            if (taggedProblems.length > 0 || taggedTopics.length > 0) topicsHtml = React.createElement(
-                "div",
-                { className: "tags htmlText" },
-                React.createElement("i", { className: "fa fa-thumb-tack" }),
-                React.createElement(
-                    "span",
-                    { className: "partName" },
-                    "Θέματα: "
-                ),
-                " ",
-                taggedProblemsContainer,
-                " ",
-                taggedTopicsContainer
-            );
-            if (this.props.data.commentReplies != undefined) if (this.props.data.commentReplies.length > 0) {
-                var replyTitle = React.createElement(
-                    "div",
-                    { className: "replyTitle" },
-                    "Απαντήσεις σε αυτό το σχόλιο:"
+                        scrollToComment: this.props.scrollToComment,
+                        shouldDisplayCommenterName: true,
+                        shouldDisplayEditIcon: false,
+                        shouldDisplayCommentEdited: false,
+                        shouldDisplayShareBtn: true,
+                        shouldDisplayCommentBody: true,
+                        shouldDisplayEmotion: false,
+                        shouldDisplayAnnotatedText: false,
+                        shouldDisplayReplyBox: false,
+                        shouldDisplayReplies: false,
+                        optionsEnabled: true,
+                        shouldDisplayTopics: false,
+                        commentClassNames: "comment replyComment",
+                        shouldDisplayFinalLawAnnBtn: false })
                 );
             }
-            return React.createElement(
-                "div",
-                { className: commentClassNames, id: this.props.data.id },
-                avatarDiv,
-                React.createElement(
-                    "div",
-                    { className: "body" },
-                    commenterName,
-                    editIcon,
-                    commentEdited,
-                    shareBtn,
-                    commentBody,
-                    emotion,
-                    annotatedText,
-                    topicsHtml
-                ),
-                options,
-                React.createElement(
-                    "div",
-                    { className: iconsClasses },
-                    React.createElement(
-                        "a",
-                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
-                        React.createElement("img", { src: "/assets/images/closed.gif" })
-                    )
-                ),
-                replyBox,
-                replyTitle,
-                replies
-            );
         },
-        renderBody: function renderBody(shouldDisplayBody) {},
-        renderReplyBox: function renderReplyBox() {},
-        renderReplies: function renderReplies() {},
-        renderEmotion: function renderEmotion() {}
-
+        renderOptions: function renderOptions(optionsEnabled) {
+            if (optionsEnabled) {
+                return React.createElement(CommentActionsEnabled, {
+                    userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
+                    id: this.props.data.id,
+                    dateAdded: this.props.data.dateAdded,
+                    likeCounter: this.props.data.likesCounter,
+                    dislikeCounter: this.props.data.dislikesCounter,
+                    loggedInUserRating: this.props.loggedInUserRating,
+                    emotionId: this.props.data.emotionId,
+                    imagesPath: this.props.imagesPath,
+                    consultationId: this.props.consultationId,
+                    comment: this.props.data,
+                    imagesPath: this.props.imagesPath,
+                    shouldDisplayReplyBox: this.props.shouldDisplayReplyBox,
+                    shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn });
+            }
+            return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.comment.emotionId });
+        }
     });
 
     var CommentActionsEnabled = React.createClass({
@@ -833,7 +832,17 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
-            console.log(this.props);
+            if (this.props.shouldDisplayReplyBox) var replyLink = React.createElement(
+                "a",
+                { className: replyClasses, onClick: this.state.handleReply },
+                "Απάντηση ",
+                React.createElement("i", { className: "fa fa-reply" })
+            );
+            if (this.props.shouldDisplayFinalLawAnnBtn) var commentFinalLawAnnBtn = React.createElement(
+                "a",
+                { onClick: this.handleCommentInFinalLaw, className: "commentInFinalLaw", type: "button", "data-toggle": "modal", "data-target": "#finalLawCommentModal" },
+                "Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;"
+            );
             return React.createElement(
                 "div",
                 null,
@@ -870,21 +879,12 @@
                             this.state.dislikeCounter,
                             ")"
                         ),
-                        React.createElement(
-                            "a",
-                            { className: replyClasses, onClick: this.state.handleReply },
-                            "Απάντηση ",
-                            React.createElement("i", { className: "fa fa-reply" })
-                        ),
+                        replyLink,
+                        commentFinalLawAnnBtn,
                         React.createElement(
                             "span",
                             { className: "date" },
                             date
-                        ),
-                        React.createElement(
-                            "a",
-                            { onClick: this.handleCommentInFinalLaw, className: "commentInFinalLaw", type: "button", "data-toggle": "modal", "data-target": "#finalLawCommentModal" },
-                            "Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;"
                         )
                     )
                 ),
@@ -997,42 +997,13 @@
         displayName: "CommentAnnFinalLaw",
 
         render: function render() {
-            console.log(this.props);
             if (this.props.busy) {
                 return React.createElement(scify.ReactLoader, { display: this.props.busy });
             } else {
                 var commentClassNames = "comment";
                 var commenterName, annotatedText, topicsHtml;
                 var emotion = React.createElement("span", null);
-                var emotionId = this.props.comment.emotionId;
-                if (emotionId != undefined) {
-                    var image = "";
-                    switch (emotionId) {
-                        case 1:
-                            image = "/emoticons/emoticon-superhappy.png";
-                            break;
-                        case 2:
-                            image = "/emoticons/emoticon-happy.png";
-                            break;
-                        case 3:
-                            image = "/emoticons/emoticon-worried.png";
-                            break;
-                        case 4:
-                            image = "/emoticons/emoticon-sad.png";
-                            break;
-                        case 5:
-                            image = "/emoticons/emoticon-angry.png";
-                            break;
-                    }
-                    var imageWithPath = this.props.imagesPath + image;
-                    console.log(imageWithPath);
-                    emotion = React.createElement(
-                        "div",
-                        { className: "userEmotion htmlText" },
-                        "Ο χρήστης εκδήλωσε το συναίσθημα: ",
-                        React.createElement("img", { src: imageWithPath })
-                    );
-                }
+
                 //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
                 var iconsClasses = classNames("icons", {
                     hide: this.props.comment.source.commentSource == 2 || this.props.comment.dateAdded < this.props.consultationEndDate
