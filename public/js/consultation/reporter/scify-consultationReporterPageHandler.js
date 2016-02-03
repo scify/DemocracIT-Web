@@ -205,8 +205,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
     loadArticleWordCloud = function(articleId, commentsNum) {
     window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
 },
-
-        createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
+    createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
 
