@@ -399,6 +399,7 @@
             $("body").trigger("editcomment", commentToBeEdited);
         },
         render: function render() {
+            console.log(this.props);
             //hide lock icon for open gov consultations, and for comments that we posted before the end of the consultation date
             var iconsClasses = classNames("icons", {
                 hide: this.props.data.source.commentSource == 2 || this.props.data.dateAdded < this.props.consultationEndDate
@@ -718,7 +719,6 @@
         },
         renderOptions: function renderOptions(optionsEnabled) {
             if (optionsEnabled) {
-                console.log(this.props.data);
                 return React.createElement(CommentActionsEnabled, {
                     userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
                     id: this.props.data.id,

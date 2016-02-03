@@ -56,7 +56,6 @@
             return promise;
         },
         render: function() {
-
             return (
                 <div className="" onClick={this.refreshComments}>
                     <a>{this.props.user.first_name} {this.props.user.last_name}</a>
@@ -77,6 +76,7 @@
             };
         },
         render: function() {
+            var instance = this;
             if(this.props.display) {
                 if (this.props.busy) {
                     return (
@@ -85,9 +85,38 @@
                         </div>
                     );
                 }
+                var commentNodes = this.props.data.map(function (commentWithArticleName) {
+                    commentWithArticleName.comment.userAnnotatedText = commentWithArticleName.article_name;
+                    //define the source as Democracit
+                    commentWithArticleName.comment.source.commentSource = 2;
+                    var comment = commentWithArticleName.comment;
+                    return (
+                            <scify.Comment
+                                           imagesPath = {instance.props.imagesPath}
+                                           key={commentWithArticleName.comment.id}
+                                           data={comment}
+                                           shouldDisplayCommenterName={true}
+                                           shouldDisplayEditIcon={false}
+                                           shouldDisplayCommentEdited={true}
+                                           shouldDisplayShareBtn={false}
+                                           shouldDisplayCommentBody={true}
+                                           shouldDisplayEmotion={true}
+                                           shouldDisplayAnnotatedText={true}
+                                           shouldDisplayReplyBox={false}
+                                           shouldDisplayReplies={false}
+                                           optionsEnabled={false}
+                                           shouldDisplayTopics={true}
+                                           commentClassNames="comment"
+                                           shouldDisplayFinalLawAnnBtn={false}/>
+
+                    );
+                });
                 return (
-                    <scify.CommentList imagesPath = {this.props.imagesPath} data={this.props.data} parent="reporterUserStats"/>
+                    <div className="commentList">
+                        {commentNodes}
+                    </div>
                 );
+
             } else {
                 return (
                     <div></div>
@@ -96,6 +125,7 @@
         }
     });
 
+    //TODO: check if unused React class
     scify.CommentsForArticle = React.createClass({
         getInitialState: function() {
             return {

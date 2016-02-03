@@ -1,6 +1,6 @@
 (function(){
 
-    scify.commentList = React.createClass({
+    scify.ReporterCommentList = React.createClass({
         getInitialState: function() {
             return {
                 articleId: this.props.articleId,

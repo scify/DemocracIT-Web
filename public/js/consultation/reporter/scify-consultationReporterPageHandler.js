@@ -125,37 +125,37 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var domElementOpenGovComments = document.getElementById("commentsOpenGov");
         var domElementDITComments = document.getElementById("commentsDIT");
         if (domElementOpenGovComments) {
-            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListOpenGovProperties), domElementOpenGovComments);
+            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListOpenGovProperties), domElementOpenGovComments);
         }
         if (domElementDITComments) {
             //console.log(instance.commentListProperties);
-            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
+            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementDITComments);
         }
     },
     createListOfCommentsByAnnId = function(instance) {
         var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
         if (domElementCommentsByAnnId) {
-            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnId);
+            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByAnnId);
         }
 
     },
     createListOfCommentsByProblemId = function(instance) {
         var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
         if (domElementCommentsByProblemId) {
-            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemId);
+            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByProblemId);
         }
 
     },
     createListOfCommentsByAnnIdPerArticle = function(instance) {
         var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
         if (domElementCommentsByAnnIdPerArticle) {
-            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
+            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
         }
     },
     createListOfCommentsByProblemIdPerArticle = function(instance) {
         var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
         if (domElementCommentsByProblemIdPerArticle) {
-            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
+            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
         }
     },
     createArticleWordCloudChart = function() {

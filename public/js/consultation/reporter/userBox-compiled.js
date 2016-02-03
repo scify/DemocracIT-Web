@@ -55,7 +55,6 @@
             return promise;
         },
         render: function render() {
-
             return React.createElement(
                 "div",
                 { className: "", onClick: this.refreshComments },
@@ -83,6 +82,7 @@
             };
         },
         render: function render() {
+            var instance = this;
             if (this.props.display) {
                 if (this.props.busy) {
                     return React.createElement(
@@ -91,13 +91,41 @@
                         React.createElement(scify.ReactLoader, { display: this.props.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { imagesPath: this.props.imagesPath, data: this.props.data, parent: "reporterUserStats" });
+                var commentNodes = this.props.data.map(function (commentWithArticleName) {
+                    commentWithArticleName.comment.userAnnotatedText = commentWithArticleName.article_name;
+                    //define the source as Democracit
+                    commentWithArticleName.comment.source.commentSource = 2;
+                    var comment = commentWithArticleName.comment;
+                    return React.createElement(scify.Comment, {
+                        imagesPath: instance.props.imagesPath,
+                        key: commentWithArticleName.comment.id,
+                        data: comment,
+                        shouldDisplayCommenterName: true,
+                        shouldDisplayEditIcon: false,
+                        shouldDisplayCommentEdited: true,
+                        shouldDisplayShareBtn: false,
+                        shouldDisplayCommentBody: true,
+                        shouldDisplayEmotion: true,
+                        shouldDisplayAnnotatedText: true,
+                        shouldDisplayReplyBox: false,
+                        shouldDisplayReplies: false,
+                        optionsEnabled: false,
+                        shouldDisplayTopics: true,
+                        commentClassNames: "comment",
+                        shouldDisplayFinalLawAnnBtn: false });
+                });
+                return React.createElement(
+                    "div",
+                    { className: "commentList" },
+                    commentNodes
+                );
             } else {
                 return React.createElement("div", null);
             }
         }
     });
 
+    //TODO: check if unused React class
     scify.CommentsForArticle = React.createClass({
         displayName: "CommentsForArticle",
 

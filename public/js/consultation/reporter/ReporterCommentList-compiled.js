@@ -2,8 +2,8 @@
 
 (function () {
 
-    scify.commentList = React.createClass({
-        displayName: "commentList",
+    scify.ReporterCommentList = React.createClass({
+        displayName: "ReporterCommentList",
 
         getInitialState: function getInitialState() {
             return {
@@ -171,4 +171,4 @@
     });
 })();
 
-//# sourceMappingURL=commentList-compiled.js.map
+//# sourceMappingURL=ReporterCommentList-compiled.js.map
