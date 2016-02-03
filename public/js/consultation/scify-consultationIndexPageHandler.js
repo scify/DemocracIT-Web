@@ -492,7 +492,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         annotateFinalLaw = function(){
             var finalLawAnn = new scify.Annotator("#finalLawDiv  .article-body,#finalLawDiv .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#finalLawDiv .fl-ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><input type='checkbox'></span>");
+            $("#finalLawDiv .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
 
         },
     init = function(){
