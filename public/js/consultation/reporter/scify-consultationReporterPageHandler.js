@@ -120,43 +120,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");
     },
-    loadListOfCommentsPerArticle = function(articleId) {
-        $(".commentsTabs").css("display","block");
-        window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
-        window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
-
-        $('html, body').animate({
-            scrollTop: 800
-        }, 1000);
-
-    },
-
-    loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
-        if(typeOfAnn == "annotation") {
-            window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
-        } else if(typeOfAnn == "problem") {
-            window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
-        }
-    },
-    loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
-        if(typeOfAnn == "annotation") {
-            window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
-        } else if(typeOfAnn == "problem") {
-            window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
-        }
-    },
 
     createListOfCommentsPerArticle = function(instance){
         var domElementOpenGovComments = document.getElementById("commentsOpenGov");
@@ -176,7 +139,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         }
 
     },
-
     createListOfCommentsByProblemId = function(instance) {
         var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
         if (domElementCommentsByProblemId) {
@@ -204,10 +166,47 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         }
 
     },
-    loadArticleWordCloud = function(articleId, commentsNum) {
-        window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
+    loadListOfCommentsPerArticle = function(articleId) {
+        $(".commentsTabs").css("display","block");
+        window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
+        window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
+
+        $('html, body').animate({
+            scrollTop: 800
+        }, 1000);
+
     },
-    createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
+    loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
+        if(typeOfAnn == "annotation") {
+            window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        } else if(typeOfAnn == "problem") {
+            window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        }
+    },
+    loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
+        if(typeOfAnn == "annotation") {
+            window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        } else if(typeOfAnn == "problem") {
+            window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            $('html, body').animate({
+                scrollTop: 800
+            }, 1000);
+        }
+    },
+    loadArticleWordCloud = function(articleId, commentsNum) {
+    window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
+},
+
+        createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
 
