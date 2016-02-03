@@ -718,6 +718,7 @@
         },
         renderOptions: function renderOptions(optionsEnabled) {
             if (optionsEnabled) {
+                console.log(this.props.data);
                 return React.createElement(CommentActionsEnabled, {
                     userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
                     id: this.props.data.id,
@@ -733,7 +734,7 @@
                     shouldDisplayReplyBox: this.props.shouldDisplayReplyBox,
                     shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn });
             }
-            return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.comment.dateAdded, likeCounter: this.props.data.comment.likesCounter, dislikeCounter: this.props.data.comment.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.comment.emotionId });
+            return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.emotionId });
         }
     });
 

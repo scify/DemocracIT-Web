@@ -162,7 +162,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var domElementOpenGovComments = document.getElementById("commentsOpenGov");
         var domElementDITComments = document.getElementById("commentsDIT");
         if (domElementOpenGovComments) {
-            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
+            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListOpenGovProperties), domElementOpenGovComments);
         }
         if (domElementDITComments) {
             //console.log(instance.commentListProperties);
@@ -570,7 +570,41 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             consultationEndDate:instance.consultationEndDate,
             imagesPath: instance.imagesPath,
             consultationId: instance.consultationId,
-            appState: instance.appState
+            appState: instance.appState,
+            shouldDisplayCommenterName: true,
+            shouldDisplayEditIcon: false,
+            shouldDisplayCommentEdited: true,
+            shouldDisplayShareBtn: true,
+            shouldDisplayCommentBody: true,
+            shouldDisplayEmotion: true,
+            shouldDisplayAnnotatedText: true,
+            shouldDisplayReplyBox:false,
+            shouldDisplayReplies: true,
+            optionsEnabled: true,
+            shouldDisplayTopics: true,
+            shouldDisplayFinalLawAnnBtn: true,
+            commentClassNames:"comment"
+        }
+        instance.commentListOpenGovProperties = {
+            userId : instance.userId,
+            userDefined : userDefined,
+            consultationEndDate:instance.consultationEndDate,
+            imagesPath: instance.imagesPath,
+            consultationId: instance.consultationId,
+            appState: instance.appState,
+            shouldDisplayCommenterName: true,
+            shouldDisplayEditIcon: false,
+            shouldDisplayCommentEdited: false,
+            shouldDisplayShareBtn: false,
+            shouldDisplayCommentBody: true,
+            shouldDisplayEmotion: false,
+            shouldDisplayAnnotatedText: false,
+            shouldDisplayReplyBox:false,
+            shouldDisplayReplies: false,
+            optionsEnabled: true,
+            shouldDisplayTopics: true,
+            shouldDisplayFinalLawAnnBtn: false,
+            commentClassNames:"comment"
         }
     },
     init = function(){

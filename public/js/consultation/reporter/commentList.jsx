@@ -147,7 +147,20 @@
                         userId = {this.props.userId}
                         userDefined={this.props.userDefined}
                         data={this.state.comments}
-                        parent="reporter"/>
+                        parent="reporter"
+                        shouldDisplayCommenterName={this.props.shouldDisplayCommenterName}
+                        shouldDisplayEditIcon={this.props.shouldDisplayEditIcon}
+                        shouldDisplayCommentEdited={this.props.shouldDisplayCommentEdited}
+                        shouldDisplayShareBtn={this.props.shouldDisplayShareBtn}
+                        shouldDisplayCommentBody={this.props.shouldDisplayCommentBody}
+                        shouldDisplayEmotion={this.props.shouldDisplayEmotion}
+                        shouldDisplayAnnotatedText={this.props.shouldDisplayAnnotatedText}
+                        shouldDisplayReplyBox={this.props.shouldDisplayReplyBox}
+                        shouldDisplayReplies={this.props.shouldDisplayReplies}
+                        optionsEnabled={this.props.optionsEnabled}
+                        shouldDisplayTopics={this.props.shouldDisplayTopics}
+                        commentClassNames={this.props.commentClassNames}
+                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
                 );
             } else {
                 return (

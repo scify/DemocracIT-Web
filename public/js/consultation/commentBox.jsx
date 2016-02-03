@@ -624,6 +624,7 @@
         },
         renderOptions: function(optionsEnabled){
             if(optionsEnabled) {
+                console.log(this.props.data);
                 return(
                     <CommentActionsEnabled
                         userDefined={this.props.userDefined} handleReply={this.handleReply} source={this.props.data.source.commentSource}
@@ -642,7 +643,7 @@
                 );
             }
             return (
-                <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.comment.dateAdded} likeCounter={this.props.data.comment.likesCounter} dislikeCounter={this.props.data.comment.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.comment.emotionId}/>
+                <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.emotionId}/>
             );
         }
     });
