@@ -719,7 +719,10 @@
         renderOptions: function renderOptions(optionsEnabled) {
             if (optionsEnabled) {
                 return React.createElement(CommentActionsEnabled, {
-                    userDefined: this.props.userDefined, handleReply: this.handleReply, source: this.props.data.source.commentSource,
+                    consultationEndDate: this.props.consultationEndDate,
+                    userDefined: this.props.userDefined,
+                    handleReply: this.handleReply,
+                    source: this.props.data.source.commentSource,
                     id: this.props.data.id,
                     dateAdded: this.props.data.dateAdded,
                     likeCounter: this.props.data.likesCounter,
@@ -827,6 +830,7 @@
             console.log(instance.state);
         },
         render: function render() {
+
             var instance = this;
             var replyClasses = classNames("reply", { hide: this.state.source == 2 }); //,{hide: this.props.data.source.commentSource ==2}); //hide for opengov
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
@@ -918,7 +922,8 @@
                                 React.createElement(CommentAnnFinalLaw, { busy: instance.state.finalLawBusy,
                                     finalLawDiv: instance.state.finalLawDiv,
                                     comment: instance.props.comment,
-                                    imagesPath: instance.props.imagesPath
+                                    imagesPath: instance.props.imagesPath,
+                                    consultationEndDate: this.props.consultationEndDate
                                 })
                             ),
                             React.createElement(
@@ -1000,6 +1005,9 @@
             if (this.props.busy) {
                 return React.createElement(scify.ReactLoader, { display: this.props.busy });
             } else {
+                var iconsClasses = classNames("icons", {
+                    hide: this.props.comment.source.commentSource == 2 || this.props.comment.dateAdded < this.props.consultationEndDate
+                });
                 return React.createElement(
                     "div",
                     null,
