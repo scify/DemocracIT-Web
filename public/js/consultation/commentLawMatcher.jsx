@@ -98,13 +98,13 @@
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h4 className="modal-title">Αντιστοίχηση σχολίου με τον τελικό νόμο <i className="fa fa-question-circle" title="Επεξήγηση"></i></h4>
-                                    <button type="button" className="close" data-dismiss="modal">&times;</button>
+                                    <button type="button" className="close" onClick={this.closeModal}>&times;</button>
                                 </div>
                                 <div className="modal-body">
                                     {{ innerContent }}
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                                    <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
                                     <button id="saveFinalLawAnnotation" className="btn blue">Καταχώρηση</button>
                                 </div>
                             </div>

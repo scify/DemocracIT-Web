@@ -122,7 +122,7 @@
                                 ),
                                 React.createElement(
                                     "button",
-                                    { type: "button", className: "close", "data-dismiss": "modal" },
+                                    { type: "button", className: "close", onClick: this.closeModal },
                                     "×"
                                 )
                             ),
@@ -136,7 +136,7 @@
                                 { className: "modal-footer" },
                                 React.createElement(
                                     "button",
-                                    { type: "button", className: "btn btn-default", "data-dismiss": "modal" },
+                                    { type: "button", className: "btn btn-default", onClick: this.closeModal },
                                     "Κλείσιμο"
                                 ),
                                 React.createElement(
