@@ -816,7 +816,8 @@
     var CommentAnnFinalLaw = React.createClass({
         getInitialState: function() {
             return {
-                divId : "finalLawAnn_" + this.props.comment.id
+                divId : "finalLawAnn_" + this.props.comment.id,
+                outerDivId : "outerDiv_" + "finalLawAnn_" + this.props.comment.id
             };
         },
         componentDidMount: function() {
@@ -825,11 +826,35 @@
             this.wrapDivToForm();
             this.appendButtonToForm();
             this.createAnnotationAreasForFinalLaw();
+            this.formSubmitHandler();
+        },
+        //TODO: implement clearForm function to clear all selected checkboxes
 
+        formSubmitHandler: function() {
+            var instance = this;
+            $('#' + instance.state.outerDivId + ' #saveFinalLawAnnotation').on("click",function(e) {
+                console.log(instance.state.outerDivId);
+                e.preventDefault();
+                console.log("click");
+                var inputs = $("#" + instance.state.outerDivId + " #FinalLawAnnForm :input");
+                var values = {};
+                var index = 0;
+                $(inputs).each(function() {
+                    if(this.type == "checkbox") {
+                        if($(this).is(':checked')) {
+                            console.log($(this).parent().parent().attr("data-id"));
+                            var dataId = $(this).parent().parent().attr("data-id");
+                            values[index] = dataId;
+                            index++;
+                        }
+                    }
+                });
+                console.log(values);
+        });
         },
         updateFinalLawDivDataTarget: function() {
             //we want to change the data-target value of the final law div to be unique
-            $("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
+            //$("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
             $("#" + this.state.divId + " a[data-target^='#finalLawUploadedBody']").each(function(index){
                 $(this).attr("data-target", "#finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
                 $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
@@ -840,7 +865,7 @@
             $("#" + this.state.divId).wrap('<form id="FinalLawAnnForm"></form>');
         },
         appendButtonToForm: function() {
-            $(".finalLawAnnModalContent").append('<button id="saveFinalLawAnnotation" class="btn blue" type="submit">Καταχώρηση</button>');
+            $("#FinalLawAnnForm" + " #" + this.state.divId).append('<button id="saveFinalLawAnnotation" class="btn blue">Καταχώρηση</button>');
         },
         createAnnotationAreasForFinalLaw: function() {
             var finalLawAnn = new scify.Annotator("#" + this.state.divId + "  .article-body, #" + this.state.divId + " .article-title-text", "fl-ann");
@@ -861,30 +886,32 @@
                     });
 
                 return (
-                    <div id={this.state.divId} className="finalLawAnnModalContent">
-                        <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
-                        <div className="annFinalLawComment">
-                            <div className='body'>
-                                <scify.Comment
-                                    imagesPath = {this.props.imagesPath}
-                                    key={this.props.comment.id}
-                                    data={this.props.comment}
-                                    shouldDisplayCommenterName={true}
-                                    shouldDisplayEditIcon={false}
-                                    shouldDisplayCommentEdited={true}
-                                    shouldDisplayShareBtn={true}
-                                    shouldDisplayCommentBody={true}
-                                    shouldDisplayEmotion={true}
-                                    shouldDisplayAnnotatedText={true}
-                                    shouldDisplayReplyBox={false}
-                                    shouldDisplayReplies={false}
-                                    optionsEnabled={true}
-                                    shouldDisplayTopics={true}
-                                    commentClassNames="comment"
-                                    shouldDisplayFinalLawAnnBtn={false}/>
-                            </div>
-                            <div className={iconsClasses}>
-                                <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                    <div id={this.state.outerDivId}>
+                        <div id={this.state.divId} className="finalLawAnnModalContent">
+                            <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
+                            <div className="annFinalLawComment">
+                                <div className='body'>
+                                    <scify.Comment
+                                        imagesPath = {this.props.imagesPath}
+                                        key={this.props.comment.id}
+                                        data={this.props.comment}
+                                        shouldDisplayCommenterName={true}
+                                        shouldDisplayEditIcon={false}
+                                        shouldDisplayCommentEdited={true}
+                                        shouldDisplayShareBtn={true}
+                                        shouldDisplayCommentBody={true}
+                                        shouldDisplayEmotion={true}
+                                        shouldDisplayAnnotatedText={true}
+                                        shouldDisplayReplyBox={false}
+                                        shouldDisplayReplies={false}
+                                        optionsEnabled={true}
+                                        shouldDisplayTopics={true}
+                                        commentClassNames="comment"
+                                        shouldDisplayFinalLawAnnBtn={false}/>
+                                </div>
+                                <div className={iconsClasses}>
+                                    <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                                </div>
                             </div>
                         </div>
                     </div>
