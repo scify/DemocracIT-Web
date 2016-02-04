@@ -48,7 +48,6 @@
         },
         updateFinalLawDivDataTarget: function updateFinalLawDivDataTarget() {
             //we want to change the data-target value of the final law div to be unique
-            //$("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
             $("#commentLawMatcher a[data-target^='#finalLawUploadedBody']").each(function (index) {
                 $(this).attr("data-target", "#finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
                 $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
@@ -68,10 +67,6 @@
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
 
             if (!this.props.busy) {
-                var iconsClasses = classNames("icons", {
-                    hide: this.props.comment.source.commentSource == 2 || this.props.comment.dateAdded < this.props.consultationEndDate
-                });
-                console.log(this.props.finalLawDiv);
                 innerContent = React.createElement(
                     "div",
                     { className: "finalLawAnnModalContent" },

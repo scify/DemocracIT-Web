@@ -734,15 +734,6 @@
                                                         endDate: this.props.consultationEndDate
                                                        }
                             );
-
-
-
-            //var instance = this;
-            //var finalLawHtml = $("#finalLawDiv").html();
-            ////console.log (finalLawHtml);
-            //instance.state.finalLawDiv = finalLawHtml;
-            //instance.state.finalLawBusy = false;
-            //instance.setState(instance.state);
         },
         render: function() {
 
