@@ -120,6 +120,52 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         if (!article.find(".article-body").hasClass("in"))
             article.find(".show-hide").trigger("click");
     },
+
+    createListOfCommentsPerArticle = function(instance){
+        var domElementOpenGovComments = document.getElementById("commentsOpenGov");
+        var domElementDITComments = document.getElementById("commentsDIT");
+        if (domElementOpenGovComments) {
+            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListOpenGovProperties), domElementOpenGovComments);
+        }
+        if (domElementDITComments) {
+            //console.log(instance.commentListProperties);
+            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementDITComments);
+        }
+    },
+    createListOfCommentsByAnnId = function(instance) {
+        var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
+        if (domElementCommentsByAnnId) {
+            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByAnnId);
+        }
+
+    },
+    createListOfCommentsByProblemId = function(instance) {
+        var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
+        if (domElementCommentsByProblemId) {
+            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByProblemId);
+        }
+
+    },
+    createListOfCommentsByAnnIdPerArticle = function(instance) {
+        var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
+        if (domElementCommentsByAnnIdPerArticle) {
+            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
+        }
+    },
+    createListOfCommentsByProblemIdPerArticle = function(instance) {
+        var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
+        if (domElementCommentsByProblemIdPerArticle) {
+            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.ReporterCommentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
+        }
+    },
+    createArticleWordCloudChart = function() {
+
+        var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
+        if (domElementArticleWordCloud) {
+            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
+        }
+
+    },
     loadListOfCommentsPerArticle = function(articleId) {
         $(".commentsTabs").css("display","block");
         window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
@@ -130,7 +176,6 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         }, 1000);
 
     },
-
     loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
         if(typeOfAnn == "annotation") {
             window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
@@ -157,56 +202,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }, 1000);
         }
     },
-
-    createListOfCommentsPerArticle = function(instance){
-        var domElementOpenGovComments = document.getElementById("commentsOpenGov");
-        var domElementDITComments = document.getElementById("commentsDIT");
-        if (domElementOpenGovComments) {
-            window.OpenGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementOpenGovComments);
-        }
-        if (domElementDITComments) {
-            //console.log(instance.commentListProperties);
-            window.DITGovommentsPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementDITComments);
-        }
-    },
-    createListOfCommentsByAnnId = function(instance) {
-        var domElementCommentsByAnnId = document.getElementById("commentsPerAnnId");
-        if (domElementCommentsByAnnId) {
-            window.CommentsByAnnIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnId);
-        }
-
-    },
-
-    createListOfCommentsByProblemId = function(instance) {
-        var domElementCommentsByProblemId = document.getElementById("commentsPerProblemId");
-        if (domElementCommentsByProblemId) {
-            window.CommentsByProblemIdComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemId);
-        }
-
-    },
-    createListOfCommentsByAnnIdPerArticle = function(instance) {
-        var domElementCommentsByAnnIdPerArticle = document.getElementById("commentsPerAnnIdPerArticle");
-        if (domElementCommentsByAnnIdPerArticle) {
-            window.CommentsByAnnIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByAnnIdPerArticle);
-        }
-    },
-    createListOfCommentsByProblemIdPerArticle = function(instance) {
-        var domElementCommentsByProblemIdPerArticle = document.getElementById("commentsPerProblemIdPerArticle");
-        if (domElementCommentsByProblemIdPerArticle) {
-            window.CommentsByProblemIdPerArticleComponent = React.render(React.createElement(scify.commentList, instance.commentListProperties), domElementCommentsByProblemIdPerArticle);
-        }
-    },
-    createArticleWordCloudChart = function() {
-
-        var domElementArticleWordCloud = document.getElementById("articleWordCloudDiv");
-        if (domElementArticleWordCloud) {
-            window.ArticleWordCloudComponent = React.render(React.createElement(scify.WordCloud, null), domElementArticleWordCloud);
-        }
-
-    },
     loadArticleWordCloud = function(articleId, commentsNum) {
-        window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
-    },
+    window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
+},
     createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
@@ -570,7 +568,41 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             consultationEndDate:instance.consultationEndDate,
             imagesPath: instance.imagesPath,
             consultationId: instance.consultationId,
-            appState: instance.appState
+            appState: instance.appState,
+            shouldDisplayCommenterName: true,
+            shouldDisplayEditIcon: false,
+            shouldDisplayCommentEdited: true,
+            shouldDisplayShareBtn: true,
+            shouldDisplayCommentBody: true,
+            shouldDisplayEmotion: true,
+            shouldDisplayAnnotatedText: true,
+            shouldDisplayReplyBox:false,
+            shouldDisplayReplies: true,
+            optionsEnabled: true,
+            shouldDisplayTopics: true,
+            shouldDisplayFinalLawAnnBtn: true,
+            commentClassNames:"comment"
+        }
+        instance.commentListOpenGovProperties = {
+            userId : instance.userId,
+            userDefined : userDefined,
+            consultationEndDate:instance.consultationEndDate,
+            imagesPath: instance.imagesPath,
+            consultationId: instance.consultationId,
+            appState: instance.appState,
+            shouldDisplayCommenterName: true,
+            shouldDisplayEditIcon: false,
+            shouldDisplayCommentEdited: false,
+            shouldDisplayShareBtn: false,
+            shouldDisplayCommentBody: true,
+            shouldDisplayEmotion: false,
+            shouldDisplayAnnotatedText: false,
+            shouldDisplayReplyBox:false,
+            shouldDisplayReplies: false,
+            optionsEnabled: true,
+            shouldDisplayTopics: true,
+            shouldDisplayFinalLawAnnBtn: false,
+            commentClassNames:"comment"
         }
     },
     init = function(){

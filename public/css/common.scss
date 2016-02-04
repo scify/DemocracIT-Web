@@ -547,3 +547,51 @@ legend {
 .finalLawFileContent {
   margin-top: 50px;
 }
+
+.commentInFinalLaw {
+  float:right !important;
+}
+
+#finalLawCommentModal .modal-dialog {
+  width: 95%;
+  top: 20px;
+}
+
+#finalLawCommentModal #finalLawAnnDiv {
+  float: right;
+  width: 45%;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
+#finalLawCommentModal .modal-body {
+  height: 750px;
+}
+
+#finalLawCommentModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#finalLawCommentModal #finalLawAnnDiv .stats {
+  display: none;
+}
+
+#finalLawCommentModal #finalLawAnnDiv {
+  max-height: 750px;
+  overflow-y: scroll;
+  font-family: Verdana, sans-serif;
+  font-size: 14px;
+}
+
+#finalLawCommentModal .title {
+  font-weight: bold;
+}
+
+#finalLawCommentModal .annFinalLawComment {
+  float: left;
+  width: 45%;
+  padding-left: 15px;
+  padding-top: 20px;
+}
