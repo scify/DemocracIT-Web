@@ -508,7 +508,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         if (!this.commentWithLawMatcher)
         {
-            this.commentWithLawMatcher = React.render(React.createElement(scify.CommentLawMatcher, {
+            this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {
                 comment:data.comment,
                 finalLawDiv: $("#finalLawDiv").html()
             }), document.getElementById("commentLawMatcher"));
