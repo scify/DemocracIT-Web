@@ -732,7 +732,6 @@
             instance.state.finalLawDiv = finalLawHtml;
             instance.state.finalLawBusy = false;
             instance.setState(instance.state);
-            console.log(instance.state);
         },
         render: function() {
 
@@ -815,6 +814,40 @@
     });
 
     var CommentAnnFinalLaw = React.createClass({
+        getInitialState: function() {
+            return {
+                divId : "finalLawAnn_" + this.props.comment.id
+            };
+        },
+        componentDidMount: function() {
+
+            this.updateFinalLawDivDataTarget();
+            this.wrapDivToForm();
+            this.appendButtonToForm();
+            this.createAnnotationAreasForFinalLaw();
+
+        },
+        updateFinalLawDivDataTarget: function() {
+            //we want to change the data-target value of the final law div to be unique
+            $("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
+            $("#" + this.state.divId + " a[data-target^='#finalLawUploadedBody']").each(function(index){
+                $(this).attr("data-target", "#finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
+                $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
+            });
+        },
+        wrapDivToForm: function() {
+            //wrap the entire final law div into a form
+            $("#" + this.state.divId).wrap('<form id="FinalLawAnnForm"></form>');
+        },
+        appendButtonToForm: function() {
+            $(".finalLawAnnModalContent").append('<button id="saveFinalLawAnnotation" class="btn blue" type="submit">Καταχώρηση</button>');
+        },
+        createAnnotationAreasForFinalLaw: function() {
+            var finalLawAnn = new scify.Annotator("#" + this.state.divId + "  .article-body, #" + this.state.divId + " .article-title-text", "fl-ann");
+            finalLawAnn.init();
+            $("#" + this.state.divId + " .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+
+        },
         render: function() {
             if(this.props.busy) {
                 return (
@@ -826,8 +859,9 @@
                         hide: this.props.comment.source.commentSource == 2 ||
                         this.props.comment.dateAdded < this.props.consultationEndDate
                     });
+
                 return (
-                    <div>
+                    <div id={this.state.divId} className="finalLawAnnModalContent">
                         <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
                         <div className="annFinalLawComment">
                             <div className='body'>

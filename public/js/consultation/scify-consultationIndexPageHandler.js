@@ -503,20 +503,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //console.log(comment);
          this.commentAnnotator.openForEdit(e, comment);
     },
-        annotateFinalLaw = function(){
-            var finalLawAnn = new scify.Annotator("#finalLawDiv  .article-body,#finalLawDiv .article-title-text", "fl-ann");
-            finalLawAnn.init();
-            $("#finalLawDiv .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
-
-        },
     init = function(){
         var instance= this;
         moment.locale('el');
 
         this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
         this.commentAnnotator.init();
-
-        annotateFinalLaw();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();

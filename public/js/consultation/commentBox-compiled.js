@@ -827,7 +827,6 @@
             instance.state.finalLawDiv = finalLawHtml;
             instance.state.finalLawBusy = false;
             instance.setState(instance.state);
-            console.log(instance.state);
         },
         render: function render() {
 
@@ -1001,6 +1000,38 @@
     var CommentAnnFinalLaw = React.createClass({
         displayName: "CommentAnnFinalLaw",
 
+        getInitialState: function getInitialState() {
+            return {
+                divId: "finalLawAnn_" + this.props.comment.id
+            };
+        },
+        componentDidMount: function componentDidMount() {
+
+            this.updateFinalLawDivDataTarget();
+            this.wrapDivToForm();
+            this.appendButtonToForm();
+            this.createAnnotationAreasForFinalLaw();
+        },
+        updateFinalLawDivDataTarget: function updateFinalLawDivDataTarget() {
+            //we want to change the data-target value of the final law div to be unique
+            $("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
+            $("#" + this.state.divId + " a[data-target^='#finalLawUploadedBody']").each(function (index) {
+                $(this).attr("data-target", "#finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
+                $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
+            });
+        },
+        wrapDivToForm: function wrapDivToForm() {
+            //wrap the entire final law div into a form
+            $("#" + this.state.divId).wrap("<form id=\"FinalLawAnnForm\"></form>");
+        },
+        appendButtonToForm: function appendButtonToForm() {
+            $(".finalLawAnnModalContent").append("<button id=\"saveFinalLawAnnotation\" class=\"btn blue\" type=\"submit\">Καταχώρηση</button>");
+        },
+        createAnnotationAreasForFinalLaw: function createAnnotationAreasForFinalLaw() {
+            var finalLawAnn = new scify.Annotator("#" + this.state.divId + "  .article-body, #" + this.state.divId + " .article-title-text", "fl-ann");
+            finalLawAnn.init();
+            $("#" + this.state.divId + " .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+        },
         render: function render() {
             if (this.props.busy) {
                 return React.createElement(scify.ReactLoader, { display: this.props.busy });
@@ -1008,9 +1039,10 @@
                 var iconsClasses = classNames("icons", {
                     hide: this.props.comment.source.commentSource == 2 || this.props.comment.dateAdded < this.props.consultationEndDate
                 });
+
                 return React.createElement(
                     "div",
-                    null,
+                    { id: this.state.divId, className: "finalLawAnnModalContent" },
                     React.createElement("div", { id: "finalLawAnnDiv", dangerouslySetInnerHTML: { __html: this.props.finalLawDiv } }),
                     React.createElement(
                         "div",
