@@ -499,4 +499,7 @@ legend {
   padding-left: 15px;
   padding-top: 20px; }
 
+.modal.show {
+  display: block; }
+
 /*# sourceMappingURL=common.css.map */

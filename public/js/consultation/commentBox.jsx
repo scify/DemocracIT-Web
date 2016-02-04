@@ -726,12 +726,23 @@
             this.postRateCommentAndRefresh();
         },
         handleCommentInFinalLaw:function(){
-            var instance = this;
-            var finalLawHtml = $("#finalLawDiv").html();
-            //console.log (finalLawHtml);
-            instance.state.finalLawDiv = finalLawHtml;
-            instance.state.finalLawBusy = false;
-            instance.setState(instance.state);
+
+            $("body").trigger("match-comment-with-law",{  finalLawBusy: this.state.finalLawBusy,
+                                                        finalLawDiv: this.state.finalLawDiv,
+                                                        comment: this.props.comment,
+                                                        imagesPath: this.props.imagesPath,
+                                                        endDate: this.props.consultationEndDate
+                                                       }
+                            );
+
+
+
+            //var instance = this;
+            //var finalLawHtml = $("#finalLawDiv").html();
+            ////console.log (finalLawHtml);
+            //instance.state.finalLawDiv = finalLawHtml;
+            //instance.state.finalLawBusy = false;
+            //instance.setState(instance.state);
         },
         render: function() {
 
@@ -743,7 +754,7 @@
             if(this.props.shouldDisplayReplyBox)
                 var replyLink = <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
             if(this.props.shouldDisplayFinalLawAnnBtn)
-                var commentFinalLawAnnBtn = <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button" data-toggle="modal" data-target="#finalLawCommentModal">Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;</a>
+                var commentFinalLawAnnBtn = <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button">Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;</a>
             return (
                 <div>
                     <div className="optionsContainer">
@@ -759,27 +770,6 @@
                             {commentFinalLawAnnBtn}
                             <span className="date">{date}</span>
                             </div>
-                    </div>
-                    <div id="finalLawCommentModal" className="modal fade consFinalLawModal" role="dialog">
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h4 className="modal-title">Αντιστοίχηση σχολίου με τον τελικό νόμο <i className="fa fa-question-circle" title="Επεξήγηση"></i></h4>
-                                    <button type="button" className="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div className="modal-body">
-                                    <CommentAnnFinalLaw busy={instance.state.finalLawBusy}
-                                                        finalLawDiv = {instance.state.finalLawDiv}
-                                                        comment = {instance.props.comment}
-                                                        imagesPath = {instance.props.imagesPath}
-                                                        consultationEndDate={this.props.consultationEndDate}
-                                    ></CommentAnnFinalLaw>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             );
@@ -813,18 +803,15 @@
         }
     });
 
-    var CommentAnnFinalLaw = React.createClass({
+    window.scify.CommentLawMatcher = React.createClass({
         getInitialState: function() {
             return {
-                divId : "finalLawAnn_" + this.props.comment.id,
-                outerDivId : "outerDiv_" + "finalLawAnn_" + this.props.comment.id
+                comment : this.props.comment,
+                display :""
             };
         },
         componentDidMount: function() {
-
             this.updateFinalLawDivDataTarget();
-            this.wrapDivToForm();
-            this.appendButtonToForm();
             this.createAnnotationAreasForFinalLaw();
             this.formSubmitHandler();
         },
@@ -832,11 +819,11 @@
 
         formSubmitHandler: function() {
             var instance = this;
-            $('#' + instance.state.outerDivId + ' #saveFinalLawAnnotation').on("click",function(e) {
-                console.log(instance.state.outerDivId);
+            $('#saveFinalLawAnnotation').on("click",function(e) {
+
                 e.preventDefault();
                 console.log("click");
-                var inputs = $("#" + instance.state.outerDivId + " #FinalLawAnnForm :input");
+                var inputs = $("#FinalLawAnnForm :input");
                 var values = {};
                 var index = 0;
                 $(inputs).each(function() {
@@ -852,71 +839,89 @@
                 console.log(values);
         });
         },
+        display: function(data){
+            console.log(data);
+            this.state.comment = data.comment;
+            this.state.display = "in show";
+            this.setState(this.state);
+        },
         updateFinalLawDivDataTarget: function() {
             //we want to change the data-target value of the final law div to be unique
             //$("#" + this.state.divId + "#finalLawAnnDiv").removeAttr("id");
-            $("#" + this.state.divId + " a[data-target^='#finalLawUploadedBody']").each(function(index){
+            $("#commentLawMatcher a[data-target^='#finalLawUploadedBody']").each(function(index){
                 $(this).attr("data-target", "#finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
                 $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
             });
         },
-        wrapDivToForm: function() {
-            //wrap the entire final law div into a form
-            $("#" + this.state.divId).wrap('<form id="FinalLawAnnForm"></form>');
-        },
-        appendButtonToForm: function() {
-            $("#FinalLawAnnForm" + " #" + this.state.divId).append('<button id="saveFinalLawAnnotation" class="btn blue">Καταχώρηση</button>');
-        },
         createAnnotationAreasForFinalLaw: function() {
-            var finalLawAnn = new scify.Annotator("#" + this.state.divId + "  .article-body, #" + this.state.divId + " .article-title-text", "fl-ann");
+            var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#" + this.state.divId + " .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+            $("#commentLawMatcher .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
 
         },
+        closeModal:function(){
+            this.state.display = "";
+            this.setState(this.state);
+        },
         render: function() {
-            if(this.props.busy) {
-                return (
-                    <scify.ReactLoader display={this.props.busy} />
-                );
-            } else {
+
+            var innerContent =  <scify.ReactLoader display={this.props.busy} />;
+
+            if(!this.props.busy) {
                 var iconsClasses = classNames("icons",
                     {
                         hide: this.props.comment.source.commentSource == 2 ||
                         this.props.comment.dateAdded < this.props.consultationEndDate
                     });
-
-                return (
-                    <div id={this.state.outerDivId}>
-                        <div id={this.state.divId} className="finalLawAnnModalContent">
-                            <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
-                            <div className="annFinalLawComment">
-                                <div className='body'>
-                                    <scify.Comment
-                                        imagesPath = {this.props.imagesPath}
-                                        key={this.props.comment.id}
-                                        data={this.props.comment}
-                                        shouldDisplayCommenterName={true}
-                                        shouldDisplayEditIcon={false}
-                                        shouldDisplayCommentEdited={true}
-                                        shouldDisplayShareBtn={true}
-                                        shouldDisplayCommentBody={true}
-                                        shouldDisplayEmotion={true}
-                                        shouldDisplayAnnotatedText={true}
-                                        shouldDisplayReplyBox={false}
-                                        shouldDisplayReplies={false}
-                                        optionsEnabled={true}
-                                        shouldDisplayTopics={true}
-                                        commentClassNames="comment"
-                                        shouldDisplayFinalLawAnnBtn={false}/>
+                console.log(this.props.finalLawDiv);
+                innerContent =
+                    <div className="finalLawAnnModalContent">
+                        <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
+                        <div className="annFinalLawComment">
+                            <div className='body commentBox'>
+                                <scify.Comment
+                                    imagesPath = {this.props.imagesPath}
+                                    key={this.props.comment.id}
+                                    data={this.props.comment}
+                                    shouldDisplayCommenterName={true}
+                                    shouldDisplayEditIcon={false}
+                                    shouldDisplayCommentEdited={true}
+                                    shouldDisplayShareBtn={true}
+                                    shouldDisplayCommentBody={true}
+                                    shouldDisplayEmotion={true}
+                                    shouldDisplayAnnotatedText={true}
+                                    shouldDisplayReplyBox={false}
+                                    shouldDisplayReplies={false}
+                                    optionsEnabled={false}
+                                    shouldDisplayTopics={true}
+                                    commentClassNames="comment"
+                                    shouldDisplayFinalLawAnnBtn={false}/>
+                            </div>
+                        </div>
+                    </div>
+            }
+            return (
+                <form id="FinalLawAnnForm">
+                    <div id="finalLawCommentModal" className={ classNames("modal","fade","consFinalLawModal",this.state.display)} role="dialog">
+                        <div className={ classNames("modal-backdrop","fade",this.state.display)} style={{height: 966 +"px"}}></div>
+                        <div className="modal-dialog ">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h4 className="modal-title">Αντιστοίχηση σχολίου με τον τελικό νόμο <i className="fa fa-question-circle" title="Επεξήγηση"></i></h4>
+                                    <button type="button" className="close" data-dismiss="modal">&times;</button>
                                 </div>
-                                <div className={iconsClasses}>
-                                    <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                                <div className="modal-body">
+                                    {{ innerContent }}
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
+                                    <button id="saveFinalLawAnnotation" className="btn blue">Καταχώρηση</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                );
-            }
+                </form>
+            );
         }
     });
 })()
