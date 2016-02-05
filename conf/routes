@@ -33,6 +33,7 @@ POST        /annotation/extractTags                       @controllers.Annotatio
 POST        /comments/rate                                @controllers.AnnotationController.rateComment
 POST        /comment/reply/save                           @controllers.AnnotationController.saveReply
 POST        /finallaw/annotate                            @controllers.AnnotationController.annotateFinalLaw
+GET         /finallaw/annotations/get                     @controllers.AnnotationController.getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long)
 #GET         /search
 
 GET         /consultation/reporter/:consultationId        @controllers.ConsultationController.getReporterPage(consultationId :Long)

@@ -53,9 +53,34 @@ class ConsultationRepository {
     }
   }
 
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long): List[FinalLawUserAnnotation] ={
+    var finalLawAnnotationsForComment:List[FinalLawUserAnnotation] = Nil
+    DB.withConnection { implicit c =>
 
+      val results = SQL"""
+         select fl_cm.*, fl_cm_areas.ann_id, u.fullname as user_name from final_law_comment_matching fl_cm
+         	  inner join final_law_comment_matching_areas fl_cm_areas on fl_cm.id = fl_cm_areas.final_law_ann_id
+            inner join account.user u on u.id = fl_cm.user_id
+         	  where fl_cm.comment_id = $commentId and fl_cm.final_law_id = $finalLawId;
+        """.as((FinalLawAnnotationParser.Parse ~ SqlParser.str("ann_id")) *)
 
-  def saveFinalLawAnnotation(commenterId: UUID, commentId:Long, finalLawId: Long, annotationIds: List[String]):Option[Long] = {
+      val newResults = results.groupBy(z =>{z._1})
+
+     // val finalLawUserAnnotation:FinalLawUserAnnotation = results.head._1;
+      for (tuple <- newResults)  // (FinalLawUserAnnotation, List[(FinalLawUserAnnotation ,List[String])])
+      {
+        //tuple._1 contains the FinalLawUserAnnotation
+        //tuple._2 contains the List[(FinalLawUserAnnotation ,List[String])]
+
+        tuple._1.annotationIds = tuple._2.map(x=> x._2)
+
+        //finalLawUserAnnotation.annotationIds  = Nil
+      }
+      newResults.map(x=>x._1).toList
+    }
+  }
+
+  def saveFinalLawAnnotation(userId: UUID, commentId:Long, finalLawId: Long, annotationIds: List[String]):Option[Long] = {
     DB.withTransaction() { implicit c =>
       val finalLawAnnId =
         SQL"""
@@ -68,7 +93,7 @@ class ConsultationRepository {
                       )
           VALUES
                     (
-                      cast($commenterId as uuid),
+                      cast($userId as uuid),
                       $commentId,
                       now(),
                       $finalLawId)
