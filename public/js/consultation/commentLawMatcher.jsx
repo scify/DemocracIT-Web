@@ -19,14 +19,12 @@
             $('#saveFinalLawAnnotation').on("click",function(e) {
 
                 e.preventDefault();
-                console.log("click");
                 var inputs = $("#FinalLawAnnForm :input");
                 var values = {};
                 var index = 0;
                 $(inputs).each(function() {
                     if(this.type == "checkbox") {
                         if($(this).is(':checked')) {
-                            console.log($(this).parent().parent().attr("data-id"));
                             var dataId = $(this).parent().parent().attr("data-id");
                             values[index] = dataId;
                             index++;
