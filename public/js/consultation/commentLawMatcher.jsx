@@ -4,7 +4,8 @@
         getInitialState: function() {
             return {
                 comment : this.props.comment,
-                display :""
+                display :"",
+                finalLawId: this.props.finalLawId
             };
         },
         componentDidMount: function() {
@@ -20,7 +21,7 @@
 
                 e.preventDefault();
                 var inputs = $("#FinalLawAnnForm :input");
-                var values = {};
+                var values = [];
                 var index = 0;
                 $(inputs).each(function() {
                     if(this.type == "checkbox") {
@@ -31,7 +32,31 @@
                         }
                     }
                 });
-                console.log(values);
+                var dataToSend = {
+                    annotationIds: values,
+                    commenterId:instance.state.comment.userId,
+                    finalLawId:instance.state.finalLawId
+                };
+                console.log(dataToSend);
+                instance.sendDataToController(dataToSend);
+            });
+        },
+        sendDataToController: function(data) {
+            $.ajax({
+                method: "POST",
+                url: "/finallaw/annotate",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend:function(){
+                    //TODO: set busy to display loader
+                },
+                success : function(data){
+                    console.log(data);
+                },
+                complete: function(){
+                    //TODO: set not busy or display a message?
+                }
             });
         },
         display: function(data){
@@ -101,9 +126,11 @@
                                 <div className="modal-body">
                                     {{ innerContent }}
                                 </div>
+                                <div className="saveBtnContainer">
+                                    <button id="saveFinalLawAnnotation" className="btn blue">Καταχώρηση</button>
+                                </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
-                                    <button id="saveFinalLawAnnotation" className="btn blue">Καταχώρηση</button>
                                 </div>
                             </div>
                         </div>

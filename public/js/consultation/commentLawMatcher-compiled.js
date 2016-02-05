@@ -8,7 +8,8 @@
         getInitialState: function getInitialState() {
             return {
                 comment: this.props.comment,
-                display: ""
+                display: "",
+                finalLawId: this.props.finalLawId
             };
         },
         componentDidMount: function componentDidMount() {
@@ -24,7 +25,7 @@
 
                 e.preventDefault();
                 var inputs = $("#FinalLawAnnForm :input");
-                var values = {};
+                var values = [];
                 var index = 0;
                 $(inputs).each(function () {
                     if (this.type == "checkbox") {
@@ -35,7 +36,27 @@
                         }
                     }
                 });
-                console.log(values);
+                var dataToSend = {
+                    annotationIds: values,
+                    commenterId: instance.state.comment.userId,
+                    finalLawId: instance.state.finalLawId
+                };
+                console.log(dataToSend);
+                instance.sendDataToController(dataToSend);
+            });
+        },
+        sendDataToController: function sendDataToController(data) {
+            $.ajax({
+                method: "POST",
+                url: "/finallaw/annotate",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function beforeSend() {},
+                success: function success(data) {
+                    console.log(data);
+                },
+                complete: function complete() {}
             });
         },
         display: function display(data) {
@@ -131,16 +152,20 @@
                             ),
                             React.createElement(
                                 "div",
+                                { className: "saveBtnContainer" },
+                                React.createElement(
+                                    "button",
+                                    { id: "saveFinalLawAnnotation", className: "btn blue" },
+                                    "Καταχώρηση"
+                                )
+                            ),
+                            React.createElement(
+                                "div",
                                 { className: "modal-footer" },
                                 React.createElement(
                                     "button",
                                     { type: "button", className: "btn btn-default", onClick: this.closeModal },
                                     "Κλείσιμο"
-                                ),
-                                React.createElement(
-                                    "button",
-                                    { id: "saveFinalLawAnnotation", className: "btn blue" },
-                                    "Καταχώρηση"
                                 )
                             )
                         )
@@ -150,5 +175,9 @@
         }
     });
 })();
+
+//TODO: set busy to display loader
+
+//TODO: set not busy or display a message?
 
 //# sourceMappingURL=commentLawMatcher-compiled.js.map
