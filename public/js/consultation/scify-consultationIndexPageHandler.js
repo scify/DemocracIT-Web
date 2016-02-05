@@ -510,6 +510,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         {
             this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {
                 comment:data.comment,
+                imagesPath: this.imagesPath,
                 finalLawDiv: $("#finalLawDiv").html()
             }), document.getElementById("commentLawMatcher"));
         }

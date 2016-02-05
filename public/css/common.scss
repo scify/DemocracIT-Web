@@ -601,3 +601,15 @@ legend {
 {
   display:block;
 }
+
+.optionsContainerDisabled {
+  margin-bottom: 25px;
+}
+.optionsContainerDisabled .options div {
+  float: left;
+  margin-right: 5px;
+}
+
+.optionsContainerDisabled .options span {
+  float: left;
+}

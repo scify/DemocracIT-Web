@@ -502,4 +502,14 @@ legend {
 .modal.show {
   display: block; }
 
+.optionsContainerDisabled {
+  margin-bottom: 25px; }
+
+.optionsContainerDisabled .options div {
+  float: left;
+  margin-right: 5px; }
+
+.optionsContainerDisabled .options span {
+  float: left; }
+
 /*# sourceMappingURL=common.css.map */
