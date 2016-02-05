@@ -35,7 +35,8 @@
                 var dataToSend = {
                     annotationIds: values,
                     commenterId:instance.state.comment.userId,
-                    finalLawId:instance.state.finalLawId
+                    finalLawId:instance.state.finalLawId,
+                    commentId:instance.state.comment.id
                 };
                 console.log(dataToSend);
                 instance.sendDataToController(dataToSend);
