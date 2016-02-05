@@ -149,8 +149,9 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val parameterList = Json.parse(request.body.asJson.get.toString)
     val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
     val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
+    val commentId = (parameterList \ "commentId").asOpt[Long].get
     val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
-    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(commenterId, finalLawId, annotationIds);
+    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(commenterId, commentId, finalLawId, annotationIds);
     Ok(Json.toJson(finalLawAnnotationId))
   }
 }
