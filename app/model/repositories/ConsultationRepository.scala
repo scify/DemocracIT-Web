@@ -53,6 +53,34 @@ class ConsultationRepository {
     }
   }
 
+  def saveFinalLawAnnotation(commenterId: UUID, finalLawId: Long, annotationIds: List[String]):Long = {
+    DB.withTransaction() { implicit c =>
+      val finalLawAnnId =
+        SQL"""
+          INSERT INTO public.final_law_annotation
+                      (
+                      user_id,
+                      date_added,
+                      final_law_Id
+                      )
+          VALUES
+                    (
+                      cast($commenterId as uuid),
+                      now(),
+                      $finalLawId)
+                  """.executeInsert()
+      for (annId <- annotationIds) {
+        SQL"""
+              INSERT INTO public.final_law_annotation_id
+                          (final_law_ann_id,ann_id)
+              VALUES
+              ($finalLawAnnId,$annId)
+            """.execute()
+      }
+
+      finalLawAnnId
+    }
+  }
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean):Unit = {
     var column = "num_of_approvals"
     if(attitude == 1) {
