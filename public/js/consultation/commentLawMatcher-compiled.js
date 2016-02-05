@@ -60,8 +60,6 @@
             });
         },
         fetchAnnotationData: function fetchAnnotationData() {
-            console.log(this.state.comment.id);
-            console.log(this.state.finalLawId);
             var dataToSend = {
                 commentId: this.state.comment.id,
                 finalLawId: this.state.finalLawId
@@ -80,7 +78,6 @@
             });
         },
         display: function display(data) {
-            console.log(data);
             this.state.comment = data.comment;
             this.state.display = "in show";
             this.setState(this.state);
