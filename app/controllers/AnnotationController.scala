@@ -7,13 +7,12 @@ import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
-import model.services.{MailerManager, UserProfileManager, AnnotationManager, GamificationEngineTrait}
+import model.services.{AnnotationManager, GamificationEngineTrait, MailerManager, UserProfileManager}
 import model.viewmodels.forms.{RateCommentForm, _}
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import utils.ImplicitReadWrites.FormErrorWrites
-import utils.ImplicitReadWrites.commentsWrites
+import utils.ImplicitReadWrites.{FormErrorWrites, commentsWrites}
 import utils.MailService
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
@@ -147,11 +146,18 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
 
   def annotateFinalLaw() = SecuredAction { implicit request =>
     val parameterList = Json.parse(request.body.asJson.get.toString)
-    val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
+    val userId = request.identity.userID
     val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
     val commentId = (parameterList \ "commentId").asOpt[Long].get
     val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
-    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(commenterId, commentId, finalLawId, annotationIds);
+    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds);
     Ok(Json.toJson(finalLawAnnotationId))
+  }
+
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long) = UserAwareAction { implicit request =>
+    val finalLawUserAnnotation = annotationManager.getFinalLawAnnotationsForComment(commentId, finalLawId)
+    import utils.ImplicitReadWrites._
+
+    Ok(Json.toJson(finalLawUserAnnotation))
   }
 }

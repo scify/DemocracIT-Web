@@ -133,9 +133,14 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
     commentId
   }
 
-  def saveFinalLawAnnotation(commenterId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):Option[Long] = {
-    val finalLawAnnotationId = consultationRepository.saveFinalLawAnnotation(commenterId, commentId, finalLawId, annotationIds)
+  def saveFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):Option[Long] = {
+    val finalLawAnnotationId = consultationRepository.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
     finalLawAnnotationId
+  }
+
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long):List[FinalLawUserAnnotation] = {
+    val finalLawUserAnnotation = consultationRepository.getFinalLawAnnotationsForComment(commentId, finalLawId)
+    finalLawUserAnnotation
   }
 
   def howManyLikesToday(user_id:UUID): Int ={

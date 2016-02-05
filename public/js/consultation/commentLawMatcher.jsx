@@ -34,7 +34,6 @@
                 });
                 var dataToSend = {
                     annotationIds: values,
-                    commenterId:instance.state.comment.userId,
                     finalLawId:instance.state.finalLawId,
                     commentId:instance.state.comment.id
                 };
@@ -60,11 +59,36 @@
                 }
             });
         },
+        fetchAnnotationData: function() {
+            console.log(this.state.comment.id);
+            console.log(this.state.finalLawId);
+            var dataToSend = {
+                commentId: this.state.comment.id,
+                finalLawId: this.state.finalLawId
+            };
+            $.ajax({
+                method: "GET",
+                url: "/finallaw/annotations/get",
+                data: dataToSend,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend:function(){
+                    //TODO: set busy to display loader
+                },
+                success : function(data){
+                    console.log(data);
+                },
+                complete: function(){
+                    //TODO: set not busy or display a message?
+                }
+            });
+        },
         display: function(data){
             console.log(data);
             this.state.comment = data.comment;
             this.state.display = "in show";
             this.setState(this.state);
+            this.fetchAnnotationData();
         },
         updateFinalLawDivDataTarget: function() {
             //we want to change the data-target value of the final law div to be unique

@@ -38,7 +38,6 @@
                 });
                 var dataToSend = {
                     annotationIds: values,
-                    commenterId: instance.state.comment.userId,
                     finalLawId: instance.state.finalLawId,
                     commentId: instance.state.comment.id
                 };
@@ -60,11 +59,32 @@
                 complete: function complete() {}
             });
         },
+        fetchAnnotationData: function fetchAnnotationData() {
+            console.log(this.state.comment.id);
+            console.log(this.state.finalLawId);
+            var dataToSend = {
+                commentId: this.state.comment.id,
+                finalLawId: this.state.finalLawId
+            };
+            $.ajax({
+                method: "GET",
+                url: "/finallaw/annotations/get",
+                data: dataToSend,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function beforeSend() {},
+                success: function success(data) {
+                    console.log(data);
+                },
+                complete: function complete() {}
+            });
+        },
         display: function display(data) {
             console.log(data);
             this.state.comment = data.comment;
             this.state.display = "in show";
             this.setState(this.state);
+            this.fetchAnnotationData();
         },
         updateFinalLawDivDataTarget: function updateFinalLawDivDataTarget() {
             //we want to change the data-target value of the final law div to be unique
@@ -176,6 +196,10 @@
         }
     });
 })();
+
+//TODO: set busy to display loader
+
+//TODO: set not busy or display a message?
 
 //TODO: set busy to display loader
 
