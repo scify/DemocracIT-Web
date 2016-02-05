@@ -11,11 +11,10 @@ object FinalLawAnnotationParser {
   val Parse: RowParser[FinalLawUserAnnotation] = {
     get[UUID]("user_id") ~
     get[String]("user_name") ~
-    get[Long]("comment_id") ~
-    get[List[String]]("annotationIds") map
+    get[Long]("comment_id") map
     {
-      case user_id ~ user_name ~ comment_id ~ annotationIds =>
-        FinalLawUserAnnotation(user_id, user_name, comment_id, annotationIds)
+      case user_id ~ user_name ~ comment_id =>
+        FinalLawUserAnnotation(user_id, user_name, comment_id, Nil)
     }
   }
 }
