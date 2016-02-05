@@ -133,8 +133,8 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
     commentId
   }
 
-  def saveFinalLawAnnotation(commenterId:UUID, finalLawId:Long, annotationIds:List[String]):Long = {
-    val finalLawAnnotationId = consultationRepository.saveFinalLawAnnotation(commenterId, finalLawId, annotationIds)
+  def saveFinalLawAnnotation(commenterId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):Option[Long] = {
+    val finalLawAnnotationId = consultationRepository.saveFinalLawAnnotation(commenterId, commentId, finalLawId, annotationIds)
     finalLawAnnotationId
   }
 
