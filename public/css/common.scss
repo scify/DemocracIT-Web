@@ -613,3 +613,11 @@ legend {
 .optionsContainerDisabled .options span {
   float: left;
 }
+
+#finalLawCommentModal .modal-footer .btn {
+  float: right;
+  margin-top: -40px;
+}
+#finalLawCommentModal .saveBtnContainer {
+  text-align: center;
+}
