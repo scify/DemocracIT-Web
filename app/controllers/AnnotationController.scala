@@ -118,7 +118,6 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
     val userManager = new UserProfileManager()
     val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None,Nil,None)
-    //TODO: Send email to commenter
     val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
     val annotationId = (parameterList \ "annotationId").asOpt[String].get
     val consultationId = (parameterList \ "consultationId").asOpt[Long].get
@@ -144,5 +143,14 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
   def extractTags() = SecuredAction { implicit request =>
         val text = request.request.body.asText.get
         Ok(Json.toJson(annotationManager.extractTags(text)))
+  }
+
+  def annotateFinalLaw() = SecuredAction { implicit request =>
+    val parameterList = Json.parse(request.body.asJson.get.toString)
+    val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
+    val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
+    val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
+    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(commenterId, finalLawId, annotationIds);
+    Ok(Json.toJson(finalLawAnnotationId))
   }
 }
