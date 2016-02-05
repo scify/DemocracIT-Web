@@ -53,31 +53,34 @@ class ConsultationRepository {
     }
   }
 
-  def saveFinalLawAnnotation(commenterId: UUID, finalLawId: Long, annotationIds: List[String]):Long = {
+
+
+  def saveFinalLawAnnotation(commenterId: UUID, commentId:Long, finalLawId: Long, annotationIds: List[String]):Option[Long] = {
     DB.withTransaction() { implicit c =>
       val finalLawAnnId =
         SQL"""
-          INSERT INTO public.final_law_annotation
+          INSERT INTO public.final_law_comment_matching
                       (
                       user_id,
+                      comment_id,
                       date_added,
                       final_law_Id
                       )
           VALUES
                     (
                       cast($commenterId as uuid),
+                      $commentId,
                       now(),
                       $finalLawId)
                   """.executeInsert()
       for (annId <- annotationIds) {
         SQL"""
-              INSERT INTO public.final_law_annotation_id
+              INSERT INTO public.final_law_comment_matching_areas
                           (final_law_ann_id,ann_id)
               VALUES
               ($finalLawAnnId,$annId)
             """.execute()
       }
-
       finalLawAnnId
     }
   }
