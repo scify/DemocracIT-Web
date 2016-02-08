@@ -181,11 +181,56 @@
                 commentId: this.props.commentId
             };
         },
+        //function to produce a random CSS color
+        getRandomColor: function() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        },
+        //function to handle click on annotator button
+        handleMatchingBtn: function(e) {
+            e.preventDefault();
+            var btnIndex = e.target.id.split("_")[1];
+            var btnColor = $(e.target).css("background-color");
+            var annotationDivs = this.state.annotators[btnIndex].annotationIds;
+
+            $.each( annotationDivs, function( index, divDataId ) {
+                $("[data-id=" + divDataId + "]").css("background-color", btnColor);
+                $("[data-id=" + divDataId + "]").css("color", "#fff");
+            });
+            if(!$("[data-id=" + annotationDivs[0] + "]").closest(".article-body").parent().hasClass("in"))
+                $("[data-id=" + annotationDivs[0] + "]").closest(".article-body").parent().prev().find(".show-hide").trigger("click");
+            var articleDomId = $("[data-id=" + annotationDivs[0] + "]").closest(".article-body").parent().attr("id");
+            this.scrollToTargetDiv(articleDomId);
+        },
+        //function to scroll to the target div of comment - final law matched areas
+        scrollToTargetDiv: function(targetDivId) {
+            //distOfTarget is the distance (number of pixels) between the div we want to scroll to and the top
+            var distOfTarget = $('#' + targetDivId).offset().top;
+            //distOfTopDiv is the distance (number of pixels) between the top and the parent div
+            var distOfTopDiv = $('#finalLawAnnDiv').offset().top;
+            console.log($('#finalLawAnnDiv').scrollTop());
+            //initialScroll is the difference between the top and the current position of the scrollbar
+            var initialScroll = $('#finalLawAnnDiv').scrollTop();
+            $("#finalLawAnnDiv").animate({ scrollTop: distOfTarget - distOfTopDiv  + initialScroll }, 500);
+        },
+        //function to produce a button for each user that has matched the comment with the final law
         renderAnnotatorBtns: function() {
-            console.log(this.state.annotators);
+            var instance = this;
+            var annotatorIndex = 0;
+            //for each annotator User, we should create a button element
             var annotatorBtns = this.state.annotators.map(function (annotatorObj){
+                var btnId = "finalLawMatch_" + annotatorIndex;
+                annotatorIndex ++;
+                //each button should have a random color
+                var btnRandomColor = {
+                    backgroundColor: instance.getRandomColor() + " !important"
+                };
                 return(
-                    <button id="saveFinalLawAnnotation" className="btn blue">{annotatorObj.userName}</button>
+                    <button id={btnId} className="btn blue annotatorBtn" onClick={instance.handleMatchingBtn} style={btnRandomColor}>{annotatorObj.userName}</button>
                 );
             });
             var annotatorBtnContainer = this.state.annotators.length > 0 ?
