@@ -5,7 +5,8 @@
             return {
                 comment : this.props.comment,
                 display :"",
-                finalLawId: this.props.finalLawId
+                finalLawId: this.props.finalLawId,
+                annotators: []
             };
         },
         componentDidMount: function() {
@@ -42,6 +43,7 @@
             });
         },
         sendDataToController: function(data) {
+
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
@@ -53,6 +55,7 @@
                 },
                 success : function(data){
                     console.log(data);
+
                 },
                 complete: function(){
                     //TODO: set not busy or display a message?
@@ -60,6 +63,7 @@
             });
         },
         fetchAnnotationData: function() {
+            var instance = this;
             var dataToSend = {
                 commentId: this.state.comment.id,
                 finalLawId: this.state.finalLawId
@@ -75,6 +79,8 @@
                 },
                 success : function(data){
                     console.log(data);
+                    instance.state.annotators = data;
+                    instance.setState(instance.state);
                 },
                 complete: function(){
                     //TODO: set not busy or display a message?
@@ -105,7 +111,10 @@
             this.setState(this.state);
         },
         render: function() {
-
+            var annotatorBox = <div></div>;
+            if(this.state.annotators.length > 0) {
+                annotatorBox = <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id}/>
+            }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
 
             if(!this.props.busy) {
@@ -121,7 +130,7 @@
                                     shouldDisplayCommenterName={true}
                                     shouldDisplayEditIcon={false}
                                     shouldDisplayCommentEdited={true}
-                                    shouldDisplayShareBtn={true}
+                                    shouldDisplayShareBtn={false}
                                     shouldDisplayCommentBody={true}
                                     shouldDisplayEmotion={true}
                                     shouldDisplayAnnotatedText={true}
@@ -131,6 +140,9 @@
                                     shouldDisplayTopics={true}
                                     commentClassNames="comment"
                                     shouldDisplayFinalLawAnnBtn={false}/>
+                                <div className="annotatorBox">
+                                    {annotatorBox}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -158,6 +170,37 @@
                         </div>
                     </div>
                 </form>
+            );
+        }
+    });
+
+    var AnnotationButtons = React.createClass({
+        getInitialState: function() {
+            return {
+                annotators: this.props.annotators,
+                commentId: this.props.commentId
+            };
+        },
+        renderAnnotatorBtns: function() {
+            console.log(this.state.annotators);
+            var annotatorBtns = this.state.annotators.map(function (annotatorObj){
+                return(
+                    <button id="saveFinalLawAnnotation" className="btn blue">{annotatorObj.userName}</button>
+                );
+            });
+            var annotatorBtnContainer = this.state.annotators.length > 0 ?
+                <div id={"annotatorBtnContainer_" + this.state.commentId} className="annotatorBtnContainer">
+                    {annotatorBtns}
+                </div>:"";
+            return (annotatorBtnContainer);
+
+        },
+        render: function() {
+
+            return(
+                <div>
+                    {this.renderAnnotatorBtns()}
+                </div>
             );
         }
     });

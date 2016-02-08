@@ -9,7 +9,8 @@
             return {
                 comment: this.props.comment,
                 display: "",
-                finalLawId: this.props.finalLawId
+                finalLawId: this.props.finalLawId,
+                annotators: []
             };
         },
         componentDidMount: function componentDidMount() {
@@ -46,6 +47,7 @@
             });
         },
         sendDataToController: function sendDataToController(data) {
+
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
@@ -60,6 +62,7 @@
             });
         },
         fetchAnnotationData: function fetchAnnotationData() {
+            var instance = this;
             var dataToSend = {
                 commentId: this.state.comment.id,
                 finalLawId: this.state.finalLawId
@@ -73,6 +76,8 @@
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
                     console.log(data);
+                    instance.state.annotators = data;
+                    instance.setState(instance.state);
                 },
                 complete: function complete() {}
             });
@@ -100,7 +105,10 @@
             this.setState(this.state);
         },
         render: function render() {
-
+            var annotatorBox = React.createElement("div", null);
+            if (this.state.annotators.length > 0) {
+                annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id });
+            }
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
 
             if (!this.props.busy) {
@@ -121,7 +129,7 @@
                                 shouldDisplayCommenterName: true,
                                 shouldDisplayEditIcon: false,
                                 shouldDisplayCommentEdited: true,
-                                shouldDisplayShareBtn: true,
+                                shouldDisplayShareBtn: false,
                                 shouldDisplayCommentBody: true,
                                 shouldDisplayEmotion: true,
                                 shouldDisplayAnnotatedText: true,
@@ -130,7 +138,12 @@
                                 optionsEnabled: false,
                                 shouldDisplayTopics: true,
                                 commentClassNames: "comment",
-                                shouldDisplayFinalLawAnnBtn: false })
+                                shouldDisplayFinalLawAnnBtn: false }),
+                            React.createElement(
+                                "div",
+                                { className: "annotatorBox" },
+                                annotatorBox
+                            )
                         )
                     )
                 );
@@ -189,6 +202,41 @@
                         )
                     )
                 )
+            );
+        }
+    });
+
+    var AnnotationButtons = React.createClass({
+        displayName: "AnnotationButtons",
+
+        getInitialState: function getInitialState() {
+            return {
+                annotators: this.props.annotators,
+                commentId: this.props.commentId
+            };
+        },
+        renderAnnotatorBtns: function renderAnnotatorBtns() {
+            console.log(this.state.annotators);
+            var annotatorBtns = this.state.annotators.map(function (annotatorObj) {
+                return React.createElement(
+                    "button",
+                    { id: "saveFinalLawAnnotation", className: "btn blue" },
+                    annotatorObj.userName
+                );
+            });
+            var annotatorBtnContainer = this.state.annotators.length > 0 ? React.createElement(
+                "div",
+                { id: "annotatorBtnContainer_" + this.state.commentId, className: "annotatorBtnContainer" },
+                annotatorBtns
+            ) : "";
+            return annotatorBtnContainer;
+        },
+        render: function render() {
+
+            return React.createElement(
+                "div",
+                null,
+                this.renderAnnotatorBtns()
             );
         }
     });

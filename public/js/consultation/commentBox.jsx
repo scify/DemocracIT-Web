@@ -372,7 +372,9 @@
             if(this.props.scrollToComment != undefined && this.getHashValue("commentid") == this.props.data.id) {
                 this.props.scrollToComment();
             }
+
             $("#shareComment-" + instance.props.data.id).click(function() {
+                console.log("#shareComment-" + instance.props.data.id);
                 var commentId = $(this).attr('id').split('-')[1];
                 var annotationId = instance.props.annotationId;
                 //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.

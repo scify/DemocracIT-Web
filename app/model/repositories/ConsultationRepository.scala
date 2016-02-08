@@ -54,7 +54,6 @@ class ConsultationRepository {
   }
 
   def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long): List[FinalLawUserAnnotation] ={
-    var finalLawAnnotationsForComment:List[FinalLawUserAnnotation] = Nil
     DB.withConnection { implicit c =>
 
       val results = SQL"""
@@ -71,10 +70,8 @@ class ConsultationRepository {
       {
         //tuple._1 contains the FinalLawUserAnnotation
         //tuple._2 contains the List[(FinalLawUserAnnotation ,List[String])]
-
         tuple._1.annotationIds = tuple._2.map(x=> x._2)
 
-        //finalLawUserAnnotation.annotationIds  = Nil
       }
       newResults.map(x=>x._1).toList
     }
