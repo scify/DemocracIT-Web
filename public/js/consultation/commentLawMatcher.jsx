@@ -9,13 +9,15 @@
                 annotators: [],
                 showInnerModal: false,
                 innerModalMessage: "",
-                annotationDivBusy: false
+                annotationDivBusy: false,
+                submitBtnText: "Καταχώρηση"
             };
         },
         componentDidMount: function() {
             this.updateFinalLawDivDataTarget();
             this.createAnnotationAreasForFinalLaw();
             this.formSubmitHandler();
+
         },
         //function to clear all selected checkboxes
         clearAnnotationForm: function() {
@@ -54,7 +56,6 @@
                     finalLawId:instance.state.finalLawId,
                     commentId:instance.state.comment.id
                 };
-                console.log(dataToSend);
                 if(dataToSend.annotationIds.length == 0) {
                     instance.showNoAnnSelectedModal();
                     return;
@@ -62,14 +63,25 @@
                 instance.sendDataToController(dataToSend);
             });
         },
+        //function to check if the logged in user has already matched the comment with the final law
+        checkIfTheUserHasAnnotated: function() {
+            var instance = this;
+            var answer = false;
+            $.each(this.state.annotators, function( index, annotator ) {
+                if(annotator.userId == instance.props.userId) {
+                    answer = true;
+                }
+            });
+            return answer;
+        },
         //function to show appropriate modal for empty form submissions (no annotation areas selected)
-        showNoAnnSelectedModal() {
+        showNoAnnSelectedModal: function() {
             this.state.showInnerModal = true;
             this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
             this.setState(this.state);
         },
         //function to show appropriate modal for for not logged in user
-        showNotLoggedInModal() {
+        showNotLoggedInModal: function() {
             this.state.showInnerModal = true;
             this.state.innerModalMessage = 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a>';
             this.setState(this.state);
@@ -78,14 +90,16 @@
         sendDataToController: function(data) {
             var dataToSend = data;
             var instance = this;
+            var url = "/finallaw/annotate";
+            if(this.checkIfTheUserHasAnnotated())
+                url = "/finallaw/annotate/update"
             $.ajax({
                 method: "POST",
-                url: "/finallaw/annotate",
+                url: url,
                 data: JSON.stringify(data),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 beforeSend:function(){
-                    //TODO: set busy to display loader
                     instance.state.annotationDivBusy = true;
                     instance.setState(instance.state);
                 },
@@ -98,13 +112,27 @@
                         userName: data
                     };
                     console.log(newAnnObj);
-                    instance.addToAnnotatorsArr(newAnnObj);
+                    if(instance.checkIfTheUserHasAnnotated())
+                        instance.replaceAnnotation(newAnnObj);
+                     else
+                        instance.addToAnnotatorsArr(newAnnObj);
                 },
                 complete: function(){
-                    //TODO: set not busy or display a message?
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
                     instance.clearAnnotationForm();
+                }
+            });
+        },
+        //function to replace existing annotation object after annotation update
+        replaceAnnotation: function(updatedAnnotator) {
+            var instance = this;
+            $.each(this.state.annotators, function( index, annotator ) {
+                console.log(annotator.userId);
+                console.log(index);
+                if(annotator.userId == updatedAnnotator.userId) {
+                    instance.state.annotators[index] = updatedAnnotator;
+                    return;
                 }
             });
         },
@@ -112,7 +140,6 @@
         addToAnnotatorsArr: function(newAnnotator) {
             this.state.annotators.push(newAnnotator);
             this.setState(this.state);
-            console.log(this.state.annotators);
         },
         //function to fetch initial annotation data (comment-final law matches)
         fetchAnnotationData: function() {
@@ -128,7 +155,8 @@
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 beforeSend:function(){
-                    //TODO: set busy to display loader
+                    instance.state.annotationDivBusy = true;
+                    instance.setState(instance.state);
                 },
                 success : function(data){
                     console.log(data);
@@ -136,7 +164,14 @@
                     instance.setState(instance.state);
                 },
                 complete: function(){
-                    //TODO: set not busy or display a message?
+                    instance.state.annotationDivBusy = false;
+                    instance.setState(instance.state);
+                    instance.clearAnnotationForm();
+                    console.log(instance.checkIfTheUserHasAnnotated());
+                    if(instance.checkIfTheUserHasAnnotated()) {
+                        instance.state.submitBtnText = "Τροποποίηση Καταχώρησης"
+                        instance.setState(instance.state);
+                    }
                 }
             });
         },
@@ -145,6 +180,7 @@
             this.state.display = "in show";
             this.setState(this.state);
             this.fetchAnnotationData();
+
         },
         updateFinalLawDivDataTarget: function() {
             //we want to change the data-target value of the final law div to be unique
@@ -247,7 +283,7 @@
                                     {{ innerContent }}
                                 </div>
                                 <div className="saveBtnContainer">
-                                    <button id="saveFinalLawAnnotation" className="btn blue">Καταχώρηση</button>
+                                    <button id="saveFinalLawAnnotation" className="btn blue">{this.state.submitBtnText}</button>
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
@@ -298,7 +334,6 @@
             var distOfTarget = $('#' + targetDivId).offset().top;
             //distOfTopDiv is the distance (number of pixels) between the top and the parent div
             var distOfTopDiv = $('#finalLawAnnDiv').offset().top;
-            console.log($('#finalLawAnnDiv').scrollTop());
             //initialScroll is the difference between the top and the current position of the scrollbar
             var initialScroll = $('#finalLawAnnDiv').scrollTop();
             $("#finalLawAnnDiv").animate({ scrollTop: distOfTarget - distOfTopDiv  + initialScroll }, 500);

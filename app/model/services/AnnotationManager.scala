@@ -134,7 +134,14 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
   }
 
   def saveFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
-    val finalLawAnnotationId = consultationRepository.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    consultationRepository.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    val userProfileRepository = new UserProfileRepository()
+    val userName = userProfileRepository.getUserFullNameById(userId)
+    userName
+  }
+
+  def updateFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
+    consultationRepository.updateFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
     val userProfileRepository = new UserProfileRepository()
     val userName = userProfileRepository.getUserFullNameById(userId)
     userName

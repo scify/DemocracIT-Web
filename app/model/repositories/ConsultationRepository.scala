@@ -60,7 +60,7 @@ class ConsultationRepository {
          select fl_cm.*, fl_cm_areas.ann_id, u.fullname as user_name from final_law_comment_matching fl_cm
          	  inner join final_law_comment_matching_areas fl_cm_areas on fl_cm.id = fl_cm_areas.final_law_ann_id
             inner join account.user u on u.id = fl_cm.user_id
-         	  where fl_cm.comment_id = $commentId and fl_cm.final_law_id = $finalLawId;
+         	  where fl_cm.comment_id = $commentId and fl_cm.final_law_id = $finalLawId and fl_cm.active = true;
         """.as((FinalLawAnnotationParser.Parse ~ SqlParser.str("ann_id")) *)
 
       val newResults = results.groupBy(z =>{z._1})
@@ -106,6 +106,17 @@ class ConsultationRepository {
       finalLawAnnId
     }
   }
+
+  def updateFinalLawAnnotation(userId: UUID, commentId:Long, finalLawId: Long, annotationIds: List[String]):Option[Long] = {
+    DB.withTransaction() { implicit c =>
+      val finalLawAnnId =
+        SQL"""
+              UPDATE public.final_law_comment_matching SET active = false WHERE user_id = cast($userId AS UUID) and final_law_Id = $finalLawId
+          """.execute()
+      saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    }
+  }
+
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean):Unit = {
     var column = "num_of_approvals"
     if(attitude == 1) {

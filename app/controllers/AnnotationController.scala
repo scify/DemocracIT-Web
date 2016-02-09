@@ -154,6 +154,16 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     Ok(Json.toJson(finalLawAnnotationId))
   }
 
+  def updateFinalLawAnnotation() = SecuredAction { implicit request =>
+    val parameterList = Json.parse(request.body.asJson.get.toString)
+    val userId = request.identity.userID
+    val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
+    val commentId = (parameterList \ "commentId").asOpt[Long].get
+    val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
+    val finalLawAnnotationId = annotationManager.updateFinalLawAnnotation(userId, commentId, finalLawId, annotationIds);
+    Ok(Json.toJson(finalLawAnnotationId))
+  }
+
   def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long) = UserAwareAction { implicit request =>
     val finalLawUserAnnotation = annotationManager.getFinalLawAnnotationsForComment(commentId, finalLawId)
     import utils.ImplicitReadWrites._
