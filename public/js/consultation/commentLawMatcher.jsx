@@ -6,7 +6,9 @@
                 comment : this.props.comment,
                 display :"",
                 finalLawId: this.props.finalLawId,
-                annotators: []
+                annotators: [],
+                showInnerModal: false,
+                innerModalMessage: ""
             };
         },
         componentDidMount: function() {
@@ -18,9 +20,13 @@
 
         formSubmitHandler: function() {
             var instance = this;
-            $('#saveFinalLawAnnotation').on("click",function(e) {
 
+            $('#saveFinalLawAnnotation').on("click",function(e) {
                 e.preventDefault();
+                if(instance.props.userId == "") {
+                    instance.showNotLoggedInModal();
+                    return;
+                }
                 var inputs = $("#FinalLawAnnForm :input");
                 var values = [];
                 var index = 0;
@@ -39,11 +45,23 @@
                     commentId:instance.state.comment.id
                 };
                 console.log(dataToSend);
+                if(dataToSend.annotationIds.length == 0) {
+                    instance.showNoAnnSelectedModal();
+                }
                 instance.sendDataToController(dataToSend);
             });
         },
+        showNoAnnSelectedModal() {
+            this.state.showInnerModal = true;
+            this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
+            this.setState(this.state);
+        },
+        showNotLoggedInModal() {
+            this.state.showInnerModal = true;
+            this.state.innerModalMessage = 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a>';
+            this.setState(this.state);
+        },
         sendDataToController: function(data) {
-
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
@@ -110,13 +128,18 @@
             this.state.display = "";
             this.setState(this.state);
         },
+        closeInnerModal: function() {
+            this.state.showInnerModal = false;
+            this.setState(this.state);
+            console.log(this.state.showInnerModal);
+        },
         render: function() {
             var annotatorBox = <div></div>;
             if(this.state.annotators.length > 0) {
-                annotatorBox = <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id}/>
+                annotatorBox = <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id} userId={this.props.userId}/>
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
-
+            var showInnerModalClasses = classNames("in show",{ hide :!this.state.showInnerModal});
             if(!this.props.busy) {
                 innerContent =
                     <div className="finalLawAnnModalContent">
@@ -142,6 +165,27 @@
                                     shouldDisplayFinalLawAnnBtn={false}/>
                                 <div className="annotatorBox">
                                     {annotatorBox}
+                                </div>
+                                <div id="noRateModal" className={ classNames("modal","fade", showInnerModalClasses)}
+                                     role="dialog">
+                                    <div className={ classNames("modal-backdrop","fade",showInnerModalClasses)}></div>
+                                    <div className="modal-dialog">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <button type="button" className="close" id="closeInnerModal" onClick={this.closeInnerModal}>&times;</button>
+                                            </div>
+                                            <div className="modal-body">
+                                                <div className="notLoggedinWrapper">
+                                                    <div className="msg"><i class="fa fa-exclamation-triangle"></i>
+                                                        <p className="notLoggedText" dangerouslySetInnerHTML={{__html:this.state.innerModalMessage}}></p></div>
+                                                </div>
+                                            </div>
+
+                                            <div className="modal-footer">
+                                                <button className="close btn red innerModalCloseBtn" type="button" onClick={this.closeInnerModal}>Κλείσιμο</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

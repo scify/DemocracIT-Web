@@ -10,7 +10,9 @@
                 comment: this.props.comment,
                 display: "",
                 finalLawId: this.props.finalLawId,
-                annotators: []
+                annotators: [],
+                showInnerModal: false,
+                innerModalMessage: ""
             };
         },
         componentDidMount: function componentDidMount() {
@@ -22,9 +24,13 @@
 
         formSubmitHandler: function formSubmitHandler() {
             var instance = this;
-            $("#saveFinalLawAnnotation").on("click", function (e) {
 
+            $("#saveFinalLawAnnotation").on("click", function (e) {
                 e.preventDefault();
+                if (instance.props.userId == "") {
+                    instance.showNotLoggedInModal();
+                    return;
+                }
                 var inputs = $("#FinalLawAnnForm :input");
                 var values = [];
                 var index = 0;
@@ -43,11 +49,23 @@
                     commentId: instance.state.comment.id
                 };
                 console.log(dataToSend);
+                if (dataToSend.annotationIds.length == 0) {
+                    instance.showNoAnnSelectedModal();
+                }
                 instance.sendDataToController(dataToSend);
             });
         },
+        showNoAnnSelectedModal: function showNoAnnSelectedModal() {
+            this.state.showInnerModal = true;
+            this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
+            this.setState(this.state);
+        },
+        showNotLoggedInModal: function showNotLoggedInModal() {
+            this.state.showInnerModal = true;
+            this.state.innerModalMessage = "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"/signIn?returnUrl=@request.uri\">συνδεδεμένοι</a>";
+            this.setState(this.state);
+        },
         sendDataToController: function sendDataToController(data) {
-
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
@@ -104,13 +122,18 @@
             this.state.display = "";
             this.setState(this.state);
         },
+        closeInnerModal: function closeInnerModal() {
+            this.state.showInnerModal = false;
+            this.setState(this.state);
+            console.log(this.state.showInnerModal);
+        },
         render: function render() {
             var annotatorBox = React.createElement("div", null);
             if (this.state.annotators.length > 0) {
-                annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id });
+                annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id, userId: this.props.userId });
             }
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
-
+            var showInnerModalClasses = classNames("in show", { hide: !this.state.showInnerModal });
             if (!this.props.busy) {
                 innerContent = React.createElement(
                     "div",
@@ -143,6 +166,52 @@
                                 "div",
                                 { className: "annotatorBox" },
                                 annotatorBox
+                            ),
+                            React.createElement(
+                                "div",
+                                { id: "noRateModal", className: classNames("modal", "fade", showInnerModalClasses),
+                                    role: "dialog" },
+                                React.createElement("div", { className: classNames("modal-backdrop", "fade", showInnerModalClasses) }),
+                                React.createElement(
+                                    "div",
+                                    { className: "modal-dialog" },
+                                    React.createElement(
+                                        "div",
+                                        { className: "modal-content" },
+                                        React.createElement(
+                                            "div",
+                                            { className: "modal-header" },
+                                            React.createElement(
+                                                "button",
+                                                { type: "button", className: "close", id: "closeInnerModal", onClick: this.closeInnerModal },
+                                                "×"
+                                            )
+                                        ),
+                                        React.createElement(
+                                            "div",
+                                            { className: "modal-body" },
+                                            React.createElement(
+                                                "div",
+                                                { className: "notLoggedinWrapper" },
+                                                React.createElement(
+                                                    "div",
+                                                    { className: "msg" },
+                                                    React.createElement("i", { "class": "fa fa-exclamation-triangle" }),
+                                                    React.createElement("p", { className: "notLoggedText", dangerouslySetInnerHTML: { __html: this.state.innerModalMessage } })
+                                                )
+                                            )
+                                        ),
+                                        React.createElement(
+                                            "div",
+                                            { className: "modal-footer" },
+                                            React.createElement(
+                                                "button",
+                                                { className: "close btn red innerModalCloseBtn", type: "button", onClick: this.closeInnerModal },
+                                                "Κλείσιμο"
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
