@@ -67,16 +67,15 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
   }
 
   def formatFileContent(fileContent:String):String = {
-    var splitContent:Array[String] = fileContent.split("\\r?\\n")
-    var l = splitContent.length
+    val splitContent:Array[String] = fileContent.split("\n")
     var fileContentFinal = ""
     var isFirstArticle = true
     var htmlContent = ""
-    var articleNum = 1;
-    for(i <- splitContent){
-      if(i.length > 6) {
-        val v = i.substring(0,6)
-        if (i.substring(0, 6).equals("Άρθρο ")) {
+    var articleNum = 1
+    //for each line in the document
+    for(line <- splitContent){
+      if(line.length > 6) {
+        if (line.substring(0, 6).equals("Άρθρο ")) {
           if(isFirstArticle) {
             htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
               "<div class=\"col-md-12\"><div class=\"title\">" +
@@ -89,18 +88,25 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
               "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
               "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
           }
-
-          var htmlContentAfter = "</span></div><div id=\"finalLawUploadedBody-" + articleNum + "\" class=\"collapse\" style=\"height:0;\" ><div class=\"article-body\">"
+          //htmlContentAfter contains the HTML div after the article title, preceding the article body
+          val htmlContentAfter = "</span></div><div id=\"finalLawUploadedBody-" + articleNum + "\" class=\"collapse\" style=\"height:0;\" ><div class=\"article-body\">"
+          //augment the article counter
           articleNum += 1
-          fileContentFinal += htmlContent + i + htmlContentAfter
-        }
-        else if (i.substring(0, 1).matches("[0-9]") && i.substring(1,2).equals(".")){
-          fileContentFinal += "<b>" + i.substring(0, 2) + "</b>" + i.substring(2,i.length) + "<br>"
+          fileContentFinal += htmlContent + line + htmlContentAfter
         } else{
-          fileContentFinal += i + "<br>"
+            //check if line ends with "-"
+            if(line.charAt(line.length-1) == 8722 || line.charAt(line.length-1) == 45 ) {
+              fileContentFinal += line.substring(0, line.length-1)
+            } else if (line.contains(". ")) {
+                fileContentFinal += line + "<br>"
+            }
+            else {
+              fileContentFinal += line
+            }
         }
-      } else
-        fileContentFinal += i + "<br>"
+      } else {
+          fileContentFinal += line
+      }
     }
     fileContentFinal += "</div></div></div></div></div>"
     fileContentFinal

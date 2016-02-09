@@ -533,13 +533,11 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
                 $.ajax({
                     type: 'GET',
-                    url: "/consultation/finallaw/delete/" + finalLawId,
+                    url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
                     beforeSend: function () {
                     },
                     success: function (returnData) {
-                        //console.log(returnData);
                         setTimeout(function (){
-                            //$("#deleteLaw").find(".loaderSmall").remove();
                             var url = window.location.href;
                             if(url.indexOf("?target=finalLaw") == -1)
                                 url += '?target=finalLaw';
