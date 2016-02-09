@@ -12,7 +12,8 @@
                 finalLawId: this.props.finalLawId,
                 annotators: [],
                 showInnerModal: false,
-                innerModalMessage: ""
+                innerModalMessage: "",
+                annotationDivBusy: false
             };
         },
         componentDidMount: function componentDidMount() {
@@ -51,6 +52,7 @@
                 console.log(dataToSend);
                 if (dataToSend.annotationIds.length == 0) {
                     instance.showNoAnnSelectedModal();
+                    return;
                 }
                 instance.sendDataToController(dataToSend);
             });
@@ -66,18 +68,42 @@
             this.setState(this.state);
         },
         sendDataToController: function sendDataToController(data) {
+            var dataToSend = data;
+            var instance = this;
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
                 data: JSON.stringify(data),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                beforeSend: function beforeSend() {},
+                beforeSend: function beforeSend() {
+                    //TODO: set busy to display loader
+                    instance.state.annotationDivBusy = true;
+                    instance.setState(instance.state);
+                },
                 success: function success(data) {
                     console.log(data);
+                    var newAnnObj = {
+                        annotationIds: dataToSend.annotationIds,
+                        commentId: dataToSend.commentId,
+                        userId: instance.props.userId,
+                        userName: data
+                    };
+                    console.log(newAnnObj);
+                    instance.addToAnnotatorsArr(newAnnObj);
                 },
-                complete: function complete() {}
+                complete: function complete() {
+                    //TODO: set not busy or display a message?
+                    instance.state.annotationDivBusy = false;
+                    instance.setState(instance.state);
+                }
             });
+        },
+        //function to add new annotation object to annotators array
+        addToAnnotatorsArr: function addToAnnotatorsArr(newAnnotator) {
+            this.state.annotators.push(newAnnotator);
+            this.setState(this.state);
+            console.log(this.state.annotators);
         },
         fetchAnnotationData: function fetchAnnotationData() {
             var instance = this;
@@ -129,8 +155,18 @@
         },
         render: function render() {
             var annotatorBox = React.createElement("div", null);
-            if (this.state.annotators.length > 0) {
-                annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id, userId: this.props.userId });
+            if (this.state.annotationDivBusy) {
+                annotatorBox = React.createElement(
+                    "div",
+                    { className: "annotatorBtnContainer" },
+                    React.createElement(scify.ReactLoader, { display: this.state.annotationDivBusy })
+                );
+            } else {
+                if (this.state.annotators.length > 0) {
+                    console.log(this.state.annotators);
+                    annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id,
+                        userId: this.props.userId });
+                }
             }
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
             var showInnerModalClasses = classNames("in show", { hide: !this.state.showInnerModal });
@@ -340,6 +376,11 @@
             var annotatorBtnContainer = this.state.annotators.length > 0 ? React.createElement(
                 "div",
                 { id: "annotatorBtnContainer_" + this.state.commentId, className: "annotatorBtnContainer" },
+                React.createElement(
+                    "div",
+                    { className: "annotatorsAreaTitle" },
+                    "Πατήστε επάνω σε κάποιον χρήση για να δείτε τις επισημειωμένες περιοχές:"
+                ),
                 annotatorBtns
             ) : "";
             return annotatorBtnContainer;
@@ -354,10 +395,6 @@
         }
     });
 })();
-
-//TODO: set busy to display loader
-
-//TODO: set not busy or display a message?
 
 //TODO: set busy to display loader
 

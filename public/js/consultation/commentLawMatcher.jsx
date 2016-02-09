@@ -8,7 +8,8 @@
                 finalLawId: this.props.finalLawId,
                 annotators: [],
                 showInnerModal: false,
-                innerModalMessage: ""
+                innerModalMessage: "",
+                annotationDivBusy: false
             };
         },
         componentDidMount: function() {
@@ -47,6 +48,7 @@
                 console.log(dataToSend);
                 if(dataToSend.annotationIds.length == 0) {
                     instance.showNoAnnSelectedModal();
+                    return;
                 }
                 instance.sendDataToController(dataToSend);
             });
@@ -62,6 +64,8 @@
             this.setState(this.state);
         },
         sendDataToController: function(data) {
+            var dataToSend = data;
+            var instance = this;
             $.ajax({
                 method: "POST",
                 url: "/finallaw/annotate",
@@ -70,15 +74,32 @@
                 contentType: "application/json; charset=utf-8",
                 beforeSend:function(){
                     //TODO: set busy to display loader
+                    instance.state.annotationDivBusy = true;
+                    instance.setState(instance.state);
                 },
                 success : function(data){
                     console.log(data);
-
+                    var newAnnObj = {
+                        annotationIds: dataToSend.annotationIds,
+                        commentId: dataToSend.commentId,
+                        userId: instance.props.userId,
+                        userName: data
+                    };
+                    console.log(newAnnObj);
+                    instance.addToAnnotatorsArr(newAnnObj);
                 },
                 complete: function(){
                     //TODO: set not busy or display a message?
+                    instance.state.annotationDivBusy = false;
+                    instance.setState(instance.state);
                 }
             });
+        },
+        //function to add new annotation object to annotators array
+        addToAnnotatorsArr: function(newAnnotator) {
+            this.state.annotators.push(newAnnotator);
+            this.setState(this.state);
+            console.log(this.state.annotators);
         },
         fetchAnnotationData: function() {
             var instance = this;
@@ -135,8 +156,15 @@
         },
         render: function() {
             var annotatorBox = <div></div>;
-            if(this.state.annotators.length > 0) {
-                annotatorBox = <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id} userId={this.props.userId}/>
+            if(this.state.annotationDivBusy) {
+                annotatorBox = <div className="annotatorBtnContainer"><scify.ReactLoader display={this.state.annotationDivBusy} /></div>;
+            } else {
+                if (this.state.annotators.length > 0) {
+                    console.log(this.state.annotators);
+                    annotatorBox =
+                        <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id}
+                                           userId={this.props.userId}/>
+                }
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
             var showInnerModalClasses = classNames("in show",{ hide :!this.state.showInnerModal});
@@ -279,6 +307,7 @@
             });
             var annotatorBtnContainer = this.state.annotators.length > 0 ?
                 <div id={"annotatorBtnContainer_" + this.state.commentId} className="annotatorBtnContainer">
+                    <div className="annotatorsAreaTitle">Πατήστε επάνω σε κάποιον χρήση για να δείτε τις επισημειωμένες περιοχές:</div>
                     {annotatorBtns}
                 </div>:"";
             return (annotatorBtnContainer);

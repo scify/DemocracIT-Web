@@ -528,4 +528,10 @@ legend {
 .innerModalCloseBtn {
   float: none !important; }
 
+.annotatorBtnContainer {
+  margin-top: 30px; }
+
+.annotatorBtnContainer .annotatorsAreaTitle {
+  margin-bottom: 10px; }
+
 /*# sourceMappingURL=common.css.map */
