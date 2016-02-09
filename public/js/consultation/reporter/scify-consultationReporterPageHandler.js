@@ -605,6 +605,20 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             commentClassNames:"comment"
         }
     },
+    handleMatchCommentWithLaw = function(e,data){
+
+        if (!this.commentWithLawMatcher)
+        {
+            this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {
+                comment:data.comment,
+                imagesPath: this.imagesPath,
+                finalLawId: parseInt(this.finalLawId),
+                finalLawDiv: $("#finalLawDiv").html(),
+                userId: this.userId
+            }), document.getElementById("commentLawMatcher"));
+        }
+        this.commentWithLawMatcher.display(data);
+    }
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -640,6 +654,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         expandArticleOnClick();
         finalLawModalHandler();
 
+        $("body").on("match-comment-with-law",handleMatchCommentWithLaw.bind(instance));
         //FB tracking code for visiting reporter page
         fbq('track', 'ViewContent');
     };
