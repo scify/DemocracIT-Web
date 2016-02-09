@@ -21,11 +21,20 @@
             this.createAnnotationAreasForFinalLaw();
             this.formSubmitHandler();
         },
-        //TODO: implement clearForm function to clear all selected checkboxes
-
+        //function to clear all selected checkboxes
+        clearAnnotationForm: function clearAnnotationForm() {
+            var inputs = $("#FinalLawAnnForm :input");
+            $(inputs).each(function () {
+                if (this.type == "checkbox") {
+                    if ($(this).is(":checked")) {
+                        $(this).attr("checked", false);
+                    }
+                }
+            });
+        },
+        //function that handles annotation form submission
         formSubmitHandler: function formSubmitHandler() {
             var instance = this;
-
             $("#saveFinalLawAnnotation").on("click", function (e) {
                 e.preventDefault();
                 if (instance.props.userId == "") {
@@ -57,16 +66,19 @@
                 instance.sendDataToController(dataToSend);
             });
         },
+        //function to show appropriate modal for empty form submissions (no annotation areas selected)
         showNoAnnSelectedModal: function showNoAnnSelectedModal() {
             this.state.showInnerModal = true;
             this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
             this.setState(this.state);
         },
+        //function to show appropriate modal for for not logged in user
         showNotLoggedInModal: function showNotLoggedInModal() {
             this.state.showInnerModal = true;
             this.state.innerModalMessage = "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"/signIn?returnUrl=@request.uri\">συνδεδεμένοι</a>";
             this.setState(this.state);
         },
+        // function to send form submission data to controller
         sendDataToController: function sendDataToController(data) {
             var dataToSend = data;
             var instance = this;
@@ -96,6 +108,7 @@
                     //TODO: set not busy or display a message?
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
+                    instance.clearAnnotationForm();
                 }
             });
         },
@@ -105,6 +118,7 @@
             this.setState(this.state);
             console.log(this.state.annotators);
         },
+        //function to fetch initial annotation data (comment-final law matches)
         fetchAnnotationData: function fetchAnnotationData() {
             var instance = this;
             var dataToSend = {
