@@ -32,6 +32,8 @@
                     }
                 }
             });
+            $("[data-id^=\"fl-ann\"]").css("background-color", "#fff");
+            $("[data-id^=\"fl-ann\"]").css("color", "#000");
         },
         //function that handles annotation form submission
         formSubmitHandler: function formSubmitHandler() {
@@ -89,6 +91,13 @@
             this.state.innerModalMessage = "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"/signIn?returnUrl=@request.uri\">συνδεδεμένοι</a>";
             this.setState(this.state);
         },
+        //function to update the text of submit button
+        updateSubmitBtnText: function updateSubmitBtnText() {
+            if (this.checkIfTheUserHasAnnotated()) {
+                this.state.submitBtnText = "Τροποποίηση Καταχώρησης";
+                this.setState(this.state);
+            }
+        },
         // function to send form submission data to controller
         sendDataToController: function sendDataToController(data) {
             var dataToSend = data;
@@ -120,6 +129,8 @@
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
                     instance.clearAnnotationForm();
+                    console.log(instance.checkIfTheUserHasAnnotated());
+                    instance.updateSubmitBtnText();
                 }
             });
         },
@@ -167,10 +178,7 @@
                     instance.setState(instance.state);
                     instance.clearAnnotationForm();
                     console.log(instance.checkIfTheUserHasAnnotated());
-                    if (instance.checkIfTheUserHasAnnotated()) {
-                        instance.state.submitBtnText = "Τροποποίηση Καταχώρησης";
-                        instance.setState(instance.state);
-                    }
+                    instance.updateSubmitBtnText();
                 }
             });
         },
