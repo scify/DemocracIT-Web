@@ -106,7 +106,7 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    console.log(data);
+                    //console.log(data);
                     var newAnnObj = {
                         annotationIds: dataToSend.annotationIds,
                         commentId: dataToSend.commentId,
@@ -127,8 +127,8 @@
         replaceAnnotation: function replaceAnnotation(updatedAnnotator) {
             var instance = this;
             $.each(this.state.annotators, function (index, annotator) {
-                console.log(annotator.userId);
-                console.log(index);
+                /*console.log(annotator.userId);
+                console.log(index);*/
                 if (annotator.userId == updatedAnnotator.userId) {
                     instance.state.annotators[index] = updatedAnnotator;
                     return;
@@ -178,7 +178,7 @@
             this.state.comment = data.comment;
             this.state.display = "in show";
             this.setState(this.state);
-            this.fetchAnnotationData();
+            if (this.props.finalLawDiv != undefined) this.fetchAnnotationData();
         },
         updateFinalLawDivDataTarget: function updateFinalLawDivDataTarget() {
             //we want to change the data-target value of the final law div to be unique
@@ -190,7 +190,7 @@
         createAnnotationAreasForFinalLaw: function createAnnotationAreasForFinalLaw() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#commentLawMatcher .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+            $("#commentLawMatcher .fl-ann").append("<span className='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
         },
         closeModal: function closeModal() {
             this.state.display = "";
@@ -202,6 +202,20 @@
             console.log(this.state.showInnerModal);
         },
         render: function render() {
+            var finalLawDiv = this.props.finalLawDiv;
+            var finalLawHtml = React.createElement("div", { id: "finalLawAnnDiv", dangerouslySetInnerHTML: { __html: this.props.finalLawDiv } });
+            if (finalLawDiv == undefined) {
+                finalLawHtml = React.createElement(
+                    "div",
+                    { id: "finalLawAnnDiv", className: "noFinalLawText" },
+                    "Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη. Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε ",
+                    React.createElement(
+                        "a",
+                        { href: window.location.href + "?target=finalLaw" },
+                        "εδώ"
+                    )
+                );
+            }
             var annotatorBox = React.createElement("div", null);
             if (this.state.annotationDivBusy) {
                 annotatorBox = React.createElement(
@@ -222,7 +236,7 @@
                 innerContent = React.createElement(
                     "div",
                     { className: "finalLawAnnModalContent" },
-                    React.createElement("div", { id: "finalLawAnnDiv", dangerouslySetInnerHTML: { __html: this.props.finalLawDiv } }),
+                    finalLawHtml,
                     React.createElement(
                         "div",
                         { className: "annFinalLawComment" },
@@ -280,7 +294,7 @@
                                                 React.createElement(
                                                     "div",
                                                     { className: "msg" },
-                                                    React.createElement("i", { "class": "fa fa-exclamation-triangle" }),
+                                                    React.createElement("i", { className: "fa fa-exclamation-triangle" }),
                                                     React.createElement("p", { className: "notLoggedText", dangerouslySetInnerHTML: { __html: this.state.innerModalMessage } })
                                                 )
                                             )

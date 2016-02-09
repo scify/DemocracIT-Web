@@ -104,7 +104,7 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    console.log(data);
+                    //console.log(data);
                     var newAnnObj = {
                         annotationIds: dataToSend.annotationIds,
                         commentId: dataToSend.commentId,
@@ -128,8 +128,8 @@
         replaceAnnotation: function(updatedAnnotator) {
             var instance = this;
             $.each(this.state.annotators, function( index, annotator ) {
-                console.log(annotator.userId);
-                console.log(index);
+                /*console.log(annotator.userId);
+                console.log(index);*/
                 if(annotator.userId == updatedAnnotator.userId) {
                     instance.state.annotators[index] = updatedAnnotator;
                     return;
@@ -179,7 +179,8 @@
             this.state.comment = data.comment;
             this.state.display = "in show";
             this.setState(this.state);
-            this.fetchAnnotationData();
+            if(this.props.finalLawDiv != undefined)
+                this.fetchAnnotationData();
 
         },
         updateFinalLawDivDataTarget: function() {
@@ -192,7 +193,7 @@
         createAnnotationAreasForFinalLaw: function() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#commentLawMatcher .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+            $("#commentLawMatcher .fl-ann").append("<span className='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
 
         },
         closeModal:function(){
@@ -205,6 +206,13 @@
             console.log(this.state.showInnerModal);
         },
         render: function() {
+            var finalLawDiv = this.props.finalLawDiv;
+            var finalLawHtml = <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>;
+            if(finalLawDiv == undefined) {
+                finalLawHtml = <div id="finalLawAnnDiv" className="noFinalLawText">Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη.
+                    Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε <a href={window.location.href + "?target=finalLaw"}>εδώ</a>
+                </div>;
+            }
             var annotatorBox = <div></div>;
             if(this.state.annotationDivBusy) {
                 annotatorBox = <div className="annotatorBtnContainer"><scify.ReactLoader display={this.state.annotationDivBusy} /></div>;
@@ -221,7 +229,7 @@
             if(!this.props.busy) {
                 innerContent =
                     <div className="finalLawAnnModalContent">
-                        <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>
+                        {finalLawHtml}
                         <div className="annFinalLawComment">
                             <div className='body commentBox'>
                                 <scify.Comment
@@ -254,7 +262,7 @@
                                             </div>
                                             <div className="modal-body">
                                                 <div className="notLoggedinWrapper">
-                                                    <div className="msg"><i class="fa fa-exclamation-triangle"></i>
+                                                    <div className="msg"><i className="fa fa-exclamation-triangle"></i>
                                                         <p className="notLoggedText" dangerouslySetInnerHTML={{__html:this.state.innerModalMessage}}></p></div>
                                                 </div>
                                             </div>
