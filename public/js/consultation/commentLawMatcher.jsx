@@ -247,10 +247,14 @@
                 annotatorBox = <div className="annotatorBtnContainer"><scify.ReactLoader display={this.state.annotationDivBusy} /></div>;
             } else {
                 if (this.state.annotators.length > 0) {
-                    console.log(this.state.annotators);
                     annotatorBox =
                         <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id}
-                                           userId={this.props.userId}/>
+                                           userId={this.props.userId}/>;
+                } else {
+                    annotatorBox =
+                        <div className="noAnnotators">Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.<br></br>
+                            Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες
+                            περιοχές αντιστοίχησης.</div>;
                 }
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;

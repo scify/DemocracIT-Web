@@ -253,9 +253,16 @@
                 );
             } else {
                 if (this.state.annotators.length > 0) {
-                    console.log(this.state.annotators);
                     annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id,
                         userId: this.props.userId });
+                } else {
+                    annotatorBox = React.createElement(
+                        "div",
+                        { className: "noAnnotators" },
+                        "Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.",
+                        React.createElement("br", null),
+                        "Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης."
+                    );
                 }
             }
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
