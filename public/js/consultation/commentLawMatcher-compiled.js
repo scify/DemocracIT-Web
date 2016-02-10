@@ -21,6 +21,20 @@
             this.updateFinalLawDivDataTarget();
             this.createAnnotationAreasForFinalLaw();
             this.formSubmitHandler();
+            this.highlightCheckedArea();
+        },
+        //function to highlight appropriate area on checkbox checked
+        highlightCheckedArea: function highlightCheckedArea() {
+            console.log("added!");
+            $(".fl-ann-icon").find("input:checkbox").on("click", function () {
+                if ($(this).is(":checked")) {
+                    $(this).parent().parent().css("background-color", "lightblue");
+                    $(this).parent().parent().css("color", "#fff");
+                } else {
+                    $(this).parent().parent().css("background-color", "#fff");
+                    $(this).parent().parent().css("color", "#000");
+                }
+            });
         },
         //function to clear all selected checkboxes
         clearAnnotationForm: function clearAnnotationForm() {
@@ -115,7 +129,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    //console.log(data);
                     var newAnnObj = {
                         annotationIds: dataToSend.annotationIds,
                         commentId: dataToSend.commentId,
@@ -123,7 +136,8 @@
                         userName: data
                     };
                     console.log(newAnnObj);
-                    if (instance.checkIfTheUserHasAnnotated()) instance.replaceAnnotation(newAnnObj);else instance.addToAnnotatorsArr(newAnnObj);
+                    var newAnnObjPos = instance.state.annotators.length;
+                    if (instance.checkIfTheUserHasAnnotated()) newAnnObjPos = instance.replaceAnnotation(newAnnObj);else instance.addToAnnotatorsArr(newAnnObj);
                 },
                 complete: function complete() {
                     instance.state.annotationDivBusy = false;
@@ -137,14 +151,15 @@
         //function to replace existing annotation object after annotation update
         replaceAnnotation: function replaceAnnotation(updatedAnnotator) {
             var instance = this;
+            var annObjIndex = 0;
             $.each(this.state.annotators, function (index, annotator) {
-                /*console.log(annotator.userId);
-                console.log(index);*/
                 if (annotator.userId == updatedAnnotator.userId) {
                     instance.state.annotators[index] = updatedAnnotator;
+                    annObjIndex = index;
                     return;
                 }
             });
+            return annObjIndex;
         },
         //function to add new annotation object to annotators array
         addToAnnotatorsArr: function addToAnnotatorsArr(newAnnotator) {
@@ -177,7 +192,6 @@
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
                     instance.clearAnnotationForm();
-                    console.log(instance.checkIfTheUserHasAnnotated());
                     instance.updateSubmitBtnText();
                 }
             });
@@ -198,7 +212,8 @@
         createAnnotationAreasForFinalLaw: function createAnnotationAreasForFinalLaw() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#commentLawMatcher .fl-ann").append("<span className='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+            $("#commentLawMatcher .fl-ann").prepend("<div class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></div>");
+            $("#commentLawMatcher .fl-ann").wrap("<div class=\"annotatableArea\"></div>>");
         },
         closeModal: function closeModal() {
             this.state.display = "";
