@@ -33,6 +33,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
 
     this.tutorialAnnotator = null;
     this.imagesPath = imagesPath;
+    this.commentWithLawMatcher = null; //represents a react component used to match a comment with the final law
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -396,9 +397,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     beforeSend: function () {
                     },
                     success: function (returnData) {
-                        console.log(returnData);
                         setTimeout(function (){
-                            //$("#deleteLaw").find(".loaderSmall").remove();
                             var url = window.location.href;
                             if(url.indexOf("?target=finalLaw") == -1)
                                 url += '?target=finalLaw';
@@ -503,20 +502,27 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         //console.log(comment);
          this.commentAnnotator.openForEdit(e, comment);
     },
-        annotateFinalLaw = function(){
-            var finalLawAnn = new scify.Annotator("#finalLawDiv  .article-body,#finalLawDiv .article-title-text", "fl-ann");
-            finalLawAnn.init();
-            $("#finalLawDiv .fl-ann").append("<span class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></span>");
+    handleMatchCommentWithLaw = function(e,data){
 
-        },
+        if (!this.commentWithLawMatcher)
+        {
+            this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {
+                comment:data.comment,
+                imagesPath: this.imagesPath,
+                finalLawId: parseInt(this.finalLawId),
+                finalLawDiv: $("#finalLawDiv").html(),
+                userId: this.userId,
+                shouldDisplaySubmitBtn: !($("#finalLawDiv").html() == undefined)
+            }), document.getElementById("commentLawMatcher"));
+        }
+        this.commentWithLawMatcher.display(data);
+    }
     init = function(){
         var instance= this;
         moment.locale('el');
 
         this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
         this.commentAnnotator.init();
-
-        annotateFinalLaw();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
@@ -537,6 +543,11 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         finalLawModalHandler();
         openArticleAndCommentFromURL();
         handleArticleShare(instance);
+
+
+
+        $("body").on("match-comment-with-law",handleMatchCommentWithLaw.bind(instance));
+
     };
 
     return {

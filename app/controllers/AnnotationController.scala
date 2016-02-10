@@ -7,13 +7,12 @@ import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import model.dtos._
-import model.services.{MailerManager, UserProfileManager, AnnotationManager, GamificationEngineTrait}
+import model.services.{AnnotationManager, GamificationEngineTrait, MailerManager, UserProfileManager}
 import model.viewmodels.forms.{RateCommentForm, _}
 import org.joda.time.DateTime
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import utils.ImplicitReadWrites.FormErrorWrites
-import utils.ImplicitReadWrites.commentsWrites
+import utils.ImplicitReadWrites.{FormErrorWrites, commentsWrites}
 import utils.MailService
 
 class AnnotationController @Inject() (val messagesApi: MessagesApi,
@@ -118,7 +117,6 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     val commentId = annotationManager.saveReply(articleId, parentId, discussionthreadclientid, replyText, userId)
     val userManager = new UserProfileManager()
     val comment:Comment = new Comment(Some(commentId), articleId, Some(parentId), CommentSource.Democracit, replyText, None, None, userManager.getUserFullNameById(userId), None, None, today ,1, "2", emptyAnnotationTags, emptyAnnotationTags, None, 0, 0, None,Nil,None)
-    //TODO: Send email to commenter
     val commenterId = (parameterList \ "commenterId").asOpt[UUID].get
     val annotationId = (parameterList \ "annotationId").asOpt[String].get
     val consultationId = (parameterList \ "consultationId").asOpt[Long].get
@@ -144,5 +142,32 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
   def extractTags() = SecuredAction { implicit request =>
         val text = request.request.body.asText.get
         Ok(Json.toJson(annotationManager.extractTags(text)))
+  }
+
+  def annotateFinalLaw() = SecuredAction { implicit request =>
+    val parameterList = Json.parse(request.body.asJson.get.toString)
+    val userId = request.identity.userID
+    val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
+    val commentId = (parameterList \ "commentId").asOpt[Long].get
+    val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
+    val finalLawAnnotationId = annotationManager.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds);
+    Ok(Json.toJson(finalLawAnnotationId))
+  }
+
+  def updateFinalLawAnnotation() = SecuredAction { implicit request =>
+    val parameterList = Json.parse(request.body.asJson.get.toString)
+    val userId = request.identity.userID
+    val finalLawId = (parameterList \ "finalLawId").asOpt[Long].get
+    val commentId = (parameterList \ "commentId").asOpt[Long].get
+    val annotationIds = (parameterList \ "annotationIds").asOpt[List[String]].get
+    val finalLawAnnotationId = annotationManager.updateFinalLawAnnotation(userId, commentId, finalLawId, annotationIds);
+    Ok(Json.toJson(finalLawAnnotationId))
+  }
+
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long) = UserAwareAction { implicit request =>
+    val finalLawUserAnnotation = annotationManager.getFinalLawAnnotationsForComment(commentId, finalLawId)
+    import utils.ImplicitReadWrites._
+
+    Ok(Json.toJson(finalLawUserAnnotation))
   }
 }

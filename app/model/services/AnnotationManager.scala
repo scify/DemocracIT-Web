@@ -15,6 +15,7 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
+  val consultationRepository = new ConsultationRepository()
 
   def extractTags(input:String):Seq[String] = {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -130,6 +131,25 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
   def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Long = {
     val commentId = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
     commentId
+  }
+
+  def saveFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
+    consultationRepository.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    val userProfileRepository = new UserProfileRepository()
+    val userName = userProfileRepository.getUserFullNameById(userId)
+    userName
+  }
+
+  def updateFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
+    consultationRepository.updateFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    val userProfileRepository = new UserProfileRepository()
+    val userName = userProfileRepository.getUserFullNameById(userId)
+    userName
+  }
+
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long):List[FinalLawUserAnnotation] = {
+    val finalLawUserAnnotation = consultationRepository.getFinalLawAnnotationsForComment(commentId, finalLawId)
+    finalLawUserAnnotation
   }
 
   def howManyLikesToday(user_id:UUID): Int ={
