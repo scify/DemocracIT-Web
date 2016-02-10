@@ -14,7 +14,8 @@
                 showInnerModal: false,
                 innerModalMessage: "",
                 annotationDivBusy: false,
-                submitBtnText: "Καταχώρηση"
+                submitBtnText: "Καταχώρηση",
+                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn
             };
         },
         componentDidMount: function componentDidMount() {
@@ -142,7 +143,7 @@
                 complete: function complete() {
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
-                    instance.clearAnnotationForm();
+
                     console.log(instance.checkIfTheUserHasAnnotated());
                     instance.updateSubmitBtnText();
                 }
@@ -218,6 +219,7 @@
         closeModal: function closeModal() {
             this.state.display = "";
             this.setState(this.state);
+            this.clearAnnotationForm();
         },
         closeInnerModal: function closeInnerModal() {
             this.state.showInnerModal = false;
@@ -227,6 +229,8 @@
         render: function render() {
             var finalLawDiv = this.props.finalLawDiv;
             var finalLawHtml = React.createElement("div", { id: "finalLawAnnDiv", dangerouslySetInnerHTML: { __html: this.props.finalLawDiv } });
+            var url = window.location.href;
+            if (url.indexOf("?target=finalLaw") == -1) url += "?target=finalLaw";
             if (finalLawDiv == undefined) {
                 finalLawHtml = React.createElement(
                     "div",
@@ -234,7 +238,7 @@
                     "Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη. Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε ",
                     React.createElement(
                         "a",
-                        { href: window.location.href + "?target=finalLaw" },
+                        { href: url },
                         "εδώ"
                     )
                 );
@@ -255,6 +259,11 @@
             }
             var innerContent = React.createElement(scify.ReactLoader, { display: this.props.busy });
             var showInnerModalClasses = classNames("in show", { hide: !this.state.showInnerModal });
+            if (this.state.shouldDisplaySubmitBtn) var submitBtn = React.createElement(
+                "button",
+                { id: "saveFinalLawAnnotation", className: "btn blue" },
+                this.state.submitBtnText
+            );
             if (!this.props.busy) {
                 innerContent = React.createElement(
                     "div",
@@ -374,11 +383,7 @@
                             React.createElement(
                                 "div",
                                 { className: "saveBtnContainer" },
-                                React.createElement(
-                                    "button",
-                                    { id: "saveFinalLawAnnotation", className: "btn blue" },
-                                    this.state.submitBtnText
-                                )
+                                submitBtn
                             ),
                             React.createElement(
                                 "div",
@@ -407,7 +412,7 @@
         },
         //function to produce a random CSS color
         getRandomColor: function getRandomColor() {
-            var letters = "0123456789ABCDEF".split("");
+            var letters = "0123456701AB0123".split("");
             var color = "#";
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];

@@ -10,7 +10,8 @@
                 showInnerModal: false,
                 innerModalMessage: "",
                 annotationDivBusy: false,
-                submitBtnText: "Καταχώρηση"
+                submitBtnText: "Καταχώρηση",
+                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn
             };
         },
         componentDidMount: function() {
@@ -143,7 +144,7 @@
                 complete: function(){
                     instance.state.annotationDivBusy = false;
                     instance.setState(instance.state);
-                    instance.clearAnnotationForm();
+
                     console.log(instance.checkIfTheUserHasAnnotated());
                     instance.updateSubmitBtnText();
                 }
@@ -222,6 +223,7 @@
         closeModal:function(){
             this.state.display = "";
             this.setState(this.state);
+            this.clearAnnotationForm();
         },
         closeInnerModal: function() {
             this.state.showInnerModal = false;
@@ -231,9 +233,12 @@
         render: function() {
             var finalLawDiv = this.props.finalLawDiv;
             var finalLawHtml = <div id="finalLawAnnDiv" dangerouslySetInnerHTML={{__html:this.props.finalLawDiv}}></div>;
+            var url = window.location.href;
+            if(url.indexOf("?target=finalLaw") == -1)
+                url+= "?target=finalLaw";
             if(finalLawDiv == undefined) {
                 finalLawHtml = <div id="finalLawAnnDiv" className="noFinalLawText">Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη.
-                    Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε <a href={window.location.href + "?target=finalLaw"}>εδώ</a>
+                    Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε <a href={url}>εδώ</a>
                 </div>;
             }
             var annotatorBox = <div></div>;
@@ -249,6 +254,8 @@
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
             var showInnerModalClasses = classNames("in show",{ hide :!this.state.showInnerModal});
+            if(this.state.shouldDisplaySubmitBtn)
+                var submitBtn = <button id="saveFinalLawAnnotation" className="btn blue">{this.state.submitBtnText}</button>
             if(!this.props.busy) {
                 innerContent =
                     <div className="finalLawAnnModalContent">
@@ -314,7 +321,7 @@
                                     {{ innerContent }}
                                 </div>
                                 <div className="saveBtnContainer">
-                                    <button id="saveFinalLawAnnotation" className="btn blue">{this.state.submitBtnText}</button>
+                                    {submitBtn}
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
@@ -336,7 +343,7 @@
         },
         //function to produce a random CSS color
         getRandomColor: function() {
-            var letters = '0123456789ABCDEF'.split('');
+            var letters = '0123456701AB0123'.split('');
             var color = '#';
             for (var i = 0; i < 6; i++ ) {
                 color += letters[Math.floor(Math.random() * 16)];

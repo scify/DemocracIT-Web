@@ -511,7 +511,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 imagesPath: this.imagesPath,
                 finalLawId: parseInt(this.finalLawId),
                 finalLawDiv: $("#finalLawDiv").html(),
-                userId: this.userId
+                userId: this.userId,
+                shouldDisplaySubmitBtn: !($("#finalLawDiv").html() == undefined)
             }), document.getElementById("commentLawMatcher"));
         }
         this.commentWithLawMatcher.display(data);
