@@ -26,7 +26,6 @@
         },
         //function to highlight appropriate area on checkbox checked
         highlightCheckedArea: function highlightCheckedArea() {
-            console.log("added!");
             $(".fl-ann-icon").find("input:checkbox").on("click", function () {
                 if ($(this).is(":checked")) {
                     $(this).parent().parent().css("background-color", "lightblue");
@@ -197,6 +196,7 @@
                 }
             });
         },
+        //function to display the whole React class
         display: function display(data) {
             this.state.comment = data.comment;
             this.state.display = "in show";
@@ -210,6 +210,7 @@
                 $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
             });
         },
+        //function to initialize Annotator for final law text and attach checkboxes
         createAnnotationAreasForFinalLaw: function createAnnotationAreasForFinalLaw() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();

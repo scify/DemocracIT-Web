@@ -22,7 +22,6 @@
         },
         //function to highlight appropriate area on checkbox checked
         highlightCheckedArea: function() {
-            console.log("added!");
             $('.fl-ann-icon').find('input:checkbox').on("click", function(){
                 if($(this).is(":checked")) {
                     $(this).parent().parent().css("background-color", "lightblue");
@@ -105,7 +104,7 @@
         //function to update the text of submit button
         updateSubmitBtnText: function() {
             if(this.checkIfTheUserHasAnnotated()) {
-                this.state.submitBtnText = "Τροποποίηση Καταχώρησης"
+                this.state.submitBtnText = "Τροποποίηση Καταχώρησης";
                 this.setState(this.state);
             }
         },
@@ -115,7 +114,7 @@
             var instance = this;
             var url = "/finallaw/annotate";
             if(this.checkIfTheUserHasAnnotated())
-                url = "/finallaw/annotate/update"
+                url = "/finallaw/annotate/update";
             $.ajax({
                 method: "POST",
                 url: url,
@@ -198,6 +197,7 @@
                 }
             });
         },
+        //function to display the whole React class
         display: function(data){
             this.state.comment = data.comment;
             this.state.display = "in show";
@@ -213,6 +213,7 @@
                 $(this).parent().next().attr("id", "finalLawAnnBody-" + $(this).attr("data-target").split("-")[1]);
             });
         },
+        //function to initialize Annotator for final law text and attach checkboxes
         createAnnotationAreasForFinalLaw: function() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
