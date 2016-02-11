@@ -165,7 +165,16 @@ scify.EvaluatorPageHandler.prototype = function(){
                 legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15
             };
-            createChart(this.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
+            var domElementLoader = document.getElementById("firstChartLoader");
+            if (domElementLoader) {
+                window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
+            }
+            $("#consultationsPerMonthInnerChart").css("display", "none");
+            setTimeout(function(){
+                React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
+                $("#consultationsPerMonthInnerChart").css("display", "block");
+            }, 6000);
+            createChart(instance.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
 
         createConsFrequencyPerOrganizationDiv();
