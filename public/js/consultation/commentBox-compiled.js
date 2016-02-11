@@ -520,7 +520,7 @@
                         ),
                         React.createElement(
                             "span",
-                            { className: "shareBtnComment", id: "shareComment-" + commentIdForShare },
+                            { className: "shareBtnComment", title: "Σύνδεσμος για αυτό το σχόλιο", id: "shareComment-" + commentIdForShare },
                             React.createElement("i", { className: "fa fa-link" })
                         )
                     );

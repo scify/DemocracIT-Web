@@ -483,7 +483,7 @@
                     var commentIdForShare = this.props.data.id;
                     var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
                                         Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span>
-                                        <span className="shareBtnComment" id={"shareComment-" + commentIdForShare}>
+                                        <span className="shareBtnComment" title="Σύνδεσμος για αυτό το σχόλιο" id={"shareComment-" + commentIdForShare}>
                                             <i className="fa fa-link"></i>
                                         </span>
                                    </div>;
