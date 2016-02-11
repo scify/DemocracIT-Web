@@ -11,8 +11,15 @@ scify.TutorialAnnotator.prototype = (function(){
                 if(index == 0) {
                     $(this).attr( "id", "step4" );
                     $(this).attr( "tutorial-id", "clicked");
+                    //elementToAddStep5 is the first link to load comments
+                    var elementToAddStep5 = $("body").find(".load:first");
+                    //if the consultation is new (no comments yet), the element is empty
+                    //so we should attach the step to the first annotation area
+                    if(elementToAddStep5.length == 0)
+                        elementToAddStep5 = $("body").find(".ann:first");
+                    $(elementToAddStep5).attr("id", "step5");
 
-                    $("[data-reactid='.1']").find(".load").attr( "id", "step5" );
+
                 }
                 //
                 $(this).attr("title","κλικ εδώ για σχολιασμού όλου του άρθρου");
