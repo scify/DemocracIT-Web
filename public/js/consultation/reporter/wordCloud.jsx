@@ -31,40 +31,7 @@
                 },
                 success : function(data){
                     console.log(data);
-                    var multiplier = 2;
-                    var sizes = 0;
-                    var average;
-
-                    for(var i=0; i<data.results.length ; i++) {
-                        sizes += data.results[i].freq;
-                    }
-                    average = sizes / data.results.length;
-                    console.log("average: " + average);
-                    if(average < 3) {
-                        multiplier = 10;
-                    } else if(average < 5) {
-                        multiplier = 8;
-                    } else if (average < 10) {
-                        multiplier = 4;
-                    } else if (average < 20) {
-                        multiplier = 2;
-                    } else if(average > 120) {
-                        multiplier = 0.3;
-                        instance.state.cloudHeight = 700;
-                        instance.state.translateHeight = 300;
-                    } else if(average > 80) {
-                        multiplier = 0.5;
-                        instance.state.cloudHeight = 700;
-                        instance.state.translateHeight = 300;
-                    }
-                    var arr = $.map(data, function(el) {
-                        var results = [];
-                        for(var item in el) {
-                            results.push({"text":el[item].term, "size":Math.floor(el[item].freq * multiplier)})
-                        }
-                        return results;
-                    });
-                    instance.state.frequency_list = arr;
+                    instance.computeMultiplierByAverageFreq(data, instance);
                     //instance.state.parent = "cons";
                 },
                 complete: function(){
@@ -78,6 +45,44 @@
             });
 
             return promise;
+        },
+        computeMultiplierByAverageFreq: function(data, instance) {
+            var multiplier = 2;
+            var sizes = 0;
+            var average;
+            //we compute the average frequency so that we can be able to initialize the multiplier
+            //the multiplier serves the purpose of augmenting the words in terms of pixels
+            //e.g. a word that has frequency one, with a 1- multiplier will get 10 pixels.
+            for(var i=0; i<data.results.length ; i++) {
+                sizes += data.results[i].freq;
+            }
+            average = sizes / data.results.length;
+            console.log("average: " + average);
+            if(average < 3) {
+                multiplier = 10;
+            } else if(average < 5) {
+                multiplier = 8;
+            } else if (average < 10) {
+                multiplier = 4;
+            } else if (average < 20) {
+                multiplier = 2;
+            } else if(average > 120) {
+                multiplier = 0.3;
+                instance.state.cloudHeight = 700;
+                instance.state.translateHeight = 300;
+            } else if(average > 80) {
+                multiplier = 0.5;
+                instance.state.cloudHeight = 700;
+                instance.state.translateHeight = 300;
+            }
+            var arr = $.map(data, function(el) {
+                var results = [];
+                for(var item in el) {
+                    results.push({"text":el[item].term, "size":Math.floor(el[item].freq * multiplier)})
+                }
+                return results;
+            });
+            instance.state.frequency_list = arr;
         },
         getArticleWordCloudFromServer : function(articleId, commentsNum){
             this.state.frequency_list = [];
@@ -97,37 +102,8 @@
                     instance.setState(instance.state);
                 },
                 success : function(data){
-                    var multiplier = 2;
-                    var sizes = 0;
-                    var average;
-                    if(commentsNum < 20) {
-                        multiplier = 5;
-                    }
-                    for(var i=0; i<data.results.length ; i++) {
-                        sizes += data.results[i].freq;
-                    }
-                    average = sizes / data.results.length;
-                    if(average < 3) {
-                        multiplier = 12;
-                    } else if(average > 120) {
-                        multiplier = 0.3;
-                        instance.state.cloudHeight = 700;
-                        instance.state.translateHeight = 300;
-                    } else if(average > 80) {
-                        multiplier = 0.5;
-                        instance.state.cloudHeight = 700;
-                        instance.state.translateHeight = 300;
-                    }
-                    var arr = $.map(data, function(el) {
-                        var results = [];
-                        for(var item in el) {
-                            results.push({"text":el[item].term, "size":Math.floor(el[item].freq * multiplier)});
-                        }
-                        return results;
-                    });
-
-                    instance.state.frequency_list = arr;
-                    //instance.state.parent = "article";
+                    console.log(data);
+                    instance.computeMultiplierByAverageFreq(data, instance);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -151,7 +127,7 @@
                     .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
 
                 var words =this.state.frequency_list;
-                d3.layout.cloud().size([1000, 700])
+                d3.layout.cloud().size(["1000", 700])
                     .words(words)
                     .rotate(function() { return (~~(Math.random() * 6) - 3) * 10; })
                     .font("Impact")
@@ -164,7 +140,7 @@
 
                 function draw(words) {
                     d3.select("#wordCloudChart").append("svg")
-                        .attr("width", 1000)
+                        .attr("width", "1000")
                         .attr("height", 700)
                         .append("g")
                         .attr("transform", "translate(" + 1200 / 2 + "," + 700 / 2 + ")")
