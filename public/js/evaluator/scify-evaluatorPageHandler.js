@@ -35,6 +35,12 @@ scify.EvaluatorPageHandler.prototype = function(){
                 default:
                     break
             }
+            $("#" + chartId).css("display", "none");
+            var showChart = function() {
+                $("#" + chartId).css("display", "block");
+                React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
+            };
+            google.visualization.events.addListener(chart, 'animationfinish', showChart);
             chart.draw(data, options);
             // When a row is selected, the listener is triggered.
             google.visualization.events.addListener(chart, 'select', function() {
@@ -169,11 +175,11 @@ scify.EvaluatorPageHandler.prototype = function(){
             if (domElementLoader) {
                 window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
             }
-            $("#consultationsPerMonthInnerChart").css("display", "none");
+            /*$("#consultationsPerMonthInnerChart").css("display", "none");
             setTimeout(function(){
                 React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
                 $("#consultationsPerMonthInnerChart").css("display", "block");
-            }, 6000);
+            }, 6000);*/
             createChart(instance.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
 
