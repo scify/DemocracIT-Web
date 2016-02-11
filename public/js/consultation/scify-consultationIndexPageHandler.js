@@ -74,7 +74,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 source :"opengov",
                 isdiscussionForTheWholeArticle:true,
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
-                parent: "consultation"
+                parent: "consultation",
+                shouldDisplayCommenterName:true,
+                shouldDisplayEditIcon:false,
+                shouldDisplayCommentEdited:false,
+                shouldDisplayShareBtn:true,
+                shouldDisplayCommentBody: true,
+                shouldDisplayEmotion:false,
+                shouldDisplayAnnotatedText:false,
+                shouldDisplayReplyBox:false,
+                shouldDisplayReplies:false,
+                optionsEnabled:false,
+                shouldDisplayTopics:false,
+                shouldDisplayFinalLawAnnBtn:false,
+                shouldDisplayLikeDislike:false,
+                commentClassNames:"comment"
             };
 
             //define function to use after the comment has loaded
@@ -115,6 +129,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.shouldDisplayAnnotatedText = true;
                 commentBoxProperties.shouldDisplayReplyBox = true;
                 commentBoxProperties.shouldDisplayReplies = true;
+                commentBoxProperties.shouldDisplayLikeDislike = true;
                 commentBoxProperties.optionsEnabled = true;
                 commentBoxProperties.shouldDisplayTopics = true;
                 commentBoxProperties.shouldDisplayFinalLawAnnBtn = true;

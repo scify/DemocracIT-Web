@@ -259,7 +259,8 @@
                         optionsEnabled: this.props.optionsEnabled,
                         shouldDisplayTopics: this.props.shouldDisplayTopics,
                         commentClassNames: this.props.commentClassNames,
-                        shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn })
+                        shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn,
+                        shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike })
                 )
             );
         }
@@ -295,6 +296,7 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
+                console.log(instance.props);
                 return React.createElement(
                     "div",
                     { className: instance.props.parent },
@@ -323,7 +325,8 @@
                         optionsEnabled: instance.props.optionsEnabled,
                         shouldDisplayTopics: instance.props.shouldDisplayTopics,
                         commentClassNames: instance.props.commentClassNames,
-                        shouldDisplayFinalLawAnnBtn: instance.props.shouldDisplayFinalLawAnnBtn })
+                        shouldDisplayFinalLawAnnBtn: instance.props.shouldDisplayFinalLawAnnBtn,
+                        shouldDisplayLikeDislike: instance.props.shouldDisplayLikeDislike })
                 );
             });
 
@@ -738,7 +741,14 @@
                     shouldDisplayReplyBox: this.props.shouldDisplayReplyBox,
                     shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn });
             }
-            return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath, dateAdded: this.props.data.dateAdded, likeCounter: this.props.data.likesCounter, dislikeCounter: this.props.data.dislikesCounter, loggedInUserRating: this.props.loggedInUserRating, emotionId: this.props.data.emotionId });
+            return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath,
+                dateAdded: this.props.data.dateAdded,
+                likeCounter: this.props.data.likesCounter,
+                dislikeCounter: this.props.data.dislikesCounter,
+                loggedInUserRating: this.props.loggedInUserRating,
+                emotionId: this.props.data.emotionId,
+                shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike
+            });
         }
     });
 
@@ -911,12 +921,10 @@
             var agreeClasses = classNames("agree", { active: this.state.liked === true });
             var disagreeClasses = classNames("disagree", { active: this.state.liked === false });
             var date = moment(this.props.dateAdded).format("llll");
-            return React.createElement(
-                "div",
-                { className: "optionsContainerDisabled" },
-                React.createElement(
+            if (this.props.shouldDisplayLikeDislike) {
+                var likeDislikeInfo = React.createElement(
                     "div",
-                    { className: "options" },
+                    null,
                     React.createElement(
                         "div",
                         { className: agreeClasses },
@@ -933,17 +941,25 @@
                     React.createElement(
                         "div",
                         { className: disagreeClasses },
-                        "Χρήστες που διαφωνούν",
+                        " Χρήστες που διαφωνούν",
                         React.createElement("i", { className: "fa fa-thumbs-o-down" })
                     ),
-                    " ",
                     React.createElement(
                         "span",
                         { className: "c" },
                         " (",
                         this.state.dislikeCounter,
                         ")"
-                    ),
+                    )
+                );
+            }
+            return React.createElement(
+                "div",
+                { className: "optionsContainerDisabled" },
+                React.createElement(
+                    "div",
+                    { className: "options" },
+                    likeDislikeInfo,
                     React.createElement(
                         "span",
                         { className: "date" },

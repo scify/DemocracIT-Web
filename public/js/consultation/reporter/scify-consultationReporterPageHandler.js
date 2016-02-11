@@ -579,6 +579,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             optionsEnabled: true,
             shouldDisplayTopics: true,
             shouldDisplayFinalLawAnnBtn: true,
+            shouldDisplayLikeDislike:true,
             commentClassNames:"comment"
         }
         instance.commentListOpenGovProperties = {
@@ -597,9 +598,10 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             shouldDisplayAnnotatedText: false,
             shouldDisplayReplyBox:false,
             shouldDisplayReplies: false,
-            optionsEnabled: true,
-            shouldDisplayTopics: true,
+            optionsEnabled: false,
+            shouldDisplayTopics: false,
             shouldDisplayFinalLawAnnBtn: false,
+            shouldDisplayLikeDislike:false,
             commentClassNames:"comment"
         }
     },

@@ -269,7 +269,8 @@
                             optionsEnabled={this.props.optionsEnabled}
                             shouldDisplayTopics={this.props.shouldDisplayTopics}
                             commentClassNames={this.props.commentClassNames}
-                            shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
+                            shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
+                            shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}/>
                     </div>
                 </div>
 
@@ -306,6 +307,7 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
+                console.log(instance.props);
                 return (
                     <div className={instance.props.parent}>
                     <scify.Comment scrollToComment={instance.props.scrollToComment}
@@ -333,7 +335,8 @@
                                    optionsEnabled={instance.props.optionsEnabled}
                                    shouldDisplayTopics={instance.props.shouldDisplayTopics}
                                    commentClassNames={instance.props.commentClassNames}
-                                   shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}/>
+                                   shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}
+                                   shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}/>
 
                     </div>
                 );
@@ -647,7 +650,14 @@
                 );
             }
             return (
-                <CommentActionsDisabled imagesPath={this.props.imagesPath} dateAdded={this.props.data.dateAdded} likeCounter={this.props.data.likesCounter} dislikeCounter={this.props.data.dislikesCounter} loggedInUserRating={this.props.loggedInUserRating} emotionId={this.props.data.emotionId}/>
+                <CommentActionsDisabled imagesPath={this.props.imagesPath}
+                                        dateAdded={this.props.data.dateAdded}
+                                        likeCounter={this.props.data.likesCounter}
+                                        dislikeCounter={this.props.data.dislikesCounter}
+                                        loggedInUserRating={this.props.loggedInUserRating}
+                                        emotionId={this.props.data.emotionId}
+                                        shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
+                />
             );
         }
     });
@@ -780,15 +790,19 @@
             var agreeClasses = classNames("agree", {active: this.state.liked===true});
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
+            if(this.props.shouldDisplayLikeDislike) {
+                var likeDislikeInfo = <div>
+                    <div className={agreeClasses}>Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i></div>
+                    <span className="c"> ({this.state.likeCounter})</span>
+                    <div className={disagreeClasses}> Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i></div>
+                    <span className="c"> ({this.state.dislikeCounter})</span>
+                </div>;
+            }
             return (
                 <div className="optionsContainerDisabled">
                     <div className="options">
-                        <div className={agreeClasses}>
-                            Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i>
-                        </div><span className="c"> ({this.state.likeCounter})</span>
-                        <div className={disagreeClasses}>
-                            Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i>
-                        </div> <span className="c"> ({this.state.dislikeCounter})</span>
+                        {likeDislikeInfo}
+
                         <span className="date">{date}</span>
                     </div>
                 </div>
