@@ -31,7 +31,8 @@
                 },
                 success : function(data){
                     console.log(data);
-                    instance.computeMultiplierByAverageFreq(data, instance);
+                    if(data.results.length != 0)
+                        instance.computeMultiplierByAverageFreq(data, instance);
                     //instance.state.parent = "cons";
                 },
                 complete: function(){
@@ -44,6 +45,39 @@
                 }
             });
 
+            return promise;
+        },
+        getArticleWordCloudFromServer : function(articleId, commentsNum){
+            this.state.frequency_list = [];
+            console.log(articleId);
+            var instance = this;
+            var promise = $.ajax({
+                method: "POST",
+                url: "/article/wordCloud/" + articleId,
+                beforeSend: function(){
+                    instance.state.frequency_list = [];
+                    var chart = document.getElementById("wordCloudChart");
+                    while (chart.firstChild) {
+                        chart.removeChild(chart.firstChild);
+                    }
+                    instance.state.busy=true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success : function(data){
+                    console.log(data);
+                    if(data.results.length != 0)
+                        instance.computeMultiplierByAverageFreq(data, instance);
+                },
+                complete: function(){
+                    instance.state.busy=false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function(x,z,y){
+                    console.log(x);
+                }
+            });
             return promise;
         },
         computeMultiplierByAverageFreq: function(data, instance) {
@@ -100,38 +134,6 @@
                 return results;
             });
             instance.state.frequency_list = arr;
-        },
-        getArticleWordCloudFromServer : function(articleId, commentsNum){
-            this.state.frequency_list = [];
-            console.log(articleId);
-            var instance = this;
-            var promise = $.ajax({
-                method: "POST",
-                url: "/article/wordCloud/" + articleId,
-                beforeSend: function(){
-                    instance.state.frequency_list = [];
-                    var chart = document.getElementById("wordCloudChart");
-                    while (chart.firstChild) {
-                        chart.removeChild(chart.firstChild);
-                    }
-                    instance.state.busy=true;
-                    instance.state.display = true;
-                    instance.setState(instance.state);
-                },
-                success : function(data){
-                    console.log(data);
-                    instance.computeMultiplierByAverageFreq(data, instance);
-                },
-                complete: function(){
-                    instance.state.busy=false;
-                    instance.state.display = true;
-                    instance.setState(instance.state);
-                },
-                error: function(x,z,y){
-                    console.log(x);
-                }
-            });
-            return promise;
         },
         drawD3 : function() {
             var fill = d3.scale.category20();
