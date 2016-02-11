@@ -39,8 +39,6 @@
                     }
                     average = sizes / data.results.length;
                     console.log("average: " + average);
-                    instance.state.cloudHeight = 700;
-                    instance.state.translateHeight = 400;
                     if (average < 3) {
                         multiplier = 10;
                     } else if (average < 5) {
@@ -66,14 +64,16 @@
                         return results;
                     });
                     instance.state.frequency_list = arr;
-                    instance.state.parent = "cons";
+                    //instance.state.parent = "cons";
                 },
                 complete: function complete() {
                     instance.state.busy = false;
                     instance.state.display = true;
                     instance.setState(instance.state);
                 },
-                error: function error(x, z, y) {}
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
             });
 
             return promise;
@@ -106,8 +106,6 @@
                         sizes += data.results[i].freq;
                     }
                     average = sizes / data.results.length;
-                    instance.state.cloudHeight = 500;
-                    instance.state.translateHeight = 200;
                     if (average < 3) {
                         multiplier = 12;
                     } else if (average > 120) {
@@ -128,7 +126,7 @@
                     });
 
                     instance.state.frequency_list = arr;
-                    instance.state.parent = "article";
+                    //instance.state.parent = "article";
                 },
                 complete: function complete() {
                     instance.state.busy = false;
@@ -144,6 +142,7 @@
         drawD3: function drawD3() {
             var fill = d3.scale.category20();
             var instance = this;
+            //translate gives padding to the top
             var translate = "translate(500," + instance.state.translateHeight + ")";
             if (this.state.frequency_list.length > 0) {
                 var draw = function draw(words) {
@@ -156,7 +155,7 @@
                     }).text(function (d) {
                         return d.text;
                     });
-
+                    //re-initialize frequency list
                     instance.state.frequency_list = [];
                 };
 
@@ -195,7 +194,5 @@
         }
     });
 })();
-
-//console.log(x);
 
 //# sourceMappingURL=wordCloud-compiled.js.map
