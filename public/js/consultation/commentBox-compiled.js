@@ -296,7 +296,6 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
-                console.log(instance.props);
                 return React.createElement(
                     "div",
                     { className: instance.props.parent },

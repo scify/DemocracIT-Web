@@ -307,7 +307,6 @@
             var instance = this;
 
             var commentNodes = this.props.data.map(function (comment) {
-                console.log(instance.props);
                 return (
                     <div className={instance.props.parent}>
                     <scify.Comment scrollToComment={instance.props.scrollToComment}

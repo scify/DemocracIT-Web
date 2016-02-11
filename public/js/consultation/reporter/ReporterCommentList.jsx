@@ -30,8 +30,9 @@
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    if(data.length == 0)
-                        $("#commentsOpenGov").append("<div class='noStats'>Δεν υπάρχουν σχόλια από το opengov.gr για αυτό το άρθρο.</div>")
+                    console.log(data);
+                    if(data.length == 0 && $("#commentsDIT").find(".noStats").length == 0)
+                        $("#commentsOpenGov").append("<div class='noStats'>Δεν υπάρχουν δεδομένα από το opengov.gr</div>")
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -60,7 +61,7 @@
                 },
                 success : function(data){
                     instance.state.comments = data;
-                    if(data.length == 0)
+                    if(data.length == 0 && $("#commentsDIT").find(".noStats").length == 0)
                         $("#commentsDIT").append("<div class='noStats'>Δεν υπάρχουν σχόλια από το democracit για αυτό το άρθρο.</div>")
                 },
                 complete: function(){
