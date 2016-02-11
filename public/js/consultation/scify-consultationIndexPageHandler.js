@@ -345,7 +345,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
+                $("#finalLawDropZone").append('<div class="waiting-msg"> ' +
+                    'Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. ' +
+                    '<div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -354,9 +356,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             init: function() {
                 this.on("error", function(file,errorMessage) {
                     $(".dz-error-message").css("opacity",1);
+                    this.removeFile(file);
+                    console.log(errorMessage);
+                    $(".dz-error-message").append('<div>' + errorMessage + '</div>');
                 });
                 this.on("addedfile", function() {
-                    /*If more than one file, we ceep the latest one*/
+                    /*If more than one file, we keep the latest one*/
                     if (this.files[1]!=null){
                         this.removeFile(this.files[0]);
                     }

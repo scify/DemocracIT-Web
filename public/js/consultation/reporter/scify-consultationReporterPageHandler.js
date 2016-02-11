@@ -478,6 +478,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             init: function() {
                 this.on("error", function(file,errorMessage) {
                     $(".dz-error-message").css("opacity",1);
+                    this.removeFile(file);
+                    console.log(errorMessage);
+                    $(".dz-error-message").append('<div>' + errorMessage + '</div>');
                 });
                 this.on("addedfile", function() {
                     /*If more than one file, we ceep the latest one*/
