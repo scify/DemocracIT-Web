@@ -50,10 +50,24 @@
             var multiplier = 2;
             var sizes = 0;
             var average;
+            //we sort the array of values so that we can get the min and max values
+            //this will help map the values to a [40-120] values range, so that we are independent of the initial values
+            data.results.sort(function (a, b) {
+                return a.freq - b.freq
+            });
+            var min = data.results[0].freq,
+                max = data.results[data.results.length - 1].freq;
+            if(min == max)
+                max += 100;
+
+                //TODO: remove fallback method:
             //we compute the average frequency so that we can be able to initialize the multiplier
             //the multiplier serves the purpose of augmenting the words in terms of pixels
             //e.g. a word that has frequency one, with a 1- multiplier will get 10 pixels.
-            for(var i=0; i<data.results.length ; i++) {
+            /*console.log("min: " + min);
+            console.log("max: " + max);*/
+            //Y = (X-A)/(B-A) * (D-C) + C
+            /*for(var i=0; i<data.results.length ; i++) {
                 sizes += data.results[i].freq;
             }
             average = sizes / data.results.length;
@@ -74,11 +88,14 @@
                 multiplier = 0.5;
                 instance.state.cloudHeight = 700;
                 instance.state.translateHeight = 300;
-            }
+            }*/
             var arr = $.map(data, function(el) {
                 var results = [];
                 for(var item in el) {
-                    results.push({"text":el[item].term, "size":Math.floor(el[item].freq * multiplier)})
+                    //results.push({"text":el[item].term, "size":Math.floor(el[item].freq * multiplier)})
+                    var num = Math.floor((el[item].freq - min) / (max - min) * (120 - 40) + 10);
+                    //console.log("freq: " + el[item].freq + " num: " + num);
+                    results.push({"text":el[item].term, "size":num})
                 }
                 return results;
             });
