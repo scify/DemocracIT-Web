@@ -18,8 +18,7 @@
             if (instance.state.commentsCount > instance.state.comments.length) instance.getCommentsFromServer.call(instance);else if (instance.state.display) instance.setVisibibility.call(instance, false);else instance.setVisibibility.call(instance, true);
         },
         getConsWordCloudFromServer: function getConsWordCloudFromServer(consultationId) {
-            console.log("getWordCloudFromServe r");
-
+            console.log("getWordCloudFromServer");
             var instance = this;
             var promise = $.ajax({
                 method: "POST",
@@ -40,8 +39,8 @@
                     }
                     average = sizes / data.results.length;
                     console.log("average: " + average);
-                    instance.state.cloudHeight = 500;
-                    instance.state.translateHeight = 200;
+                    instance.state.cloudHeight = 700;
+                    instance.state.translateHeight = 400;
                     if (average < 3) {
                         multiplier = 10;
                     } else if (average < 5) {
@@ -67,7 +66,6 @@
                         return results;
                     });
                     instance.state.frequency_list = arr;
-                    //console.log(instance.state.frequency_list);
                     instance.state.parent = "cons";
                 },
                 complete: function complete() {
@@ -146,21 +144,15 @@
         drawD3: function drawD3() {
             var fill = d3.scale.category20();
             var instance = this;
-            var translate = "";
-            if (instance.state.parent == "cons") {
-                var translate = "translate(500," + instance.state.translateHeight + ")";
-            } else if (instance.state.parent == "article") {
-                var translate = "translate(500," + instance.state.translateHeight + ")";
-            }
+            var translate = "translate(500," + instance.state.translateHeight + ")";
             if (this.state.frequency_list.length > 0) {
                 var draw = function draw(words) {
-                    console.log(words);
-                    d3.select("#wordCloudChart").append("svg").attr("width", "100%").attr("height", instance.state.cloudHeight).append("g").attr("transform", translate).selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+                    d3.select("#wordCloudChart").append("svg").attr("width", 1000).attr("height", 700).append("g").attr("transform", "translate(" + 1200 / 2 + "," + 700 / 2 + ")").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
                         return d.size + "px";
                     }).style("font-family", "Impact").style("fill", function (d, i) {
                         return fill(i);
                     }).attr("text-anchor", "middle").attr("transform", function (d) {
-                        return "translate(" + [d.x, d.y] + ")";
+                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
                     }).text(function (d) {
                         return d.text;
                     });
@@ -170,12 +162,9 @@
 
                 var color = d3.scale.linear().domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100]).range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
 
-                var color = d3.scale.linear().domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100]).range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-
                 var words = this.state.frequency_list;
-                console.log(words);
-                d3.layout.cloud().size([900, 500]).words(words).rotate(function () {
-                    return ~ ~(Math.random() * 2) * 90;
+                d3.layout.cloud().size([1000, 700]).words(words).rotate(function () {
+                    return (~ ~(Math.random() * 6) - 3) * 10;
                 }).font("Impact").fontSize(function (d) {
                     return d.size;
                 }).padding(5).on("end", draw).start();

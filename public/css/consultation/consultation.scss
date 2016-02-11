@@ -684,7 +684,12 @@ a.load {
 }
 
 #consWordCloudModal .modal-dialog {
-  width: 1000px;
+  width: 1300px;
+}
+
+#wordCloudChart {
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .modal-body .explanation {
