@@ -74,7 +74,21 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 source :"opengov",
                 isdiscussionForTheWholeArticle:true,
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
-                parent: "consultation"
+                parent: "consultation",
+                shouldDisplayCommenterName:true,
+                shouldDisplayEditIcon:false,
+                shouldDisplayCommentEdited:false,
+                shouldDisplayShareBtn:true,
+                shouldDisplayCommentBody: true,
+                shouldDisplayEmotion:false,
+                shouldDisplayAnnotatedText:false,
+                shouldDisplayReplyBox:false,
+                shouldDisplayReplies:false,
+                optionsEnabled:false,
+                shouldDisplayTopics:false,
+                shouldDisplayFinalLawAnnBtn:false,
+                shouldDisplayLikeDislike:false,
+                commentClassNames:"comment"
             };
 
             //define function to use after the comment has loaded
@@ -115,6 +129,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.shouldDisplayAnnotatedText = true;
                 commentBoxProperties.shouldDisplayReplyBox = true;
                 commentBoxProperties.shouldDisplayReplies = true;
+                commentBoxProperties.shouldDisplayLikeDislike = true;
                 commentBoxProperties.optionsEnabled = true;
                 commentBoxProperties.shouldDisplayTopics = true;
                 commentBoxProperties.shouldDisplayFinalLawAnnBtn = true;
@@ -330,7 +345,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
+                $("#finalLawDropZone").append('<div class="waiting-msg"> ' +
+                    'Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. ' +
+                    '<div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -339,9 +356,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             init: function() {
                 this.on("error", function(file,errorMessage) {
                     $(".dz-error-message").css("opacity",1);
+                    console.log(errorMessage);
+                    var instance = this;
+                    $(".dz-details").on("click", function(){
+                        instance.removeFile(file);
+                    });
                 });
                 this.on("addedfile", function() {
-                    /*If more than one file, we ceep the latest one*/
+                    /*If more than one file, we keep the latest one*/
                     if (this.files[1]!=null){
                         this.removeFile(this.files[0]);
                     }
@@ -363,9 +385,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var parameter = getParameterByName("target");
         if(parameter == "finalLaw") {
             console.log("scroll");
-            $('html, body').animate({
-                scrollTop: 500
-            }, 1000);
+            $("html, body").animate({ scrollTop: $('#finalLawLink').offset().top - 100 }, 1000);
             $(".finalLawLi a").trigger("click");
         }
     },

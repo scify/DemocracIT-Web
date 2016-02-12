@@ -35,6 +35,12 @@ scify.EvaluatorPageHandler.prototype = function(){
                 default:
                     break
             }
+            $("#" + chartId).css("display", "none");
+            var showChart = function() {
+                $("#" + chartId).css("display", "block");
+                $("#firstChartLoader").css("display","none");
+            };
+            google.visualization.events.addListener(chart, 'animationfinish', showChart);
             chart.draw(data, options);
             // When a row is selected, the listener is triggered.
             google.visualization.events.addListener(chart, 'select', function() {
@@ -165,7 +171,12 @@ scify.EvaluatorPageHandler.prototype = function(){
                 legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15
             };
-            createChart(this.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
+            var domElementLoader = document.getElementById("firstChartLoader");
+            if (domElementLoader) {
+                window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
+            }
+            $(domElementLoader).prepend("<div style='text-align: center; margin-bottom: 5px'>Περιμένετε...</div>");
+            createChart(instance.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
 
         createConsFrequencyPerOrganizationDiv();

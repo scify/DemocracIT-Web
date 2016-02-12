@@ -136,8 +136,7 @@
                         userName: data
                     };
                     console.log(newAnnObj);
-                    var newAnnObjPos = instance.state.annotators.length;
-                    if (instance.checkIfTheUserHasAnnotated()) newAnnObjPos = instance.replaceAnnotation(newAnnObj);else instance.addToAnnotatorsArr(newAnnObj);
+                    if (instance.checkIfTheUserHasAnnotated()) instance.replaceAnnotation(newAnnObj);else instance.addToAnnotatorsArr(newAnnObj);
                 },
                 complete: function complete() {
                     instance.state.annotationDivBusy = false;
@@ -151,15 +150,12 @@
         //function to replace existing annotation object after annotation update
         replaceAnnotation: function replaceAnnotation(updatedAnnotator) {
             var instance = this;
-            var annObjIndex = 0;
             $.each(this.state.annotators, function (index, annotator) {
                 if (annotator.userId == updatedAnnotator.userId) {
                     instance.state.annotators[index] = updatedAnnotator;
-                    annObjIndex = index;
                     return;
                 }
             });
-            return annObjIndex;
         },
         //function to add new annotation object to annotators array
         addToAnnotatorsArr: function addToAnnotatorsArr(newAnnotator) {

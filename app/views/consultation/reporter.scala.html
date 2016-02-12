@@ -65,7 +65,7 @@
                 <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">Συμμετοχή στη διαβούλευση</a></li>
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
                 <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">Ανάλυση σχολίων</a></li>
-                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
+                @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
 
             </ul>
             <div class="tab-content">
@@ -84,7 +84,7 @@
                             @if(vm.commentsPerArticle.isEmpty) {
                                 <div class="noStats">Δεν υπάρχουν δεδομένα.</div>
                             } else {
-                                <ul class="commentsTabs nav nav-tabs" role="tablist" style="display : none">
+                                <ul id="commentsTabs" class="commentsTabs nav nav-tabs" role="tablist" style="display : none">
                                     <li role="presentation" class="active"><a href="#commentsOpenGov" aria-controls="commentsOpenGov" role="tab" data-toggle="tab">
                                         Σχόλια OpenGov</a></li>
                                     <li role="presentation"><a href="#commentsDIT" aria-controls="commentsDIT" role="tab" data-toggle="tab">

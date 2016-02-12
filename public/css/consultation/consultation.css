@@ -525,7 +525,11 @@ a.load {
   outline-width: 0px !important; }
 
 #consWordCloudModal .modal-dialog {
-  width: 1000px; }
+  width: 1300px; }
+
+#wordCloudChart {
+  overflow-x: scroll;
+  overflow-y: scroll; }
 
 .modal-body .explanation {
   margin-top: 18px;

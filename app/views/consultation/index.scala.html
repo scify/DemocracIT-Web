@@ -63,7 +63,7 @@
                 }
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
                 <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
-                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
+                @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
@@ -100,7 +100,7 @@
                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                     <span class="article-title-text">@article.title</span>
                                     <span class="shareSpan shareArticleHidden">Κάντε αντιγραφή τον παρακάτω σύνδεσμο:<br></span>
-                                    <span class="shareBtn" id="share-@article.id">
+                                    <span class="shareBtn" id="share-@article.id" title="Σύνδεσμος για αυτό το άρθρο">
                                         <i class="fa fa-link"></i>
                                     </span>
                                 </div>

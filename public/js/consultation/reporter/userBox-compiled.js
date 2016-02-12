@@ -111,6 +111,7 @@
                         shouldDisplayReplies: false,
                         optionsEnabled: false,
                         shouldDisplayTopics: true,
+                        shouldDisplayLikeDislike: true,
                         commentClassNames: "comment",
                         shouldDisplayFinalLawAnnBtn: false });
                 });
