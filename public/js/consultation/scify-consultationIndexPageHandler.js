@@ -356,9 +356,11 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             init: function() {
                 this.on("error", function(file,errorMessage) {
                     $(".dz-error-message").css("opacity",1);
-                    this.removeFile(file);
                     console.log(errorMessage);
-                    $(".dz-error-message").append('<div>' + errorMessage + '</div>');
+                    var instance = this;
+                    $(".dz-details").on("click", function(){
+                        instance.removeFile(file);
+                    });
                 });
                 this.on("addedfile", function() {
                     /*If more than one file, we keep the latest one*/
