@@ -176,11 +176,6 @@ scify.EvaluatorPageHandler.prototype = function(){
                 window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
             }
             $(domElementLoader).prepend("<div style='text-align: center; margin-bottom: 5px'>Περιμένετε...</div>");
-            /*$("#consultationsPerMonthInnerChart").css("display", "none");
-            setTimeout(function(){
-                React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
-                $("#consultationsPerMonthInnerChart").css("display", "block");
-            }, 6000);*/
             createChart(instance.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
         }
 
