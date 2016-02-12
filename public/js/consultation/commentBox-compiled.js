@@ -786,7 +786,7 @@
                     return 1;
                 },
                 complete: function complete() {
-                    instance.setState(instance.state);
+                    if (this.props.userDefined) instance.setState(instance.state);
                 },
                 error: function error(err) {
                     console.log(err);
@@ -799,15 +799,15 @@
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = true;
 
-            if (oldLikeStatus === true) {
+            if (oldLikeStatus === true && this.props.userDefined) {
                 //if comment was already liked, undo it
                 newLikeStatus = null;
                 this.state.likeCounter = this.state.likeCounter - 1;
             }
-            if (oldLikeStatus === false) //comment was disliked and now it was liked, remove it from counter
+            if (oldLikeStatus === false && this.props.userDefined) //comment was disliked and now it was liked, remove it from counter
                 this.state.dislikeCounter = this.state.dislikeCounter - 1;
 
-            if (newLikeStatus === true) this.state.likeCounter = this.state.likeCounter + 1;
+            if (newLikeStatus === true && this.props.userDefined) this.state.likeCounter = this.state.likeCounter + 1;
 
             this.state.liked = newLikeStatus;
             this.postRateCommentAndRefresh();
@@ -817,15 +817,15 @@
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = false;
 
-            if (oldLikeStatus === false) {
+            if (oldLikeStatus === false && this.props.userDefined) {
                 //if comment was already disliked, undo it
                 newLikeStatus = null;
                 this.state.dislikeCounter = this.state.dislikeCounter - 1;
             }
-            if (oldLikeStatus === true) //comment was liked and now it was disliked, remove it from counter
+            if (oldLikeStatus === true && this.props.userDefined) //comment was liked and now it was disliked, remove it from counter
                 this.state.likeCounter = this.state.likeCounter - 1;
 
-            if (newLikeStatus === false) this.state.dislikeCounter = this.state.dislikeCounter + 1;
+            if (newLikeStatus === false && this.props.userDefined) this.state.dislikeCounter = this.state.dislikeCounter + 1;
 
             this.state.liked = newLikeStatus;
             this.postRateCommentAndRefresh();
