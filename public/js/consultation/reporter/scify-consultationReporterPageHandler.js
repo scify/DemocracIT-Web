@@ -170,37 +170,27 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         $(".commentsTabs").css("display","block");
         window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
         window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
-
-        $('html, body').animate({
-            scrollTop: 800
-        }, 1000);
-
+        scrollToTabs();
     },
     loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
         if(typeOfAnn == "annotation") {
             window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
         } else if(typeOfAnn == "problem") {
             window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
         }
+        scrollToTabs();
     },
     loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
         if(typeOfAnn == "annotation") {
             window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
         } else if(typeOfAnn == "problem") {
             window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
-            $('html, body').animate({
-                scrollTop: 800
-            }, 1000);
         }
+        scrollToTabs();
+    },
+    //function to scroll to the target div of comment - final law matched areas
+    scrollToTabs = function() {
+        $("html, body").animate({ scrollTop: $('#commentsTabs').offset().top - 200 }, 1000);
     },
     loadArticleWordCloud = function(articleId, commentsNum) {
     window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
@@ -505,9 +495,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var parameter = getParameterByName("target");
         //console.log(parameter);
         if(parameter == "finalLaw") {
-            $('html, body').animate({
-                scrollTop: 500
-            }, 1000);
+            $("html, body").animate({ scrollTop: $('#finalLawLink').offset().top - 100 }, 1000);
             $(".finalLawLi a").trigger("click");
         }
     },

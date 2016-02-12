@@ -383,9 +383,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var parameter = getParameterByName("target");
         if(parameter == "finalLaw") {
             console.log("scroll");
-            $('html, body').animate({
-                scrollTop: 500
-            }, 1000);
+            $("html, body").animate({ scrollTop: $('#finalLawLink').offset().top - 100 }, 1000);
             $(".finalLawLi a").trigger("click");
         }
     },
