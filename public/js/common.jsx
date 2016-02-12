@@ -22,7 +22,7 @@ var handleAjaxLoginErrors = function(event, request, settings){
         if (request.status == 401)
         {
 
-            displayNotLoggedIn();
+            displayNotLoggedIn(request);
         }
 
         if (request.status == 403)
@@ -33,7 +33,7 @@ var handleAjaxLoginErrors = function(event, request, settings){
                 html: true});
         }
     },
-    displayNotLoggedIn = function() {
+    displayNotLoggedIn = function(request) {
         swal({
             title: "Είσοδος",
             text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="'+request.responseJSON+'">συνδεδεμένοι</a>',

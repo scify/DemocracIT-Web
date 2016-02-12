@@ -170,27 +170,29 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         $(".commentsTabs").css("display","block");
         window.OpenGovommentsPerArticleComponent.getOpenGovCommentsByArticleId(articleId);
         window.DITGovommentsPerArticleComponent.getDITCommentsByArticleId(articleId);
-        scrollToTabs();
+        scrollToTargetDiv("commentsTabs");
     },
     loadListOfCommentsByAnnId = function(annTagId, consultationId, typeOfAnn) {
         if(typeOfAnn == "annotation") {
             window.CommentsByAnnIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            scrollToTargetDiv("commentsPerAnnId");
         } else if(typeOfAnn == "problem") {
             window.CommentsByProblemIdComponent.getCommentsByAnnId(annTagId, consultationId);
+            scrollToTargetDiv("commentsPerProblemId");
         }
-        scrollToTabs();
     },
     loadListOfCommentsByAnnIdPerArticle = function(annTagId, articleId, consultationId, typeOfAnn) {
         if(typeOfAnn == "annotation") {
             window.CommentsByAnnIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            scrollToTargetDiv("commentsPerAnnIdPerArticle");
         } else if(typeOfAnn == "problem") {
             window.CommentsByProblemIdPerArticleComponent.getCommentsByAnnIdPerArticle(annTagId, articleId);
+            scrollToTargetDiv("commentsPerProblemIdPerArticle");
         }
-        scrollToTabs();
     },
     //function to scroll to the target div of comment - final law matched areas
-    scrollToTabs = function() {
-        $("html, body").animate({ scrollTop: $('#commentsTabs').offset().top - 200 }, 1000);
+    scrollToTargetDiv = function(targetDiv) {
+        $("html, body").animate({ scrollTop: $('#' + targetDiv).offset().top - 200 }, 1000);
     },
     loadArticleWordCloud = function(articleId, commentsNum) {
     window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);

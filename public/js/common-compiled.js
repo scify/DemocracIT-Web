@@ -24,7 +24,7 @@ scify.ReactLoader = React.createClass({
     var handleAjaxLoginErrors = function handleAjaxLoginErrors(event, request, settings) {
         if (request.status == 401) {
 
-            displayNotLoggedIn();
+            displayNotLoggedIn(request);
         }
 
         if (request.status == 403) {
@@ -34,7 +34,7 @@ scify.ReactLoader = React.createClass({
                 html: true });
         }
     },
-        displayNotLoggedIn = function displayNotLoggedIn() {
+        displayNotLoggedIn = function displayNotLoggedIn(request) {
         swal({
             title: "Είσοδος",
             text: "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"" + request.responseJSON + "\">συνδεδεμένοι</a>",
