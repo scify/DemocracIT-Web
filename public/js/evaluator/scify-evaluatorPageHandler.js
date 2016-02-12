@@ -38,7 +38,7 @@ scify.EvaluatorPageHandler.prototype = function(){
             $("#" + chartId).css("display", "none");
             var showChart = function() {
                 $("#" + chartId).css("display", "block");
-                React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
+                $("#firstChartLoader").css("display","none");
             };
             google.visualization.events.addListener(chart, 'animationfinish', showChart);
             chart.draw(data, options);
@@ -175,6 +175,7 @@ scify.EvaluatorPageHandler.prototype = function(){
             if (domElementLoader) {
                 window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
             }
+            $(domElementLoader).prepend("<div style='text-align: center; margin-bottom: 5px'>Περιμένετε...</div>");
             /*$("#consultationsPerMonthInnerChart").css("display", "none");
             setTimeout(function(){
                 React.unmountComponentAtNode(document.getElementById('firstChartLoader'));
