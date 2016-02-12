@@ -17,7 +17,6 @@ scify.TutorialAnnotator.prototype = (function(){
                     elementToAddStep5 = $(".article:first").find(".load:first");
                     //if the consultation is new (no comments yet), the element is empty
                     //so we should attach the step to the first annotation area
-                    console.log(elementToAddStep5.length);
                     //if the element is not found, it means that we do not have comments in the first article.
                     if(elementToAddStep5.length == 0) {
                         shouldAddStep5 = false
@@ -41,9 +40,6 @@ scify.TutorialAnnotator.prototype = (function(){
                 startIntro.call(instance, shouldAddStep5);
             });
 
-        },
-        removeStepFromArr = function() {
-            console.log(this.stepsForTutorial);
         },
         checkAndReadCookie = function() {
             var tutorialCookie = getCookie("tutorialCookie");
