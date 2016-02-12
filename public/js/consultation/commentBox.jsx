@@ -687,7 +687,7 @@
                 articleId:instance.props.comment.articleId,
                 consultationId:instance.props.consultationId
             };
-            $.ajax({
+           $.ajax({
 
                 method: "POST",
                 url: "/comments/rate",
@@ -695,12 +695,16 @@
                 data: data,
                 beforeSend:function(){
                 },
-                success : function(response){},
+                success : function(response){
+                    return 1;
+                },
                 complete: function(){
                     instance.setState(instance.state);
                 },
                 error:function(err){ console.log(err)}
-            })
+            });
+
+
         },
         handleLikeComment :function(){ //user pressed the liked button
             var oldLikeStatus =this.state.liked;

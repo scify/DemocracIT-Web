@@ -27,18 +27,19 @@ scify.Annotator.prototype = (function(){
             if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '')
                 return true;
 
-            //an element can be annotated if all it's children are #TEXT OR SUP nodes
-            var bannedNodeFound=false;
+            //an element can be annotated if all it's children are #TEXT OR SUP nodes or STRONG nodes or A nodes
+            var nodeThanCanBeAnnottatedIsFound=false;
             for (var i = 0; i < element.childNodes.length; i++) {
                 if ( element.childNodes[i].nodeName !="SUP" &&
                     element.childNodes[i].nodeName !="#text" &&
-                    element.childNodes[i].nodeName !="STRONG" )
+                    element.childNodes[i].nodeName !="STRONG" &&
+                    element.childNodes[i].nodeName !="A" )
                 {
-                    bannedNodeFound=true; //the child node is not SUP and is not #TEXT node
+                    nodeThanCanBeAnnottatedIsFound=true; //the child node is not SUP/#TEXT/STRONG/A node. This means that we can step inside in order to make it annotatable
                     break;
                 }
             }
-            if (bannedNodeFound || element.textContent.trim().length==0)
+            if (nodeThanCanBeAnnottatedIsFound || element.textContent.trim().length==0)
                 return false;
 
             return true;
