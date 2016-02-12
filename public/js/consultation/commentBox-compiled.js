@@ -153,9 +153,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(comment) {
-                    /*console.log(instance.state);
-                    console.log(instance.props);
-                    console.log(comment);*/
                     if (instance.commentsLoadedFromServer()) {
                         //search for the old comment in the comments array
                         for (var commentIndex = 0; commentIndex < instance.state.allComments.length; commentIndex++) {
@@ -363,7 +360,6 @@
             }
 
             $("#shareComment-" + instance.props.data.id).click(function () {
-                console.log("#shareComment-" + instance.props.data.id);
                 var commentId = $(this).attr("id").split("-")[1];
                 var annotationId = instance.props.annotationId;
                 //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
@@ -731,7 +727,7 @@
                     dateAdded: this.props.data.dateAdded,
                     likeCounter: this.props.data.likesCounter,
                     dislikeCounter: this.props.data.dislikesCounter,
-                    loggedInUserRating: this.props.loggedInUserRating,
+                    loggedInUserRating: this.props.data.loggedInUserRating,
                     emotionId: this.props.data.emotionId,
                     imagesPath: this.props.imagesPath,
                     consultationId: this.props.consultationId,
@@ -744,7 +740,7 @@
                 dateAdded: this.props.data.dateAdded,
                 likeCounter: this.props.data.likesCounter,
                 dislikeCounter: this.props.data.dislikesCounter,
-                loggedInUserRating: this.props.loggedInUserRating,
+                loggedInUserRating: this.props.data.loggedInUserRating,
                 emotionId: this.props.data.emotionId,
                 shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike
             });
@@ -758,7 +754,7 @@
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked: this.props.loggedInUserRating, //if not null it means has liked/disliked this comment
+                liked: this.props.comment.loggedInUserRating, //if not null it means has liked/disliked this comment
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
                 finalLawBusy: true
@@ -799,6 +795,7 @@
         },
         handleLikeComment: function handleLikeComment() {
             //user pressed the liked button
+            console.log(this.props);
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = true;
 
@@ -915,7 +912,7 @@
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked: this.props.loggedInUserRating //if not null it means has liked/disliked this comment
+                liked: this.props.comment.loggedInUserRating //if not null it means has liked/disliked this comment
             };
         },
         render: function render() {
