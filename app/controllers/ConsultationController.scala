@@ -67,13 +67,13 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
   }
 
   def formatFileContent(fileContent:String):String = {
-    val splitContent:Array[String] = fileContent.split("\n")
+    val lines:Array[String] = fileContent.split("\n")
     var fileContentFinal = ""
     var isFirstArticle = true
     var htmlContent = ""
     var articleNum = 1
     //for each line in the document
-    for(line <- splitContent){
+    for(line <- lines){
       if(line.length > 6) {
         if (line.substring(0, 6).equals("Άρθρο ")) {
           if(isFirstArticle) {

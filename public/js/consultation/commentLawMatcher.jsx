@@ -18,10 +18,10 @@
             this.updateFinalLawDivDataTarget();
             this.createAnnotationAreasForFinalLaw();
             this.formSubmitHandler();
-            this.highlightCheckedArea();
+            this.highlightCheckedAreaListener();
         },
         //function to highlight appropriate area on checkbox checked
-        highlightCheckedArea: function() {
+        highlightCheckedAreaListener: function() {
             $('.fl-ann-icon').find('input:checkbox').on("click", function(){
                 if($(this).is(":checked")) {
                     $(this).parent().parent().css("background-color", "lightblue");

@@ -786,7 +786,9 @@
 
                 data: data,
                 beforeSend: function beforeSend() {},
-                success: function success(response) {},
+                success: function success(response) {
+                    return 1;
+                },
                 complete: function complete() {
                     instance.setState(instance.state);
                 },
