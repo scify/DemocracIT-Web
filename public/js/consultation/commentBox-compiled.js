@@ -911,8 +911,7 @@
         getInitialState: function getInitialState() {
             return {
                 likeCounter: this.props.likeCounter,
-                dislikeCounter: this.props.dislikeCounter,
-                liked: this.props.comment.loggedInUserRating //if not null it means has liked/disliked this comment
+                dislikeCounter: this.props.dislikeCounter
             };
         },
         render: function render() {
