@@ -549,7 +549,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }), document.getElementById("reportComment"));
         }
         this.reportCommentDiv.display(data);
-    }
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -576,8 +576,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         finalLawModalHandler();
         openArticleAndCommentFromURL();
         handleArticleShare(instance);
-
-
 
         $("body").on("match-comment-with-law",handleMatchCommentWithLaw.bind(instance));
         $("body").on("report-comment",handleReportComment.bind(instance));

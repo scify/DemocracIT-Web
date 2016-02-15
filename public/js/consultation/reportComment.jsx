@@ -20,12 +20,12 @@
             }
             else {
                 //check if the logged in user has already reported this comment
-                this.checkIfUserHasReporterThisComment(this.state.comment.id);
+                this.checkIfUserHasReportedThisComment(this.state.comment.id);
             }
             this.setState(this.state);
 
         },
-        checkIfUserHasReporterThisComment(commentId) {
+        checkIfUserHasReportedThisComment(commentId) {
             var instance = this;
             $.ajax({
                 method: "GET",

@@ -573,8 +573,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             shouldDisplayTopics: true,
             shouldDisplayFinalLawAnnBtn: true,
             shouldDisplayLikeDislike:true,
-            commentClassNames:"comment"
-        }
+            commentClassNames:"comment",
+            shouldDisplayReportAction:true
+        };
         instance.commentListOpenGovProperties = {
             userId : instance.userId,
             userDefined : userDefined,
@@ -595,8 +596,9 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             shouldDisplayTopics: false,
             shouldDisplayFinalLawAnnBtn: false,
             shouldDisplayLikeDislike:false,
-            commentClassNames:"comment"
-        }
+            commentClassNames:"comment",
+            shouldDisplayReportAction:false
+        };
     },
     handleMatchCommentWithLaw = function(e,data){
 
@@ -611,7 +613,19 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }), document.getElementById("commentLawMatcher"));
         }
         this.commentWithLawMatcher.display(data);
-    }
+    },
+    handleReportComment = function(e,data){
+        if (!this.reportCommentDiv)
+        {
+            this.reportCommentDiv = React.render(React.createElement(scify.reportComment, {
+                comment:data.comment,
+                imagesPath: this.imagesPath,
+                userId: this.userId,
+                shouldDisplaySubmitBtn: true
+            }), document.getElementById("reportComment"));
+        }
+        this.reportCommentDiv.display(data);
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
@@ -648,6 +662,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         finalLawModalHandler();
 
         $("body").on("match-comment-with-law",handleMatchCommentWithLaw.bind(instance));
+        $("body").on("report-comment",handleReportComment.bind(instance));
+
         //FB tracking code for visiting reporter page
         fbq('track', 'ViewContent');
     };
