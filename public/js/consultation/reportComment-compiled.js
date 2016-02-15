@@ -13,7 +13,6 @@
         },
         //function to display the whole React class
         display: function display(data) {
-            console.log(data);
             this.state.comment = data.comment;
             this.state.display = true;
             this.state.busy = true;
@@ -21,8 +20,61 @@
             //TODO: fetch report data
             /*if(this.props.finalLawDiv != undefined)
                 this.fetchAnnotationData();*/
-            this.state.shouldDisplaySubmitBtn = true;
+
             this.setState(this.state);
+            //todo: check if user logged in
+            this.checkIfUserHasReporterThisComment(this.state.comment.id);
+        },
+        checkIfUserHasReporterThisComment: function checkIfUserHasReporterThisComment(commentId) {
+            var instance = this;
+            $.ajax({
+                method: "GET",
+                url: "/comment/report/check/" + commentId,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    console.log(data);
+                    if (data == false) {
+                        instance.state.shouldDisplaySubmitBtn = true;
+                        instance.state.message = "Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε \"Αναφορά\":";
+                    } else {
+                        instance.state.shouldDisplaySubmitBtn = false;
+                        instance.state.message = "Έχετε ήδη αναφέρει αυτό το σχόλιο ως υβριστικό";
+                    }
+                    instance.setState(instance.state);
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.setState(instance.state);
+                }
+            });
+        },
+        reportComment: function reportComment() {
+            var instance = this;
+            $.ajax({
+                method: "POST",
+                url: "/comment/report",
+                data: JSON.stringify({ commentId: instance.state.comment.id }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    instance.state.shouldDisplaySubmitBtn = false;
+                    instance.state.message = "Η αναφορά καταχωρήθηκε. Πατήστε \"Κλείσιμο\" για να επιστρέψετε στην προηγούμενη σελίδα.";
+                    instance.setState(instance.state);
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.setState(instance.state);
+                }
+            });
         },
         closeModal: function closeModal() {
             this.state.display = false;
@@ -33,7 +85,7 @@
             var innerContent = React.createElement(
                 "div",
                 { className: "reportCommentMsg" },
-                " Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε \"Αναφορά\":"
+                this.state.message
             );
             if (this.state.display) showReportCommentModal = classNames("in show");
             if (this.state.busy) innerContent = React.createElement(
@@ -43,7 +95,7 @@
             );
             if (this.state.shouldDisplaySubmitBtn) var submitBtn = React.createElement(
                 "button",
-                { id: "saveCommentReport", className: "btn blue" },
+                { id: "saveCommentReport", className: "btn blue", onClick: this.reportComment },
                 "Αναφορά"
             );
             return React.createElement(

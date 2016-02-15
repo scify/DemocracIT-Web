@@ -9,7 +9,6 @@
         },
         //function to display the whole React class
         display: function(data){
-            console.log(data);
             this.state.comment = data.comment;
             this.state.display = true;
             this.state.busy = true;
@@ -17,8 +16,62 @@
             //TODO: fetch report data
             /*if(this.props.finalLawDiv != undefined)
                 this.fetchAnnotationData();*/
-            this.state.shouldDisplaySubmitBtn = true;
+
             this.setState(this.state);
+            //todo: check if user logged in
+            this.checkIfUserHasReporterThisComment(this.state.comment.id);
+        },
+        checkIfUserHasReporterThisComment(commentId) {
+            var instance = this;
+            $.ajax({
+                method: "GET",
+                url: "/comment/report/check/" + commentId,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend:function(){
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success : function(data){
+                    console.log(data);
+                    if(data == false) {
+                        instance.state.shouldDisplaySubmitBtn = true;
+                        instance.state.message = 'Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε "Αναφορά":';
+                    }
+                    else {
+                        instance.state.shouldDisplaySubmitBtn = false;
+                        instance.state.message = 'Έχετε ήδη αναφέρει αυτό το σχόλιο ως υβριστικό';
+                    }
+                    instance.setState(instance.state);
+                },
+                complete: function(){
+                    instance.state.busy = false;
+                    instance.setState(instance.state);
+                }
+            });
+        },
+        reportComment: function(){
+            var instance = this;
+            $.ajax({
+                method: "POST",
+                url: "/comment/report",
+                data:JSON.stringify({commentId: instance.state.comment.id}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                beforeSend:function(){
+                    instance.state.busy = true;
+                    instance.setState(instance.state);
+                },
+                success : function(data){
+                    instance.state.shouldDisplaySubmitBtn = false;
+                    instance.state.message = 'Η αναφορά καταχωρήθηκε. Πατήστε "Κλείσιμο" για να επιστρέψετε στην προηγούμενη σελίδα.';
+                    instance.setState(instance.state);
+                },
+                complete: function(){
+                    instance.state.busy = false;
+                    instance.setState(instance.state);
+                }
+            });
         },
         closeModal:function(){
             this.state.display = false;
@@ -26,13 +79,13 @@
         },
         render: function() {
             var showReportCommentModal = classNames("hide");
-            var innerContent = <div className="reportCommentMsg"> Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε "Αναφορά":</div>
+            var innerContent = <div className="reportCommentMsg">{this.state.message}</div>
             if(this.state.display)
                 showReportCommentModal = classNames("in show");
             if(this.state.busy)
                 innerContent =  <div className="reportCommentMsg"><scify.ReactLoader display={this.state.busy} /></div>;
             if(this.state.shouldDisplaySubmitBtn)
-                var submitBtn = <button id="saveCommentReport" className="btn blue">Αναφορά</button>
+                var submitBtn = <button id="saveCommentReport" className="btn blue" onClick={this.reportComment}>Αναφορά</button>;
             return(
                 <div id="reportCommentModal" className={ classNames("modal","fade", showReportCommentModal)} role="dialog">
                     <div className={ classNames("modal-backdrop","fade",showReportCommentModal)}></div>

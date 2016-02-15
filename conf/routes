@@ -31,6 +31,8 @@ POST        /annotation/save                              @controllers.Annotatio
 POST        /annotation/update                            @controllers.AnnotationController.updatePost
 POST        /annotation/extractTags                       @controllers.AnnotationController.extractTags
 POST        /comments/rate                                @controllers.AnnotationController.rateComment
+GET         /comment/report/check/:commentId              @controllers.AnnotationController.checkIfUserHasReportedComment(commentId:Long)
+POST        /comment/report                               @controllers.AnnotationController.reportComment
 POST        /comment/reply/save                           @controllers.AnnotationController.saveReply
 POST        /finallaw/annotate                            @controllers.AnnotationController.annotateFinalLaw
 POST        /finallaw/annotate/update                     @controllers.AnnotationController.updateFinalLawAnnotation
