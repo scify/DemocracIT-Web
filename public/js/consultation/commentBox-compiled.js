@@ -786,7 +786,7 @@
                     return 1;
                 },
                 complete: function complete() {
-                    if (this.props.userDefined) instance.setState(instance.state);
+                    if (instance.props.userDefined) instance.setState(instance.state);
                 },
                 error: function error(err) {
                     console.log(err);
@@ -795,7 +795,7 @@
         },
         handleLikeComment: function handleLikeComment() {
             //user pressed the liked button
-            console.log(this.props);
+            //console.log(this.props);
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = true;
 
@@ -816,7 +816,7 @@
             //user pressed the dislike button
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = false;
-
+            console.log(this.props.userDefined);
             if (oldLikeStatus === false && this.props.userDefined) {
                 //if comment was already disliked, undo it
                 newLikeStatus = null;
