@@ -533,7 +533,8 @@ legend {
   margin-top: 30px; }
 
 .noAnnotators {
-  margin-top: 30px; }
+  margin-top: 30px;
+  font-weight: bold; }
 
 .annotatorBtnContainer .annotatorsAreaTitle {
   margin-bottom: 10px; }
