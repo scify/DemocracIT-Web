@@ -16,14 +16,25 @@
             this.state.comment = data.comment;
             this.state.display = true;
             this.state.busy = true;
+            console.log(this.props.userId);
+            //if the user is not logged in
+            if (this.props.userId == undefined || this.props.userId == "") {
+                this.state.busy = false;
+                this.state.message = React.createElement(
+                    "div",
+                    null,
+                    "Για αυτή την ενέργεια χρειάζεται να είστε ",
+                    React.createElement(
+                        "a",
+                        { href: "/signIn?returnUrl=@request.uri" },
+                        "συνδεδεμένοι"
+                    )
+                );
+            } else {
+                //check if the logged in user has already reported this comment
+                this.checkIfUserHasReporterThisComment(this.state.comment.id);
+            }
             this.setState(this.state);
-            //TODO: fetch report data
-            /*if(this.props.finalLawDiv != undefined)
-                this.fetchAnnotationData();*/
-
-            this.setState(this.state);
-            //todo: check if user logged in
-            this.checkIfUserHasReporterThisComment(this.state.comment.id);
         },
         checkIfUserHasReporterThisComment: function checkIfUserHasReporterThisComment(commentId) {
             var instance = this;
@@ -37,7 +48,6 @@
                     instance.setState(instance.state);
                 },
                 success: function success(data) {
-                    console.log(data);
                     if (data == false) {
                         instance.state.shouldDisplaySubmitBtn = true;
                         instance.state.message = "Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε \"Αναφορά\":";
@@ -93,11 +103,12 @@
                 { className: "reportCommentMsg" },
                 React.createElement(scify.ReactLoader, { display: this.state.busy })
             );
-            if (this.state.shouldDisplaySubmitBtn) var submitBtn = React.createElement(
+            if (this.state.shouldDisplaySubmitBtn && this.props.userId != undefined) var submitBtn = React.createElement(
                 "button",
                 { id: "saveCommentReport", className: "btn blue", onClick: this.reportComment },
                 "Αναφορά"
             );
+
             return React.createElement(
                 "div",
                 { id: "reportCommentModal", className: classNames("modal", "fade", showReportCommentModal), role: "dialog" },
