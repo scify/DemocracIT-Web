@@ -296,7 +296,8 @@
                                 optionsEnabled: false,
                                 shouldDisplayTopics: true,
                                 commentClassNames: "comment",
-                                shouldDisplayFinalLawAnnBtn: false }),
+                                shouldDisplayFinalLawAnnBtn: false,
+                                shouldDisplayReportAction: false }),
                             React.createElement(
                                 "div",
                                 { className: "annotatorBox" },

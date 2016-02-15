@@ -279,7 +279,8 @@
                                     optionsEnabled={false}
                                     shouldDisplayTopics={true}
                                     commentClassNames="comment"
-                                    shouldDisplayFinalLawAnnBtn={false}/>
+                                    shouldDisplayFinalLawAnnBtn={false}
+                                    shouldDisplayReportAction={false}/>
                                 <div className="annotatorBox">
                                     {annotatorBox}
                                 </div>

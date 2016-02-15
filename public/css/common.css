@@ -481,6 +481,19 @@ legend {
   margin-right: 0px;
   width: 100%; }
 
+#reporterCommentModal .modal-body {
+  height: 450px;
+  padding: 30px; }
+
+#reporterCommentModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%; }
+
+#reporterCommentModal .modal-dialog {
+  width: 50%;
+  top: 20px; }
+
 #finalLawCommentModal #finalLawAnnDiv .stats {
   display: none; }
 
@@ -556,5 +569,19 @@ legend {
 
 #wordCloudChart svg {
   width: 100%; }
+
+.comment .optionsRight {
+  width: 220px;
+  float: right; }
+
+.comment .optionsRight .reportAction {
+  float: left;
+  text-decoration: underline;
+  color: darkred;
+  font-style: italic;
+  opacity: 0.6; }
+
+.comment .optionsRight .reportAction:hover {
+  cursor: pointer; }
 
 /*# sourceMappingURL=common.css.map */

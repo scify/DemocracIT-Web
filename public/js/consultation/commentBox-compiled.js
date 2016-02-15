@@ -257,7 +257,8 @@
                         shouldDisplayTopics: this.props.shouldDisplayTopics,
                         commentClassNames: this.props.commentClassNames,
                         shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn,
-                        shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike })
+                        shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike,
+                        shouldDisplayReportAction: this.props.shouldDisplayReportAction })
                 )
             );
         }
@@ -322,7 +323,8 @@
                         shouldDisplayTopics: instance.props.shouldDisplayTopics,
                         commentClassNames: instance.props.commentClassNames,
                         shouldDisplayFinalLawAnnBtn: instance.props.shouldDisplayFinalLawAnnBtn,
-                        shouldDisplayLikeDislike: instance.props.shouldDisplayLikeDislike })
+                        shouldDisplayLikeDislike: instance.props.shouldDisplayLikeDislike,
+                        shouldDisplayReportAction: instance.props.shouldDisplayReportAction })
                 );
             });
 
@@ -349,7 +351,8 @@
                 dislikeCounter: this.props.data.dislikesCounter,
                 liked: this.props.data.loggedInUserRating, //if not null it means has liked/disliked this comment
                 comment: this.props.data,
-                displayReplyBox: false
+                displayReplyBox: false,
+                displayReportModal: false
             };
         },
         componentDidMount: function componentDidMount() {
@@ -419,7 +422,12 @@
                     this.renderCommenterName(this.props.shouldDisplayCommenterName),
                     this.renderEditIcon(this.props.shouldDisplayEditIcon),
                     this.renderCommentEdited(this.props.shouldDisplayCommentEdited),
-                    this.renderShareBtn(this.props.shouldDisplayShareBtn),
+                    React.createElement(
+                        "div",
+                        { className: "optionsRight" },
+                        this.renderReportAction(this.props.shouldDisplayReportAction),
+                        this.renderShareBtn(this.props.shouldDisplayShareBtn)
+                    ),
                     this.renderCommentBody(this.props.shouldDisplayCommentBody),
                     this.renderEmotion(this.props.shouldDisplayEmotion),
                     this.renderAnnotatedText(this.props.shouldDisplayAnnotatedText),
@@ -744,6 +752,22 @@
                 emotionId: this.props.data.emotionId,
                 shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike
             });
+        },
+        renderReportAction: function renderReportAction(shouldDisplayReportAction) {
+            var reportBtn = React.createElement("span", null);
+            if (shouldDisplayReportAction) reportBtn = React.createElement(
+                "span",
+                { className: "reportAction", onClick: this.openReportModal },
+                "Αναφορά σχολίου ως υβριστικό"
+            );
+            return reportBtn;
+        },
+        openReportModal: function openReportModal() {
+            $("body").trigger("report-comment", {
+                comment: this.props.data,
+                imagesPath: this.props.imagesPath,
+                endDate: this.props.consultationEndDate
+            });
         }
     });
 
@@ -757,7 +781,8 @@
                 liked: this.props.comment.loggedInUserRating, //if not null it means has liked/disliked this comment
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
-                finalLawBusy: true
+                finalLawBusy: true,
+                reportCommentBusy: true
             };
         },
         postRateCommentAndRefresh: function postRateCommentAndRefresh() {

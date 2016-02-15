@@ -267,7 +267,8 @@
                             shouldDisplayTopics={this.props.shouldDisplayTopics}
                             commentClassNames={this.props.commentClassNames}
                             shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
-                            shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}/>
+                            shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
+                            shouldDisplayReportAction={this.props.shouldDisplayReportAction}/>
                     </div>
                 </div>
 
@@ -332,7 +333,8 @@
                                    shouldDisplayTopics={instance.props.shouldDisplayTopics}
                                    commentClassNames={instance.props.commentClassNames}
                                    shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}
-                                   shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}/>
+                                   shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}
+                                   shouldDisplayReportAction={instance.props.shouldDisplayReportAction}/>
 
                     </div>
                 );
@@ -358,12 +360,13 @@
                 if(this.props.data.commentReplies.length > 1)
                     sortByKey(this.props.data.commentReplies, 'dateAdded');
             return {
-                        likeCounter: this.props.data.likesCounter,
-                        dislikeCounter: this.props.data.dislikesCounter,
-                        liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
-                        comment: this.props.data,
-                        displayReplyBox: false
-                    };
+                likeCounter: this.props.data.likesCounter,
+                dislikeCounter: this.props.data.dislikesCounter,
+                liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                comment: this.props.data,
+                displayReplyBox: false,
+                displayReportModal:false
+            };
         },
         componentDidMount : function(){
             var instance = this;
@@ -428,7 +431,10 @@
                         {this.renderCommenterName(this.props.shouldDisplayCommenterName)}
                         {this.renderEditIcon(this.props.shouldDisplayEditIcon)}
                         {this.renderCommentEdited(this.props.shouldDisplayCommentEdited)}
-                        {this.renderShareBtn(this.props.shouldDisplayShareBtn)}
+                        <div className="optionsRight">
+                            {this.renderReportAction(this.props.shouldDisplayReportAction)}
+                            {this.renderShareBtn(this.props.shouldDisplayShareBtn)}
+                        </div>
                         {this.renderCommentBody(this.props.shouldDisplayCommentBody)}
                         {this.renderEmotion(this.props.shouldDisplayEmotion)}
                         {this.renderAnnotatedText(this.props.shouldDisplayAnnotatedText)}
@@ -654,6 +660,20 @@
                                         shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
                 />
             );
+        },
+        renderReportAction: function(shouldDisplayReportAction){
+            var reportBtn = <span></span>;
+            if(shouldDisplayReportAction)
+                reportBtn = <span className="reportAction" onClick={this.openReportModal}>Αναφορά σχολίου ως υβριστικό</span>
+            return(reportBtn);
+        },
+        openReportModal: function() {
+            $("body").trigger("report-comment",{
+                    comment: this.props.data,
+                    imagesPath: this.props.imagesPath,
+                    endDate: this.props.consultationEndDate
+                }
+            );
         }
     });
 
@@ -665,7 +685,8 @@
                 liked : this.props.comment.loggedInUserRating,  //if not null it means has liked/disliked this comment
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
-                finalLawBusy:true
+                finalLawBusy:true,
+                reportCommentBusy:true
             };
         },
         postRateCommentAndRefresh: function(){
