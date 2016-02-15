@@ -117,6 +117,19 @@ class ConsultationRepository {
     }
   }
 
+
+  def getConsultationFinalLawStats():List[ConsultationFinalLawStats] = {
+    DB.withTransaction() { implicit c =>
+      val results:List[ConsultationFinalLawStats] = SQL""" coalesce(cast(active as int), 0) as hasLaw, count(*) as numOfConsultations
+                                    from consultation cons
+                                    left outer join consultation_final_law cfl on cfl.consultation_id = cons.id  and active = cast(1 as bit)
+                                    group by active
+
+        """.as(ConsultationFinalLawStatsParser.Parse *)
+      results
+    }
+  }
+
   def rateFinalLaw(userId: UUID, consultationId: Long, finalLawId: Long, attitude: Int, liked:Boolean):Unit = {
     var column = "num_of_approvals"
     if(attitude == 1) {
