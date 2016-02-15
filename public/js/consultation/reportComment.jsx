@@ -17,6 +17,8 @@
             //TODO: fetch report data
             /*if(this.props.finalLawDiv != undefined)
                 this.fetchAnnotationData();*/
+            this.state.shouldDisplaySubmitBtn = true;
+            this.setState(this.state);
         },
         closeModal:function(){
             this.state.display = false;
@@ -24,12 +26,15 @@
         },
         render: function() {
             var showReportCommentModal = classNames("hide");
+            var innerContent = <div className="reportCommentMsg"> Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε "Αναφορά":</div>
             if(this.state.display)
                 showReportCommentModal = classNames("in show");
             if(this.state.busy)
-                var innerContent =  <scify.ReactLoader display={this.state.busy} />;
+                innerContent =  <div className="reportCommentMsg"><scify.ReactLoader display={this.state.busy} /></div>;
+            if(this.state.shouldDisplaySubmitBtn)
+                var submitBtn = <button id="saveCommentReport" className="btn blue">Αναφορά</button>
             return(
-                <div id="reporterCommentModal" className={ classNames("modal","fade", showReportCommentModal)} role="dialog">
+                <div id="reportCommentModal" className={ classNames("modal","fade", showReportCommentModal)} role="dialog">
                     <div className={ classNames("modal-backdrop","fade",showReportCommentModal)}></div>
                     <div className="modal-dialog ">
                         <div className="modal-content">
@@ -61,7 +66,7 @@
                                 {innerContent}
                             </div>
                             <div className="saveBtnContainer">
-
+                                {submitBtn}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>

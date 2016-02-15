@@ -575,18 +575,18 @@ legend {
   width: 100%;
 }
 
-#reporterCommentModal .modal-body {
+#reportCommentModal .modal-body {
   height: 450px;
   padding: 30px;
 }
 
-#reporterCommentModal .container {
+#reportCommentModal .container {
   margin-left: 0px;
   margin-right: 0px;
   width: 100%;
 }
 
-#reporterCommentModal .modal-dialog {
+#reportCommentModal .modal-dialog {
   width: 50%;
   top: 20px;
 }
@@ -636,6 +636,10 @@ legend {
   margin-top: 10px;
 }
 #finalLawCommentModal .saveBtnContainer {
+  text-align: center;
+}
+
+#reportCommentModal .saveBtnContainer {
   text-align: center;
 }
 
@@ -700,4 +704,21 @@ legend {
 
 .comment .optionsRight .reportAction:hover {
   cursor: pointer;
+}
+
+.reportCommentMsg {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#saveCommentReport {
+  background-color: darkred;
+}
+
+#reportCommentModal .modal-header {
+  padding-bottom: 40px;
+}
+
+#reportCommentModal .modal-title {
+  float:left;
 }

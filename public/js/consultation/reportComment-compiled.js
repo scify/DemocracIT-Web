@@ -21,6 +21,8 @@
             //TODO: fetch report data
             /*if(this.props.finalLawDiv != undefined)
                 this.fetchAnnotationData();*/
+            this.state.shouldDisplaySubmitBtn = true;
+            this.setState(this.state);
         },
         closeModal: function closeModal() {
             this.state.display = false;
@@ -28,11 +30,25 @@
         },
         render: function render() {
             var showReportCommentModal = classNames("hide");
+            var innerContent = React.createElement(
+                "div",
+                { className: "reportCommentMsg" },
+                " Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε \"Αναφορά\":"
+            );
             if (this.state.display) showReportCommentModal = classNames("in show");
-            if (this.state.busy) var innerContent = React.createElement(scify.ReactLoader, { display: this.state.busy });
+            if (this.state.busy) innerContent = React.createElement(
+                "div",
+                { className: "reportCommentMsg" },
+                React.createElement(scify.ReactLoader, { display: this.state.busy })
+            );
+            if (this.state.shouldDisplaySubmitBtn) var submitBtn = React.createElement(
+                "button",
+                { id: "saveCommentReport", className: "btn blue" },
+                "Αναφορά"
+            );
             return React.createElement(
                 "div",
-                { id: "reporterCommentModal", className: classNames("modal", "fade", showReportCommentModal), role: "dialog" },
+                { id: "reportCommentModal", className: classNames("modal", "fade", showReportCommentModal), role: "dialog" },
                 React.createElement("div", { className: classNames("modal-backdrop", "fade", showReportCommentModal) }),
                 React.createElement(
                     "div",
@@ -82,7 +98,11 @@
                             ),
                             innerContent
                         ),
-                        React.createElement("div", { className: "saveBtnContainer" }),
+                        React.createElement(
+                            "div",
+                            { className: "saveBtnContainer" },
+                            submitBtn
+                        ),
                         React.createElement(
                             "div",
                             { className: "modal-footer" },
