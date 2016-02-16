@@ -117,3 +117,16 @@ consultation.headers.active = ενεργή
 consultation.headers.finish = ολοκληρώθηκε
 consultation.headers.posted = Αναρτήθηκε
 evaluation.final.consultation = Τελική έκθεση
+userprofile.points.expl = Πώς υπολογίζονται οι πόντοι;
+userprofile.points.plural = πόντοι
+userprofile.points.singular = πόντος
+userprofile.points.rule1expl = Αν ανεβάσετε τον τελικό νόμο για μια διαβούλευση:
+userprofile.points.rule2expl = Αν ψηφίσετε θετικά ή αρνητικά για έναν τελικό νόμο που έχει ανεβάσει κάποιος άλλος χρήστης (μόνο μια φορά για κάθε τελικό νόμο):
+userprofile.points.rule3expl = Αν κποιος τελικός νόμος που ανεβάσατε ψηφιστεί θετικά από κάποιον χρήστη:
+userprofile.points.rule4expl = Αν κάνετε like σε κάποιο σχόλιο (για μέχρι 10 likes ανα ημέρα):
+userprofile.points.rule5expl = Αν σχολιάσετε σε κάποιο άρθρο (για μέχρι 10 σχόλια ανα ημέρα):userprofile.points.rule5 = +1 πόντος
+userprofile.points.rule6expl = Αν σχολιάσετε σε τμήμα κειμένου κάποιου άρθρου (για μέχρι 10 σχόλια ανα ημέρα):
+userprofile.points.rule7expl = Αν στο σχόλιό σας επισυνάπτονται θέματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα):
+userprofile.points.rule8expl = Αν στο σχόλιό σας επισυνάπτονται προβλήματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα):
+userprofile.points.rule9expl = Αν κάποιος τελικός νόμος που ανεβάσατε ψηφιστεί αρνητικά από κάποιον χρήστη:
+userprofile.points.rule10expl = Αν διαγράψετε κάποιον τελικό νόμο που ανεβάσατε:

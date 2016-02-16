@@ -42,7 +42,7 @@
                 </div>
                 <ul class="data">
                     <li><div class="points"><span class ="title">Πόντοι:</span> <span class="numOfPoints">@vm.totalUserPoints</span><i class="fa fa-heart pointIcon"></i>
-                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">Πώς υπολογίζονται οι πόντοι;</a></li>
+                        </div><a id="pointsExplanationBtn" data-toggle="modal" data-target="#pointsExplanationModal">@messages("userprofile.points.expl")</a></li>
                 </ul>
             </div>
         </div>
@@ -56,16 +56,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="msg">
-                            <div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν ανεβάσετε τον τελικό νόμο για μια διαβούλευση: <span class="explanationPoint">+10 πόντοι</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν ψηφίσετε θετικά ή αρνητικά για έναν τελικό νόμο που έχει ανεβάσει κάποιος άλλος χρήστης (μόνο μια φορά για κάθε τελικό νόμο): <span class="explanationPoint">+2 πόντοι</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν κποιος τελικός νόμος που ανεβάσατε ψηφιστεί θετικά από κάποιον χρήστη: <span class="explanationPoint">+5 πόντοι</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν κάνετε like σε κάποιο σχόλιο (για μέχρι 10 likes ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν σχολιάσετε σε κάποιο άρθρο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν σχολιάσετε σε τμήμα κειμένου κάποιου άρθρου (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+2 πόντοι</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν στο σχόλιό σας επισυνάπτονται θέματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
-                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">Αν στο σχόλιό σας επισυνάπτονται προβλήματα για το κείμενο (για μέχρι 10 σχόλια ανα ημέρα): <span class="explanationPoint">+1 πόντος</span></div>
-                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">Αν κάποιος τελικός νόμος που ανεβάσατε ψηφιστεί αρνητικά από κάποιον χρήστη: <span class="explanationPoint down">-7 πόντοι</span></div>
-                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">Αν διαγράψετε κάποιον τελικό νόμο που ανεβάσατε: <span class="explanationPoint down">-10 πόντοι</span></div>
+                            <div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule1expl") <span class="explanationPoint">+10 @messages("userprofile.points.plural")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule2expl") <span class="explanationPoint">+2 @messages("userprofile.points.plural")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule3expl") <span class="explanationPoint">+5 @messages("userprofile.points.plural")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule4expl") <span class="explanationPoint">+1 @messages("userprofile.points.singular")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule5expl") <span class="explanationPoint">+1 @messages("userprofile.points.singular")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule6expl") <span class="explanationPoint">+2 @messages("userprofile.points.plural")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule7expl") <span class="explanationPoint">+1 @messages("userprofile.points.singular")</span></div>
+                            <br><br><div class="number"><i class="fa fa-thumbs-up"></i></div><div class="explanationText">@messages("userprofile.points.rule8expl") <span class="explanationPoint">+1 @messages("userprofile.points.singular")</span></div>
+                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">@messages("userprofile.points.rule9expl") <span class="explanationPoint down">-7 @messages("userprofile.points.plural")</span></div>
+                            <br><br><div class="number down"><i class="fa fa-thumbs-down"></i></div><div class="explanationText">@messages("userprofile.points.rule10expl") <span class="explanationPoint down">-10 @messages("userprofile.points.plural")</span></div>
                         </div>
                     </div>
                     <div class="modal-footer">
