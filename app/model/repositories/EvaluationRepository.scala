@@ -32,7 +32,7 @@ class EvaluationRepository {
 
       val consultations: List[ConsultationForEvaluation] =
         SQL(
-          """select * from consultation where id in (""" + cons_ids + """)
+          """select * from consultation where id in (""" + cons_ids + """) order by start_date desc
           """).as(ConsultationForEvaluationParser.Parse *)
       consultations
     }
@@ -40,7 +40,8 @@ class EvaluationRepository {
 
   def getConsultationFinalLawStats():List[ConsultationFinalLawStats] = {
     DB.withTransaction() { implicit c =>
-      val results:List[ConsultationFinalLawStats] = SQL"""select coalesce(cast(active as int), 0) as hasLaw, count(*) as numOfConsultations
+      val results:List[ConsultationFinalLawStats] = SQL"""select coalesce(cast(active as int), 0) as hasLaw,
+                                                    count(*) as numOfConsultations,  array_to_string(array_agg(cons.id), ', ') as cons_ids
                                     from consultation cons
                                     left outer join consultation_final_law cfl on cfl.consultation_id = cons.id  and active = cast(1 as bit)
                                     group by active
