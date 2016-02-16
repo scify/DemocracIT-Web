@@ -7,10 +7,10 @@ import model.dtos._
 object ConsultationFinalLawStatsParser {
   val Parse: RowParser[ConsultationFinalLawStats] = {
 
-      int("numOfConsultations") ~ int("hasLaw")map
+      int("numOfConsultations") ~ int("hasLaw") ~ str("cons_ids")map
       {
-        case numOfConsultations ~ hasLaw =>
-          ConsultationFinalLawStats(numOfConsultations, hasLaw)
+        case numOfConsultations ~ hasLaw ~ cons_ids =>
+          ConsultationFinalLawStats(numOfConsultations, hasLaw, cons_ids)
       }
   }
 }

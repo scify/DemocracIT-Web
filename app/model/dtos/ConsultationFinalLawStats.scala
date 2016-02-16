@@ -1,3 +1,3 @@
 package model.dtos
 
-case class ConsultationFinalLawStats(numOfConsultations:Int, hasLaw:Int)
+case class ConsultationFinalLawStats(numOfConsultations:Int, hasLaw:Int, cons_ids:String)
