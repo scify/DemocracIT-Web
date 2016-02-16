@@ -1,4 +1,4 @@
-@(user: Option[User])
+@(user: Option[User])(implicit messages :Messages)
 
     <nav class="navbar navbar-default ">
         <div class="container">
@@ -20,28 +20,28 @@
             <div id="navbar" class="navbar-collapse collapse" >
                 <ul class="nav navbar-nav navbar-right">
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="/"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
+                        <li><a href="/"><i class="fa fa-home"></i> @messages("header.home")</a></li>
                     } else {
-                        <li><a href="http://democracit.org"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
+                        <li><a href="http://democracit.org"><i class="fa fa-home"></i> @messages("header.home")</a></li>
                     }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
+                        <li><a href="@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> @messages("header.consultations")</a></li>
                     } else {
-                        <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
+                        <li><a href="http://www.democracit.org@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> @messages("header.consultations")</a></li>
                     }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
-                        <li><a href="/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
+                        <li><a href="/evaluation"><i class="fa fa-bar-chart"></i> @messages("header.reports")</a></li>
                     } else {
-                        <li><a href="http://democracit.org/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
+                        <li><a href="http://democracit.org/evaluation"><i class="fa fa-bar-chart"></i> @messages("header.reports")</a></li>
                     }
-                    <li><a href="http://about.democracit.org/blog/"><i class="fa fa-rss"></i> ΒLOG</a></li>
+                    <li><a href="http://about.democracit.org/blog/"><i class="fa fa-rss"></i> @messages("header.blog")</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-info-circle"></i> ΣΧΕΤΙΚΑ <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-info-circle"></i> @messages("header.about") <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="http://about.democracit.org/h-anagki//">H ΑΝΑΓKH</a></li>
-                            <li><a href="http://about.democracit.org/to-ergo/">ΤΟ ΕΡΓΟ</a></li>
-                            <li><a href="http://about.democracit.org/h-omada/">H ΟΜΑΔΑ</a></li>
-                            <li><a href="http://about.democracit.org/frequently-asked-questions"><i class="fa fa-question-circle"></i> ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ</a></li>
+                            <li><a href="http://about.democracit.org/h-anagki//">@messages("header.about.need")</a></li>
+                            <li><a href="http://about.democracit.org/to-ergo/">@messages("header.about.project")</a></li>
+                            <li><a href="http://about.democracit.org/h-omada/">@messages("header.about.team")</a></li>
+                            <li><a href="http://about.democracit.org/frequently-asked-questions"><i class="fa fa-question-circle"></i> @messages("header.about.faq")</a></li>
                         </ul>
                     </li>
 
@@ -55,29 +55,29 @@
                         </a>
                         <ul class="dropdown-menu">
                              @if(play.Play.application().configuration().getString("application.state") == "development") {
-                                    <li><a href="/userProfile"><i class="fa fa-user"></i> ΤΟ ΠΡΟΦΙΛ ΜΟΥ</a></li>
-                                    <li><a href="@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> ΕΞΟΔΟΣ</a></li>
+                                    <li><a href="/userProfile"><i class="fa fa-user"></i> @messages("header.profile")</a></li>
+                                    <li><a href="@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> @messages("header.logout")</a></li>
                              } else {
-                                 <li><a href="http://www.democracit.org/userProfile"><i class="fa fa-user"></i> ΤΟ ΠΡΟΦΙΛ ΜΟΥ</a></li>
-                                <li><a href="http://www.democracit.org@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> ΕΞΟΔΟΣ</a></li>
+                                 <li><a href="http://www.democracit.org/userProfile"><i class="fa fa-user"></i> @messages("header.profile")</a></li>
+                                <li><a href="http://www.democracit.org@routes.AccountController.signOut"><i class="fa fa-sign-out"></i> @messages("header.logout")</a></li>
                              }
                         </ul>
                     </li>
                     }.getOrElse {
                         @if(play.Play.application().configuration().getString("application.state") == "development") {
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> @messages("header.login") <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li id="register"><a href="@routes.SignUpController.signUpRequest"><i class="fa fa-user-plus"></i> ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
-                                    <li id="login"><a href="@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
+                                    <li id="register"><a href="@routes.SignUpController.signUpRequest"><i class="fa fa-user-plus"></i> @messages("header.signup")</a></li>
+                                    <li id="login"><a href="@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> @messages("header.haveaccount")</a></li>
                                 </ul>
                             </li>
                         } else {
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> ΕΙΣΟΔΟΣ <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> @messages("header.login") <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li id="register"><a href="http://www.democracit.org@routes.SignUpController.signUpRequest"><i class="fa fa-user-plus"></i> ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</a></li>
-                                    <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ</a></li>
+                                    <li id="register"><a href="http://www.democracit.org@routes.SignUpController.signUpRequest"><i class="fa fa-user-plus"></i> @messages("header.signup")</a></li>
+                                    <li id="login"><a href="http://www.democracit.org@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> @messages("header.haveaccount")</a></li>
                                 </ul>
                             </li>
                         }

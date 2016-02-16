@@ -1,5 +1,5 @@
 @import model.viewmodels.UserProfileViewModel
-@(vm: UserProfileViewModel)
+@(vm: UserProfileViewModel)(implicit messages :Messages)
 
 @js = {
     <script src="@routes.Assets.at("js/evaluator/scify-evaluatorPageHandler.js")" ></script>

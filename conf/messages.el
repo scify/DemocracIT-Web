@@ -1,3 +1,32 @@
+header.home = ΑΡΧΙΚΗ
+header.consultations = ΔΙΑΒΟΥΛΕΥΣΕΙΣ
+header.reports = ΑΝΑΦΟΡΕΣ
+header.blog = BLOG
+header.about = ΣΧΕΤΙΚΑ
+header.about.need = Η ΑΝΑΓΚΗ
+header.about.project = ΤΟ ΕΡΓΟ
+header.about.team = Η ΟΜΑΔΑ
+header.about.faq = ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ
+header.profile = ΤΟ ΠΡΟΦΙΛ ΜΟΥ
+header.logout = ΕΞΟΔΟΣ
+header.login = ΕΙΣΟΔΟΣ
+header.signup = ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ
+header.haveaccount = ΕΧΩ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ
+mail.welcome.subject = Ενεργοποιήστε το λογαριασμό σας στο democracit
+mail.welcome.body = Πατήστε στο ακόλουθο link για να ενεργοποιήσετε τον λογαριασμό σας στο democracit! <br> <a href={0}>{0}</a>
+mail.forgotpwd.subject = Ανάκτηση κωδικού στο democracit
+mail.forgotpwd.body =  Πατήστε στο ακόλουθο link για να τροποποίησετε τον κωδικό σας στο democracit! <br> <a href={0}>{0}</a>
+mail.replyToCommenter.subject = Απάντηση σε σχόλιο σας στο democracit
+mail.replyToCommenter.body = Ένας χρήστης σχολίασε το σχόλιο σας στο democracit: <br> {0} <br><br> Δείτε το σχόλιο εδω: <a href={1}>{1}</a>
+mail.replyToCommenterForLike.subject = Κάποιος συμφωνεί με το σχόλιό σας στο democracit
+mail.replyToCommenterForLike.body = Ένας χρήστης συμφώνησε το σχόλιο σας στο democracit.<br><br> Δείτε το σχόλιο εδω: <a href={0}>{0}</a>
+specify.password.title= Αλλαγή κωδικού
+reset.password.email.sent= Ελέγξτε το email σας!
+specify.password.button= Αλλαγή κωδικού
+forgot.password = Κλικ εδώ αν δε θυμάστε τον κωδικό σας!
+forgot.password.reset.title = Αλλαγή κωδικού
+forgot.password.reset.email-hint= Πληκτρολογήστε το email σας για να σας στείλουμε οδηγίες για την ανάκτηση
+forgot.password.reset.button= Στείλτε μου email
 error.email = Εισάγετε μια διεύθυνση email
 sign.in.credentials = Είσοδος
 sign.in = Είσοδος
