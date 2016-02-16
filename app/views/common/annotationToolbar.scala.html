@@ -1,6 +1,6 @@
 @(user:Option[User], annotationsRelatedToProblems: Seq[model.dtos.AnnotationTags],
   annotationsRelatedToTopics: Seq[model.dtos.AnnotationTags],
-  consultationOpenGovUrl:String)(implicit request: play.api.mvc.Request[Any])
+  consultationOpenGovUrl:String)(implicit request: play.api.mvc.Request[Any], messages :Messages)
 
 <div class="modal fade" id="toolbar-modal" tabindex="-1" role="dialog" aria-labelledby="annotate-toolbar">
     <div class="modal-dialog" role="document">
@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel" >
-                        Παρατήρηση/Σχόλιο για το τμήμα κειμένου:
+                        @messages("annotation.comment.text")
                 </h4>
             </div>
             <form action="@routes.AnnotationController.annotatePost()" method="post">
