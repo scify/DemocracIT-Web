@@ -57,6 +57,7 @@ GET         /comments/cons/dit/retrieve/csv/:consultationId           @controlle
 GET         /comments/cons/ann/retrieve/csv/:consultationId           @controllers.ReporterController.getAnnotationsForConsultationCSV(consultationId:Long)
 GET         /comments/cons/problems/retrieve/csv/:consultationId      @controllers.ReporterController.getProblemsForConsultationCSV(consultationId:Long)
 GET         /evaluation                                   @controllers.EvaluationController.getEvaluationPage()
+GET         /evaluator/consflstats/                       @controllers.EvaluationController.getConsFinalLawStats()
 GET         /evaluator/frequency/organization             @controllers.EvaluationController.getEvaluationPerOrganization()
 GET         /evaluator/duration/organization              @controllers.EvaluationController.getConsDurationPerOrganization()
 GET         /evaluator/duration/all                       @controllers.EvaluationController.getConsDuration()

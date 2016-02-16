@@ -236,8 +236,32 @@
 
             return promise;
         },
+        getConsFinalLawStats: function() {
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: "/evaluator/consflstats/",
+                beforeSend: function(){
+                        instance.state.busy=true;
+                        instance.state.display = true;
+                        instance.setState(instance.state);
+                    },
+                success: function(data) {
+                    console.log(data);
+                },
+                complete: function(){
+                    instance.state.busy=false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function(x,z,y){
+                    console.log(x);
+                }
+            });
+
+            return promise;
+        },
         /**
-         * If you want to customize further the function, it is recommended you extend it by creating another one.
          * function createBarChart
          * @param object dataForChart
          * it should be and obect with the following members: {string: Key, number: Value, string:Tooltip (what is displayed when hovering), string:annotation(what is on the bar)}

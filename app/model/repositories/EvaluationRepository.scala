@@ -38,6 +38,17 @@ class EvaluationRepository {
     }
   }
 
+  def getConsultationFinalLawStats():List[ConsultationFinalLawStats] = {
+    DB.withTransaction() { implicit c =>
+      val results:List[ConsultationFinalLawStats] = SQL"""select coalesce(cast(active as int), 0) as hasLaw, count(*) as numOfConsultations
+                                    from consultation cons
+                                    left outer join consultation_final_law cfl on cfl.consultation_id = cons.id  and active = cast(1 as bit)
+                                    group by active
+
+        """.as(ConsultationFinalLawStatsParser.Parse *)
+      results
+    }
+  }
 
   def getEvaluationPerOrganization(dateSet: String): List[ConsFrequencyPerOrganization] = {
     DB.withConnection { implicit c =>
