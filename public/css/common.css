@@ -600,4 +600,20 @@ legend {
 #reportCommentModal .modal-title {
   float: left; }
 
+.loadMoreBtn {
+  color: #337ab7;
+  margin-top: 15px;
+  float: left; }
+
+.loadMoreBtn:hover {
+  cursor: pointer; }
+
+.loadMoreBtn i {
+  font-size: 20px;
+  padding-left: 5px; }
+
+.loadMoreBtn .loadMoreIcon {
+  float: right;
+  margin-top: -4px; }
+
 /*# sourceMappingURL=common.css.map */
