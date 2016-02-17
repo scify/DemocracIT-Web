@@ -194,4 +194,4 @@ annotation.comment.emotion.anxious.text = Worried
 annotation.comment.emotion.sad.text = Sad
 annotation.comment.emotion.angry.text = Angry
 annotation.comment.remindertext = do not forget that the official carrier of the open consultation is OpenGov. {0} Click here {1} to leave your comment in the consultation page in OpenGov as well. {2} Learn more {1}
-submitBtn = Submit
+submitbtn = Submit

@@ -194,4 +194,4 @@ annotation.comment.emotion.anxious.text = Ανήσυχος
 annotation.comment.emotion.sad.text = Λυπημένος
 annotation.comment.emotion.angry.text = Νευριασμένος
 annotation.comment.remindertext = μη ξεχνάτε ότι ο επίσημος φορέας της ανοικτής διαβούλευσης ειναι το OpenGov. {0} Κλικ εδώ {1} για να αφήσετε το σχόλιο σας και στη σελίδα της διαβούλευσης του OpenGov. {2} Μάθετε περισσότερα {1}
-submitBtn = Καταχώρηση
+submitbtn = Καταχώρηση
