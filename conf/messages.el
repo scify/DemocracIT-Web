@@ -199,3 +199,5 @@ reporter.dispersion = Διασπορά
 reporter.duration = Διάρκεια
 reporter.participation = Συμμετοχή
 reporter.connection.finallaw = Σύνδεση με τελικό νόμο
+layout.twitter.title = Διαδικτυακή πλατφόρμα δημοσίων διαβουλεύσεων
+layout.twitter.description = Οι δημόσιες διαβουλεύσεις όπως θα έπρεπε να είναι.

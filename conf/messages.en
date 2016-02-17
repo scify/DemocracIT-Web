@@ -199,3 +199,6 @@ reporter.dispersion = Dispersion
 reporter.duration = Duration
 reporter.participation = Participation
 reporter.connection.finallaw = Final Law Connection
+layout.twitter.title = Public consultation web platform
+layout.twitter.description = Public consultations the way they are supposed to be.
+
