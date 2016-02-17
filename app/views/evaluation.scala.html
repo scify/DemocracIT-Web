@@ -27,10 +27,10 @@
 @layout("DemocracIT", css, js,vm.user) {
     <div  class="container">
         <ul id="tabs" class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#consultationsPerMonthContent" aria-controls="profile" role="tab" data-toggle="tab">Διασπορά</a></li>
-            <li role="presentation"><a href="#durationPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Διάρκεια</a></li>
-            <li role="presentation"><a href="#commPerConsPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">Συμμετοχή</a></li>
-            <li role="presentation"><a href="#finalLawComparison" aria-controls="profile" role="tab" data-toggle="tab">Σύνδεση με τελικό νόμο</a></li>
+            <li role="presentation" class="active"><a href="#consultationsPerMonthContent" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.dispersion")</a></li>
+            <li role="presentation"><a href="#durationPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.duration")</a></li>
+            <li role="presentation"><a href="#commPerConsPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.participation")</a></li>
+            <li role="presentation"><a href="#finalLawComparison" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.connection.finallaw")</a></li>
             @if(play.Play.application().configuration().getString("application.state") == "development") {
                 <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">
                     @messages("evaluation.comments.users")</a></li>
@@ -45,7 +45,7 @@
                 <div class="tab-content">
                     <div  role="tabpanel" class="tab-pane active" id="consultationsPerMonthDiv">
                         <div id="consultationsPerMonthChart">
-                            <div class="explanation chartExpl"><i class="fa fa-info-circle"></i> Τα στοιχεία αναφέρονται στους τελευταίους 18 μήνες (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)</div>
+                            <div class="explanation chartExpl"><i class="fa fa-info-circle"></i> @messages("evaluation.press.bar")</div>
                             <div id="firstChartLoader"></div>
                             <div id="consultationsPerMonthInnerChart" class="verticalChart">
                             </div>
@@ -67,7 +67,7 @@
                 <div class="tab-content">
                     <div  role="tabpanel" class="tab-pane active" id="durationContentDiv">
                         <div id="consDurationChart">
-                            <div class="explanation chartExpl"><i class="fa fa-info-circle"></i>@messages("evaluation.press.bar")</div>
+                            <div class="explanation chartExpl"><i class="fa fa-info-circle"></i> @messages("evaluation.press.bar")</div>
                             <div id="consDurationInnerChart" class="verticalChart"></div>
                         </div>
                     </div>
