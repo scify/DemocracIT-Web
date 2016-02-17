@@ -117,6 +117,8 @@ consultation.headers.finish = finished
 consultation.headers.posted = Posted
 evaluation.final.consultation = Final consultation
 userprofile.points.expl = How are points computed?
+userprofile.points.expl.title = Point System Explanation
+userprofile.points = Points
 userprofile.points.plural = points
 userprofile.points.singular = point
 userprofile.points.rule1expl = If you upload the final law for a consultation:
@@ -201,4 +203,20 @@ reporter.participation = Participation
 reporter.connection.finallaw = Final Law Connection
 layout.twitter.title = Public consultation web platform
 layout.twitter.description = Public consultations the way they are supposed to be.
+signup.confirmation.emai = A confirmation e-mail has been sent to {0}
+signup.confirmation.title = Your registration is almost complete
+signup.confirmation.welcome = Welcome to DemocracIT
+resetpassword.oldpassword.placeholer = current password
+resetpassword.newpassword.placeholer = new password
+resetpassword.newpasswordagain.placeholer = re-enter new password
+resetpassword.confirm.title = Reset password confirmation
+resetpassword.confirm.message = Your password has been changed.
+invalidtoken.title = Process failure
+invalidtoken.message = The combination you chose is no longer valid
+sentresetpassword.message = An email has been sent to {0} with instructions on how to change your password
+unknownemail.title = This email was not found
+unknownemail.message = There is no user with this email address.
+
+
+
 

@@ -118,6 +118,8 @@ consultation.headers.finish = ολοκληρώθηκε
 consultation.headers.posted = Αναρτήθηκε
 evaluation.final.consultation = Τελική έκθεση
 userprofile.points.expl = Πώς υπολογίζονται οι πόντοι;
+userprofile.points.expl.title = Επεξήγηση συστήματος πόντων
+userprofile.points = Πόντοι
 userprofile.points.plural = πόντοι
 userprofile.points.singular = πόντος
 userprofile.points.rule1expl = Αν ανεβάσετε τον τελικό νόμο για μια διαβούλευση:
@@ -201,3 +203,27 @@ reporter.participation = Συμμετοχή
 reporter.connection.finallaw = Σύνδεση με τελικό νόμο
 layout.twitter.title = Διαδικτυακή πλατφόρμα δημοσίων διαβουλεύσεων
 layout.twitter.description = Οι δημόσιες διαβουλεύσεις όπως θα έπρεπε να είναι.
+signup.confirmation.emai = Σας έχει αποσταλεί ένα email στη διεύθυνση {0} για να ενεργοποιήσετε το λογαριασμό σας
+signup.confirmation.title = H εγγραφή σας σχεδόν ολοκληρώθηκε
+signup.confirmation.welcome = Καλώς ήρθατε στο democracit
+resetpassword.oldpassword.placeholer = τρέχον κωδικός
+resetpassword.newpassword.placeholer = νέος κωδικός
+resetpassword.newpasswordagain.placeholer = ξαναγράψτε τον νέο κωδικό
+resetpassword.confirm.title = Επιβεβαίωση αλλαγής κωδικού
+resetpassword.confirm.message = Ο κωδικός σας έχει αλλάξει.
+invalidtoken.title = Αποτυχία επεξεργασίας
+invalidtoken.message = Ο σύνδεσμος που επιλέξατε δεν είναι πλεόν ενεργός
+sentresetpassword.message = Σας έχουμε στείλει ενα email στη διεύθυνση {0} με οδηγίες για να αλλάξετε τον κωδικό σας
+unknownemail.title = Το email σας δεν βρέθηκε
+unknownemail.message = Δεν υπάρχει χρήστης με τη συγκεκριμένη διεύθυνση email.
+
+
+
+
+
+
+
+
+
+
+
