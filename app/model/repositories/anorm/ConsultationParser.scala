@@ -1,11 +1,7 @@
 package model.repositories.anorm
-
-import java.text.SimpleDateFormat
-
-import anorm._
 import anorm.SqlParser._
+import anorm._
 import model.dtos._
-
 
 object ConsultationParser{
 

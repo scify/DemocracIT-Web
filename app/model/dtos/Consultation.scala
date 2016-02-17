@@ -5,10 +5,9 @@ import java.util.concurrent.TimeUnit
 import java.util.{Calendar, Date, Locale}
 
 import org.joda.time.DateTime
-import org.ocpsoft.prettytime.units.Day
-import org.ocpsoft.prettytime.{Duration, TimeFormat, PrettyTime}
+import org.ocpsoft.prettytime.PrettyTime
+import play.api.i18n.Messages
 import utils.Pluralizer
-
 
 case class Consultation( id:Long,
                    startDate:Date,
@@ -27,11 +26,12 @@ case class Consultation( id:Long,
   val isActive = endDate.after(DateTime.now().toDate)
   val totalDurationInDays =   TimeUnit.DAYS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)
 
-  def totalDurationFormatted = {
+  def totalDurationFormatted(implicit messages:Messages) = {
+
     if (totalDurationInDays==0)
-      Pluralizer.get(TimeUnit.HOURS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)," ώρα", " ώρες")
+      Pluralizer.get(TimeUnit.HOURS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)," " + messages("hour"), " " + messages("hours"))
     else
-    Pluralizer.get(totalDurationInDays," ημέρα", " ημέρες")
+    Pluralizer.get(totalDurationInDays," " + messages("day"), " " + messages("days"))
   }
 
   def isCompletedText = {
@@ -44,7 +44,7 @@ case class Consultation( id:Long,
     val dateFormated = formatOutgoing.format(formatIncomming.parse(date.toString))
     dateFormated
   }
-  def endDateFormatted = {
+  def endDateFormatted(implicit messages:Messages) = {
        // val lang = play.api.Play.current.configuration.getString("application.langs").get
       //  val locale = new Locale("el");
       // val stats = ResourceBundle.getBundle("org.ocpsoft.prettytime.i18n.Resources", locale);
@@ -52,7 +52,7 @@ case class Consultation( id:Long,
 
     try{
       //todo: on production the _el.properties are not loaded and the english one's are always displayed. Could not find out why, skipped to manual calculation of the string due to lack of development time needed to resolve the issue
-          manualCalculation(t)
+          manualCalculation(t, messages)
     }
     catch
       {
@@ -60,7 +60,7 @@ case class Consultation( id:Long,
       }
     }
 
-  private def manualCalculation(t:PrettyTime):String = {
+  private def manualCalculation(t:PrettyTime, messages:Messages):String = {
     val approximateDuration = t.approximateDuration(endDate)
     val unit =approximateDuration.getUnit()
     import scala.collection.JavaConverters._
@@ -68,24 +68,24 @@ case class Consultation( id:Long,
     val d = duration.filter(p=>p.getUnit== unit)
     val quantity =Math.abs(d.head.getQuantity())
 
-    var prefix="πριν "
+    var prefix= messages("before") + " "
     if (approximateDuration.isInFuture())
-      prefix="σε "
+      prefix= messages("in") + " "
 
     if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Day])
-      prefix + utils.Pluralizer.get(quantity ,"ημέρα","ημέρες")
+      prefix + utils.Pluralizer.get(quantity ,messages("day"),messages("days"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Week])
-      prefix + utils.Pluralizer.get(quantity ,"εβδομάδα","εβδομάδες")
+      prefix + utils.Pluralizer.get(quantity ,messages("week"),messages("weeks"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Decade])
-      prefix + utils.Pluralizer.get(quantity ,"δεκαετία","δεκαετίες")
+      prefix + utils.Pluralizer.get(quantity ,messages("decade"),messages("decades"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Month])
-      prefix + utils.Pluralizer.get(quantity ,"μήνα","μήνες")
+      prefix + utils.Pluralizer.get(quantity ,messages("month"),messages("months"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Year])
-      prefix + utils.Pluralizer.get(quantity ,"χρόνο","χρόνια")
+      prefix + utils.Pluralizer.get(quantity ,messages("year"),messages("years"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Hour])
-      prefix +  utils.Pluralizer.get(quantity ,"ώρα","ώρες")
+      prefix +  utils.Pluralizer.get(quantity ,messages("hour"),messages("hours"))
     else if (unit.isInstanceOf[org.ocpsoft.prettytime.units.Minute])
-      prefix +  utils.Pluralizer.get(quantity ,"λεπτό","λεπτά")
+      prefix +  utils.Pluralizer.get(quantity ,messages("minute"),messages("minutes"))
     else
       t.format(endDate)
   }

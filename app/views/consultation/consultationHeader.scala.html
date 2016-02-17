@@ -29,7 +29,7 @@
                     @if(cons.isActive) {
                         <span class="consState activeCons">@messages("consultation.headers.active")</span>
                     } else {
-                        <span class="consState inactiveCons">@messages("consultation.headers.finish")/span>
+                        <span class="consState inactiveCons">@messages("consultation.headers.finish")</span>
                     }
                     <div class="dates">
                         @messages("consultation.headers.posted")
@@ -39,7 +39,7 @@
                         <br>
                         @cons.prettyDateFormat(cons.endDate)
                     </div>
-                    @messages("evaluation.duration") @cons.totalDurationFormatted
+                    @messages("evaluation.duration") @cons.totalDurationFormatted(messages)
 
                 </div>
                 <div id="step2">

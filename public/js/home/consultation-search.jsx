@@ -71,7 +71,7 @@ var SearchBox = React.createClass({
                         <div className="form-group">
                             <div className="box">
                                 <span className="icon"><i className="fa fa-search"></i></span>
-                                <input ref="searchInput" type="search" id="search" name="query" placeholder="αναζητήστε στο τίτλο, πχ 'συντάξεις'" onKeyUp={this.handleKeyUp} />
+                                <input ref="searchInput" type="search" id="search" name="query" placeholder="αναζητήστε στον τίτλο, πχ 'συντάξεις'" onKeyUp={this.handleKeyUp} />
                             </div>
                         </div>
                     </form>

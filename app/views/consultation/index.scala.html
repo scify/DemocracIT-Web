@@ -62,9 +62,10 @@
                 @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTab=>
                     <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@messages("consultation.index.articles")</a></li>
                 }
-                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
-                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
-                @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Τελικός Νόμος</a></li>}
+                <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.relatedlaws")</a></li>
+                <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">@messages("consultation.index.commentanalysis")</a></li>
+                @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi">
+                    <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.finallaw")</a></li>}
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
@@ -98,10 +99,10 @@
                         <div data-id="@article.id"  class="row article" id="article_@article.id">
                             <div class="col-md-12">
                                 <div class="title">
-                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>@messages("close")</span><span>@messages("close")</span></a>
+                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>@messages("close")</span><span>@messages("open")</span></a>
                                     <span class="article-title-text">@article.title</span>
-                                    <span class="shareSpan shareArticleHidden">Κάντε αντιγραφή τον παρακάτω σύνδεσμο:<br></span>
-                                    <span class="shareBtn" id="share-@article.id" title="Σύνδεσμος για αυτό το άρθρο">
+                                    <span class="shareSpan shareArticleHidden">@messages("consultation.index.copylink")<br></span>
+                                    <span class="shareBtn" id="share-@article.id" title='@messages("consultation.index.articlelink")'>
                                         <i class="fa fa-link"></i>
                                     </span>
                                 </div>
@@ -144,8 +145,9 @@
                                             </td>
                                             <td class="relevantLaw">
                                                 <div id="@i">
-                                                    @if(vm.findOccurances(groupLaws(i)._1) == 1) {Βρέθηκε} else {Βρέθηκαν} <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1), "αναφορά", "αναφορές")</a>
-                                                    σε @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {άρθρο} else {άρθρα}
+                                                    @if(vm.findOccurances(groupLaws(i)._1) == 1) {@messages("found.singular")} else {@messages("found.plural")}
+                                                <a class="relevantLawsBtn" id="@i">@utils.Pluralizer.get(vm.findOccurances(groupLaws(i)._1), messages("reference.singular"), messages("reference.plural"))</a>
+                                                    @messages("in") @vm.articlesOccurances(groupLaws(i)._1) @if(vm.articlesOccurances(groupLaws(i)._1) == 1) {@messages("article.singular")} else {@messages("article.plural")}
                                                 <div class="childLaws">
                                                 @for(law <- groupLaws(i)._2) {
                                                     <a class="childLaw" href="@law.pdf_url">@law.entity_text</a>
@@ -181,13 +183,12 @@
                             @if(vm.user.isDefined) {
                                 @if(vm.finalLaw.get.user_id.toString.equals(vm.user.get.userID.toString)) {
                                     <div class="title marginBottom" id="deleteLaw">
-                                        Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw">
-                                        εδώ</a></div>
+                                        @Html(messages("consultation.finallaw.delete", "<a id=\"deleteFinalLaw\">", "</a></div>"))
                                 }
                             }
                             <div class="title">@messages("consultation.index.compare")</div>
                             <div class="container">
-                                <button id="finalLawModalBtn" class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">Σύγκριση</button>
+                                <button id="finalLawModalBtn" class="finalLawBtn" type="button" data-toggle="modal" data-target="#finalLawModal">@messages("compare")</button>
                             </div>
                         </div>
                         <div id="finalLawModal" class="modal fade" role="dialog">
@@ -206,7 +207,7 @@
                                                         <div  class="row article">
                                                             <div class="">
                                                                 <div class="title">
-                                                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#finalLawBody-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
+                                                                    <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#finalLawBody-@article.id"><span>@messages("close")</span><span>@messages("open")</span></a>
                                                                     <span class="article-title">@article.title</span>
                                                                 </div>
                                                                 <div id="finalLawBody-@article.id" class="collapse" style="height:0;" >
@@ -235,12 +236,12 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="notLoggedinWrapper">
-                                                                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
+                                                                    <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">@Html(messages("notlogedintext","<a href=\"/signIn?returnUrl=@request.uri\">","</a>"))</p></div>
                                                                 </div>
                                                             </div>
 
                                                             <div class="modal-footer">
-                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="closeInnerModal()">Κλείσιμο</button>
+                                                                <button class="close btn red" type="button" id="closeInnerModal"  class="btn red" onclick="closeInnerModal()">@messages("closebtn")</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -271,10 +272,9 @@
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="msg"><div class="number">1</div>Όταν μια διαβούλευση έχει λήξει και ο τελικός νόμος που την αφορά γίνει διαθέσιμος, οι χρήστες μπορούν να τον ανεβάσουν εδώ (σε μορφή .pdf ή .txt),
-                                            ώστε να μπορούν να τον συγκρίνουν με το αρχικό κείμενο της διαβούλευσης.<br><br><div class="number">2</div>Σε περίπτωση που κάποιος χρήστης αντιληφθεί ότι το αρχείο που έχει ανέβει ως τελικός νόμος για
-                                            μια διαβούλευση δεν είναι σωστό (ελλιπές ή άσχετο αρχείο), μπορεί να ψηφίσει αρνητικά ως προς την ορθότητα του αρχείου. Αντίστοιχα, αν το αρχείο είναι το σωστό, υπάρχει η δυνατότητα θετικής ψήφου.<br><br><div class="number">3</div>Όταν ένα αρχείο λάβει 5 και περισσότερες αρνητικές ψήφους τίθεται
-                                            ανενεργό και η διαδικασία μεταφόρτωσης του τελικού νόμου από τους χρήστες ξεκινά από την αρχή.
+                                        <div class="msg"><div class="number">1</div>@messages("consultation.explain.1")<br><br>
+                                            <div class="number">2</div>@messages("consultation.explain.2")<br><br>
+                                            <div class="number">3</div>@messages("consultation.explain.3")
                                         </div>
                                     </div>
 
@@ -289,7 +289,7 @@
                         <div class="finalLawFileContent">
                             <div>
                                 <object data="@vm.getFinalLawRelativePath()" type="application/pdf" width="100%" height="800">
-                                    Δείτε το κείμενο του τελικού νόμου <a href="@vm.getFinalLawRelativePath()">εδώ</a>
+                                    @Html(messages("consultation.finallaw.seetext", "<a href=\"@vm.getFinalLawRelativePath()\">", "</a>"))
                                 </object>
                             </div>
                         </div>

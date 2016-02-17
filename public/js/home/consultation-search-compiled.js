@@ -86,7 +86,7 @@ var SearchBox = React.createClass({
                                 { className: "icon" },
                                 React.createElement("i", { className: "fa fa-search" })
                             ),
-                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "αναζητήστε στο τίτλο, πχ 'συντάξεις'", onKeyUp: this.handleKeyUp })
+                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "αναζητήστε στον τίτλο, πχ 'συντάξεις'", onKeyUp: this.handleKeyUp })
                         )
                     )
                 ),
