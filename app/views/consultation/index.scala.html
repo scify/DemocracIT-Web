@@ -226,7 +226,7 @@
                                                     <div id="rateApprove" class="statRow"><a class="rateFinalLaw">@messages("consultation.index.approve") <i class="fa fa-thumbs-o-up"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_approvals</span>)</div>
                                                     <div id="rateDisapprove" class="statRow"><a class="rateFinalLaw">@messages("consultation.index.disapprove") <i class="fa fa-thumbs-o-down"></i></a> (<span class="counter">@vm.finalLaw.get.num_of_dissaprovals</span>)</div>
                                                     <button class="noRateBtn" type="button" data-toggle="modal" data-target="#noRateModal"></button>
-                                                    </div>
+                                                </div>
                                                 @Html(vm.finalLaw.get.file_text)
                                                 <div id="noRateModal" class="modal fade consFinalLawModal" role="dialog">
                                                     <div class="modal-dialog">
