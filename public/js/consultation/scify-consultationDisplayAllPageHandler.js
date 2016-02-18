@@ -24,7 +24,7 @@ scify.ConsultationDisplayAllPageHandler.prototype = function(){
                 //{ title: "Διάρκεια" },
                 //{ title: "Λήξη" }
             ],
-            "lengthMenu": [[25, 50,100, -1], [25, 50,100, "Όλες"]],
+            "lengthMenu": [[25, 50,100, -1], [25, 50,100, this.messages.all]],
             language: {
                 "sProcessing":   this.messages.editMsg + "...",
                 "sLengthMenu":   "_MENU_ " + this.messages.perPage,

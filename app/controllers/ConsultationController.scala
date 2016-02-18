@@ -63,7 +63,8 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
       "sortedBy" -> messages("consultations.search.sortedBy"),
       "totalRecords" -> messages("consultations.search.totalRecords"),
       "ended" -> messages("ended"),
-      "articlePlural" -> messages("article.plural")
+      "articlePlural" -> messages("article.plural"),
+      "all" -> messages("consultations.search.all")
     )
     Json.toJson(messageList).toString()
   }

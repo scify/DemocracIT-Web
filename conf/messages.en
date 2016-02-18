@@ -289,3 +289,6 @@ consultations.search.to = to
 consultations.search.records = records
 consultations.search.sortedBy = (sorted by
 consultations.search.totalRecords = total records)
+consultations.search.all = All
+consultation.linkToOpenGov = consultation at opengov.gr
+homepage = Home
