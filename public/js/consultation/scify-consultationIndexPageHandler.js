@@ -2,6 +2,7 @@
 scify.ConsultationIndexPageHandler = function( consultationid,
                                                generalMessages,
                                                commentBoxMessages,
+                                               commentAnnMessages,
                                                finalLawId,
                                                ratingUsers,
                                                finalLawUserId,
@@ -32,6 +33,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,
     }
     this.messages = generalMessages;
     this.commentBoxMessages = commentBoxMessages;
+    this.commentAnnMessages = commentAnnMessages;
     this.relevantLaws = [];
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
@@ -564,8 +566,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     init = function(){
         var instance= this;
         moment.locale('el');
-
-        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
+        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave, instance.commentAnnMessages);
         this.commentAnnotator.init();
 
         replaceRelevantLaws(this.relevantLaws);

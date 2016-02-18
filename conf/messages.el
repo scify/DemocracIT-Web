@@ -264,3 +264,15 @@ commentBox.commentNotMatched = Αυτό το σχόλιο δεν έχει αντ
 commentBox.commentNotMatchedExpl = Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης.
 commentBox.commentFLMatchingTitle = Αντιστοίχηση σχολίου με τον τελικό νόμο
 commentBox.commentFLMatchingSeeUsersTitle= Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές
+comment.Annotator.AnnTextTitle = κλικ εδώ για σχολιασμού όλου του κειμένου
+comment.Annotator.forWholeArticle = Παρατήρηση/Σχόλιο για όλοκληρο το άρθρο:
+comment.Annotator.forTextPart = Παρατήρηση/Σχόλιο για το τμήμα κειμένου:
+comment.Annotator.editCommentLabel = Τροποποιήστε το σχόλιό σας:
+comment.Annotator.topicPrompt = κλικ εδώ για να θέσετε το θέμα
+comment.Annotator.topicExample = π.χ. ''ασάφεια'', ''μη κατανοητό κείμενο''
+comment.Annotator.problemIcon = βοηθήστε το νομοθέτη αναφέροντας προβλήματα
+
+
+
+
+

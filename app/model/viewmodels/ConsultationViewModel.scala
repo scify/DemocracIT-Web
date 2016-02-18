@@ -114,6 +114,18 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
     Json.toJson(messageList).toString()
   }
 
+  def getCommentAnnotatorMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map(
+      "annTextTitle" -> messages("comment.Annotator.AnnTextTitle"),
+      "forWholeArticle" -> messages("comment.Annotator.forWholeArticle"),
+      "forTextPart" -> messages("comment.Annotator.forTextPart"),
+      "editCommentLabel" -> messages("comment.Annotator.editCommentLabel"),
+      "topicPrompt" -> messages("comment.Annotator.topicPrompt"),
+      "topicExample" -> messages("comment.Annotator.topicExample")
+    )
+    Json.toJson(messageList).toString()
+  }
+
   def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
 
     val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law.replace(" ","").replace(".","")).toList

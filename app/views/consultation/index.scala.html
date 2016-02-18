@@ -28,6 +28,7 @@
          var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
                  @Html(vm.getGeneralMessages(messages)),
                  @Html(vm.getCommentBoxMessages(messages)),
+                 @Html(vm.getCommentAnnotatorMessages(messages)),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
                  @Html(vm.ratingUsersToJson()),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
