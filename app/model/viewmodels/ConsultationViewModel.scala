@@ -89,7 +89,11 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
       "like" -> messages("commentBox.like"),
       "dislike" -> messages("commentBox.dislike"),
       "likeUsers" -> messages("commentBox.likeUsers"),
-      "dislikeUsers" -> messages("commentBox.dislikeUsers")
+      "dislikeUsers" -> messages("commentBox.dislikeUsers"),
+      "annPlaceholder" -> messages("annotation.comment.leavetext.placeholder"),
+      "submitbtn" -> messages("submitbtn"),
+      "signInTitle" -> messages("sign.in.title"),
+      "notlogedintext" ->messages("notlogedintext", "<a href=\"/signIn\">", "</a>")
     )
     Json.toJson(messageList).toString()
   }

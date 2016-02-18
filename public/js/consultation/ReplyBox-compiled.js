@@ -7,7 +7,8 @@
         getInitialState: function getInitialState() {
             return {
                 busy: false,
-                display: this.props.display
+                display: this.props.display,
+                messages: this.props.messages
             };
         },
         handleReplySave: function handleReplySave(event) {
@@ -53,22 +54,23 @@
             });
         },
         render: function render() {
+            var instance = this;
             if (this.props.display) {
                 if (!this.state.busy) {
                     if (this.props.userId) {
                         return React.createElement('form', { className: 'ContactForm', onSubmit: this.handleReplySave }, React.createElement('textarea', {
                             className: 'replyInput',
                             type: 'text',
-                            placeholder: 'θα ήθελα να δηλώσω...',
+                            placeholder: instance.state.messages.annPlaceholder,
                             name: 'replyTextArea' + this.props.parentId
                         }), React.createElement('button', {
                             type: 'submit',
                             className: 'btn blue replyBtn'
-                        }, 'Καταχώρηση'));
+                        }, instance.state.messages.submitbtn));
                     } else {
                         swal({
-                            title: 'Είσοδος',
-                            text: 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn">συνδεδεμένοι</a>',
+                            title: instance.state.signInTitle,
+                            text: instance.state.messages('notlogedintext'),
                             html: true
                         });
                         return React.createElement('div', null);

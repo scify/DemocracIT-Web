@@ -684,7 +684,8 @@
                     articleId: this.props.data.articleId,
                     display: this.state.displayReplyBox,
                     annotationId: this.props.data.discussionThread.text.split(this.props.data.articleId)[1],
-                    consultationId: this.props.consultationId });
+                    consultationId: this.props.consultationId,
+                    messages: this.state.messages });
             }
         },
         renderReplies: function renderReplies(shouldDisplayReplies) {
