@@ -35,15 +35,38 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
 
       implicit object Consultatites extends Writes[Consultation] {
         override def writes(c: Consultation): JsValue = Json.arr(
-          (if (c.isActive) "λήξη σε:" else "έληξε: ") + c.endDateFormatted,
+          (if (c.isActive) messagesApi("endsIn") + ":" else messagesApi("endsIn") + ": ") + c.endDateFormatted,
           "<a href='/consultation/" + c.id + "'>" + c.title + "</a>",
-          c.articlesNum.toString + (if (c.articlesNum == 1) " άρθρo" else " άρθρα")
+          c.articlesNum.toString + (if (c.articlesNum == 1) " " + messagesApi("article.singular") else " " + messagesApi("article.plural"))
         )
       }
-      Ok(views.html.consultation.search("", Json.toJson(results), results.length))
+      Ok(views.html.consultation.search("", Json.toJson(results), results.length, getConsultationsSearchMessages(messagesApi)))
     }
     }
 
+  def getConsultationsSearchMessages(messages: MessagesApi):String = {
+    val messageList:Map[String,String] = Map(
+      "end" -> messages("end"),
+      "title" -> messages("title"),
+      "search" -> messages("search"),
+      "firstPage" -> messages("consultations.search.firstPage"),
+      "lastPage" -> messages("consultations.search.lastPage"),
+      "previousPage" -> messages("consultations.search.previousPage"),
+      "nextPage" -> messages("consultations.search.nextPage"),
+      "editMsg" -> messages("consultations.search.editMsg"),
+      "perPage" -> messages("consultations.search.perPage"),
+      "noRecords" -> messages("consultations.search.noRecords"),
+      "showing" -> messages("consultations.search.showing"),
+      "from" -> messages("consultations.search.from"),
+      "to" -> messages("consultations.search.to"),
+      "records" -> messages("consultations.search.records"),
+      "sortedBy" -> messages("consultations.search.sortedBy"),
+      "totalRecords" -> messages("consultations.search.totalRecords"),
+      "ended" -> messages("ended"),
+      "articlePlural" -> messages("article.plural")
+    )
+    Json.toJson(messageList).toString()
+  }
   //}
 
   def parsePdfContent(filePath:String):String = {

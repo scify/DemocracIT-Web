@@ -1,5 +1,7 @@
-scify.ConsultationDisplayAllPageHandler = function(consultations ){
+scify.ConsultationDisplayAllPageHandler = function(consultations, messages){
     this.consultations = consultations;
+    this.messages = messages;
+    console.log(messages);
 }
 
 scify.ConsultationDisplayAllPageHandler.prototype = function(){
@@ -16,28 +18,28 @@ scify.ConsultationDisplayAllPageHandler.prototype = function(){
             data: instance.consultations,
             columns: [
                 { title: '#' },
-                { title: 'Λήξη' },
-                { title: 'Τίτλος' },
-                { title: "άρθρα" },
+                { title: this.messages.end },
+                { title: this.messages.title },
+                { title: this.messages.articlePlural },
                 //{ title: "Διάρκεια" },
                 //{ title: "Λήξη" }
             ],
             "lengthMenu": [[25, 50,100, -1], [25, 50,100, "Όλες"]],
             language: {
-                "sProcessing":   "Επεξεργασία...",
-                "sLengthMenu":   "_MENU_ ανα σελίδα",
-                "sZeroRecords":  "Δεν βρέθηκαν εγγραφές που να ταιριάζουν",
-                "sInfo":         "Δείχνοντας _START_ εως _END_ από _TOTAL_ εγγραφές",
-                "sInfoEmpty":    "Δείχνοντας 0 εως 0 από 0 εγγραφές",
-                "sInfoFiltered": "(φιλτραρισμένες από _MAX_ συνολικά εγγραφές)",
+                "sProcessing":   this.messages.editMsg + "...",
+                "sLengthMenu":   "_MENU_ " + this.messages.perPage,
+                "sZeroRecords":  this.messages.noRecords,
+                "sInfo":         this.messages.showing + " _START_ " + this.messages.to + " _END_ " + this.messages.from + " _TOTAL_ " + this.messages.records,
+                "sInfoEmpty":    this.messages.showing + " 0 " + this.messages.to + " 0 " + this.messages.from + " 0 " + this.messages.records,
+                "sInfoFiltered": this.messages.sortedBy + " _MAX_ " + this.messages.totalRecords,
                 "sInfoPostFix":  "",
-                "sSearch":       "Αναζήτηση:",
+                "sSearch":       this.messages.search + ":",
                 "sUrl":          "",
                 "oPaginate": {
-                    "sFirst":    "Πρώτη",
-                    "sPrevious": "Προηγούμενη",
-                    "sNext":     "Επόμενη",
-                    "sLast":     "Τελευταία"
+                    "sFirst":    this.messages.firstPage,
+                    "sPrevious": this.messages.previousPage,
+                    "sNext":     this.messages.nextPage,
+                    "sLast":     this.messages.lastPage
                 }
             }
         } );

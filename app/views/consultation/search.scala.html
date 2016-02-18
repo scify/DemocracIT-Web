@@ -1,11 +1,11 @@
 @import play.api.libs.json.JsValue
-@(query: String, consultationsJson: JsValue, totalConsultations:Int)(implicit messages :Messages)
+@(query: String, consultationsJson: JsValue, totalConsultations:Int, messagesForConsultationsSearch:String)(implicit messages :Messages)
 
 @js = {
     <script src="http://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
     <script src="@routes.Assets.at("js/consultation/scify-consultationDisplayAllPageHandler.js")" ></script>
     <script>
-        var c= new scify.ConsultationDisplayAllPageHandler(@Html(consultationsJson.toString()));
+        var c= new scify.ConsultationDisplayAllPageHandler(@Html(consultationsJson.toString()), @Html(messagesForConsultationsSearch));
         c.init();
     </script>
 }

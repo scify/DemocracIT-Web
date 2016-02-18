@@ -271,7 +271,24 @@ comment.Annotator.editCommentLabel = Τροποποιήστε το σχόλιό 
 comment.Annotator.topicPrompt = κλικ εδώ για να θέσετε το θέμα
 comment.Annotator.topicExample = π.χ. ''ασάφεια'', ''μη κατανοητό κείμενο''
 comment.Annotator.problemIcon = βοηθήστε το νομοθέτη αναφέροντας προβλήματα
-
+endsIn = λήξη σε
+ended = έληξε
+end = Λήξη
+title = Τίτλος
+search= Αναζήτηση
+consultations.search.firstPage = Πρώτη
+consultations.search.previousPage = Προηγούμενη
+consultations.search.nextPage = Επόμενη
+consultations.search.lastPage = Τελευταία
+consultations.search.editMsg = Επεξεργασία
+consultations.search.perPage = ανα σελίδα
+consultations.search.noRecords = Δεν βρέθηκαν εγγραφές που να ταιριάζουν
+consultations.search.showing = Δείχνοντας
+consultations.search.from = από
+consultations.search.to = εως
+consultations.search.records = εγγραφές
+consultations.search.sortedBy = (φιλτραρισμένες από
+consultations.search.totalRecords = συνολικά εγγραφές)
 
 
 
