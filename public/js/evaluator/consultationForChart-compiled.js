@@ -8,9 +8,24 @@
         getInitialState: function getInitialState() {
             return {
                 consultations: [],
+                displayedConsultations: [],
                 busy: false,
-                display: false
+                display: false,
+                page: 10,
+                shouldDisplayLoadMoreBtn: true
             };
+        },
+        displayNextBatch: function displayNextBatch(event) {
+            //event.preventDefault();
+            var loaded = this.state.displayedConsultations.length;
+            var nextBatchMargin = this.state.page;
+            var toLoad = loaded + nextBatchMargin;
+            if (toLoad > this.state.consultations.length) {
+                toLoad = this.state.consultations.length;
+                this.state.shouldDisplayLoadMoreBtn = false;
+            }
+            this.state.displayedConsultations = this.state.consultations.slice(0, toLoad);
+            this.setState(this.state);
         },
         getConsultationsFromServer: function getConsultationsFromServer(cons_ids) {
             //console.log(cons_ids)
@@ -22,6 +37,7 @@
                 data: { cons_ids: cons_ids },
                 beforeSend: function beforeSend() {
                     instance.state.consultations = [];
+                    instance.state.displayedConsultations = [];
                     instance.state.busy = true;
                     instance.state.display = true;
                     instance.setState(instance.state);
@@ -33,7 +49,7 @@
                 complete: function complete() {
                     instance.state.busy = false;
                     instance.state.display = true;
-                    instance.setState(instance.state);
+                    instance.displayNextBatch.call(instance);
                 },
                 error: function error(x, z, y) {
                     console.log(x);
@@ -52,7 +68,8 @@
                     );
                 } else {
                     var divToDisplay = [];
-                    instance.state.consultations.forEach(function (consultation) {
+                    console.log(instance.state.displayedConsultations.length);
+                    instance.state.displayedConsultations.forEach(function (consultation) {
                         //console.log(consultation);
                         divToDisplay.push(React.createElement(
                             "div",
@@ -84,10 +101,21 @@
                             )
                         ));
                     });
+                    var loadMoreBtnClasses = classNames("loadMoreBtn", { hide: !instance.state.shouldDisplayLoadMoreBtn });
                     return React.createElement(
                         "div",
                         { className: "commentList" },
-                        divToDisplay
+                        divToDisplay,
+                        React.createElement(
+                            "div",
+                            { className: loadMoreBtnClasses, onClick: this.displayNextBatch },
+                            "load more ",
+                            React.createElement(
+                                "div",
+                                { className: "loadMoreIcon" },
+                                React.createElement("i", { className: "fa fa-sort-desc" })
+                            )
+                        )
                     );
                 }
             } else {

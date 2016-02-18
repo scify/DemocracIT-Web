@@ -38,6 +38,16 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
 
   }
 
+  def checkIfUserHasReportedComment(commentId:Long, userId:UUID): Boolean = {
+    val answer = commentsRepository.checkIfUserHasReportedComment(commentId, userId)
+    answer
+  }
+
+  def reportComment(commentId:Long, userId:UUID): Long = {
+    val answer = commentsRepository.reportComment(commentId, userId)
+    answer
+  }
+
   def saveComment(comment:Comment): Comment = {
 
     if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <= 0) {

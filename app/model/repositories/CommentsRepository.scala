@@ -43,6 +43,26 @@ class CommentsRepository {
 
   }
 
+  def checkIfUserHasReportedComment(commentId: Long, userId: UUID): Boolean = {
+    DB.withConnection { implicit c =>
+      val answer: Boolean =
+        SQL"""
+           select exists (select * from comment_reports where user_id = cast($userId as uuid) and comment_id=$commentId);
+           """.as(SqlParser.bool("exists").single)
+      answer
+    }
+  }
+
+  def reportComment(commentId: Long, userId: UUID): Long = {
+    DB.withConnection { implicit c =>
+      val reportId:Option[Long] =
+        SQL"""
+           INSERT INTO public.comment_reports (user_id, comment_id, created_at) VALUES (CAST($userId AS UUID), $commentId, now())
+           """.executeInsert()
+      reportId.get
+    }
+  }
+
   def howManyLikesToday(userId:UUID):Int = {
     DB.withConnection { implicit c =>
       val answer:Int = SQL"""

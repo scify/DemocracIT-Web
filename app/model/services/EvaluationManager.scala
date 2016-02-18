@@ -63,6 +63,14 @@ class EvaluationManager {
     durations = evaluationRepository.getConsDurationPerOrganization()
     durations
   }
+
+  def getConsFinalLawStats(): List[model.dtos.ConsultationFinalLawStats] = {
+    val evaluationRepository = new EvaluationRepository()
+    var consFinalLawStats: List[model.dtos.ConsultationFinalLawStats] = Nil
+    consFinalLawStats = evaluationRepository.getConsultationFinalLawStats()
+    consFinalLawStats
+  }
+
   def getConsDuration(): List[model.dtos.ConsDurations] = {
     val evaluationRepository = new EvaluationRepository()
     var durations: List[model.dtos.ConsDurations] = Nil

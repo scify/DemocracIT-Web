@@ -147,7 +147,6 @@
                     }
                     $("#consDurationInnerChart").append("<div style=\"margin-top: 20px\" class=\"organizationChart\"><div id=\"" + chartId + "\"></div></div>");
                     $("#" + chartId).before("" + "<div class=\"organizationName\">" + chartTitle + "</div>");
-                    //console.log(dataForDuration);
                     instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
                 },
                 complete: function complete() {
@@ -224,8 +223,41 @@
 
             return promise;
         },
+        getConsFinalLawStats: function getConsFinalLawStats() {
+            var instance = this;
+            var promise = $.ajax({
+                method: "GET",
+                url: "/evaluator/consflstats/",
+                beforeSend: function beforeSend() {
+                    instance.state.busy = true;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                success: function success(data) {
+                    console.log(data);
+                    var chartId = "finalLawComparisonInnerChart";
+                    $("#finalLawComparisonChart").append("<div id=\"finalLawComparisonInnerChart\"></div>");
+                    var statsData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var statsType = "Διαβουλεύσεις με αρχείο τελικού νόμου";
+                        if (data[i].hasLaw == 0) statsType = "Διαβουλεύσεις χωρίς αρχείο τελικού νόμου";
+                        statsData.push([statsType, data[i].numOfConsultations, data[i].cons_ids]);
+                    }
+                    instance.createPieChart(statsData, chartId, "Διαβουλεύσεις στις οποίες οι χρήστες " + "έχουν μεταφορτώσει αρχείο τελικού νόμου (πατήστε επάνω στο γράφημα " + "για να δείτε τις διαβουλέυσεις)");
+                },
+                complete: function complete() {
+                    instance.state.busy = false;
+                    instance.state.display = true;
+                    instance.setState(instance.state);
+                },
+                error: function error(x, z, y) {
+                    console.log(x);
+                }
+            });
+
+            return promise;
+        },
         /**
-         * If you want to customize further the function, it is recommended you extend it by creating another one.
          * function createBarChart
          * @param object dataForChart
          * it should be and obect with the following members: {string: Key, number: Value, string:Tooltip (what is displayed when hovering), string:annotation(what is on the bar)}
@@ -311,6 +343,36 @@
                 $("#consList").remove();
                 var selection = chart.getSelection();
                 var cons_ids = dataForChart[selection[0].row][4];
+                /*Create new element for the list*/
+                $("#" + chartId).after("<div id=\"consList\"></div>");
+                var domElementConsList = document.getElementById("consList");
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent.getConsultationsFromServer(cons_ids);
+                chart.setSelection();
+            });
+        },
+        createPieChart: function createPieChart(dataForChart, chartId, chartTitle) {
+            var data = new google.visualization.DataTable();
+            data.addColumn("string", "");
+            data.addColumn("number", "");
+            data.addColumn({ type: "string", role: "scope" });
+            data.addRows(dataForChart);
+            console.log(data);
+            var options = {
+                title: chartTitle,
+                is3D: true,
+                height: 600,
+                width: 1100,
+                "chartArea": { width: "75%", "height": 400, left: "0" }
+            };
+            console.log($("#" + chartId).length);
+            var chart = new google.visualization.PieChart(document.getElementById(chartId));
+            chart.draw(data, options);
+            google.visualization.events.addListener(chart, "select", function () {
+                /*Remove current list*/
+                $("#consList").remove();
+                var selection = chart.getSelection();
+                var cons_ids = dataForChart[selection[0].row][2];
                 /*Create new element for the list*/
                 $("#" + chartId).after("<div id=\"consList\"></div>");
                 var domElementConsList = document.getElementById("consList");
