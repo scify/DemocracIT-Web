@@ -25,19 +25,24 @@
     <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
     <script>
      $(function(){
-        var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
-                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
-                                                                @Html(vm.ratingUsersToJson()),
-                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
-                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
-                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
-                                                                @Html(vm.discussionThreadsToJson()),
-                                                                @Html(vm.relevantLawsToJson()),
-                                                                @Html(vm.consultation.isActive.toString),
-                                                                '@routes.Assets.at("images")',
-                                                                '@play.Play.application().configuration().getString("application.state")',
-                                                                Date.parse('@vm.consultation.endDate')
-                                                                );
+         var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
+                 '@messages("youCannotVoteFLMsg")',
+                 '@messages("deleteFLPrompt")',
+                 '@messages("uploadFLmsg")',
+                 '@messages("uploadFLWrongFile")',
+                 '@messages("uploadFLLoadingMsg")',
+                 '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
+                 @Html(vm.ratingUsersToJson()),
+                 '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
+                 @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
+                 @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                 @Html(vm.discussionThreadsToJson()),
+                 @Html(vm.relevantLawsToJson()),
+                 @Html(vm.consultation.isActive.toString),
+                 '@routes.Assets.at("images")',
+                 '@play.Play.application().configuration().getString("application.state")',
+                 Date.parse('@vm.consultation.endDate')
+         );
         controller.init();
      })
     </script>

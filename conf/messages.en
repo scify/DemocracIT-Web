@@ -49,8 +49,8 @@ invalid.credentials = Your password or username are invalid
 access.denied = Access denied
 user.exists = User already exist
 could.not.authenticate = Unable to connect. Please try again!
-close = Close
-open = Open
+close = close
+open = open
 explain = Explanation
 evaluation.dispersion = Dispersion
 evaluation.duration = Duration
@@ -216,7 +216,9 @@ invalidtoken.message = The combination you chose is no longer valid
 sentresetpassword.message = An email has been sent to {0} with instructions on how to change your password
 unknownemail.title = This email was not found
 unknownemail.message = There is no user with this email address.
-
-
-
+youCannotVoteFLMsg = You cannot vote for a file that you have uploaded.
+deleteFLPrompt = Are you sure?
+uploadFLmsg = Drag here the file you would like to upload, or click in the box. (Accepted file types: .pdf, .txt)
+uploadFLWrongFile = Wrong file type. Accepted file types: .pdf, .txt \\nPlease click on the box to upload another file.
+uploadFLLoadingMsg = Please wait. The uploading process may take some seconds...
 

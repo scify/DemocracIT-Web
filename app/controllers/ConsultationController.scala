@@ -80,13 +80,13 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
             htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
               "<div class=\"col-md-12\"><div class=\"title\">" +
               "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
-              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+              "><span>" + messagesApi("close") + "</span><span>" + messagesApi("open") + "</span></a><span class=\"article-title\">"
             isFirstArticle = false
           } else {
             htmlContent = "</div></div></div></div><div data-id=" + articleNum + "  class=\"row article\">" +
               "<div class=\"col-md-12\"><div class=\"title\">" +
               "<a class=\"show-hide btn collapsed\" data-toggle=\"collapse\" data-target=\"#finalLawUploadedBody-" + articleNum + "\"" +
-              "><span>κλείσιμο</span><span>άνοιγμα</span></a><span class=\"article-title\">"
+              "><span>" + messagesApi("close") + "</span><span>" + messagesApi("open") + "</span></a><span class=\"article-title\">"
           }
           //htmlContentAfter contains the HTML div after the article title, preceding the article body
           val htmlContentAfter = "</span></div><div id=\"finalLawUploadedBody-" + articleNum + "\" class=\"collapse\" style=\"height:0;\" ><div class=\"article-body\">"
