@@ -330,4 +330,290 @@ legend {
 .btn.red:hover {
   background-color: rgba(255, 0, 0, 0.85); }
 
+.emotionContainer .emotionList {
+  float: left;
+  padding-left: 0px;
+  width: 100%;
+  margin-bottom: 20px; }
+
+.emotionContainer .emotionList li {
+  float: left;
+  list-style-type: none;
+  margin-right: 5px;
+  padding: 5px;
+  height: 50px;
+  border-radius: 5px; }
+
+.emotionContainer .emotionList li:hover {
+  background-color: #2b669a;
+  transition: background-color 0.5s ease; }
+
+.emotionContainer .emotionList .clicked {
+  background-color: #2b669a;
+  transition: background-color 0.5s ease; }
+
+.emotionContainer .emotionList li img {
+  height: 40px; }
+
+#save-annotation {
+  float: left;
+  margin-left: 65px; }
+
+.emotionMsg {
+  margin-bottom: 5px; }
+
+.userEmotion img {
+  height: 25px;
+  margin-left: 5px; }
+
+.comment .date {
+  margin-right: 20px; }
+
+.smallLink {
+  font-size: 11px; }
+
+.smallLink a {
+  color: #49c0f4 !important; }
+
+.shareArticleHidden, .shareArticleHiddenComment {
+  display: none; }
+
+.shareSpan, .shareSpanComment {
+  top: 30px;
+  position: absolute;
+  background-color: lightgrey;
+  width: auto;
+  right: 15px;
+  height: auto;
+  padding: 8px;
+  z-index: 100; }
+
+.shareSpan:after, .shareSpan:before {
+  bottom: 100%;
+  left: 80%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.shareSpanComment:after, .shareSpanComment:before {
+  bottom: 100%;
+  left: 90%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.shareSpan:after, .shareSpanComment:after {
+  border-color: rgba(217, 215, 215, 0);
+  border-bottom-color: lightgrey;
+  border-width: 10px;
+  margin-left: -10px; }
+
+.shareSpan:before, .shareSpanComment:before {
+  border-color: rgba(40, 47, 51, 0);
+  border-bottom-color: lightgrey;
+  border-width: 13px;
+  margin-left: -13px; }
+
+.fa-link {
+  color: #337ab7; }
+
+.fa-link:hover {
+  cursor: pointer; }
+
+.shareBtnComment {
+  position: relative;
+  float: right;
+  height: 10px; }
+
+.shareLink {
+  float: right; }
+
+.editIcon {
+  padding-left: 20px;
+  font-size: 1.5em;
+  position: absolute; }
+
+.editIcon:hover {
+  cursor: pointer;
+  color: #337ab7; }
+
+.comment .editedComment {
+  margin-left: 70px;
+  font-style: italic;
+  opacity: 0.5;
+  font-size: 1em;
+  position: absolute; }
+
+.reporterUserStats .comment .editedComment {
+  margin-left: 0px;
+  position: relative; }
+
+.targetDiv {
+  background-color: lightsteelblue !important; }
+
+.finalLawFileContent {
+  margin-top: 50px; }
+
+.commentInFinalLaw {
+  float: right !important; }
+
+#finalLawCommentModal .modal-dialog {
+  width: 95%;
+  top: 20px; }
+
+#finalLawCommentModal #finalLawAnnDiv {
+  float: right;
+  width: 45%;
+  padding-right: 10px;
+  padding-top: 10px; }
+
+#finalLawCommentModal .modal-body {
+  height: 750px; }
+
+#finalLawCommentModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%; }
+
+#reportCommentModal .modal-body {
+  height: 450px;
+  padding: 30px; }
+
+#reportCommentModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%; }
+
+#reportCommentModal .modal-dialog {
+  width: 50%;
+  top: 20px; }
+
+#finalLawCommentModal #finalLawAnnDiv .stats {
+  display: none; }
+
+#finalLawCommentModal #finalLawAnnDiv {
+  max-height: 750px;
+  overflow-y: scroll;
+  font-family: Verdana, sans-serif;
+  font-size: 14px; }
+
+#finalLawCommentModal .title {
+  font-weight: bold; }
+
+#finalLawCommentModal .annFinalLawComment {
+  float: left;
+  width: 45%;
+  padding-left: 15px;
+  padding-top: 20px; }
+
+.modal.show {
+  display: block; }
+
+.optionsContainerDisabled {
+  margin-bottom: 25px; }
+
+.optionsContainerDisabled .options div {
+  float: left;
+  margin-right: 5px; }
+
+.optionsContainerDisabled .options span {
+  float: left; }
+
+#finalLawCommentModal .modal-footer .btn {
+  float: right;
+  margin-top: -40px;
+  margin-top: 10px; }
+
+#finalLawCommentModal .saveBtnContainer {
+  text-align: center; }
+
+#reportCommentModal .saveBtnContainer {
+  text-align: center; }
+
+.annotatorBtn {
+  margin-right: 10px; }
+
+.finalLawAnnModalContent .hide {
+  display: none !important; }
+
+.innerModalCloseBtn {
+  float: none !important; }
+
+.annotatorBtnContainer {
+  margin-top: 30px; }
+
+.noAnnotators {
+  margin-top: 30px;
+  font-weight: bold; }
+
+.annotatorBtnContainer .annotatorsAreaTitle {
+  margin-bottom: 10px; }
+
+.noFinalLawText {
+  margin-top: 18%; }
+
+.fl-ann span {
+  float: left; }
+
+#finalLawCommentModal .fl-ann-icon {
+  float: left;
+  margin-right: 10px; }
+
+.annotatableArea {
+  border: 1px solid lightgreen;
+  margin: 5px;
+  padding: 5px; }
+
+#wordCloudChart svg {
+  width: 100%; }
+
+.comment .optionsRight {
+  width: 220px;
+  float: right; }
+
+.comment .optionsRight .reportAction {
+  float: left;
+  text-decoration: underline;
+  color: darkred;
+  font-style: italic;
+  opacity: 0.6; }
+
+.comment .optionsRight .reportAction:hover {
+  cursor: pointer; }
+
+.reportCommentMsg {
+  margin-top: 20px;
+  font-weight: bold; }
+
+#saveCommentReport {
+  background-color: darkred; }
+
+#reportCommentModal .modal-header {
+  padding-bottom: 40px; }
+
+#reportCommentModal .modal-title {
+  float: left; }
+
+.loadMoreBtn {
+  color: #337ab7;
+  margin-top: 15px;
+  float: left; }
+
+.loadMoreBtn:hover {
+  cursor: pointer; }
+
+.loadMoreBtn i {
+  font-size: 20px;
+  padding-left: 5px; }
+
+.loadMoreBtn .loadMoreIcon {
+  float: right;
+  margin-top: -4px; }
+
 /*# sourceMappingURL=common.css.map */

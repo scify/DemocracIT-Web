@@ -60,8 +60,21 @@
                             <input type="hidden" name="articleid" value=""/>
                             <input type="hidden" name="discussionroomtypeid" value=""/>
                             <input type="hidden" name="discussionroomannotationtagid" value=""/>
-
-
+                            <input type="hidden" name="emotionId" value=""/>
+                            <input type="hidden" name="forEdit" value="0"/>
+                            <input type="hidden" name="commentId" value=""/>
+                            <input type="hidden" name="revision" value=""/>
+                            <!--Declare emotion-->
+                            <div class="emotionMsg">Το κείμενο που σχολιάζω με κάνει να νιώθω:</div>
+                            <div class="emotionContainer">
+                                <ul class="emotionList">
+                                    <li class="emotionItem" id="emotion1" title="Πολύ χαρούμενος" data-id="1"><img src="@routes.Assets.at("images/emoticons/emoticon-superhappy.png")"></li>
+                                    <li class="emotionItem" id="emotion2" title="Χαρούμενος" data-id="2"><img src="@routes.Assets.at("images/emoticons/emoticon-happy.png")"></li>
+                                    <li class="emotionItem" id="emotion3" title="Ανήσυχος" data-id="3"><img src="@routes.Assets.at("images/emoticons/emoticon-worried.png")"></li>
+                                    <li class="emotionItem" id="emotion4" title="Λυπημένος" data-id="4"><img src="@routes.Assets.at("images/emoticons/emoticon-sad.png")"></li>
+                                    <li class="emotionItem" id="emotion5" title="Νευριασμένος" data-id="5"><img src="@routes.Assets.at("images/emoticons/emoticon-angry.png")"></li>
+                                </ul>
+                            </div>
                         } else {
                             <div class="notLoggedinWrapper">
                                 <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
@@ -78,7 +91,7 @@
                     <span class="warning"><i class="fa fa-warning"></i> μη ξεχνάτε ότι ο επίσημος φορέας της ανοικτής διαβούλευσης ειναι το OpenGov.
                     <a href="@consultationOpenGovUrl" target="_blank">Κλικ εδώ</a> για να αφήσετε το σχόλιο σας και στη σελίδα της διαβούλευσης του OpenGov.
                         <a href="http://about.democracit.org/frequently-asked-questions#question-3">Μάθετε περισσότερα</a></span>
-                    <button id="save-annotation" class="btn blue" type="submit">Καταχώρηση</button>
+                    <button id="save-annotation"c class="btn blue" type="submit">Καταχώρηση</button>
                 }
             <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
             </div>

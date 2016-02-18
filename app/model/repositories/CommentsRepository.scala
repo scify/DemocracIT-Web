@@ -43,6 +43,26 @@ class CommentsRepository {
 
   }
 
+  def checkIfUserHasReportedComment(commentId: Long, userId: UUID): Boolean = {
+    DB.withConnection { implicit c =>
+      val answer: Boolean =
+        SQL"""
+           select exists (select * from comment_reports where user_id = cast($userId as uuid) and comment_id=$commentId);
+           """.as(SqlParser.bool("exists").single)
+      answer
+    }
+  }
+
+  def reportComment(commentId: Long, userId: UUID): Long = {
+    DB.withConnection { implicit c =>
+      val reportId:Option[Long] =
+        SQL"""
+           INSERT INTO public.comment_reports (user_id, comment_id, created_at) VALUES (CAST($userId AS UUID), $commentId, now())
+           """.executeInsert()
+      reportId.get
+    }
+  }
+
   def howManyLikesToday(userId:UUID):Int = {
     DB.withConnection { implicit c =>
       val answer:Int = SQL"""
@@ -65,13 +85,11 @@ class CommentsRepository {
     }
   }
 
-
-
   def cancelLikeReward(userId:UUID, comment_id:Long):Unit = {
     DB.withConnection { implicit c =>
       SQL"""
             delete from user_awards
-            where user_id = cast($userId as UUID) and cast(related_data as Bigint) = $comment_id
+            where user_id = cast($userId as UUID) and related_data = cast($comment_id as text)
               """.execute()
     }
   }
@@ -95,14 +113,14 @@ class CommentsRepository {
              ),
             topLevelComments as (
 
-                  select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                  select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                           cr.liked as userrating,
                           counter.likes,
                           counter.dislikes
                   from comments c
                        inner join public.articles a on a.id = c.article_id
                        inner join  public.discussion_thread t on c.discussion_thread_id =t.id
-                       inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id
+                       inner join annotation_comment ann_comm on ann_comm.public_comment_id = c.id and c.revision = ann_comm.comment_revision
                        inner join annotation_tag ann on ann.id = ann_comm.annotation_tag_id
                        inner join account.user u on u.id = c.user_id
                        left outer join public.comment_rating cr on cr.comment_id = c.id
@@ -110,7 +128,7 @@ class CommentsRepository {
                        where a.consultation_id = $consultationId and ann.id = $annId
              ),
            replies as (
-                  select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                  select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                     cr.liked as userrating,
                                     counter.likes,
                                     counter.dislikes
@@ -150,7 +168,7 @@ class CommentsRepository {
                                   group by cr.comment_id
                                  ),
            topLevelComments as (
-                             select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                             select  c.*,ann.description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                      cr.liked as userrating,
                                      counter.likes,
                                      counter.dislikes
@@ -165,7 +183,7 @@ class CommentsRepository {
                                   where a.id = $articleId and ann.id = $annId
                         ),
            replies as (
-                             select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,
+                             select  c.*,''::text as description,u.fullName,u.avatarurl, ''::text as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                                                cr.liked as userrating,
                                                counter.likes,
                                                counter.dislikes
@@ -205,7 +223,7 @@ class CommentsRepository {
                                      where a.consultation_id = $consultation_id
                                   group by cr.comment_id
                                  )
-              select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,
+              select  c.*,u.fullName,u.avatarurl, null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                       cr.liked as userrating,
                       counter.likes,
                       counter.dislikes
@@ -216,12 +234,13 @@ class CommentsRepository {
                    left outer join public.comment_rating cr on cr.user_id = CAST($user_id as UUID)  and cr.comment_id = c.id
                    left outer join ratingCounter counter on counter.comment_id = c.id
               where a.consultation_id = $consultation_id and c.user_id = CAST($user_id as UUID)
+              order by c.date_added desc, c.id
            """.as((SqlParser.str("article_name") ~ CommentsParser.Parse map(flatten)) *)
 
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join articles a on a.id = c.article_id
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where c.user_id = CAST($user_id as UUID) and a.consultation_id = $consultation_id
@@ -268,7 +287,7 @@ class CommentsRepository {
            where t.tagid =$discussionthreadclientid
           group by cr.comment_id
          )
-          select c.*, u.fullName,u.avatarurl,null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,
+          select c.*, u.fullName,u.avatarurl,null as profileUrl, a.title as article_name, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                            counter.likes,
                             counter.dislikes,
                             cr.liked as userrating
@@ -285,7 +304,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where t.tagid =$discussionthreadclientid
                             """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
@@ -353,7 +372,7 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,
+                      select c.*, o.fullname, null as avatarurl, o.link_url as profileUrl, 1 as discussion_thread_type_id,'' as discussion_thread_tag_id,
                              counter.likes,
                              counter.dislikes, false as userrating
                        from public.comments c
@@ -386,7 +405,7 @@ class CommentsRepository {
                         where c.article_id = $articleId
                      group by cr.comment_id
                     )
-                    select c.*, u.fullname, u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
+                    select c.*, u.fullname, u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                             counter.likes,
                             counter.dislikes,
                             cr.liked as userrating from comments c
@@ -401,7 +420,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     where c.article_id = $articleId
                             """.as((SqlParser.long("public_comment_id") ~ AnnotationTypesParser.Parse map(flatten)) *)
@@ -464,7 +483,7 @@ class CommentsRepository {
                                     where a.consultation_id = $consultationId
                     group by cr.comment_id
                    )
-                     select  c.*,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,
+                     select  c.*,u.fullName,u.avatarurl, null as profileUrl, t.typeid as discussion_thread_type_id,t.tagid as discussion_thread_tag_id,
                      cr.liked as userrating,
                      counter.likes,
                      counter.dislikes
@@ -481,7 +500,7 @@ class CommentsRepository {
       val relatedTags: List[(Long,AnnotationTags)]=  SQL"""
                              select ac.public_comment_id, tag.* from annotation_comment ac
                                     inner join annotation_tag tag on ac.annotation_tag_id = tag.id
-                                    inner join comments c on c.id =ac.public_comment_id
+                                    inner join comments c on c.id =ac.public_comment_id and c.revision = ac.comment_revision
                                     inner join  public.discussion_thread t on c.discussion_thread_id =t.id
                                     inner join public.articles a on a.id = c.article_id
                                     where a.consultation_id = $consultationId
@@ -513,7 +532,7 @@ class CommentsRepository {
                             )
                             select ann_comm.annotation_tag_id as id, annotation_tag.description, annotation_tag.type_id, count(ann_comm.annotation_tag_id) as comments_num
                               from annotation_comment ann_comm
-                              inner join comm on ann_comm.public_comment_id = comm.id
+                              inner join comm on ann_comm.public_comment_id = comm.id  and comm.revision = ann_comm.comment_revision
                               inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                               group by ann_comm.annotation_tag_id,annotation_tag.id
                             """.as(AnnotationTagWithCommentsParser.Parse  *)
@@ -591,7 +610,7 @@ class CommentsRepository {
                                               annotation_tag.type_id,
                                               count(ann_comm.annotation_tag_id) as comments_num
                                         from annotation_comment ann_comm
-                                        inner join comm on ann_comm.public_comment_id = comm.id
+                                        inner join comm on ann_comm.public_comment_id = comm.id  and comm.revision = ann_comm.comment_revision
                                         inner join annotation_tag on annotation_tag.id = ann_comm.annotation_tag_id
                                         inner join articles on articles.id = comm.article_id
                                         group by ann_comm.annotation_tag_id,annotation_tag.id, articles.id
@@ -630,7 +649,7 @@ class CommentsRepository {
                                  and  c.source_type_id= 2
                      group by cr.comment_id
                     )
-                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,null as discussion_thread_type_id,
+                      select c.*, o.fullName, null as avatarurl, o.link_url as profileUrl,null as discussion_thread_type_id,'' as discussion_thread_tag_id,
                              cr.liked as userrating,
                              counter.likes,
                              counter.dislikes
@@ -707,6 +726,80 @@ class CommentsRepository {
 
   }
 
+  def saveOldComment(commentId: Long) = {
+    DB.withTransaction() { implicit c =>
+      //we store the old comment at comment_history table, retrieve the id of the comment_history row
+      val commentHistoryId = SQL"""
+          INSERT INTO public.comment_history (
+                         		comment_parent_id,
+                             url_source,
+                             article_id,
+                             parent_id,
+                             "comment",
+                             source_type_id,
+                             discussion_thread_id,
+                             user_id,
+                             date_added,
+                             revision,
+                             depth,
+                             annotatedtext,
+                             emotion_id, updated_at) select *, now() as updated_at from comments where id=$commentId""".execute()
+    }
+  }
+
+  def updateComment(comment: Comment) ={
+    DB.withTransaction() { implicit c =>
+      SQL"""UPDATE public.comments
+           SET "comment" = ${comment.body},
+               revision = ${comment.revision + 1},
+               emotion_id = ${comment.emotionId}
+           WHERE id = ${comment.id}
+         """.execute()
+      val annotationTags = comment.annotationTagProblems ::: comment.annotationTagTopics
+
+      for (annotation <- annotationTags )
+      {
+        if (annotation.id == -1)
+        {
+          //if it already exists we request the id, else save and retrieve it
+          val annotationid: Long= SQL"""
+                                     with existing as (
+                                          SELECT id FROM annotation_tag WHERE description = ${annotation.description}
+                                     ),
+                                     new as (
+                                         INSERT INTO annotation_tag   (description,type_id,date_added,status_id)
+                                         SELECT ${annotation.description} as description,
+                                                ${annotation.type_id} as type_id ,
+                                                now() as date_added,
+                                                2 as status_id
+                                         WHERE NOT EXISTS ( select id from existing)
+                                         returning id
+                                     )
+                                     select id from new
+                                      union all
+                                     select id from existing
+
+                                """.as(SqlParser.long("id").single) // .executeInsert()
+
+          annotation.id = annotationid
+        }
+
+        SQL"""
+              INSERT INTO public.annotation_comment
+                          (public_comment_id,annotation_tag_id, comment_revision)
+              VALUES
+              (${comment.id},${annotation.id}, ${comment.revision + 1})
+            """.execute()
+
+      }
+    }
+  }
+
+  def saveUpdatedComment(comment: Comment) = {
+    saveOldComment(comment.id.get)
+    updateComment(comment)
+  }
+
   def saveComment(comment: Comment, discussionThreadId: Long): Option[Long] ={
     DB.withTransaction() { implicit c =>
 
@@ -724,7 +817,8 @@ class CommentsRepository {
                       date_added,
                       revision,
                       depth,
-                      annotatedtext)
+                      annotatedtext,
+                      emotion_id)
           VALUES
                     (
                       NULL,
@@ -737,7 +831,8 @@ class CommentsRepository {
                       now(),
                       ${comment.revision},
                       ${comment.depth},
-                      ${comment.userAnnotatedText})
+                      ${comment.userAnnotatedText},
+                      ${comment.emotionId})
                   """.executeInsert()
 
 
@@ -772,9 +867,9 @@ class CommentsRepository {
 
         SQL"""
               INSERT INTO public.annotation_comment
-                          (public_comment_id,annotation_tag_id)
+                          (public_comment_id,annotation_tag_id, comment_revision)
               VALUES
-              ($commentId,${annotation.id})
+              ($commentId,${annotation.id},${comment.revision})
             """.execute()
 
       }

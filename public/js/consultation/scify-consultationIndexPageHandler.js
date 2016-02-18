@@ -4,6 +4,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
                                                relevantLaws,
                                                consultationIsActive,
                                                imagesPath,
+                                               appState,
                                                consultationEndDate){
     this.consultationid= consultationid;
     this.finalLawId = finalLawId;
@@ -12,6 +13,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.userId = userId;
     this.fullName = fullName;
     this.imagesPath = imagesPath;
+    this.appState = appState;
     this.discussionThreads ={};
     this.ratingUsers = [];
     for (var i=0; i<ratingUsers.length; i++) {
@@ -30,6 +32,8 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.consultationEndDate = consultationEndDate;
 
     this.tutorialAnnotator = null;
+    this.imagesPath = imagesPath;
+    this.commentWithLawMatcher = null; //represents a react component used to match a comment with the final law
 
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
@@ -57,6 +61,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         var instance = this;
         //todo: load existing rooms from database
         scify.discussionRooms={}; //an object that will contain reference to all the React divs that host the comments
+        var annCounter = 0;
         $(".article").each(function(index,articleDiv){
             var articleid =$(articleDiv).data("id");
 
@@ -69,8 +74,26 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 source :"opengov",
                 isdiscussionForTheWholeArticle:true,
                 commentsCount : $(articleDiv).find(".open-gov").data("count"),  //for open gov we retrieve the counter from
-                parent: "consultation"
+                parent: "consultation",
+                shouldDisplayCommenterName:true,
+                shouldDisplayEditIcon:false,
+                shouldDisplayCommentEdited:false,
+                shouldDisplayShareBtn:true,
+                shouldDisplayCommentBody: true,
+                shouldDisplayEmotion:false,
+                shouldDisplayAnnotatedText:false,
+                shouldDisplayReplyBox:false,
+                shouldDisplayReplies:false,
+                optionsEnabled:false,
+                shouldDisplayTopics:false,
+                shouldDisplayFinalLawAnnBtn:false,
+                shouldDisplayLikeDislike:false,
+                commentClassNames:"comment"
             };
+
+            //define function to use after the comment has loaded
+            commentBoxProperties.scrollToComment = callAfterCommentHasLoaded;
+
             var domElementToAddComponent = $(articleDiv).find(".open-gov")[0];
             if (domElementToAddComponent) {
                 scify.discussionRooms[commentBoxProperties.discussionthreadclientid] = React.render(React.createElement(scify.CommentBox, commentBoxProperties), domElementToAddComponent);
@@ -92,8 +115,29 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 commentBoxProperties.discussionThreadText = $(this).text().replace($(this).find(".ann-icon").text(),"");
                 commentBoxProperties.isdiscussionForTheWholeArticle = false;
                 commentBoxProperties.userDefined = userDefined;
+                commentBoxProperties.imagesPath = instance.imagesPath;
+                commentBoxProperties.annotationId = annId;
+                commentBoxProperties.consultationId = instance.consultationid;
+                commentBoxProperties.appState = instance.appState;
+                commentBoxProperties.annId = annCounter;
+                commentBoxProperties.shouldDisplayCommenterName = true;
+                commentBoxProperties.shouldDisplayEditIcon = true;
+                commentBoxProperties.shouldDisplayCommentEdited = true;
+                commentBoxProperties.shouldDisplayShareBtn = true;
+                commentBoxProperties.shouldDisplayCommentBody = true;
+                commentBoxProperties.shouldDisplayEmotion = true;
+                commentBoxProperties.shouldDisplayAnnotatedText = true;
+                commentBoxProperties.shouldDisplayReplyBox = true;
+                commentBoxProperties.shouldDisplayReplies = true;
+                commentBoxProperties.shouldDisplayLikeDislike = true;
+                commentBoxProperties.optionsEnabled = true;
+                commentBoxProperties.shouldDisplayTopics = true;
+                commentBoxProperties.shouldDisplayFinalLawAnnBtn = true;
+                commentBoxProperties.commentClassNames="comment";
+                commentBoxProperties.shouldDisplayReportAction=true;
 
-                var commentBox = $('<div class="commentbox-wrap"></div>')
+                annCounter++;
+                var commentBox = $('<div class="commentbox-wrap"></div>');
                 if ($(ann).parents(".article-title-text").length>0) // for article titles position comment box inside the body
                 {
                     commentBoxProperties.isdiscussionForTheWholeArticle=true;
@@ -126,7 +170,23 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         });
     },
     handleAnnotationSave = function(data){
-        getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        if(data.annotationTagTopics.length > 0) {
+            //facebook tracking code for user annotation topic
+            fbq('track', 'AddToCart');
+        }
+        if(data.annotationTagProblems.length > 0) {
+            //facebook tracking code for user annotation problems
+            fbq('track', 'AddToWishlist');
+        }
+        //if the form was opened for edit the comment, the forEdit input value is 1, else 0
+        if(data.forEdit == "0")
+            getDiscussionRoom(data.articleid,data.discussionroomannotationtagid).saveComment(data.action,data);
+        else {
+            //set the appropriate route for edit
+            data.action = "/annotation/update";
+            getDiscussionRoom(data.articleid, data.discussionroomannotationtagid).updateComment(data.action, data);
+        }
+
      },
     replaceRelevantLaws = function(relevantLaws) {
             for (var i=0; i<relevantLaws.length; i++) {
@@ -165,7 +225,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 return array[i];
         }
         return false;
-    }
+    },
     rateFinalLawFile = function(instance) {
         var userId = instance.userId;
         var userRate = checkRatingUsers(instance.ratingUsers, userId);
@@ -286,7 +346,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
             accept: function(file, done) {
                 console.log();
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
+                $("#finalLawDropZone").append('<div class="waiting-msg"> ' +
+                    'Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. ' +
+                    '<div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
                 }
@@ -295,9 +357,14 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             init: function() {
                 this.on("error", function(file,errorMessage) {
                     $(".dz-error-message").css("opacity",1);
+                    console.log(errorMessage);
+                    var instance = this;
+                    $(".dz-details").on("click", function(){
+                        instance.removeFile(file);
+                    });
                 });
                 this.on("addedfile", function() {
-                    /*If more than one file, we ceep the latest one*/
+                    /*If more than one file, we keep the latest one*/
                     if (this.files[1]!=null){
                         this.removeFile(this.files[0]);
                     }
@@ -317,12 +384,9 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     getParameterPointToFinalLaw = function () {
         var parameter = getParameterByName("target");
-        console.log(parameter);
         if(parameter == "finalLaw") {
             console.log("scroll");
-            $('html, body').animate({
-                scrollTop: 500
-            }, 1000);
+            $("html, body").animate({ scrollTop: $('#finalLawLink').offset().top - 100 }, 1000);
             $(".finalLawLi a").trigger("click");
         }
     },
@@ -334,7 +398,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     },
     finalLawModalHandler = function() {
         $( "#finalLawModalBtn" ).click(function() {
-            console.log("wsadfrs");
             $(".modal-body .container .consultationText div").first().find(".show-hide").click();
             $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
             //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
@@ -355,9 +418,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                     beforeSend: function () {
                     },
                     success: function (returnData) {
-                        console.log(returnData);
                         setTimeout(function (){
-                            //$("#deleteLaw").find(".loaderSmall").remove();
                             var url = window.location.href;
                             if(url.indexOf("?target=finalLaw") == -1)
                                 url += '?target=finalLaw';
@@ -376,19 +437,130 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 console.log("You pressed Cancel!");
             }
         });
-    }
+    },
+    getHashValue = function(key) {
+            var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+            return matches ? matches[1] : null;
+    },
+    callAfterCommentHasLoaded = function() {
+        var commentId = getHashValue("commentid");
+        if(commentId != undefined) {
+            $("html, body").animate({scrollTop: $('#' + commentId).offset().top - 50}, 500);
+            $("#" + commentId).addClass("targetDiv");
+            setTimeout(function () {
+                $("#" + commentId).removeClass("targetDiv");
+            },1000);
+        }
+    },
+    openArticleAndCommentFromURL = function() {
+        //get URL parameters
+        var articleId = getHashValue("articleid");
+        var annId = getHashValue("annid");
+        var commentId = getHashValue("commentid");
+        if(articleId != undefined) {
+            //open relevant article
+            $('[data-target="#body-' + articleId + '"]').click();
+        }
+        if(annId != undefined) {
+            //check the DOM tree to see if the requested annotation belongs to part of article
+            if ($('[data-id="' + annId + '"]').next().find(".load").length > 0) {
+                //if length > 0 , the annotation belongs to part of article
+                $('[data-id="' + annId + '"]').next().find(".load")[0].click();
+            } else if($('#body-' + articleId).find(".load").length > 0) {
+                //if not, the annotation is for the whole article (comment on article title)
+                $('#body-' + articleId).find(".load")[0].click();
+            }
+
+        }
+        if(annId == null && commentId == null) {
+            if(articleId != null) {
+                $("html, body").animate({scrollTop: $('#article_' + articleId).offset().top}, 500);
+                $('#article_' + articleId).addClass("targetDiv");
+                setTimeout(function () {
+                    $('#article_' + articleId).removeClass("targetDiv");
+                },1000);
+            }
+            else
+                $(".article-title-text").first().trigger("click");
+        }
+    },
+    handleArticleShare = function(instance) {
+        $(".shareBtn").click(function(){
+            var articleId = $(this).attr('id').split('-')[1];
+            var longUrl ="";
+            if(instance.appState == "development") {
+                longUrl = "http://localhost:9000/consultation/";
+            } else {
+                longUrl = "http://democracit.org/consultation/";
+            }
+            longUrl += instance.consultationid + "#articleid=" + articleId;
+            //TODO: use Url shortener
+            //show the extra div
+            $("#share-"+articleId).prev().toggleClass('shareArticleHidden');
+            //if the url has not yet been added, we add it to the div
+            if($("#share-"+articleId).prev().find(".shareUrl").length == 0)
+                $("#share-"+articleId).prev().append('<div class="shareUrl"><a href="' + longUrl + '">' + longUrl + '</a></div>');
+        });
+    },
+    getShortUrl = function(long_url, login, api_key) {
+        $.getJSON(
+            "http://api.bitly.com/v3/shorten?callback=?",
+            {
+                "format": "json",
+                "apiKey": api_key,
+                "login": login,
+                "longUrl": long_url
+            },
+            function(response)
+            {
+                return response.data.url;
+            }
+        );
+    },
+    openCommentFormForEdit = function(e,comment){
+        //clear annotation toolbar , populate fields and open.
+        //console.log(e);
+        //console.log(comment);
+         this.commentAnnotator.openForEdit(e, comment);
+    },
+    handleMatchCommentWithLaw = function(e,data){
+
+        if (!this.commentWithLawMatcher)
+        {
+            this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {
+                comment:data.comment,
+                imagesPath: this.imagesPath,
+                finalLawId: parseInt(this.finalLawId),
+                finalLawDiv: $("#finalLawDiv").html(),
+                userId: this.userId,
+                shouldDisplaySubmitBtn: !($("#finalLawDiv").html() == undefined)
+            }), document.getElementById("commentLawMatcher"));
+        }
+        this.commentWithLawMatcher.display(data);
+    },
+    handleReportComment = function(e,data){
+        if (!this.reportCommentDiv)
+        {
+            this.reportCommentDiv = React.render(React.createElement(scify.reportComment, {
+                comment:data.comment,
+                imagesPath: this.imagesPath,
+                userId: this.userId,
+                shouldDisplaySubmitBtn: true
+            }), document.getElementById("reportComment"));
+        }
+        this.reportCommentDiv.display(data);
+    },
     init = function(){
         var instance= this;
         moment.locale('el');
 
-        this.annotator = new scify.Annotator(false, handleAnnotationSave);
-        this.annotator.init();
+        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
+        this.commentAnnotator.init();
 
         replaceRelevantLaws(this.relevantLaws);
         addRelevantLawsHandler();
         $(".article-title-text").click(expandArticleOnClick);
-        $(".article-title-text").first().trigger("click");
-
+        $("body").on("editcomment",openCommentFormForEdit.bind(this));
         createDiscussionRooms.call(instance);
         removeParagraphsWithNoText();
 
@@ -402,6 +574,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         rateFinalLawFile(instance);
         getParameterPointToFinalLaw();
         finalLawModalHandler();
+        openArticleAndCommentFromURL();
+        handleArticleShare(instance);
+
+        $("body").on("match-comment-with-law",handleMatchCommentWithLaw.bind(instance));
+        $("body").on("report-comment",handleReportComment.bind(instance));
+
     };
 
     return {

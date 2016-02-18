@@ -53,7 +53,8 @@ h2 {
 .article {
   padding-top: 20px;
   border-bottom: 1px solid gray;
-  padding-bottom: 20px; }
+  padding-bottom: 20px;
+  transition: background-color 1s ease-in-out; }
 
 .article-body {
   font-size: 14px;
@@ -160,7 +161,7 @@ h2 {
   display: block; }
 
 .article-title-text .ann {
-  width: 90%; }
+  width: 94%; }
 
 .ann {
   display: inline-block;
@@ -284,7 +285,8 @@ a.load {
   background-color: #f4f7f7;
   margin-bottom: 2px;
   border-radius: 6px;
-  margin-top: 5px; }
+  margin-top: 5px;
+  transition: background-color 1s ease-in-out; }
 
 .commentBox .comment .commentAuthor {
   display: inline-block;
@@ -316,7 +318,7 @@ a.load {
   top: 5px;
   opacity: 0.8; }
 
-.commentBox .comment .options a.active {
+.comment .options a.active {
   color: gray; }
 
 .commentBox .comment .options .fa {
@@ -352,7 +354,7 @@ a.load {
   background-color: lightcoral; }
 
 .commentBox .comment .tag.topic span {
-  background-color: greenyellow; }
+  background-color: lightblue; }
 
 .commentBox .comment .tag span {
   display: inline-block;
@@ -523,7 +525,11 @@ a.load {
   outline-width: 0px !important; }
 
 #consWordCloudModal .modal-dialog {
-  width: 1000px; }
+  width: 1300px; }
+
+#wordCloudChart {
+  overflow-x: scroll;
+  overflow-y: scroll; }
 
 .modal-body .explanation {
   margin-top: 18px;
@@ -767,10 +773,10 @@ a.load {
   margin-top: 70px; }
 
 .replyComment {
-  margin-left: 40px; }
+  margin-left: 100px; }
 
 .replyTitle {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-bottom: 10px; }
 
 /*# sourceMappingURL=consultation.css.map */

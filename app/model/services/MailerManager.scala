@@ -29,6 +29,22 @@ object MailerManager {
     )
   }
 
+  def sendEmailToCommenter (email: String, commentText:String, link: String)(implicit mailService:MailService) {
+    mailService.sendEmailAsync(email)(
+      subject = Messages("mail.replyToCommenter.subject"),
+      bodyHtml = Messages("mail.replyToCommenter.body",commentText, link),
+      bodyText = link
+    )
+  }
+
+  def sendEmailToCommenterForLike (email: String, link: String)(implicit mailService:MailService) {
+    mailService.sendEmailAsync(email)(
+      subject = Messages("mail.replyToCommenterForLike.subject"),
+      bodyHtml = Messages("mail.replyToCommenterForLike.body", link),
+      bodyText = link
+    )
+  }
+
 //  def forgotPasswordUnknowAddress (email: String)(implicit mailService:MailService) {
 //
 //    def getText()(implicit messages: Messages): String = {

@@ -13,10 +13,13 @@
     <script src="@routes.Assets.at("js/moment-with-locales.min.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
     <script src="@routes.Assets.at("js/consultation/intro.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/commentLawMatcher-compiled.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/reportComment-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/commentBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/ReplyBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-tutorialAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
+    <script src="@routes.Assets.at("js/consultation/scify-commentAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/wordCloud-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
@@ -32,6 +35,7 @@
                                                                 @Html(vm.relevantLawsToJson()),
                                                                 @Html(vm.consultation.isActive.toString),
                                                                 '@routes.Assets.at("images")',
+                                                                '@play.Play.application().configuration().getString("application.state")',
                                                                 Date.parse('@vm.consultation.endDate')
                                                                 );
         controller.init();
@@ -60,7 +64,7 @@
                 }
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">Σχετικοί νόμοι</a></li>
                 <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">Ανάλυση σχολίων</a></li>
-                @if(!vm.consultation.isActive){<li role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Σύγκριση με τον τελικό νόμο</a></li>}
+                @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi"> <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">Τελικός Νόμος</a></li>}
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="consultation-body">
@@ -91,13 +95,17 @@
                         </div>
                     </div>
                     @for(article <- vm.consultation.articles) {
-                        <div data-id="@article.id"  class="row article">
+                        <div data-id="@article.id"  class="row article" id="article_@article.id">
                             <div class="col-md-12">
                                 <div class="title">
                                     <a class="show-hide btn collapsed" data-toggle="collapse" data-target="#body-@article.id"><span>κλείσιμο</span><span>άνοιγμα</span></a>
                                     <span class="article-title-text">@article.title</span>
+                                    <span class="shareSpan shareArticleHidden">Κάντε αντιγραφή τον παρακάτω σύνδεσμο:<br></span>
+                                    <span class="shareBtn" id="share-@article.id" title="Σύνδεσμος για αυτό το άρθρο">
+                                        <i class="fa fa-link"></i>
+                                    </span>
                                 </div>
-                                <div id="body-@article.id" class="collapse" style="height:0;" >
+                                <div id="body-@article.id" class="collapse" style="height:0;">
                                     <div class="comment-wrp open-gov skip-ann" data-count="@article.commentsNum"></div>
                                     <div class="article-body">
                                     @Html(article.body)
@@ -279,10 +287,27 @@
                             </div>
                         </div>
                     </div>
+                    @if(vm.finalLaw.isDefined) {
+                        <div class="finalLawFileContent">
+                            <div>
+                                <object data="@vm.getFinalLawRelativePath()" type="application/pdf" width="100%" height="800">
+                                    Δείτε το κείμενο του τελικού νόμου <a href="@vm.getFinalLawRelativePath()">εδώ</a>
+                                </object>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
 
+
+    <div id="commentLawMatcher">
+
+    </div>
+
+    <div id="reportComment">
+
+    </div>
     @common.annotationToolbar(vm.user,vm.annotationsRelatedToProblems,vm.annotationsRelatedToTopics, vm.consultation.opengov_url)
 
 }

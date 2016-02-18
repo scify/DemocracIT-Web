@@ -7,13 +7,15 @@ import model.repositories._
 import play.api.Play.current
 import play.api.libs.json.JsArray
 import play.api.libs.ws.WS
+import utils.MailService
 
 import scala.concurrent.Await
 
-class AnnotationManager (gamificationEngine: GamificationEngineTrait){
+class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailService: MailService){
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
+  val consultationRepository = new ConsultationRepository()
 
   def extractTags(input:String):Seq[String] = {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,6 +38,16 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
 
   }
 
+  def checkIfUserHasReportedComment(commentId:Long, userId:UUID): Boolean = {
+    val answer = commentsRepository.checkIfUserHasReportedComment(commentId, userId)
+    answer
+  }
+
+  def reportComment(commentId:Long, userId:UUID): Long = {
+    val answer = commentsRepository.reportComment(commentId, userId)
+    answer
+  }
+
   def saveComment(comment:Comment): Comment = {
 
     if (!comment.discussionThread.get.id.isDefined || comment.discussionThread.get.id.get <= 0) {
@@ -47,6 +59,11 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     comment.id= Some(commentsRepository.saveComment(comment, comment.discussionThread.get.id.get).get)
     awardPointsForComment(comment)
 
+    comment
+  }
+
+  def updateComment(comment:Comment): Comment = {
+    commentsRepository.saveUpdatedComment(comment)
     comment
   }
 
@@ -88,9 +105,25 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
     action_ids
   }
 
-  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean]) = {
+  def sendEmailToCommenterForLike(userId:UUID, consultationId:Long, articleId:Long, annotationId:String, commentId:Long): Unit = {
+    var linkToShowComment = ""
+    val userProfileManager = new UserProfileManager()
+    val userEmail = userProfileManager.getUserEmailById(userId)
+    if(play.Play.application().configuration().getString("application.state") == "development") {
+      linkToShowComment += "http://localhost:9000/consultation/"
+    } else {
+      linkToShowComment += "http://democracit.org/consultation/"
+    }
+    linkToShowComment += consultationId + "#articleid=" + articleId + "&annid=" + annotationId + "&commentid=" + commentId
+    MailerManager.sendEmailToCommenterForLike(userEmail, linkToShowComment)(mailService)
+  }
+
+  def rateComment(user_id:java.util.UUID, comment_id:Long, liked:Option[Boolean], commenterId:Option[UUID], annId:String, articleId:Long, consultationId:Option[Long]) = {
     if(liked != None) {
       //if the user has liked and has less than 10 likes today
+      if(liked.get && commenterId.isDefined) {
+        sendEmailToCommenterForLike(commenterId.get, consultationId.get, articleId, annId, comment_id)
+      }
       if(liked.get && howManyLikesToday(user_id) < 10) {
         gamificationEngine.rewardUser(user_id,GamificationEngineTrait.LIKE_COMMENT, comment_id)
         //if the user is disliking
@@ -108,6 +141,25 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait){
   def saveReply(articleId:Long, parentId:Long, discussionthreadclientid:Long,replyText:String, userId:UUID):Long = {
     val commentId = commentsRepository.saveCommentReply(replyText, parentId, articleId, discussionthreadclientid, userId)
     commentId
+  }
+
+  def saveFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
+    consultationRepository.saveFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    val userProfileRepository = new UserProfileRepository()
+    val userName = userProfileRepository.getUserFullNameById(userId)
+    userName
+  }
+
+  def updateFinalLawAnnotation(userId:UUID, commentId:Long, finalLawId:Long, annotationIds:List[String]):String = {
+    consultationRepository.updateFinalLawAnnotation(userId, commentId, finalLawId, annotationIds)
+    val userProfileRepository = new UserProfileRepository()
+    val userName = userProfileRepository.getUserFullNameById(userId)
+    userName
+  }
+
+  def getFinalLawAnnotationsForComment(commentId:Long, finalLawId:Long):List[FinalLawUserAnnotation] = {
+    val finalLawUserAnnotation = consultationRepository.getFinalLawAnnotationsForComment(commentId, finalLawId)
+    finalLawUserAnnotation
   }
 
   def howManyLikesToday(user_id:UUID): Int ={

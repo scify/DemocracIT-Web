@@ -15,14 +15,18 @@
             var parentId = this.props.parentId;
             var articleId = this.props.articleId;
             var discussionthreadclientid = this.props.discussionthreadclientid;
-            console.log(this.props);
             var replyText = $('textarea[name=replyTextArea' + this.props.parentId + ']').val();
+            var annotationId = this.props.annotationId;
+            console.log(this.props);
             var comment = {
                 'articleId': articleId,
                 'replyText': replyText,
                 'parentId': parentId,
                 'userId': this.props.userId,
-                'discussionthreadclientid': discussionthreadclientid
+                'discussionthreadclientid': discussionthreadclientid,
+                'commenterId': this.props.commenterId,
+                'annotationId': annotationId,
+                'consultationId': this.props.consultationId
             };
             this.saveComment('/comment/reply/save', comment);
         },

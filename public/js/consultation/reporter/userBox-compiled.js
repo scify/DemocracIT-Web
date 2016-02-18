@@ -55,7 +55,6 @@
             return promise;
         },
         render: function render() {
-
             return React.createElement(
                 "div",
                 { className: "", onClick: this.refreshComments },
@@ -66,7 +65,7 @@
                     " ",
                     this.props.user.last_name
                 ),
-                React.createElement(scify.InfoBox, { display: this.state.display, busy: this.state.busy, data: this.state.comments })
+                React.createElement(scify.InfoBox, { imagesPath: this.props.imagesPath, display: this.state.display, busy: this.state.busy, data: this.state.comments })
             );
         }
     });
@@ -83,6 +82,7 @@
             };
         },
         render: function render() {
+            var instance = this;
             if (this.props.display) {
                 if (this.props.busy) {
                     return React.createElement(
@@ -91,31 +91,35 @@
                         React.createElement(scify.ReactLoader, { display: this.props.busy })
                     );
                 }
-                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporterUserStats" });
-            } else {
-                return React.createElement("div", null);
-            }
-        }
-    });
-
-    scify.CommentsForArticle = React.createClass({
-        displayName: "CommentsForArticle",
-
-        getInitialState: function getInitialState() {
-            return {
-                display: this.props.display
-            };
-        },
-        render: function render() {
-            if (this.props.display) {
-                if (this.props.busy) {
-                    return React.createElement(
-                        "div",
-                        null,
-                        React.createElement(scify.ReactLoader, { display: this.props.busy })
-                    );
-                }
-                return React.createElement(scify.CommentList, { data: this.props.data, parent: "reporter" });
+                var commentNodes = this.props.data.map(function (commentWithArticleName) {
+                    commentWithArticleName.comment.userAnnotatedText = commentWithArticleName.article_name;
+                    //define the source as Democracit
+                    commentWithArticleName.comment.source.commentSource = 2;
+                    var comment = commentWithArticleName.comment;
+                    return React.createElement(scify.Comment, {
+                        imagesPath: instance.props.imagesPath,
+                        key: commentWithArticleName.comment.id,
+                        data: comment,
+                        shouldDisplayCommenterName: true,
+                        shouldDisplayEditIcon: false,
+                        shouldDisplayCommentEdited: true,
+                        shouldDisplayShareBtn: false,
+                        shouldDisplayCommentBody: true,
+                        shouldDisplayEmotion: true,
+                        shouldDisplayAnnotatedText: true,
+                        shouldDisplayReplyBox: false,
+                        shouldDisplayReplies: false,
+                        optionsEnabled: false,
+                        shouldDisplayTopics: true,
+                        shouldDisplayLikeDislike: true,
+                        commentClassNames: "comment",
+                        shouldDisplayFinalLawAnnBtn: false });
+                });
+                return React.createElement(
+                    "div",
+                    { className: "commentList" },
+                    commentNodes
+                );
             } else {
                 return React.createElement("div", null);
             }
