@@ -255,6 +255,15 @@ commentBox.reportCommentDone = The report has been submitted. Click "Close" to r
 commentBox.reportCommentTitle = Report comment as abusive
 commentBox.reportCommentExpl = For comments with abusive content
 commentBox.reportCommentBtn = Report
+commentBox.matchingNoAnn = Please select the final law areas that the comment appears to have influenced.
+commentBox.editMatching = Edit submission
+commentBox.matchingPrompt = click here to annotate the text
+commentBox.matching.noLaw1 = The final law for this consultation has not been uploaded by a user yet. If you want to help th lawmaker by uploading it, click
+here = here
+commentBox.commentNotMatched = This comment has not been matched with the final law yet.
+commentBox.commentNotMatchedExpl = To make an annotation, browse through the articles of the final law and select the appropriate annotation areas.
+commentBox.commentFLMatchingTitle = Final law - comment matching
+commentBox.commentFLMatchingSeeUsersTitle= Click on a user to see their annotation areas
 
 
 

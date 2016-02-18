@@ -100,7 +100,16 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
       "reportCommentTitle" ->messages("commentBox.reportCommentTitle"),
       "reportCommentExpl" ->messages("commentBox.reportCommentExpl"),
       "reportCommentBtn" ->messages("commentBox.reportCommentBtn"),
-      "closebtn" -> messages("closebtn")
+      "closebtn" -> messages("closebtn"),
+      "matchingNoAnn" -> messages("commentBox.matchingNoAnn"),
+      "editMatching" -> messages("commentBox.editMatching"),
+      "matchingPrompt" -> messages("commentBox.matchingPrompt"),
+      "matchingNoLaw1" -> messages("commentBox.matching.noLaw1"),
+      "here" -> messages("here"),
+      "commentNotMatched" -> messages("commentBox.commentNotMatched"),
+      "commentNotMatchedExpl" -> messages("commentBox.commentNotMatchedExpl"),
+      "commentFLMatchingTitle" -> messages("commentBox.commentFLMatchingTitle"),
+      "commentFLMatchingSeeUsersTitle" -> messages("commentBox.commentFLMatchingSeeUsersTitle")
     )
     Json.toJson(messageList).toString()
   }

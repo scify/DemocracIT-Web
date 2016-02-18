@@ -255,5 +255,12 @@ commentBox.reportCommentDone = Η αναφορά καταχωρήθηκε. Πα�
 commentBox.reportCommentTitle = Αναφορά σχολίου ως υβριστικό
 commentBox.reportCommentExpl = Αφορά σχόλια με υβριστικό περιεχόμενο
 commentBox.reportCommentBtn = Αναφορά
-
-
+commentBox.matchingNoAnn = Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.
+commentBox.editMatching = Τροποποίηση Καταχώρησης
+commentBox.matchingPrompt = κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο
+commentBox.matching.noLaw1 = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη. Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε
+here = εδώ
+commentBox.commentNotMatched = Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.
+commentBox.commentNotMatchedExpl = Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης.
+commentBox.commentFLMatchingTitle = Αντιστοίχηση σχολίου με τον τελικό νόμο
+commentBox.commentFLMatchingSeeUsersTitle= Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές
