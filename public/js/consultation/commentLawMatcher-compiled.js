@@ -257,7 +257,8 @@
                         { className: "noAnnotators" },
                         "Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.",
                         React.createElement("br", null),
-                        "Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης."
+                        "Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης. ",
+                        React.createElement("i", { className: "fa fa-arrow-right" })
                     );
                 }
             }
@@ -295,7 +296,8 @@
                                 optionsEnabled: false,
                                 shouldDisplayTopics: true,
                                 commentClassNames: "comment",
-                                shouldDisplayFinalLawAnnBtn: false }),
+                                shouldDisplayFinalLawAnnBtn: false,
+                                shouldDisplayReportAction: false }),
                             React.createElement(
                                 "div",
                                 { className: "annotatorBox" },
@@ -472,7 +474,7 @@
                 React.createElement(
                     "div",
                     { className: "annotatorsAreaTitle" },
-                    "Πατήστε επάνω σε κάποιον χρήση για να δείτε τις επισημειωμένες περιοχές:"
+                    "Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές:"
                 ),
                 annotatorBtns
             ) : "";

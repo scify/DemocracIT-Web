@@ -575,6 +575,22 @@ legend {
   width: 100%;
 }
 
+#reportCommentModal .modal-body {
+  height: 450px;
+  padding: 30px;
+}
+
+#reportCommentModal .container {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#reportCommentModal .modal-dialog {
+  width: 50%;
+  top: 20px;
+}
+
 #finalLawCommentModal #finalLawAnnDiv .stats {
   display: none;
 }
@@ -623,6 +639,10 @@ legend {
   text-align: center;
 }
 
+#reportCommentModal .saveBtnContainer {
+  text-align: center;
+}
+
 .annotatorBtn {
   margin-right: 10px;
 }
@@ -640,6 +660,7 @@ legend {
 }
 .noAnnotators {
   margin-top: 30px;
+  font-weight: bold;
 }
 .annotatorBtnContainer .annotatorsAreaTitle {
   margin-bottom: 10px;
@@ -666,4 +687,58 @@ legend {
 
 #wordCloudChart svg {
   width:100%;
+}
+
+.comment .optionsRight {
+  width: 220px;
+  float: right;
+}
+
+.comment .optionsRight .reportAction {
+  float: left;
+  text-decoration: underline;
+  color:darkred;
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.comment .optionsRight .reportAction:hover {
+  cursor: pointer;
+}
+
+.reportCommentMsg {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#saveCommentReport {
+  background-color: darkred;
+}
+
+#reportCommentModal .modal-header {
+  padding-bottom: 40px;
+}
+
+#reportCommentModal .modal-title {
+  float:left;
+}
+
+.loadMoreBtn {
+  color: #337ab7;
+  margin-top: 15px;
+  float: left;
+}
+
+.loadMoreBtn:hover {
+  cursor: pointer;
+}
+
+.loadMoreBtn i {
+  font-size: 20px;
+  padding-left: 5px;
+}
+
+.loadMoreBtn .loadMoreIcon {
+  float: right;
+  margin-top: -4px;
 }

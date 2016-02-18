@@ -161,9 +161,6 @@
                     instance.setState(instance.state);
                 },
                 success : function(comment){
-                    /*console.log(instance.state);
-                    console.log(instance.props);
-                    console.log(comment);*/
                     if (instance.commentsLoadedFromServer())
                     {
                         //search for the old comment in the comments array
@@ -270,7 +267,8 @@
                             shouldDisplayTopics={this.props.shouldDisplayTopics}
                             commentClassNames={this.props.commentClassNames}
                             shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
-                            shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}/>
+                            shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
+                            shouldDisplayReportAction={this.props.shouldDisplayReportAction}/>
                     </div>
                 </div>
 
@@ -335,7 +333,8 @@
                                    shouldDisplayTopics={instance.props.shouldDisplayTopics}
                                    commentClassNames={instance.props.commentClassNames}
                                    shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}
-                                   shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}/>
+                                   shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}
+                                   shouldDisplayReportAction={instance.props.shouldDisplayReportAction}/>
 
                     </div>
                 );
@@ -361,12 +360,13 @@
                 if(this.props.data.commentReplies.length > 1)
                     sortByKey(this.props.data.commentReplies, 'dateAdded');
             return {
-                        likeCounter: this.props.data.likesCounter,
-                        dislikeCounter: this.props.data.dislikesCounter,
-                        liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
-                        comment: this.props.data,
-                        displayReplyBox: false
-                    };
+                likeCounter: this.props.data.likesCounter,
+                dislikeCounter: this.props.data.dislikesCounter,
+                liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                comment: this.props.data,
+                displayReplyBox: false,
+                displayReportModal:false
+            };
         },
         componentDidMount : function(){
             var instance = this;
@@ -376,7 +376,6 @@
             }
 
             $("#shareComment-" + instance.props.data.id).click(function() {
-                console.log("#shareComment-" + instance.props.data.id);
                 var commentId = $(this).attr('id').split('-')[1];
                 var annotationId = instance.props.annotationId;
                 //if annotationId is undefined, we are in reporter page, so we cannot get the annId from the DOM.
@@ -432,7 +431,10 @@
                         {this.renderCommenterName(this.props.shouldDisplayCommenterName)}
                         {this.renderEditIcon(this.props.shouldDisplayEditIcon)}
                         {this.renderCommentEdited(this.props.shouldDisplayCommentEdited)}
-                        {this.renderShareBtn(this.props.shouldDisplayShareBtn)}
+                        <div className="optionsRight">
+                            {this.renderReportAction(this.props.shouldDisplayReportAction)}
+                            {this.renderShareBtn(this.props.shouldDisplayShareBtn)}
+                        </div>
                         {this.renderCommentBody(this.props.shouldDisplayCommentBody)}
                         {this.renderEmotion(this.props.shouldDisplayEmotion)}
                         {this.renderAnnotatedText(this.props.shouldDisplayAnnotatedText)}
@@ -638,7 +640,7 @@
                         dateAdded={this.props.data.dateAdded}
                         likeCounter={this.props.data.likesCounter}
                         dislikeCounter={this.props.data.dislikesCounter}
-                        loggedInUserRating={this.props.loggedInUserRating}
+                        loggedInUserRating={this.props.data.loggedInUserRating}
                         emotionId={this.props.data.emotionId}
                         imagesPath={this.props.imagesPath}
                         consultationId={this.props.consultationId}
@@ -653,10 +655,24 @@
                                         dateAdded={this.props.data.dateAdded}
                                         likeCounter={this.props.data.likesCounter}
                                         dislikeCounter={this.props.data.dislikesCounter}
-                                        loggedInUserRating={this.props.loggedInUserRating}
+                                        loggedInUserRating={this.props.data.loggedInUserRating}
                                         emotionId={this.props.data.emotionId}
                                         shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
                 />
+            );
+        },
+        renderReportAction: function(shouldDisplayReportAction){
+            var reportBtn = <span></span>;
+            if(shouldDisplayReportAction)
+                reportBtn = <span className="reportAction" onClick={this.openReportModal}>Αναφορά σχολίου ως υβριστικό</span>
+            return(reportBtn);
+        },
+        openReportModal: function() {
+            $("body").trigger("report-comment",{
+                    comment: this.props.data,
+                    imagesPath: this.props.imagesPath,
+                    endDate: this.props.consultationEndDate
+                }
             );
         }
     });
@@ -666,10 +682,11 @@
             return {
                 likeCounter: this.props.likeCounter,
                 dislikeCounter: this.props.dislikeCounter,
-                liked : this.props.loggedInUserRating,  //if not null it means has liked/disliked this comment
+                liked : this.props.comment.loggedInUserRating,  //if not null it means has liked/disliked this comment
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
-                finalLawBusy:true
+                finalLawBusy:true,
+                reportCommentBusy:true
             };
         },
         postRateCommentAndRefresh: function(){
@@ -699,7 +716,8 @@
                     return 1;
                 },
                 complete: function(){
-                    instance.setState(instance.state);
+                    if(instance.props.userDefined)
+                        instance.setState(instance.state);
                 },
                 error:function(err){ console.log(err)}
             });
@@ -707,17 +725,18 @@
 
         },
         handleLikeComment :function(){ //user pressed the liked button
+            //console.log(this.props);
             var oldLikeStatus =this.state.liked;
             var newLikeStatus=true;
 
-            if (oldLikeStatus ===true) { //if comment was already liked, undo it
+            if (oldLikeStatus ===true && this.props.userDefined) { //if comment was already liked, undo it
                 newLikeStatus=null;
                 this.state.likeCounter = this.state.likeCounter -1;
             }
-            if (oldLikeStatus ===false) //comment was disliked and now it was liked, remove it from counter
+            if (oldLikeStatus ===false && this.props.userDefined) //comment was disliked and now it was liked, remove it from counter
                 this.state.dislikeCounter= this.state.dislikeCounter-1;
 
-            if (newLikeStatus===true)
+            if (newLikeStatus===true && this.props.userDefined)
                 this.state.likeCounter = this.state.likeCounter + 1;
 
             this.state.liked= newLikeStatus;
@@ -726,15 +745,15 @@
         handleDislikeComment:function(){ //user pressed the dislike button
             var oldLikeStatus =this.state.liked;
             var newLikeStatus=false;
-
-            if (oldLikeStatus ===false) { //if comment was already disliked, undo it
+            console.log(this.props.userDefined);
+            if (oldLikeStatus ===false && this.props.userDefined) { //if comment was already disliked, undo it
                 newLikeStatus=null;
                 this.state.dislikeCounter = this.state.dislikeCounter  -1;
             }
-            if (oldLikeStatus ===true) //comment was liked and now it was disliked, remove it from counter
+            if (oldLikeStatus ===true && this.props.userDefined) //comment was liked and now it was disliked, remove it from counter
                 this.state.likeCounter= this.state.likeCounter-1;
 
-            if (newLikeStatus===false)
+            if (newLikeStatus===false && this.props.userDefined)
                 this.state.dislikeCounter = this.state.dislikeCounter + 1
 
             this.state.liked= newLikeStatus;
@@ -785,8 +804,7 @@
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,
-                dislikeCounter: this.props.dislikeCounter,
-                liked : this.props.loggedInUserRating  //if not null it means has liked/disliked this comment
+                dislikeCounter: this.props.dislikeCounter
             };
         },
         render: function() {

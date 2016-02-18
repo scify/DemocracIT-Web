@@ -165,7 +165,8 @@
                         optionsEnabled={this.props.optionsEnabled}
                         shouldDisplayTopics={this.props.shouldDisplayTopics}
                         commentClassNames={this.props.commentClassNames}
-                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
+                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
+                        shouldDisplayReportAction={this.props.shouldDisplayReportAction}/>
                 );
             } else {
                 return (

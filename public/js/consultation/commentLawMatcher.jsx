@@ -250,7 +250,7 @@
                     annotatorBox =
                         <div className="noAnnotators">Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.<br></br>
                             Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες
-                            περιοχές αντιστοίχησης.</div>;
+                            περιοχές αντιστοίχησης. <i className="fa fa-arrow-right"></i></div>;
                 }
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
@@ -279,7 +279,8 @@
                                     optionsEnabled={false}
                                     shouldDisplayTopics={true}
                                     commentClassNames="comment"
-                                    shouldDisplayFinalLawAnnBtn={false}/>
+                                    shouldDisplayFinalLawAnnBtn={false}
+                                    shouldDisplayReportAction={false}/>
                                 <div className="annotatorBox">
                                     {annotatorBox}
                                 </div>
@@ -395,7 +396,7 @@
             });
             var annotatorBtnContainer = this.state.annotators.length > 0 ?
                 <div id={"annotatorBtnContainer_" + this.state.commentId} className="annotatorBtnContainer">
-                    <div className="annotatorsAreaTitle">Πατήστε επάνω σε κάποιον χρήση για να δείτε τις επισημειωμένες περιοχές:</div>
+                    <div className="annotatorsAreaTitle">Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές:</div>
                     {annotatorBtns}
                 </div>:"";
             return (annotatorBtnContainer);

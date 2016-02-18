@@ -22,6 +22,11 @@ class EvaluationController @Inject()  (val messagesApi: MessagesApi,
     Ok(views.html.evaluation(evaluationManager.get(request.identity)))
   }
 
+  def getConsFinalLawStats() = UserAwareAction { implicit request =>
+    val consFinalLawStats = evaluationManager.getConsFinalLawStats()
+    Ok(Json.toJson(consFinalLawStats))
+  }
+
   def getEvaluationPerOrganization() = UserAwareAction { implicit request =>
     val frequencies = evaluationManager.getEvaluationPerOrganization()
     Ok(Json.toJson(frequencies))

@@ -154,6 +154,20 @@ class AnnotationController @Inject() (val messagesApi: MessagesApi,
     Ok(Json.toJson(finalLawAnnotationId))
   }
 
+  def checkIfUserHasReportedComment(commentId:Long) = SecuredAction { implicit request =>
+    val userId = request.identity.userID
+    val answer = annotationManager.checkIfUserHasReportedComment(commentId, userId);
+    Ok(Json.toJson(answer))
+  }
+
+  def reportComment() = SecuredAction { implicit request =>
+    val parameterList = Json.parse(request.body.asJson.get.toString)
+    val userId = request.identity.userID
+    val commentId = (parameterList \ "commentId").asOpt[Long].get
+    val reportId = annotationManager.reportComment(commentId, userId);
+    Ok(Json.toJson(reportId))
+  }
+
   def updateFinalLawAnnotation() = SecuredAction { implicit request =>
     val parameterList = Json.parse(request.body.asJson.get.toString)
     val userId = request.identity.userID

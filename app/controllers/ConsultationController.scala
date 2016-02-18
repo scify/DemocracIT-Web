@@ -108,7 +108,9 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
           fileContentFinal += line
       }
     }
-    fileContentFinal += "</div></div></div></div></div>"
+    //if isFirstArticle is true, it means that the file is in icorrect format. So we dont need to close any divs.
+    if(!isFirstArticle)
+      fileContentFinal += "</div></div></div></div></div>"
     fileContentFinal
   }
 

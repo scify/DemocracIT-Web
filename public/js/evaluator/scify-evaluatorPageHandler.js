@@ -111,6 +111,15 @@ scify.EvaluatorPageHandler.prototype = function(){
         }
         loadConsCommPerOrganization();
     },
+    createConsFinalLawStatsDiv = function() {
+        var domElementConsFinalLawStats = document.getElementById("finalLawComparisonChart");
+        if (domElementConsFinalLawStats) {
+            window.ConsFinalLawStatsComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFinalLawStats);
+        } else {
+            console.log('finalLawComparisonChart div does not exist');
+        }
+        loadConsFinalLawStats();
+    },
     loadConsFrequencyPerOrganization = function() {
         window.ConsFreqPerOrganizationComponent.getFrequencyPerOrganization();
     },
@@ -122,8 +131,11 @@ scify.EvaluatorPageHandler.prototype = function(){
     },
     loadConsCommPerOrganization = function() {
         window.ConsCommPerOrganizationComponent.getConsCommPerOrganization();
-    }
-    var init = function() {
+    },
+    loadConsFinalLawStats = function() {
+        window.ConsFinalLawStatsComponent.getConsFinalLawStats();
+    },
+    init = function() {
         var instance = this;
         if(this.consultationsPerMonth.length > 0) {
             var numRows = this.consultationsPerMonth.length;
@@ -183,6 +195,7 @@ scify.EvaluatorPageHandler.prototype = function(){
         createConsDurationPerOrganizationDiv();
         createConsDurationDiv();
         createConsCommPerOrganizationDiv();
+        createConsFinalLawStatsDiv();
         fbq('track', 'InitiateCheckout');
     }
     return {
