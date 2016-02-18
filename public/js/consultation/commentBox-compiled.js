@@ -225,13 +225,15 @@
                     React.createElement(
                         "div",
                         { className: loadAllClasses },
-                        "βλέπετε τα ",
+                        this.state.messages.seeLabel,
+                        " ",
                         this.state.comments.length,
-                        " πιο δημοφιλη σχόλια ",
+                        " ",
+                        this.state.messages.mostPopularComments,
                         React.createElement(
                             "a",
                             { onClick: this.loadAll },
-                            "κλικ εδώ για να τα δείτε όλα"
+                            this.state.messages.seeAllComments
                         )
                     ),
                     React.createElement(scify.CommentList, {

@@ -30,22 +30,9 @@ scify.ConsultationIndexPageHandler = function( consultationid,
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
     }
-    console.log(generalMessages);
-    this.messages = {youCannotVoteFLMsg: generalMessages[0],
-        deleteFLPrompt: generalMessages[1],
-        uploadFLmsg: generalMessages[2],
-        uploadFLWrongFile: generalMessages[3],
-        uploadFLLoadingMsg: generalMessages[4]
-    };
-    this.commentBoxMessages = {
-        commentsLabel: commentBoxMessages[0],
-        commentLabel: commentBoxMessages[1],
-        commentsForArticle: commentBoxMessages[2],
-        commentsForText: commentBoxMessages[3],
-        commentsFromOpengov: commentBoxMessages[4],
-        mostPopularComments : commentBoxMessages[5],
-        seeAllComments: commentBoxMessages[6]
-    };
+    console.log(commentBoxMessages);
+    this.messages = generalMessages;
+    this.commentBoxMessages = commentBoxMessages;
     this.relevantLaws = [];
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}

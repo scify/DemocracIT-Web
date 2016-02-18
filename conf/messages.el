@@ -228,6 +228,7 @@ commentBox.commentsForText = για το τμήμα κειμένου
 commentBox.commentsFromOpengov = απο το opengov
 commentBox.mostPopularComments = πιο δημοφιλη σχόλια
 commentBox.seeAllComments = κλικ εδώ για να τα δείτε όλα
+commentBox.seeLabel = βλέπετε τα
 
 
 

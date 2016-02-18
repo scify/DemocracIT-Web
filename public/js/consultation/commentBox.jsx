@@ -242,7 +242,8 @@
                                         messages={this.state.messages}/>
                     <div className={commendBoxclasses }>
                         <div className={loadAllClasses} >
-                            βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
+                            {this.state.messages.seeLabel} { this.state.comments.length } {this.state.messages.mostPopularComments}
+                            <a onClick={this.loadAll}>{this.state.messages.seeAllComments}</a>
                         </div>
                         <scify.CommentList
                             consultationEndDate={this.props.consultationEndDate}

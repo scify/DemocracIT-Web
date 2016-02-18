@@ -51,23 +51,25 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 
 
   def getGeneralMessages(messages: Messages):String = {
-    val messageList:List[String] = List(messages("youCannotVoteFLMsg"),
-      messages("deleteFLPrompt"),
-      messages("uploadFLmsg"),
-      messages("uploadFLWrongFile"),
-      messages("uploadFLLoadingMsg")
+    val messageList:Map[String,String] = Map("youCannotVoteFLMsg" -> messages("youCannotVoteFLMsg"),
+      "deleteFLPrompt" -> messages("deleteFLPrompt"),
+      "uploadFLmsg" -> messages("uploadFLmsg"),
+      "uploadFLWrongFile" -> messages("uploadFLWrongFile"),
+      "uploadFLLoadingMsg" ->messages("uploadFLLoadingMsg")
     )
     Json.toJson(messageList).toString()
   }
 
   def getCommentBoxMessages(messages: Messages):String = {
-    val messageList:List[String] = List(messages("commentBox.comments"),
-      messages("commentBox.comment"),
-      messages("commentBox.commentsForArticle"),
-      messages("commentBox.commentsForText"),
-      messages("commentBox.commentsFromOpengov"),
-      messages("commentBox.mostPopularComments"),
-      messages("commentBox.seeAllComments")
+    val messageList:Map[String,String] = Map(
+      "commentsLabel" -> messages("commentBox.comments"),
+      "commentLabel" -> messages("commentBox.comment"),
+      "commentsForArticle" -> messages("commentBox.commentsForArticle"),
+      "commentsForText" -> messages("commentBox.commentsForText"),
+      "commentsFromOpengov" -> messages("commentBox.commentsFromOpengov"),
+      "mostPopularComments" -> messages("commentBox.mostPopularComments"),
+      "seeAllComments" -> messages("commentBox.seeAllComments"),
+      "seeLabel" -> messages("commentBox.seeLabel")
     )
     Json.toJson(messageList).toString()
   }
