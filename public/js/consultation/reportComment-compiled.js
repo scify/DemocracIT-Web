@@ -8,11 +8,13 @@
         getInitialState: function getInitialState() {
             return {
                 comment: this.props.comment,
-                display: false
+                display: false,
+                messages: this.props.messages
             };
         },
         //function to display the whole React class
         display: function display(data) {
+            var instance = this;
             this.state.comment = data.comment;
             this.state.display = true;
             this.state.busy = true;
@@ -23,12 +25,7 @@
                 this.state.message = React.createElement(
                     "div",
                     null,
-                    "Για αυτή την ενέργεια χρειάζεται να είστε ",
-                    React.createElement(
-                        "a",
-                        { href: "/signIn?returnUrl=@request.uri" },
-                        "συνδεδεμένοι"
-                    )
+                    instance.state.messages.notlogedintext
                 );
             } else {
                 //check if the logged in user has already reported this comment
@@ -50,10 +47,10 @@
                 success: function success(data) {
                     if (data == false) {
                         instance.state.shouldDisplaySubmitBtn = true;
-                        instance.state.message = "Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε \"Αναφορά\":";
+                        instance.state.message = instance.state.messages.reportCommentPrompt;
                     } else {
                         instance.state.shouldDisplaySubmitBtn = false;
-                        instance.state.message = "Έχετε ήδη αναφέρει αυτό το σχόλιο ως υβριστικό";
+                        instance.state.message = instance.state.messages.reportCommentAlready;
                     }
                     instance.setState(instance.state);
                 },
@@ -77,7 +74,7 @@
                 },
                 success: function success(data) {
                     instance.state.shouldDisplaySubmitBtn = false;
-                    instance.state.message = "Η αναφορά καταχωρήθηκε. Πατήστε \"Κλείσιμο\" για να επιστρέψετε στην προηγούμενη σελίδα.";
+                    instance.state.message = instance.state.messages.reportCommentDone;
                     instance.setState(instance.state);
                 },
                 complete: function complete() {
@@ -106,7 +103,7 @@
             if (this.state.shouldDisplaySubmitBtn && this.props.userId != undefined) var submitBtn = React.createElement(
                 "button",
                 { id: "saveCommentReport", className: "btn blue", onClick: this.reportComment },
-                "Αναφορά"
+                this.state.messages.reportCommentBtn
             );
 
             return React.createElement(
@@ -125,8 +122,10 @@
                             React.createElement(
                                 "h4",
                                 { className: "modal-title" },
-                                "Αναφορά σχολίου ως υβριστικό ",
-                                React.createElement("i", { className: "fa fa-question-circle", title: "Αφορά σχόλια με υβριστικό περιεχόμενο" })
+                                this.state.messages.reportCommentTitle,
+                                " ",
+                                React.createElement("i", { className: "fa fa-question-circle",
+                                    title: this.state.messages.reportCommentExpl })
                             ),
                             React.createElement(
                                 "button",
@@ -157,7 +156,8 @@
                                     shouldDisplayTopics: true,
                                     commentClassNames: "comment",
                                     shouldDisplayFinalLawAnnBtn: false,
-                                    shouldDisplayReportAction: false })
+                                    shouldDisplayReportAction: false,
+                                    messages: this.state.messages })
                             ),
                             innerContent
                         ),
@@ -172,7 +172,7 @@
                             React.createElement(
                                 "button",
                                 { type: "button", className: "btn btn-default", onClick: this.closeModal },
-                                "Κλείσιμο"
+                                this.state.messages.closebtn
                             )
                         )
                     )

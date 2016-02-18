@@ -249,6 +249,11 @@ commentBox.dislike = Διαφωνώ
 date = Ημερομηνία
 commentBox.likeUsers = Χρήστες που συμφωνούν
 commentBox.dislikeUsers = Χρήστες που διαφωνούν
-
+commentBox.reportCommentPrompt = Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε "Αναφορά":
+commentBox.reportCommentAlready = Έχετε ήδη αναφέρει αυτό το σχόλιο ως υβριστικό
+commentBox.reportCommentDone = Η αναφορά καταχωρήθηκε. Πατήστε "Κλείσιμο" για να επιστρέψετε στην προηγούμενη σελίδα.
+commentBox.reportCommentTitle = Αναφορά σχολίου ως υβριστικό
+commentBox.reportCommentExpl = Αφορά σχόλια με υβριστικό περιεχόμενο
+commentBox.reportCommentBtn = Αναφορά
 
 

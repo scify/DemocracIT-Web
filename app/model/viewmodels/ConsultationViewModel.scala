@@ -93,7 +93,14 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
       "annPlaceholder" -> messages("annotation.comment.leavetext.placeholder"),
       "submitbtn" -> messages("submitbtn"),
       "signInTitle" -> messages("sign.in.title"),
-      "notlogedintext" ->messages("notlogedintext", "<a href=\"/signIn\">", "</a>")
+      "notlogedintext" ->messages("notlogedintext", "<a href=\"/signIn\">", "</a>"),
+      "reportCommentPrompt" ->messages("commentBox.reportCommentPrompt"),
+      "reportCommentAlready" ->messages("commentBox.reportCommentAlready"),
+      "reportCommentDone" ->messages("commentBox.reportCommentDone"),
+      "reportCommentTitle" ->messages("commentBox.reportCommentTitle"),
+      "reportCommentExpl" ->messages("commentBox.reportCommentExpl"),
+      "reportCommentBtn" ->messages("commentBox.reportCommentBtn"),
+      "closebtn" -> messages("closebtn")
     )
     Json.toJson(messageList).toString()
   }

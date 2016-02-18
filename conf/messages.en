@@ -249,7 +249,12 @@ commentBox.dislike = Disagree
 date = Date
 commentBox.likeUsers = Users that agree
 commentBox.dislikeUsers = Users that disagree
-
+commentBox.reportCommentPrompt = If you are sure that this comment is abusive, click "Report":
+commentBox.reportCommentAlready = You have already reported this comment as abusive
+commentBox.reportCommentDone = The report has been submitted. Click "Close" to return to the previous page.
+commentBox.reportCommentTitle = Report comment as abusive
+commentBox.reportCommentExpl = For comments with abusive content
+commentBox.reportCommentBtn = Report
 
 
 

@@ -554,7 +554,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 comment:data.comment,
                 imagesPath: this.imagesPath,
                 userId: this.userId,
-                shouldDisplaySubmitBtn: true
+                shouldDisplaySubmitBtn: true,
+                messages: this.commentBoxMessages
             }), document.getElementById("reportComment"));
         }
         this.reportCommentDiv.display(data);
