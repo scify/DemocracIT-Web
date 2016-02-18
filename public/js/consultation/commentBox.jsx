@@ -7,7 +7,8 @@
                      allComments: [], //in case we display a subset of comments, this array contains all the comments
                      topComments:[], //contains the top comments, the one with the most likes
                      discussionThreadId: this.props.discussionthreadid,
-                totalCommentsCount: this.props.commentsCount
+                totalCommentsCount: this.props.commentsCount,
+                messages: this.props.messages
             };
         },
         findTopComments : function(comments){
@@ -237,7 +238,8 @@
                     <TotalCommentsLink onClick={this.refreshComments}
                                        count={this.state.totalCommentsCount}
                                        source={this.props.source}
-                                       isdiscussionForTheWholeArticle={this.props.isdiscussionForTheWholeArticle} />
+                                       isdiscussionForTheWholeArticle={this.props.isdiscussionForTheWholeArticle}
+                                        messages={this.state.messages}/>
                     <div className={commendBoxclasses }>
                         <div className={loadAllClasses} >
                             βλέπετε τα { this.state.comments.length } πιο δημοφιλη σχόλια <a onClick={this.loadAll}>κλικ εδώ για να τα δείτε όλα</a>
@@ -278,25 +280,25 @@
     var TotalCommentsLink = React.createClass({
         render : function(){
 
-            var label = "σχόλια";
+            var label = this.props.messages.commentsLabel;
             if (this.props.count==1)
-                label="σχόλιο";
+                label=this.props.messages.commentLabel;
 
 
             if (this.props.source && this.props.source =="opengov")
-                label +=" απο το opengov ";
+                label +=" " + this.props.messages.commentsFromOpengov + " ";
 
             if (this.props.isdiscussionForTheWholeArticle)
-                label +=" για ολόκληρο το άρθρο";
+                label +=" " + this.props.messages.commentsForArticle;
             else
-                label +=" για το τμήμα κειμένου";
+                label +=" " + this.props.messages.commentsForText;
 
             if (this.props.count>0)
                 return (
                     <a className="load" onClick={this.props.onClick}>{this.props.count} {label} </a>
-                )
+                );
             else //todo: how can i return an empty element?
-                return (<span></span>)
+                return (<span></span>);
         }
     });
 

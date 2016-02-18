@@ -221,8 +221,13 @@ deleteFLPrompt = Είστε σίγουροι για τη διαγραφή;
 uploadFLmsg = Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt)
 uploadFLWrongFile = Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \\nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο
 uploadFLLoadingMsg = Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα...
-
-
+commentBox.comments = σχόλια
+commentBox.comment = σχόλιο
+commentBox.commentsForArticle = για ολόκληρο το άρθρο
+commentBox.commentsForText = για το τμήμα κειμένου
+commentBox.commentsFromOpengov = απο το opengov
+commentBox.mostPopularComments = πιο δημοφιλη σχόλια
+commentBox.seeAllComments = κλικ εδώ για να τα δείτε όλα
 
 
 

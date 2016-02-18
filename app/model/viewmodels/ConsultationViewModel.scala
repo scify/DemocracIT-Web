@@ -2,6 +2,7 @@ package model.viewmodels
 
 import model.dtos._
 import org.apache.commons.lang3.StringUtils
+import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.ImplicitReadWrites._
 
@@ -48,6 +49,28 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
 
   }
 
+
+  def getGeneralMessages(messages: Messages):String = {
+    val messageList:List[String] = List(messages("youCannotVoteFLMsg"),
+      messages("deleteFLPrompt"),
+      messages("uploadFLmsg"),
+      messages("uploadFLWrongFile"),
+      messages("uploadFLLoadingMsg")
+    )
+    Json.toJson(messageList).toString()
+  }
+
+  def getCommentBoxMessages(messages: Messages):String = {
+    val messageList:List[String] = List(messages("commentBox.comments"),
+      messages("commentBox.comment"),
+      messages("commentBox.commentsForArticle"),
+      messages("commentBox.commentsForText"),
+      messages("commentBox.commentsFromOpengov"),
+      messages("commentBox.mostPopularComments"),
+      messages("commentBox.seeAllComments")
+    )
+    Json.toJson(messageList).toString()
+  }
 
   def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
 

@@ -26,11 +26,8 @@
     <script>
      $(function(){
          var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
-                 '@messages("youCannotVoteFLMsg")',
-                 '@messages("deleteFLPrompt")',
-                 '@messages("uploadFLmsg")',
-                 '@messages("uploadFLWrongFile")',
-                 '@messages("uploadFLLoadingMsg")',
+                 @Html(vm.getGeneralMessages(messages)),
+                 @Html(vm.getCommentBoxMessages(messages)),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
                  @Html(vm.ratingUsersToJson()),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',

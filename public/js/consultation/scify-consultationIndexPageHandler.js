@@ -1,9 +1,7 @@
 
-scify.ConsultationIndexPageHandler = function( consultationid, youCannotVoteFLMsg,
-                                               deleteFLPrompt,
-                                               uploadFLmsg,
-                                               uploadFLWrongFile,
-                                               uploadFLLoadingMsg,
+scify.ConsultationIndexPageHandler = function( consultationid,
+                                               generalMessages,
+                                               commentBoxMessages,
                                                finalLawId,
                                                ratingUsers,
                                                finalLawUserId,
@@ -32,11 +30,21 @@ scify.ConsultationIndexPageHandler = function( consultationid, youCannotVoteFLMs
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
     }
-    this.messages = {youCannotVoteFLMsg: youCannotVoteFLMsg,
-        deleteFLPrompt: deleteFLPrompt,
-        uploadFLmsg: uploadFLmsg,
-        uploadFLWrongFile: uploadFLWrongFile,
-        uploadFLLoadingMsg: uploadFLLoadingMsg
+    console.log(generalMessages);
+    this.messages = {youCannotVoteFLMsg: generalMessages[0],
+        deleteFLPrompt: generalMessages[1],
+        uploadFLmsg: generalMessages[2],
+        uploadFLWrongFile: generalMessages[3],
+        uploadFLLoadingMsg: generalMessages[4]
+    };
+    this.commentBoxMessages = {
+        commentsLabel: commentBoxMessages[0],
+        commentLabel: commentBoxMessages[1],
+        commentsForArticle: commentBoxMessages[2],
+        commentsForText: commentBoxMessages[3],
+        commentsFromOpengov: commentBoxMessages[4],
+        mostPopularComments : commentBoxMessages[5],
+        seeAllComments: commentBoxMessages[6]
     };
     this.relevantLaws = [];
     for (var i=0; i<relevantLaws.length; i++) {
@@ -102,7 +110,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 shouldDisplayTopics:false,
                 shouldDisplayFinalLawAnnBtn:false,
                 shouldDisplayLikeDislike:false,
-                commentClassNames:"comment"
+                commentClassNames:"comment",
+                messages: instance.commentBoxMessages
             };
 
             //define function to use after the comment has loaded

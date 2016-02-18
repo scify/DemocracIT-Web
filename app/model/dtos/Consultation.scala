@@ -1,6 +1,5 @@
 package model.dtos
 
-
 import java.util.concurrent.TimeUnit
 import java.util.{Calendar, Date, Locale}
 

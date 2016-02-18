@@ -221,4 +221,10 @@ deleteFLPrompt = Are you sure?
 uploadFLmsg = Drag here the file you would like to upload, or click in the box. (Accepted file types: .pdf, .txt)
 uploadFLWrongFile = Wrong file type. Accepted file types: .pdf, .txt \\nPlease click on the box to upload another file.
 uploadFLLoadingMsg = Please wait. The uploading process may take some seconds...
-
+commentBox.comments = comments
+commentBox.comment = comment
+commentBox.commentsForArticle = on the whole article
+commentBox.commentsForText = on this text
+commentBox.commentsFromOpengov = from opengov
+commentBox.mostPopularComments = most popular comments
+commentBox.seeAllComments = click here to see all comments

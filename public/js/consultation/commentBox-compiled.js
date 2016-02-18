@@ -10,7 +10,8 @@
                 allComments: [], //in case we display a subset of comments, this array contains all the comments
                 topComments: [], //contains the top comments, the one with the most likes
                 discussionThreadId: this.props.discussionthreadid,
-                totalCommentsCount: this.props.commentsCount
+                totalCommentsCount: this.props.commentsCount,
+                messages: this.props.messages
             };
         },
         findTopComments: function findTopComments(comments) {
@@ -216,7 +217,8 @@
                 React.createElement(TotalCommentsLink, { onClick: this.refreshComments,
                     count: this.state.totalCommentsCount,
                     source: this.props.source,
-                    isdiscussionForTheWholeArticle: this.props.isdiscussionForTheWholeArticle }),
+                    isdiscussionForTheWholeArticle: this.props.isdiscussionForTheWholeArticle,
+                    messages: this.state.messages }),
                 React.createElement(
                     "div",
                     { className: commendBoxclasses },
@@ -268,12 +270,12 @@
 
         render: function render() {
 
-            var label = "σχόλια";
-            if (this.props.count == 1) label = "σχόλιο";
+            var label = this.props.messages.commentsLabel;
+            if (this.props.count == 1) label = this.props.messages.commentLabel;
 
-            if (this.props.source && this.props.source == "opengov") label += " απο το opengov ";
+            if (this.props.source && this.props.source == "opengov") label += " " + this.props.messages.commentsFromOpengov + " ";
 
-            if (this.props.isdiscussionForTheWholeArticle) label += " για ολόκληρο το άρθρο";else label += " για το τμήμα κειμένου";
+            if (this.props.isdiscussionForTheWholeArticle) label += " " + this.props.messages.commentsForArticle;else label += " " + this.props.messages.commentsForText;
 
             if (this.props.count > 0) return React.createElement(
                 "a",
