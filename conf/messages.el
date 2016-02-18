@@ -289,6 +289,7 @@ consultations.search.to = εως
 consultations.search.records = εγγραφές
 consultations.search.sortedBy = (φιλτραρισμένες από
 consultations.search.totalRecords = συνολικά εγγραφές)
+consultation.linkToOpenGov = η διαβούλευση στο opengov.gr
 
 
 
