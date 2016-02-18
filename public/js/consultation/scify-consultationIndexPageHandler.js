@@ -30,7 +30,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
     }
-    console.log(commentBoxMessages);
     this.messages = generalMessages;
     this.commentBoxMessages = commentBoxMessages;
     this.relevantLaws = [];
@@ -43,7 +42,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,
     this.tutorialAnnotator = null;
     this.imagesPath = imagesPath;
     this.commentWithLawMatcher = null; //represents a react component used to match a comment with the final law
-    console.log(this.messages);
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 

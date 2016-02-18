@@ -69,7 +69,27 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
       "commentsFromOpengov" -> messages("commentBox.commentsFromOpengov"),
       "mostPopularComments" -> messages("commentBox.mostPopularComments"),
       "seeAllComments" -> messages("commentBox.seeAllComments"),
-      "seeLabel" -> messages("commentBox.seeLabel")
+      "seeLabel" -> messages("commentBox.seeLabel"),
+      "commentAfterConsEnd" -> messages("commentBox.commentAfterConsEnd"),
+      "topics" -> messages("commentBox.topics"),
+      "problems" -> messages("commentBox.problems"),
+      "category" -> messages("commentBox.category"),
+      "copyLink" -> messages("consultation.index.copylink"),
+      "userHasEdited" -> messages("commentBox.userHasEdited"),
+      "userEditPrompt" -> messages("commentBox.userEditPrompt"),
+      "link" -> messages("commentBox.commentLink"),
+      "commentLabelCapital" -> messages("commentBox.commentCapital"),
+      "textPart" -> messages("commentBox.textPart"),
+      "articleName" -> messages("commentBox.articleName"),
+      "userEmotionLabel" -> messages("commentBox.userEmotionLabel"),
+      "repliesLabel" -> messages("commentBox.repliesLabel"),
+      "reportLabel" -> messages("commentBox.reportLabel"),
+      "reply" -> messages("commentBox.reply"),
+      "commentFLMatching" -> messages("commentBox.commentFLMatching"),
+      "like" -> messages("commentBox.like"),
+      "dislike" -> messages("commentBox.dislike"),
+      "likeUsers" -> messages("commentBox.likeUsers"),
+      "dislikeUsers" -> messages("commentBox.dislikeUsers")
     )
     Json.toJson(messageList).toString()
   }

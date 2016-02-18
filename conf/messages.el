@@ -223,14 +223,32 @@ uploadFLWrongFile = Μη αποδεκτός τύπος αρχείου. Αποδ�
 uploadFLLoadingMsg = Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα...
 commentBox.comments = σχόλια
 commentBox.comment = σχόλιο
+commentBox.commentCapital = Σχόλιο
 commentBox.commentsForArticle = για ολόκληρο το άρθρο
 commentBox.commentsForText = για το τμήμα κειμένου
 commentBox.commentsFromOpengov = απο το opengov
 commentBox.mostPopularComments = πιο δημοφιλη σχόλια
 commentBox.seeAllComments = κλικ εδώ για να τα δείτε όλα
 commentBox.seeLabel = βλέπετε τα
-
-
+commentBox.commentAfterConsEnd = Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης
+commentBox.topics = Κατηγορία
+commentBox.problems = Προβλήματα
+commentBox.category = Κατηγορία
+commentBox.commentLink = Σύνδεσμος για αυτό το σχόλιο
+commentBox.userHasEdited = Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο
+commentBox.userEditPrompt = Τροποποιήστε το σχόλιο σας
+commentBox.textPart = Τμήμα κειμένου
+commentBox.articleName = Όνομα άρθρου
+commentBox.userEmotionLabel = Ο χρήστης εκδήλωσε το συναίσθημα
+commentBox.repliesLabel = Απαντήσεις σε αυτό το σχόλιο
+commentBox.reportLabel = Αναφορά σχολίου ως υβριστικό
+commentBox.reply = Απάντηση
+commentBox.commentFLMatching = Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;
+commentBox.like = Συμφωνώ
+commentBox.dislike = Διαφωνώ
+date = Ημερομηνία
+commentBox.likeUsers = Χρήστες που συμφωνούν
+commentBox.dislikeUsers = Χρήστες που διαφωνούν
 
 
 

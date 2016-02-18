@@ -4,9 +4,9 @@
     scify.CommentBox = React.createClass({
         getInitialState : function(){
             return { comments: [], //the comments that will be displayed (either all comments or top comments)
-                     allComments: [], //in case we display a subset of comments, this array contains all the comments
-                     topComments:[], //contains the top comments, the one with the most likes
-                     discussionThreadId: this.props.discussionthreadid,
+                allComments: [], //in case we display a subset of comments, this array contains all the comments
+                topComments:[], //contains the top comments, the one with the most likes
+                discussionThreadId: this.props.discussionthreadid,
                 totalCommentsCount: this.props.commentsCount,
                 messages: this.props.messages
             };
@@ -218,12 +218,11 @@
              return  this.state.totalCommentsCount > this.state.comments.length;
         },
         render: function() {
-
             if (this.state.busy)
             {
                 return (
                     <div>
-                        <TotalCommentsLink onClick={this.refreshComments} count={this.state.totalCommentsCount} />
+                        <TotalCommentsLink onClick={this.refreshComments} count={this.state.totalCommentsCount} messages={this.state.messages}/>
                         <scify.ReactLoader display={this.state.busy} />
                     </div>
                 );
@@ -271,7 +270,8 @@
                             commentClassNames={this.props.commentClassNames}
                             shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
                             shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
-                            shouldDisplayReportAction={this.props.shouldDisplayReportAction}/>
+                            shouldDisplayReportAction={this.props.shouldDisplayReportAction}
+                            messages={this.state.messages}/>
                     </div>
                 </div>
 
@@ -306,7 +306,6 @@
     window.scify.CommentList = React.createClass({
         render: function() {
             var instance = this;
-
             var commentNodes = this.props.data.map(function (comment) {
                 return (
                     <div className={instance.props.parent}>
@@ -337,8 +336,8 @@
                                    commentClassNames={instance.props.commentClassNames}
                                    shouldDisplayFinalLawAnnBtn={instance.props.shouldDisplayFinalLawAnnBtn}
                                    shouldDisplayLikeDislike={instance.props.shouldDisplayLikeDislike}
-                                   shouldDisplayReportAction={instance.props.shouldDisplayReportAction}/>
-
+                                   shouldDisplayReportAction={instance.props.shouldDisplayReportAction}
+                                   messages={instance.props.messages}/>
                     </div>
                 );
             });
@@ -368,7 +367,8 @@
                 liked : this.props.data.loggedInUserRating,  //if not null it means has liked/disliked this comment
                 comment: this.props.data,
                 displayReplyBox: false,
-                displayReportModal:false
+                displayReportModal:false,
+                messages: this.props.messages
             };
         },
         componentDidMount : function(){
@@ -445,7 +445,7 @@
                     </div>
                     {this.renderOptions(this.props.optionsEnabled)}
                     <div className={iconsClasses}>
-                        <a data-toggle="tooltip" data-original-title="Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης"><img src="/assets/images/closed.gif"/></a>
+                        <a data-toggle="tooltip" data-original-title={this.state.messages.commentAfterConsEnd}><img src="/assets/images/closed.gif"/></a>
                      </div>
                         {this.renderReplyBox(this.props.shouldDisplayReplyBox)}
                         {this.renderReplies(this.props.shouldDisplayReplies)}
@@ -469,12 +469,12 @@
                     }
                 });
                 var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ?
-                    <span>Προβλήματα: { taggedProblems} </span> : "";
+                    <span>{this.state.messages.problems}: { taggedProblems} </span> : "";
                 var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ?
-                    <span>Κατηγορία: { taggedTopics} </span> : "";
+                    <span>{this.state.messages.category}: { taggedTopics} </span> : "";
                 if (taggedProblems.length > 0 || taggedTopics.length > 0)
                     var topicsHtml = <div className="tags htmlText"><i className="fa fa-thumb-tack"></i><span
-                        className="partName">Θέματα: </span>{taggedTopicsContainer} {taggedProblemsContainer}</div>;
+                        className="partName">{this.state.messages.topics}: </span>{taggedTopicsContainer} {taggedProblemsContainer}</div>;
                 return (topicsHtml);
             }
         },
@@ -486,8 +486,8 @@
                 if(commentSource.commentSource == 1) {
                     var commentIdForShare = this.props.data.id;
                     var shareBtn = <div className="shareLink"><span className="shareSpanComment shareArticleHiddenComment">
-                                        Κάντε αντιγραφή τον παρακάτω σύνδεσμο:</span>
-                                        <span className="shareBtnComment" title="Σύνδεσμος για αυτό το σχόλιο" id={"shareComment-" + commentIdForShare}>
+                        {this.state.messages.copyLink}:</span>
+                                        <span className="shareBtnComment" title={this.state.messages.link} id={"shareComment-" + commentIdForShare}>
                                             <i className="fa fa-link"></i>
                                         </span>
                                    </div>;
@@ -498,7 +498,7 @@
         renderCommentEdited: function(shouldDisplayCommentEdited){
             if(shouldDisplayCommentEdited) {
                 if(this.props.data.revision > 1) {
-                    var commentEdited = <span className="editedComment">Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο</span>
+                    var commentEdited = <span className="editedComment">{this.state.messages.userHasEdited}</span>
                     return(commentEdited);
                 }
             }
@@ -508,7 +508,7 @@
                 var userId = this.props.userId;
                 var commenterId = this.props.data.userId;
                 if(userId == commenterId && userId != undefined) {
-                    var editIcon = <span className="editIcon" title="Τροποποιήστε το σχόλιο σας" onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
+                    var editIcon = <span className="editIcon" title={this.state.messages.userEditPrompt} onClick={this.handleEditComment}><i className="fa fa-pencil-square-o"></i></span>
                     return(editIcon);
                 }
             }
@@ -533,7 +533,8 @@
         },
         renderCommentBody: function(shouldDisplayCommentBody){
             if(shouldDisplayCommentBody) {
-                var commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i><span className="partName">Σχόλιο: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
+                var commentBody = <div className="htmlText"><i className="fa fa-comment-o"></i>
+                    <span className="partName">{this.state.messages.commentLabelCapital}: </span><span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span></div>;
                 return (commentBody);
             }
         },
@@ -542,9 +543,9 @@
                 if(this.props.data.userAnnotatedText != null) {
                     if(this.props.data.userAnnotatedText)
                         if(this.props.data.discussionThread.discussion_thread_type_id == 2)
-                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Τμήμα κειμένου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">{this.state.messages.textPart}: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
                         else
-                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">Όνομα άρθρου: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
+                            var annotatedText = <div className="htmlText"><i className="fa fa-file-text-o"></i><span className="partName">{this.state.messages.articleName}: </span><span dangerouslySetInnerHTML={{__html: this.props.data.userAnnotatedText}}></span></div>;
                 }
                 return (annotatedText);
             }
@@ -571,18 +572,8 @@
                         break;
                 }
                 var imageWithPath = this.props.imagesPath + image;
-                var emotion = <div className="userEmotion htmlText">Ο χρήστης εκδήλωσε το συναίσθημα: <img src={imageWithPath}></img></div>;
+                var emotion = <div className="userEmotion htmlText">{this.state.messages.userEmotionLabel}: <img src={imageWithPath}></img></div>;
                 return emotion;
-            }
-        },
-        renderBody : function(shouldDisplayBody){
-            if(shouldDisplayBody) {
-                return (
-                    <div className="htmlText"><i className="fa fa-comment-o"></i>
-                        <span className="partName">Σχόλιο: </span>
-                        <span dangerouslySetInnerHTML={{__html: this.props.data.body}}></span>
-                    </div>
-                );
             }
         },
         renderReplyBox: function(shouldDisplayReplyBox){
@@ -604,7 +595,7 @@
                 if(this.props.data.commentReplies.length > 0)
                     return (
                         <div>
-                            <div className="replyTitle">Απαντήσεις σε αυτό το σχόλιο:</div>
+                            <div className="replyTitle">{this.state.messages.repliesLabel}:</div>
                             <scify.CommentList consultationEndDate={this.props.consultationEndDate}
                                                userId={this.props.userId}
                                                data={this.props.data.commentReplies}
@@ -626,7 +617,9 @@
                                                optionsEnabled={true}
                                                shouldDisplayTopics={false}
                                                commentClassNames="comment replyComment"
-                                               shouldDisplayFinalLawAnnBtn={false}/>
+                                               shouldDisplayFinalLawAnnBtn={false}
+                                               messages={this.state.messages}
+                            />
                         </div>
                     );
             }
@@ -650,7 +643,8 @@
                         comment={this.props.data}
                         imagesPath={this.props.imagesPath}
                         shouldDisplayReplyBox={this.props.shouldDisplayReplyBox}
-                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}/>
+                        shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
+                        messages={this.state.messages}/>
                 );
             }
             return (
@@ -661,13 +655,14 @@
                                         loggedInUserRating={this.props.data.loggedInUserRating}
                                         emotionId={this.props.data.emotionId}
                                         shouldDisplayLikeDislike={this.props.shouldDisplayLikeDislike}
+                                        messages={this.state.messages}
                 />
             );
         },
         renderReportAction: function(shouldDisplayReportAction){
             var reportBtn = <span></span>;
             if(shouldDisplayReportAction)
-                reportBtn = <span className="reportAction" onClick={this.openReportModal}>Αναφορά σχολίου ως υβριστικό</span>
+                reportBtn = <span className="reportAction" onClick={this.openReportModal}>{this.state.messages.reportLabel}</span>
             return(reportBtn);
         },
         openReportModal: function() {
@@ -689,7 +684,8 @@
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
                 finalLawBusy:true,
-                reportCommentBusy:true
+                reportCommentBusy:true,
+                messages: this.props.messages
             };
         },
         postRateCommentAndRefresh: function(){
@@ -748,7 +744,6 @@
         handleDislikeComment:function(){ //user pressed the dislike button
             var oldLikeStatus =this.state.liked;
             var newLikeStatus=false;
-            console.log(this.props.userDefined);
             if (oldLikeStatus ===false && this.props.userDefined) { //if comment was already disliked, undo it
                 newLikeStatus=null;
                 this.state.dislikeCounter = this.state.dislikeCounter  -1;
@@ -780,19 +775,19 @@
             var disagreeClasses = classNames("disagree", {active: this.state.liked ===false});
             var date =moment(this.props.dateAdded).format('llll');
             if(this.props.shouldDisplayReplyBox)
-                var replyLink = <a className={replyClasses} onClick={this.state.handleReply}>Απάντηση <i className="fa fa-reply"></i></a>
+                var replyLink = <a className={replyClasses} onClick={this.state.handleReply}>{this.state.messages.reply} <i className="fa fa-reply"></i></a>
             if(this.props.shouldDisplayFinalLawAnnBtn)
-                var commentFinalLawAnnBtn = <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button">Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;</a>
+                var commentFinalLawAnnBtn = <a onClick={this.handleCommentInFinalLaw} className="commentInFinalLaw" type="button">{this.state.messages.commentFLMatching}</a>
             return (
                 <div>
                     <div className="optionsContainer">
                         <div className="options">
                             <a className={agreeClasses} onClick={this.handleLikeComment}>
-                                Συμφωνώ<i className="fa fa-thumbs-o-up"></i>
+                                {this.state.messages.like}<i className="fa fa-thumbs-o-up"></i>
 
                             </a><span className="c"> ({this.state.likeCounter})</span>
                             <a className={disagreeClasses} onClick={this.handleDislikeComment}>
-                                Διαφωνώ<i className="fa fa-thumbs-o-down"></i>
+                                {this.state.messages.dislike}<i className="fa fa-thumbs-o-down"></i>
                             </a> <span className="c"> ({this.state.dislikeCounter})</span>
                             {replyLink}
                             {commentFinalLawAnnBtn}
@@ -807,7 +802,8 @@
         getInitialState: function(){
             return {
                 likeCounter: this.props.likeCounter,
-                dislikeCounter: this.props.dislikeCounter
+                dislikeCounter: this.props.dislikeCounter,
+                messages: this.props.messages
             };
         },
         render: function() {
@@ -816,9 +812,9 @@
             var date =moment(this.props.dateAdded).format('llll');
             if(this.props.shouldDisplayLikeDislike) {
                 var likeDislikeInfo = <div>
-                    <div className={agreeClasses}>Χρήστες που συμφωνούν<i className="fa fa-thumbs-o-up"></i></div>
+                    <div className={agreeClasses}>{this.state.messages.likeUsers}<i className="fa fa-thumbs-o-up"></i></div>
                     <span className="c"> ({this.state.likeCounter})</span>
-                    <div className={disagreeClasses}> Χρήστες που διαφωνούν<i className="fa fa-thumbs-o-down"></i></div>
+                    <div className={disagreeClasses}> {this.state.messages.dislikeUsers}<i className="fa fa-thumbs-o-down"></i></div>
                     <span className="c"> ({this.state.dislikeCounter})</span>
                 </div>;
             }

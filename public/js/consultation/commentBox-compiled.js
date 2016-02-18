@@ -198,12 +198,11 @@
             return this.state.totalCommentsCount > this.state.comments.length;
         },
         render: function render() {
-
             if (this.state.busy) {
                 return React.createElement(
                     "div",
                     null,
-                    React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.totalCommentsCount }),
+                    React.createElement(TotalCommentsLink, { onClick: this.refreshComments, count: this.state.totalCommentsCount, messages: this.state.messages }),
                     React.createElement(scify.ReactLoader, { display: this.state.busy })
                 );
             }
@@ -262,7 +261,8 @@
                         commentClassNames: this.props.commentClassNames,
                         shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn,
                         shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike,
-                        shouldDisplayReportAction: this.props.shouldDisplayReportAction })
+                        shouldDisplayReportAction: this.props.shouldDisplayReportAction,
+                        messages: this.state.messages })
                 )
             );
         }
@@ -296,7 +296,6 @@
 
         render: function render() {
             var instance = this;
-
             var commentNodes = this.props.data.map(function (comment) {
                 return React.createElement(
                     "div",
@@ -328,7 +327,8 @@
                         commentClassNames: instance.props.commentClassNames,
                         shouldDisplayFinalLawAnnBtn: instance.props.shouldDisplayFinalLawAnnBtn,
                         shouldDisplayLikeDislike: instance.props.shouldDisplayLikeDislike,
-                        shouldDisplayReportAction: instance.props.shouldDisplayReportAction })
+                        shouldDisplayReportAction: instance.props.shouldDisplayReportAction,
+                        messages: instance.props.messages })
                 );
             });
 
@@ -356,7 +356,8 @@
                 liked: this.props.data.loggedInUserRating, //if not null it means has liked/disliked this comment
                 comment: this.props.data,
                 displayReplyBox: false,
-                displayReportModal: false
+                displayReportModal: false,
+                messages: this.props.messages
             };
         },
         componentDidMount: function componentDidMount() {
@@ -443,7 +444,7 @@
                     { className: iconsClasses },
                     React.createElement(
                         "a",
-                        { "data-toggle": "tooltip", "data-original-title": "Το σχόλιο εισήχθει μετά τη λήξη της διαβούλευσης" },
+                        { "data-toggle": "tooltip", "data-original-title": this.state.messages.commentAfterConsEnd },
                         React.createElement("img", { src: "/assets/images/closed.gif" })
                     )
                 ),
@@ -482,14 +483,16 @@
                 var taggedProblemsContainer = this.props.data.annotationTagProblems.length > 0 ? React.createElement(
                     "span",
                     null,
-                    "Προβλήματα: ",
+                    this.state.messages.problems,
+                    ": ",
                     taggedProblems,
                     " "
                 ) : "";
                 var taggedTopicsContainer = this.props.data.annotationTagTopics.length > 0 ? React.createElement(
                     "span",
                     null,
-                    "Κατηγορία: ",
+                    this.state.messages.category,
+                    ": ",
                     taggedTopics,
                     " "
                 ) : "";
@@ -501,7 +504,8 @@
                         "span",
                         {
                             className: "partName" },
-                        "Θέματα: "
+                        this.state.messages.topics,
+                        ": "
                     ),
                     taggedTopicsContainer,
                     " ",
@@ -523,11 +527,12 @@
                         React.createElement(
                             "span",
                             { className: "shareSpanComment shareArticleHiddenComment" },
-                            "Κάντε αντιγραφή τον παρακάτω σύνδεσμο:"
+                            this.state.messages.copyLink,
+                            ":"
                         ),
                         React.createElement(
                             "span",
-                            { className: "shareBtnComment", title: "Σύνδεσμος για αυτό το σχόλιο", id: "shareComment-" + commentIdForShare },
+                            { className: "shareBtnComment", title: this.state.messages.link, id: "shareComment-" + commentIdForShare },
                             React.createElement("i", { className: "fa fa-link" })
                         )
                     );
@@ -541,7 +546,7 @@
                     var commentEdited = React.createElement(
                         "span",
                         { className: "editedComment" },
-                        "Ο χρήστης έχει τροποποιήσει αυτό το σχόλιο"
+                        this.state.messages.userHasEdited
                     );
                     return commentEdited;
                 }
@@ -554,7 +559,7 @@
                 if (userId == commenterId && userId != undefined) {
                     var editIcon = React.createElement(
                         "span",
-                        { className: "editIcon", title: "Τροποποιήστε το σχόλιο σας", onClick: this.handleEditComment },
+                        { className: "editIcon", title: this.state.messages.userEditPrompt, onClick: this.handleEditComment },
                         React.createElement("i", { className: "fa fa-pencil-square-o" })
                     );
                     return editIcon;
@@ -600,7 +605,8 @@
                     React.createElement(
                         "span",
                         { className: "partName" },
-                        "Σχόλιο: "
+                        this.state.messages.commentLabelCapital,
+                        ": "
                     ),
                     React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
                 );
@@ -617,7 +623,8 @@
                         React.createElement(
                             "span",
                             { className: "partName" },
-                            "Τμήμα κειμένου: "
+                            this.state.messages.textPart,
+                            ": "
                         ),
                         React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                     );else var annotatedText = React.createElement(
@@ -627,7 +634,8 @@
                         React.createElement(
                             "span",
                             { className: "partName" },
-                            "Όνομα άρθρου: "
+                            this.state.messages.articleName,
+                            ": "
                         ),
                         React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.userAnnotatedText } })
                     );
@@ -660,25 +668,11 @@
                 var emotion = React.createElement(
                     "div",
                     { className: "userEmotion htmlText" },
-                    "Ο χρήστης εκδήλωσε το συναίσθημα: ",
+                    this.state.messages.userEmotionLabel,
+                    ": ",
                     React.createElement("img", { src: imageWithPath })
                 );
                 return emotion;
-            }
-        },
-        renderBody: function renderBody(shouldDisplayBody) {
-            if (shouldDisplayBody) {
-                return React.createElement(
-                    "div",
-                    { className: "htmlText" },
-                    React.createElement("i", { className: "fa fa-comment-o" }),
-                    React.createElement(
-                        "span",
-                        { className: "partName" },
-                        "Σχόλιο: "
-                    ),
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.data.body } })
-                );
             }
         },
         renderReplyBox: function renderReplyBox(shouldDisplayReplyBox) {
@@ -701,7 +695,8 @@
                     React.createElement(
                         "div",
                         { className: "replyTitle" },
-                        "Απαντήσεις σε αυτό το σχόλιο:"
+                        this.state.messages.repliesLabel,
+                        ":"
                     ),
                     React.createElement(scify.CommentList, { consultationEndDate: this.props.consultationEndDate,
                         userId: this.props.userId,
@@ -724,7 +719,9 @@
                         optionsEnabled: true,
                         shouldDisplayTopics: false,
                         commentClassNames: "comment replyComment",
-                        shouldDisplayFinalLawAnnBtn: false })
+                        shouldDisplayFinalLawAnnBtn: false,
+                        messages: this.state.messages
+                    })
                 );
             }
         },
@@ -746,7 +743,8 @@
                     comment: this.props.data,
                     imagesPath: this.props.imagesPath,
                     shouldDisplayReplyBox: this.props.shouldDisplayReplyBox,
-                    shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn });
+                    shouldDisplayFinalLawAnnBtn: this.props.shouldDisplayFinalLawAnnBtn,
+                    messages: this.state.messages });
             }
             return React.createElement(CommentActionsDisabled, { imagesPath: this.props.imagesPath,
                 dateAdded: this.props.data.dateAdded,
@@ -754,7 +752,8 @@
                 dislikeCounter: this.props.data.dislikesCounter,
                 loggedInUserRating: this.props.data.loggedInUserRating,
                 emotionId: this.props.data.emotionId,
-                shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike
+                shouldDisplayLikeDislike: this.props.shouldDisplayLikeDislike,
+                messages: this.state.messages
             });
         },
         renderReportAction: function renderReportAction(shouldDisplayReportAction) {
@@ -762,7 +761,7 @@
             if (shouldDisplayReportAction) reportBtn = React.createElement(
                 "span",
                 { className: "reportAction", onClick: this.openReportModal },
-                "Αναφορά σχολίου ως υβριστικό"
+                this.state.messages.reportLabel
             );
             return reportBtn;
         },
@@ -786,7 +785,8 @@
                 source: this.props.source, //source =1 for democracIt, source = 2 for opengov
                 handleReply: this.props.handleReply,
                 finalLawBusy: true,
-                reportCommentBusy: true
+                reportCommentBusy: true,
+                messages: this.props.messages
             };
         },
         postRateCommentAndRefresh: function postRateCommentAndRefresh() {
@@ -845,7 +845,6 @@
             //user pressed the dislike button
             var oldLikeStatus = this.state.liked;
             var newLikeStatus = false;
-            console.log(this.props.userDefined);
             if (oldLikeStatus === false && this.props.userDefined) {
                 //if comment was already disliked, undo it
                 newLikeStatus = null;
@@ -878,13 +877,14 @@
             if (this.props.shouldDisplayReplyBox) var replyLink = React.createElement(
                 "a",
                 { className: replyClasses, onClick: this.state.handleReply },
-                "Απάντηση ",
+                this.state.messages.reply,
+                " ",
                 React.createElement("i", { className: "fa fa-reply" })
             );
             if (this.props.shouldDisplayFinalLawAnnBtn) var commentFinalLawAnnBtn = React.createElement(
                 "a",
                 { onClick: this.handleCommentInFinalLaw, className: "commentInFinalLaw", type: "button" },
-                "Αυτό το σχόλιο ελήψθη υπ' όψη στον τελικό νόμο;"
+                this.state.messages.commentFLMatching
             );
             return React.createElement(
                 "div",
@@ -898,7 +898,7 @@
                         React.createElement(
                             "a",
                             { className: agreeClasses, onClick: this.handleLikeComment },
-                            "Συμφωνώ",
+                            this.state.messages.like,
                             React.createElement("i", { className: "fa fa-thumbs-o-up" })
                         ),
                         React.createElement(
@@ -911,7 +911,7 @@
                         React.createElement(
                             "a",
                             { className: disagreeClasses, onClick: this.handleDislikeComment },
-                            "Διαφωνώ",
+                            this.state.messages.dislike,
                             React.createElement("i", { className: "fa fa-thumbs-o-down" })
                         ),
                         " ",
@@ -940,7 +940,8 @@
         getInitialState: function getInitialState() {
             return {
                 likeCounter: this.props.likeCounter,
-                dislikeCounter: this.props.dislikeCounter
+                dislikeCounter: this.props.dislikeCounter,
+                messages: this.props.messages
             };
         },
         render: function render() {
@@ -954,7 +955,7 @@
                     React.createElement(
                         "div",
                         { className: agreeClasses },
-                        "Χρήστες που συμφωνούν",
+                        this.state.messages.likeUsers,
                         React.createElement("i", { className: "fa fa-thumbs-o-up" })
                     ),
                     React.createElement(
@@ -967,7 +968,8 @@
                     React.createElement(
                         "div",
                         { className: disagreeClasses },
-                        " Χρήστες που διαφωνούν",
+                        " ",
+                        this.state.messages.dislikeUsers,
                         React.createElement("i", { className: "fa fa-thumbs-o-down" })
                     ),
                     React.createElement(

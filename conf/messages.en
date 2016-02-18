@@ -223,12 +223,32 @@ uploadFLWrongFile = Wrong file type. Accepted file types: .pdf, .txt \\nPlease c
 uploadFLLoadingMsg = Please wait. The uploading process may take some seconds...
 commentBox.comments = comments
 commentBox.comment = comment
+commentBox.commentCapital = Comment
 commentBox.commentsForArticle = on the whole article
 commentBox.commentsForText = on this text
 commentBox.commentsFromOpengov = from opengov
 commentBox.mostPopularComments = most popular comments
 commentBox.seeAllComments = click here to see all comments
 commentBox.seeLabel = you see the
+commentBox.commentAfterConsEnd = This comment was added after the consultation was finished
+commentBox.topics = Topics
+commentBox.problems = Problems
+commentBox.category = Category
+commentBox.commentLink = Link for this comment
+commentBox.userHasEdited = The author has edited this comment
+commentBox.userEditPrompt = Edit your comment
+commentBox.textPart = Text part
+commentBox.articleName = Article title
+commentBox.userEmotionLabel = The user has expressed the feeling
+commentBox.repliesLabel = Replies on this comment
+commentBox.reportLabel = Report this comment as abusive
+commentBox.reply = Reply
+commentBox.commentFLMatching = Did this comment influence the final law?
+commentBox.like = Agree
+commentBox.dislike = Disagree
+date = Date
+commentBox.likeUsers = Users that agree
+commentBox.dislikeUsers = Users that disagree
 
 
 
