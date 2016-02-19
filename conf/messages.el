@@ -318,3 +318,19 @@ evaluation.consWithoutFL = Διαβουλεύσεις χωρίς αρχείο τ
 evaluation.consWithFLTitle = Διαβουλεύσεις στις οποίες οι χρήστες έχουν μεταφορτώσει αρχείο τελικού νόμου (πατήστε επάνω στο γράφημα για να δείτε τις διαβουλέυσεις)
 evaluation.dateWhenConsWasActive = Ημερομηνία που ήταν ανοιχτή η διαβούλευση
 evaluation.numberOfNewConsPerMonth = Αριθμός νέων διαβουλεύσεων ανά μήνα
+LESS_THAN_5 = 5 και λιγότερες
+6_TO_10 = 6 έως 10
+11_TO_15 = 11 έως 15
+16_TO_20 = 16 έως 20
+21_TO_30 = 21 έως 30
+31_TO_50 = 31 έως 50
+MORE_THAN_50 = 50 και περισσότερες
+COMMENTS_LESS_THAN_20 = 20 και λιγότερα
+COMMENTS_21_TO_50 = 21 έως 50
+COMMENTS_51_TO_100 = 51 έως 100
+COMMENTS_101_TO_200 = 101 έως 200
+COMMENTS_201_TO_500 = 201 έως 500
+COMMENTS_501_TO_800 = 501 έως 800
+COMMENTS_MORE_THAN_800 = 801 και περισσότερα
+
+

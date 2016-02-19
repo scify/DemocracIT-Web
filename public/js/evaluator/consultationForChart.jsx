@@ -70,7 +70,7 @@
                         //console.log(consultation);
                         divToDisplay.push(<div className="consItem comment"><div className="consTitle"><a href={"/consultation/" + consultation.id}>{consultation.title}</a></div>
                             <div>{instance.state.messages.dateWhenConsWasActive}:
-                                <span className="consDate">{new Date(consultation.start_date).toLocaleDateString('el-EL', {hour: '2-digit'})}
+                                <span className="consDate"> {new Date(consultation.start_date).toLocaleDateString('el-EL', {hour: '2-digit'})}
                                 </span> {instance.state.messages.consTo} <span className="consDate">{new Date(consultation.end_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span></div>
                         </div>);
                     });

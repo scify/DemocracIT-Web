@@ -92,6 +92,7 @@
                                 React.createElement(
                                     "span",
                                     { className: "consDate" },
+                                    " ",
                                     new Date(consultation.start_date).toLocaleDateString("el-EL", { hour: "2-digit" })
                                 ),
                                 " ",
