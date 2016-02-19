@@ -1,13 +1,18 @@
 
-scify.EvaluatorPageHandler = function(consultationsPerMonth) {
+scify.EvaluatorPageHandler = function(consultationsPerMonth, evaluationMessages) {
 
-    //console.log(consultationsPerMonth);
     this.consultationsPerMonth = [];
+    this.evaluationMessages = evaluationMessages;
     for (var i=0; i<consultationsPerMonth.length; i++)
     {
-        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + consultationsPerMonth[i].numberOfConsultations + '</h5></div>', consultationsPerMonth[i].numberOfConsultations.toString(),consultationsPerMonth[i].cons_ids])
+        this.consultationsPerMonth.push([ consultationsPerMonth[i].date, consultationsPerMonth[i].numberOfConsultations,
+            '<div style="padding-left: 10px"><h5 style="width:150px">' + consultationsPerMonth[i].date + '</h5>' +
+            '<h5>' + this.evaluationMessages.consultations + ': ' + consultationsPerMonth[i].numberOfConsultations +
+            '</h5></div>', consultationsPerMonth[i].numberOfConsultations.toString(),consultationsPerMonth[i].cons_ids])
     }
-    //console.log(this.consultationsPerMonth);
+    this.evaluationChartProperties = {
+        evaluationMessages: evaluationMessages
+    };
 };
 scify.EvaluatorPageHandler.prototype = function(){
     var createChart = function(dataForChart, chartOptions, chartId, strName, numName, chartType, instance) {
@@ -51,7 +56,7 @@ scify.EvaluatorPageHandler.prototype = function(){
                 /*Create new element for the list*/
                 $("#" + chartId).after('<div id="consList"></div>');
                 var domElementConsList = document.getElementById("consList");
-                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, instance.evaluationChartProperties), domElementConsList);
                 window.ConsListComponent.getConsultationsFromServer(cons_ids);
                 chart.setSelection();
                 /*switch (chartId) {
@@ -72,49 +77,49 @@ scify.EvaluatorPageHandler.prototype = function(){
         }
         google.setOnLoadCallback(drawMultSeries);
     },
-    createConsFrequencyPerOrganizationDiv = function() {
+    createConsFrequencyPerOrganizationDiv = function(instance) {
         var domElementConsFreqPerOrganization = document.getElementById("consultationsPerOrganizationInnerDiv");
         if (domElementConsFreqPerOrganization) {
             //console.log('this record already exists');
-            window.ConsFreqPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFreqPerOrganization);
+            window.ConsFreqPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, instance.evaluationChartProperties), domElementConsFreqPerOrganization);
         } else {
             //console.log('this record does not exist');
         }
         loadConsFrequencyPerOrganization();
     },
-    createConsDurationPerOrganizationDiv = function() {
+    createConsDurationPerOrganizationDiv = function(instance) {
         var domElementConsDurationPerOrganization = document.getElementById("consDurationPerOrganizationInnerChart");
         if (domElementConsDurationPerOrganization) {
             //console.log('this record already exists');
-            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDurationPerOrganization);
+            window.ConsDurationPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, instance.evaluationChartProperties), domElementConsDurationPerOrganization);
         } else {
             //console.log('this record does not exist');
         }
         loadConsDurationPerOrganization();
     },
-    createConsDurationDiv = function() {
+    createConsDurationDiv = function(instance) {
         var domElementConsDuration = document.getElementById("consDurationInnerChart");
         if (domElementConsDuration) {
-            window.ConsDurationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsDuration);
+            window.ConsDurationComponent = React.render(React.createElement(scify.evaluatorChart, instance.evaluationChartProperties), domElementConsDuration);
         } else {
             //console.log('this record does not exist');
         }
         loadConsDuration();
     },
 
-    createConsCommPerOrganizationDiv = function() {
+    createConsCommPerOrganizationDiv = function(instance) {
         var domElementConsCommPerOrganization = document.getElementById("commConsOrgInnerChart");
         if (domElementConsCommPerOrganization) {
-            window.ConsCommPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsCommPerOrganization);
+            window.ConsCommPerOrganizationComponent = React.render(React.createElement(scify.evaluatorChart, instance.evaluationChartProperties), domElementConsCommPerOrganization);
         } else {
             //console.log('this record does not exist');
         }
         loadConsCommPerOrganization();
     },
-    createConsFinalLawStatsDiv = function() {
+    createConsFinalLawStatsDiv = function(instance) {
         var domElementConsFinalLawStats = document.getElementById("finalLawComparisonChart");
         if (domElementConsFinalLawStats) {
-            window.ConsFinalLawStatsComponent = React.render(React.createElement(scify.evaluatorChart, null), domElementConsFinalLawStats);
+            window.ConsFinalLawStatsComponent = React.render(React.createElement(scify.evaluatorChart, instance.evaluationChartProperties), domElementConsFinalLawStats);
         } else {
             console.log('finalLawComparisonChart div does not exist');
         }
@@ -135,29 +140,28 @@ scify.EvaluatorPageHandler.prototype = function(){
     loadConsFinalLawStats = function() {
         window.ConsFinalLawStatsComponent.getConsFinalLawStats();
     },
-    init = function() {
-        var instance = this;
-        if(this.consultationsPerMonth.length > 0) {
-            var numRows = this.consultationsPerMonth.length;
+    createFirstChart = function(instance) {
+        if(instance.consultationsPerMonth.length > 0) {
+            var numRows = instance.consultationsPerMonth.length;
             var expectedHeight = numRows * 30;
             if(expectedHeight < 400) {
                 expectedHeight = 600;
             }
             /*var max = this.consultationsPerMonth.reduce(function(max, arr) {
-                return Math.max(max, arr[1]);
-            }, -Infinity);*/
+             return Math.max(max, arr[1]);
+             }, -Infinity);*/
             var chartHeight = expectedHeight - 100;
             var consultationsPerMonthOptions = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
                 //'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα (πατήστε πάνω σε μια μπάρα για να δείτε τις διαβουλεύσεις)",
-                'title': "Αριθμός νέων διαβουλεύσεων ανά μήνα",
+                'title': instance.evaluationMessages.numberOfNewConsPerMonth,
                 'height': expectedHeight,
                 'width':'1300',
                 bar: {groupWidth: "90%"},
                 'chartArea': {width: '75%','height': chartHeight,left:'90'},
                 'hAxis': {
-                    title: "Μήνες",
+                    title: instance.evaluationMessages.months,
                     textStyle: {
                         fontSize: 11,
                         color: '#053061',
@@ -174,11 +178,11 @@ scify.EvaluatorPageHandler.prototype = function(){
                 },
                 'is3D':true,
                 'vAxis': {
-                    title: "Αριθμός διαβουλεύσεων",
+                    title: instance.evaluationMessages.numberOfCons,
                     format: '#'
                     /*gridlines: {
-                        count: max + 1
-                    }*/
+                     count: max + 1
+                     }*/
                 },
                 legend: {position: 'none',alignment:'start'},
                 'fontSize' : 15
@@ -187,15 +191,21 @@ scify.EvaluatorPageHandler.prototype = function(){
             if (domElementLoader) {
                 window.domElementLoader = React.render(React.createElement(scify.ReactLoader, {display:true}), domElementLoader);
             }
-            $(domElementLoader).prepend("<div style='text-align: center; margin-bottom: 5px'>Περιμένετε...</div>");
-            createChart(instance.consultationsPerMonth, consultationsPerMonthOptions, "consultationsPerMonthInnerChart", "Διαβούλευση", "Σχόλια", 'bar', instance);
+            $(domElementLoader).prepend("<div style='text-align: center; margin-bottom: 5px'>" + instance.evaluationMessages.loading + "...</div>");
+            createChart(instance.consultationsPerMonth, consultationsPerMonthOptions,
+                "consultationsPerMonthInnerChart", instance.evaluationMessages.consultation,
+                instance.evaluationMessages.commentsPlural, 'bar', instance);
         }
+    },
+    init = function() {
+        var instance = this;
 
-        createConsFrequencyPerOrganizationDiv();
-        createConsDurationPerOrganizationDiv();
-        createConsDurationDiv();
-        createConsCommPerOrganizationDiv();
-        createConsFinalLawStatsDiv();
+        createFirstChart(instance);
+        createConsFrequencyPerOrganizationDiv(instance);
+        createConsDurationPerOrganizationDiv(instance);
+        createConsDurationDiv(instance);
+        createConsCommPerOrganizationDiv(instance);
+        createConsFinalLawStatsDiv(instance);
         fbq('track', 'InitiateCheckout');
     }
     return {

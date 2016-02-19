@@ -12,7 +12,8 @@
                 busy: false,
                 display: false,
                 page: 10,
-                shouldDisplayLoadMoreBtn: true
+                shouldDisplayLoadMoreBtn: true,
+                messages: this.props.evaluationMessages
             };
         },
         displayNextBatch: function displayNextBatch(event) {
@@ -86,13 +87,16 @@
                             React.createElement(
                                 "div",
                                 null,
-                                "Ημερομηνία που ήταν ανοιχτή η διαβούλευση: ",
+                                instance.state.messages.dateWhenConsWasActive,
+                                ":",
                                 React.createElement(
                                     "span",
                                     { className: "consDate" },
                                     new Date(consultation.start_date).toLocaleDateString("el-EL", { hour: "2-digit" })
                                 ),
-                                " έως ",
+                                " ",
+                                instance.state.messages.consTo,
+                                " ",
                                 React.createElement(
                                     "span",
                                     { className: "consDate" },

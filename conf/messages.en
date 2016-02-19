@@ -304,6 +304,22 @@ reporter.commentsNumberTitle = Number of comments
 reporter.articlesPlural = Articles
 reporter.articlesSingular = Article
 reporter.problemsSingular = Problem
+evaluation.loading = Loading
+evaluation.consultations = Consultations
+evaluation.consultation = Consultation
+evaluation.organizationHasNoCons = This organization has not posted any public consultations in the past 18 months.
+evaluation.numberOfCons = Number of Consultations
+evaluation.months = Months
+evaluation.monthsConsActive = Days that the consultations were active
+evaluation.consAllocation = Consultation sparsity
+evaluation.percentage = Percentage
+evaluation.numberOfComments = Number of comments
+evaluation.consWithFL = Consultations with final law file
+evaluation.consWithoutFL = Consultations without final law file
+evaluation.consWithFLTitle = Consultations in which the users have uploaded a final law file (click on the chart to see the consultations)
+evaluation.dateWhenConsWasActive = Date when the consultation was active
+evaluation.numberOfNewConsPerMonth = Number of new consultations per month
+
 
 
 

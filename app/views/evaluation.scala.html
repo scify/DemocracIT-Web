@@ -9,11 +9,13 @@
     {'modules':[{'name':'visualization','version':'1.1','packages':
     ['corechart']}]}"></script>
     <script>
-    $(function(){
-        var controller = new scify.EvaluatorPageHandler(@Html(vm.consultationsPerMonthToJson())
-                                                       );
-        controller.init();
-     })
+            $(function(){
+                var controller = new scify.EvaluatorPageHandler(
+                        @Html(vm.consultationsPerMonthToJson()),
+                        @Html(vm.getEvaluationMessages(messages))
+                );
+                controller.init();
+            })
     </script>
 }
 

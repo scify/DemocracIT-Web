@@ -303,6 +303,18 @@ reporter.commentsNumberTitle = Αριθμός σχολίων
 reporter.articlesPlural = Άρθρα
 reporter.articlesSingular = Άρθρο
 reporter.problemsSingular = Πρόβλημα
-
-
-
+evaluation.loading = Περιμένετε
+evaluation.consultations = Διαβουλέυσεις
+evaluation.consultation = Διαβούλευση
+evaluation.organizationHasNoCons = Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις τους τελευταίους 18 μήνες.
+evaluation.numberOfCons = Αριθμός Διαβουλεύσεων
+evaluation.months = Μήνες
+evaluation.monthsConsActive = Ημέρες που οι διαβουλεύσεις ήταν ενεργές
+evaluation.consAllocation = Κατανομή Διαβουλεύσεων
+evaluation.percentage = Ποσοστό
+evaluation.numberOfComments = Αριθμός σχολίων
+evaluation.consWithFL = Διαβουλεύσεις με αρχείο τελικού νόμου
+evaluation.consWithoutFL = Διαβουλεύσεις χωρίς αρχείο τελικού νόμου
+evaluation.consWithFLTitle = Διαβουλεύσεις στις οποίες οι χρήστες έχουν μεταφορτώσει αρχείο τελικού νόμου (πατήστε επάνω στο γράφημα για να δείτε τις διαβουλέυσεις)
+evaluation.dateWhenConsWasActive = Ημερομηνία που ήταν ανοιχτή η διαβούλευση
+evaluation.numberOfNewConsPerMonth = Αριθμός νέων διαβουλεύσεων ανά μήνα
