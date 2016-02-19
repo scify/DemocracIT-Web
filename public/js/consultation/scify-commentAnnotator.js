@@ -99,7 +99,7 @@ scify.CommentAnnotator.prototype = (function(){
         },
         displayToolBar = function(e,selectedText){
             var instance = this;
-            console.log(this.messages);
+
             e.stopPropagation();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -123,7 +123,7 @@ scify.CommentAnnotator.prototype = (function(){
             if (target.closest(".title").length>0)
             {
 
-                $("#myModalLabel").text(this.messages.forWholeArticle);
+                $("#myModalLabel").text(instance.messages.forWholeArticle);
                 topicsLabel.text(topicsLabel.data("article"));
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("article"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("article"));
@@ -133,7 +133,7 @@ scify.CommentAnnotator.prototype = (function(){
 
             }
             else{
-                $("#myModalLabel").text(this.messages.forTextPart);
+                $("#myModalLabel").text(instance.messages.forTextPart);
                 topicsLabel.text(topicsLabel.data("text"));
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
@@ -157,6 +157,7 @@ scify.CommentAnnotator.prototype = (function(){
         displayToolbarForEdit = function(e, comment) {
             var instance = this;
             console.log(comment);
+            console.log(this.messages);
             e.preventDefault();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -167,7 +168,7 @@ scify.CommentAnnotator.prototype = (function(){
             var topicsTagTooltip =$("#tag-topics-label").find("i");
             var problemsLabel = $("#tag-problem-label").find("span");
 
-            $("#myModalLabel").text(this.messages.editCommentLabel);
+            $("#myModalLabel").text(instance.messages.editCommentLabel);
             topicsLabel.text(topicsLabel.data("text"));
             topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
             topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
@@ -298,7 +299,8 @@ scify.CommentAnnotator.prototype = (function(){
             });
         },
         openForEdit = function(e, comment){
-            displayToolbarForEdit(e, comment);
+            var instance = this;
+            displayToolbarForEdit.call(instance, e, comment);
         },
         init = function(){
             var instance = this;
