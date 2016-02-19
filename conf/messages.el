@@ -54,7 +54,6 @@ open = άνοιγμα
 explain = Εξήγηση
 evaluation.dispersion = Διασπορά
 evaluation.duration = Διάρκεια
-evaluation.participation = Συμμετοχή
 evaluation.comments.users = Παρατηρήσεις Χρηστών
 evaluation.total = Συνολικά
 evaluation.perorg = Ανά οργανισμό
@@ -292,6 +291,18 @@ consultations.search.totalRecords = συνολικά εγγραφές)
 consultations.search.all = Όλες
 consultation.linkToOpenGov = η διαβούλευση στο opengov.gr
 homepage = Αρχική
+reporter.topicSingular = Θέμα
+reporter.commentsPlural = Σχόλια
+reporter.clickOnName = Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια
+reporter.commentsPerArticleTitle = Σχόλια ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το άρθρο)
+reporter.topicsTitle = Θέματα που θίγονται (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα)
+reporter.problemsTitle = Προβλήματα (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα)
+reporter.topicsPerArticleTitle = Θέματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα ανά άρθρο)
+reporter.problemsPerArticleTitle = Προβλήματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα ανά άρθρο)
+reporter.commentsNumberTitle = Αριθμός σχολίων
+reporter.articlesPlural = Άρθρα
+reporter.articlesSingular = Άρθρο
+reporter.problemsSingular = Πρόβλημα
 
 
 

@@ -1,9 +1,20 @@
-scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,ratingUsers,imagesPath,finalLawUserId,userId,fullName,
+scify.ConsultationReporterPageHandler = function( consultationid,
+                                                  generalMessages,
+                                                  commentBoxMessages,
+                                                  commentAnnMessages,
+                                                  reporterMessages,
+                                                  finalLawId,
+                                                  ratingUsers,
+                                                  imagesPath,
+                                                  finalLawUserId,
+                                                  userId,
+                                                  fullName,
                                                   commentsPerArticle,
                                                   annotationsForConsultation,
                                                   annotationProblemsForConsultation,
                                                   annotationsPerArticle,
-                                                  annotationProblemsPerArticle, commenters,
+                                                  annotationProblemsPerArticle,
+                                                  commenters,
                                                   appState,
                                                   consultationEndDate){
     this.consultationId= consultationid;
@@ -39,7 +50,10 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
         return 0;
     }
 
-
+    this.reporterMessages = reporterMessages;
+    this.messages = generalMessages;
+    this.commentBoxMessages = commentBoxMessages;
+    this.commentAnnMessages = commentAnnMessages;
 
     this.commentsPerArticle =[];
     for (var i=0; i<commentsPerArticle.length; i++)
@@ -50,19 +64,19 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
         } else {
             articleTitle = commentsPerArticle[i].title.substr(0, commentsPerArticle[i].title.indexOf(':'))
         }
-        this.commentsPerArticle.push([articleTitle, commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:150px">' + commentsPerArticle[i].title + '</h5>' + '<h5>Σχόλια: ' + commentsPerArticle[i].commentsNum + '</h5></div>', commentsPerArticle[i].id, commentsPerArticle[i].commentsNum, 0 ])
+        this.commentsPerArticle.push([articleTitle, commentsPerArticle[i].commentsNum, '<div style="padding-left: 10px"><h5 style="width:150px">' + commentsPerArticle[i].title + '</h5>' + '<h5>' + this.reporterMessages.commentsPlural + ': ' + commentsPerArticle[i].commentsNum + '</h5></div>', commentsPerArticle[i].id, commentsPerArticle[i].commentsNum, 0 ])
     }
 
     this.annotationsForConsultation = [];
     for (var i=0; i<annotationsForConsultation.length; i++)
     {
-        this.annotationsForConsultation.push([annotationsForConsultation[i].annotationTag.description, annotationsForConsultation[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="150px">Θέμα: ' + annotationsForConsultation[i].annotationTag.description + '</h5>' + '<h5>Σχόλια: ' + annotationsForConsultation[i].numberOfComments + '</h5></div>', annotationsForConsultation[i].annotationTag.id, annotationsForConsultation[i].numberOfComments, 0 ])
+        this.annotationsForConsultation.push([annotationsForConsultation[i].annotationTag.description, annotationsForConsultation[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="150px">' + this.reporterMessages.topicsSingular +': ' + annotationsForConsultation[i].annotationTag.description + '</h5>' + '<h5>' + this.reporterMessages.commentsPlural + ': ' + annotationsForConsultation[i].numberOfComments + '</h5></div>', annotationsForConsultation[i].annotationTag.id, annotationsForConsultation[i].numberOfComments, 0 ])
     }
 
     this.annotationProblemsForConsultation = [];
     for (var i=0; i<annotationProblemsForConsultation.length; i++)
     {
-        this.annotationProblemsForConsultation.push([ annotationProblemsForConsultation[i].annotationTag.description, annotationProblemsForConsultation[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">Θέμα: ' + annotationProblemsForConsultation[i].annotationTag.description + '</h5>' + '<h5>Σχόλια: ' + annotationProblemsForConsultation[i].numberOfComments + '</h5></div>', annotationProblemsForConsultation[i].annotationTag.id,annotationProblemsForConsultation[i].numberOfComments, 0 ])
+        this.annotationProblemsForConsultation.push([ annotationProblemsForConsultation[i].annotationTag.description, annotationProblemsForConsultation[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">' + this.reporterMessages.topicsSingular +': ' + annotationProblemsForConsultation[i].annotationTag.description + '</h5>' + '<h5>' + this.reporterMessages.commentsPlural + ': ' + annotationProblemsForConsultation[i].numberOfComments + '</h5></div>', annotationProblemsForConsultation[i].annotationTag.id,annotationProblemsForConsultation[i].numberOfComments, 0 ])
     }
 
     this.annotationsPerArticle = [];
@@ -74,7 +88,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
         } else {
             articleTitle = annotationsPerArticle[i].article_name.substr(0, annotationsPerArticle[i].article_name.indexOf(':'));
         }
-        this.annotationsPerArticle.push([articleTitle + ": " + annotationsPerArticle[i].annotationTag.description,  annotationsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">' + annotationsPerArticle[i].article_name + '<div>Tag: ' + annotationsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationsPerArticle[i].numberOfComments + '</h5></div>', annotationsPerArticle[i].article_id, annotationsPerArticle[i].numberOfComments, annotationsPerArticle[i].annotationTag.id ])
+        this.annotationsPerArticle.push([articleTitle + ": " + annotationsPerArticle[i].annotationTag.description,  annotationsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">' + annotationsPerArticle[i].article_name + '<div>Tag: ' + annotationsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>' + this.reporterMessages.commentsPlural + ': ' + annotationsPerArticle[i].numberOfComments + '</h5></div>', annotationsPerArticle[i].article_id, annotationsPerArticle[i].numberOfComments, annotationsPerArticle[i].annotationTag.id ])
     }
 
     this.annotationProblemsPerArticle = [];
@@ -86,7 +100,7 @@ scify.ConsultationReporterPageHandler = function( consultationid,finalLawId,rati
         } else {
             articleTitle = annotationProblemsPerArticle[i].article_name.substr(0, annotationProblemsPerArticle[i].article_name.indexOf(':'));
         }
-        this.annotationProblemsPerArticle.push([articleTitle + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>Σχόλια: ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>', annotationProblemsPerArticle[i].article_id,annotationProblemsPerArticle[i].numberOfComments, annotationProblemsPerArticle[i].annotationTag.id ])
+        this.annotationProblemsPerArticle.push([articleTitle + ": " + annotationProblemsPerArticle[i].annotationTag.description,  annotationProblemsPerArticle[i].numberOfComments, '<div style="padding-left: 10px"><h5 style="width:150px">' + annotationProblemsPerArticle[i].article_name + '<div>Tag: ' + annotationProblemsPerArticle[i].annotationTag.description + '</div></h5>' + '<h5>' + this.reporterMessages.commentsPlural + ': ' + annotationProblemsPerArticle[i].numberOfComments + '</h5></div>', annotationProblemsPerArticle[i].article_id,annotationProblemsPerArticle[i].numberOfComments, annotationProblemsPerArticle[i].annotationTag.id ])
     }
 
     getUserById = function(userId) {
@@ -196,7 +210,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
     },
     loadArticleWordCloud = function(articleId, commentsNum) {
     window.ArticleWordCloudComponent.getArticleWordCloudFromServer(articleId, commentsNum);
-},
+    },
     createChart = function(dataForChart, chartId, chartName, xName, yName, strName, numName, chartWidth, chartType, instance) {
         function drawMultSeries() {
             var data = new google.visualization.DataTable();
@@ -316,14 +330,15 @@ scify.ConsultationReporterPageHandler.prototype = function(){
                 userId                  : userId,
                 user                    : userObj,
                 commentsCount : $(userDiv).data("count"),
-                imagesPath : instance.imagesPath
+                imagesPath : instance.imagesPath,
+                messages: instance.commentBoxMessages
             };
             var domElementToAddComponent = document.getElementById("box_" + userId);
             scify.userBoxes[userId] = React.render(React.createElement(scify.UserBox, userBoxProperties), domElementToAddComponent);
         });
     },
-    attachTooltips = function () {
-        $("#usersStatsTooltip").attr('title', 'Πατήστε επάνω σε ένα όνομα για να φορτώσετε τα σχόλια');
+    attachTooltips = function (instance) {
+        $("#usersStatsTooltip").attr('title', instance.reporterMessages.clickOnName);
         $('#usersStatsTooltip').click(function () {
             $('#usersStatsTooltip').mouseover();
         });
@@ -355,7 +370,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }
         }
 
-        var consultationId = instance.consultationId;
+        var consultationId = instance.consultationid;
         var finalLawId = instance.finalLawId;
         var liked = false;
         $( "#rateApprove a" ).click(function() {
@@ -364,7 +379,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }
             else if(userId == instance.finalLawUserId) {
                 $(".noRateBtn").trigger( "click" );
-                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+                $("#noRateModal .notLoggedText").html(instance.messages.youCannotVoteFLMsg);
             }
             else {
                 if($( "#rateDisapprove").hasClass("liked")) {
@@ -409,7 +424,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             }
             else if(userId == instance.finalLawUserId) {
                 $(".noRateBtn").trigger( "click" );
-                $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+                $("#noRateModal .notLoggedText").html(instance.messages.youCannotVoteFLMsg);
             }
             else {
                 if($( "#rateApprove").hasClass("liked")) {
@@ -450,49 +465,54 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         });
     },
     createFinalLawUpload = function(instance) {
-        // "myAwesomeDropzone" is the camelized version of the HTML element's ID
-        Dropzone.options.finalLawDropZone = {
-            paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 10, // MB
-            url: "/consultation/finalLawUpload/" + instance.consultationId + "/" + instance.userId,
-            uploadMultiple: false,
-            maxFiles: 1,
-            acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: "Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ",
-            dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
-            accept: function(file, done) {
-                $("#finalLawDropZone").append('<div class="waiting-msg"> Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. <div class="loader">Loading...</div></div>');
-                if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
-                    done("Naha, you don't.");
-                }
-                else { done(); }
-            },
-            init: function() {
-                this.on("error", function(file,errorMessage) {
-                    $(".dz-error-message").css("opacity",1);
-                    this.removeFile(file);
-                    console.log(errorMessage);
-                    $(".dz-error-message").append('<div>' + errorMessage + '</div>');
-                });
-                this.on("addedfile", function() {
-                    /*If more than one file, we ceep the latest one*/
-                    if (this.files[1]!=null){
-                        this.removeFile(this.files[0]);
+            // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+            Dropzone.options.finalLawDropZone = {
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 10, // MB
+                url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
+                uploadMultiple: false,
+                maxFiles: 1,
+                acceptedFiles: "application/pdf,text/plain",
+                dictDefaultMessage: instance.messages.uploadFLmsg,
+                dictInvalidFileType: instance.messages.uploadFLWrongFile,
+                accept: function(file, done) {
+                    console.log();
+                    $("#finalLawDropZone").append('<div class="waiting-msg"> ' +
+                        instance.messages.uploadFLLoadingMsg +
+                        '<div class="loader">Loading...</div></div>');
+                    if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
+                        done("Naha, you don't.");
                     }
-                });
-                this.on('success', function() {
-                    $("#finalLawDropZone").find("waiting-msg").remove();
-                    //console.log("success");
-                    setTimeout(function (){
-                        var url = window.location.href;
-                        if(url.indexOf("?target=finalLaw") == -1)
-                            url += '?target=finalLaw';
-                        window.location.href = url;
-                    }, 500);
-                });
-            }
-        };
-    },
+                    else { done(); }
+                },
+                init: function() {
+                    this.on("error", function(file,errorMessage) {
+                        $(".dz-error-message").css("opacity",1);
+                        console.log(errorMessage);
+                        var instance = this;
+                        $(".dz-details").on("click", function(){
+                            instance.removeFile(file);
+                        });
+                    });
+                    this.on("addedfile", function() {
+                        /*If more than one file, we keep the latest one*/
+                        if (this.files[1]!=null){
+                            this.removeFile(this.files[0]);
+                        }
+                    });
+                    this.on('success', function() {
+                        $("#finalLawDropZone").find("waiting-msg").remove();
+                        console.log("success");
+                        setTimeout(function (){
+                            var url = window.location.href;
+                            if(url.indexOf("?target=finalLaw") == -1)
+                                url += '?target=finalLaw';
+                            window.location.href = url;
+                        }, 500);
+                    });
+                }
+            };
+        },
     getParameterPointToFinalLaw = function () {
         var parameter = getParameterByName("target");
         //console.log(parameter);
@@ -509,45 +529,45 @@ scify.ConsultationReporterPageHandler.prototype = function(){
     },
     finalLawModalHandler = function() {
         $( "#finalLawModalBtn" ).click(function() {
-            //console.log("wsadfrs");
             $(".modal-body .container .consultationText div").first().find(".show-hide").click();
             $(".modal-body .finalLawUploadedContent div").first().find(".show-hide").click();
-            //$("#finalLawDiv").first().animate({scrollTop: $('.finalLawUploadedContent').offset().top + 80});
         });
     },
     deleteFinalLawHandler = function(instance) {
 
-        $( "#deleteFinalLaw" ).click(function() {
-            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
-            if (answer == true) {
-                //console.log("You pressed OK!");
-                var finalLawId = instance.finalLawId;
-                //console.log(finalLawId);
-                $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
-                $.ajax({
-                    type: 'GET',
-                    url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
-                    beforeSend: function () {
-                    },
-                    success: function (returnData) {
-                        setTimeout(function (){
-                            var url = window.location.href;
-                            if(url.indexOf("?target=finalLaw") == -1)
-                                url += '?target=finalLaw';
-                            window.location.href = url;
-                        }, 200);
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function () {
-                        console.log("complete");
+            $( "#deleteFinalLaw" ).click(function() {
+                var answer = window.confirm(instance.messages.deleteFLPrompt);
+                if (answer == true) {
+                    console.log("You pressed OK!");
+                    var finalLawId = instance.finalLawId;
+                    console.log(finalLawId);
+                    $("#deleteLaw").append('<div class="loaderSmall">Loading...</div>');
+                    $.ajax({
+                        type: 'GET',
+                        url: "/consultation/finallaw/delete/" + finalLawId + "/" + instance.userId,
+                        beforeSend: function () {
+                        },
+                        success: function (returnData) {
+                            setTimeout(function (){
+                                var url = window.location.href;
+                                if(url.indexOf("?target=finalLaw") == -1)
+                                    url += '?target=finalLaw';
+                                window.location.href = url;
+                            }, 200);
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function () {
+                            console.log("complete");
 
-                    }
-                });
-            }
-        });
-    },
+                        }
+                    });
+                } else {
+                    console.log("You pressed Cancel!");
+                }
+            });
+        },
     createCommentListParams = function(instance) {
         var userDefined = true;
         if(instance.userId==undefined || instance.userId=='' || instance.userId== null) {
@@ -574,7 +594,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             shouldDisplayFinalLawAnnBtn: true,
             shouldDisplayLikeDislike:true,
             commentClassNames:"comment",
-            shouldDisplayReportAction:true
+            shouldDisplayReportAction:true,
+            messages: instance.commentBoxMessages
         };
         instance.commentListOpenGovProperties = {
             userId : instance.userId,
@@ -597,7 +618,8 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             shouldDisplayFinalLawAnnBtn: false,
             shouldDisplayLikeDislike:false,
             commentClassNames:"comment",
-            shouldDisplayReportAction:false
+            shouldDisplayReportAction:false,
+            messages: instance.commentBoxMessages
         };
     },
     handleMatchCommentWithLaw = function(e,data){
@@ -630,20 +652,44 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         var instance= this;
         moment.locale('el');
         addRelevantLawsHandler();
+        console.log(instance.reporterMessages);
         if(this.commentsPerArticle.length > 0) {
-            createChart(this.commentsPerArticle, "commentsPerArticleInnerChart", "Σχόλια ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το άρθρο)", "Αριθμός σχολίων", "Άρθρα", "Άρθρο", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.commentsPerArticle, "commentsPerArticleInnerChart",
+                instance.reporterMessages.commentsPerArticleTitle,
+                instance.reporterMessages.commentsNumberTitle,
+                instance.reporterMessages.articlesPlural,
+                instance.reporterMessages.articlesSingular,
+                instance.reporterMessages.commentsPlural, '75%', 'bar', instance);
         }
         if(this.annotationsForConsultation.length > 0) {
-            createChart(this.annotationsForConsultation, "annotationsForConsultationInnerChart", "Θέματα που θίγονται (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα)", "Αριθμός σχολίων", "Θέμα", "Θέμα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationsForConsultation, "annotationsForConsultationInnerChart",
+                instance.reporterMessages.topicsTitle,
+                instance.reporterMessages.commentsNumberTitle,
+                instance.reporterMessages.topicSingular,
+                instance.reporterMessages.topicSingular,
+                instance.reporterMessages.commentsPlural, '75%', 'bar', instance);
         }
         if(this.annotationProblemsForConsultation.length > 0) {
-            createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationInnerChart", "Προβλήματα (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα)", "Πρόβλημα", "Πρόβλημα", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationProblemsForConsultation, "annotationProblemsForConsultationInnerChart",
+                instance.reporterMessages.problemsTitle,
+                instance.reporterMessages.problemsSingular,
+                instance.reporterMessages.problemsSingular,
+                instance.reporterMessages.problemsSingular,
+                instance.reporterMessages.commentsPlural, '75%', 'bar', instance);
         }
         if(this.annotationsPerArticle.length > 0) {
-            createChart(this.annotationsPerArticle, "annotationsPerArticleInnerChart", "Θέματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το θέμα ανά άρθρο)", "Αριθμός σχολίων", "", "Θέμα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationsPerArticle, "annotationsPerArticleInnerChart",
+                instance.reporterMessages.topicsPerArticleTitle,
+                instance.reporterMessages.commentsNumberTitle, "",
+                instance.reporterMessages.topicSingular,
+                instance.reporterMessages.commentsPlural, '75%', 'bar', instance);
         }
         if(this.annotationProblemsPerArticle.length > 0) {
-            createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleInnerChart", "Προβλήματα ανά άρθρο (πατήστε πάνω σε μια μπάρα για να δείτε τα σχόλια για το πρόβλημα ανά άρθρο)", "Αριθμός σχολίων", "", "Πρόβλημα", "Σχόλια", '75%', 'bar', instance);
+            createChart(this.annotationProblemsPerArticle, "annotationProblemsPerArticleInnerChart",
+                instance.reporterMessages.problemsPerArticleTitle,
+                instance.reporterMessages.commentsNumberTitle, "",
+                instance.reporterMessages.problemsSingular,
+                instance.reporterMessages.commentsPlural, '75%', 'bar', instance);
         }
         createUserBox(this);
         createCommentListParams(instance);
@@ -653,7 +699,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
         createListOfCommentsByAnnIdPerArticle(instance);
         createListOfCommentsByProblemIdPerArticle(instance);
         createArticleWordCloudChart(instance);
-        attachTooltips();
+        attachTooltips(instance);
         createFinalLawUpload(instance);
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);

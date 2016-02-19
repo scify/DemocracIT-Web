@@ -35,7 +35,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
 
       implicit object Consultatites extends Writes[Consultation] {
         override def writes(c: Consultation): JsValue = Json.arr(
-          (if (c.isActive) messagesApi("endsIn") + ":" else messagesApi("endsIn") + ": ") + c.endDateFormatted,
+          (if (c.isActive) messagesApi("endsIn") + ":" else messagesApi("ended") + ": ") + c.endDateFormatted,
           "<a href='/consultation/" + c.id + "'>" + c.title + "</a>",
           c.articlesNum.toString + (if (c.articlesNum == 1) " " + messagesApi("article.singular") else " " + messagesApi("article.plural"))
         )

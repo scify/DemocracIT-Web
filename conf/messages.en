@@ -85,7 +85,7 @@ index.empty = There is no open consultation at the moment
 index.name.first = First name:
 index.name.last = Last name:
 index.name.full = Full name:
-consultation.index.participation = Take part in consultation
+consultation.index.participation = Participate in the consultation
 consultation.index.articles = Consultation Articles
 consultation.index.relatedlaws = Related laws
 consultation.index.commentanalysis = Comment Analysis
@@ -247,8 +247,8 @@ commentBox.commentFLMatching = Did this comment influence the final law?
 commentBox.like = Agree
 commentBox.dislike = Disagree
 date = Date
-commentBox.likeUsers = Users that agree
-commentBox.dislikeUsers = Users that disagree
+commentBox.likeUsers = Users who agree
+commentBox.dislikeUsers = Users who disagree
 commentBox.reportCommentPrompt = If you are sure that this comment is abusive, click "Report":
 commentBox.reportCommentAlready = You have already reported this comment as abusive
 commentBox.reportCommentDone = The report has been submitted. Click "Close" to return to the previous page.
@@ -292,3 +292,19 @@ consultations.search.totalRecords = total records)
 consultations.search.all = All
 consultation.linkToOpenGov = consultation at opengov.gr
 homepage = Home
+reporter.topicSingular = Topic
+reporter.commentsPlural = Comments
+reporter.clickOnName = Click on a name to load the comments
+reporter.commentsPerArticleTitle = Comments per article (click on a bar to load the comments for the article)
+reporter.topicsTitle = Topics (click on a bar to load the comments for the topic)
+reporter.problemsTitle = Issues / Problems (click on a bar to load the comments for the issue / problem)
+reporter.topicsPerArticleTitle = Topics per article (click on a bar to load the comments for the topic per article)
+reporter.problemsPerArticleTitle = Issues / Problems per article (click on a bar to load the comments for the issue / topic per article)
+reporter.commentsNumberTitle = Number of comments
+reporter.articlesPlural = Articles
+reporter.articlesSingular = Article
+reporter.problemsSingular = Problem
+
+
+
+

@@ -62,8 +62,8 @@
 
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTab=>
-                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@messages("consultation.index.articles")</a></li>
+                @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTabTitle=>
+                    <li role="presentation" class="active" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@consultationArticlesTabTitle</a></li>
                 }
                 <li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.relatedlaws")</a></li>
                 <li role="presentation"> <a href="@routes.ConsultationController.getReporterPage(vm.consultation.id)" target="_blank">@messages("consultation.index.commentanalysis")</a></li>
@@ -235,7 +235,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" id="closeInnerModal" onclick="myFunction()">&times;</button>
+                                                                <button type="button" class="close" id="closeInnerModal" onclick="closeInnerModal()">&times;</button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="notLoggedinWrapper">

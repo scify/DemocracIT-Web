@@ -27,24 +27,28 @@
     {'modules':[{'name':'visualization','version':'1.1','packages':
     ['corechart']}]}"></script>
     <script>
-     $(function(){
-        var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
-                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
-                                                                @Html(vm.ratingUsersToJson()),
-                                                                '@routes.Assets.at("images")',
-                                                                '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
-                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
-                                                                @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
-                                                                @Html(vm.commentsPerArticleToJson()),
-                                                                @Html(vm.annotationsForConsultationToJson(1)),
-                                                                @Html(vm.annotationsForConsultationToJson(2)),
-                                                                @Html(vm.annotationsPerArticleToJson(1)),
-                                                                @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
-                                                                '@play.Play.application().configuration().getString("application.state")',
-                                                                Date.parse('@vm.consultation.endDate')
-                                                                );
-        controller.init();
-     })
+            $(function(){
+                var controller = new scify.ConsultationReporterPageHandler(@vm.consultation.id,
+                        @Html(vm.getGeneralMessages(messages)),
+                        @Html(vm.getCommentBoxMessages(messages)),
+                        @Html(vm.getCommentAnnotatorMessages(messages)),
+                        @Html(vm.getReporterMessages(messages)),
+                        '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
+                        @Html(vm.ratingUsersToJson()),
+                        '@routes.Assets.at("images")',
+                        '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',
+                        @Html(if (vm.user.isDefined) "'"+vm.user.get.userID.toString+"'" else "''"),
+                        @Html(if (vm.user.isDefined) "'"+vm.user.get.fullName.getOrElse("n/a")+"'" else "''"),
+                        @Html(vm.commentsPerArticleToJson()),
+                        @Html(vm.annotationsForConsultationToJson(1)),
+                        @Html(vm.annotationsForConsultationToJson(2)),
+                        @Html(vm.annotationsPerArticleToJson(1)),
+                        @Html(vm.annotationsPerArticleToJson(2)), @Html(vm.userCommentStatsToJson()),
+                        '@play.Play.application().configuration().getString("application.state")',
+                        Date.parse('@vm.consultation.endDate')
+                );
+                controller.init();
+            })
     </script>
 }
 
@@ -63,11 +67,11 @@
         @consultation.consultationHeader(vm.consultation,vm.relevantMaterials)
         <div  class="container">
             <ul id="tabs" class="nav nav-tabs" role="tablist">
-                @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTab=>
-                    <li role="presentation" id="step1"><a href="#consultation-body" aria-controls="consultation-body" role="tab" data-toggle="tab">@messages("consultation.index.articles")</a></li>
+                @defining(if (vm.consultation.isActive) messages("consultation.index.participation") else messages("consultation.index.articles")) { consultationArticlesTabTitle=>
+                    <li role="presentation"><a href="@routes.ConsultationController.getConsultation(vm.consultation.id)">@consultationArticlesTabTitle</a></li>
                 }
                 <<li role="presentation"><a href="#relevantLawsList" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.relatedlaws")</a></li>
-                <li role="presentation" class="active"> <a href="#annotatorContent" target="_blank">@messages("consultation.index.commentanalysis")</a></li>
+                <li role="presentation" class="active"> <a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">@messages("consultation.index.commentanalysis")</a></li>
                 @if(!vm.consultation.isActive){<li id="finalLawLink" role="presentation" class="finalLawLi">
                     <a href="#finalLaw" aria-controls="profile" role="tab" data-toggle="tab">@messages("consultation.index.finallaw")</a></li>}
 
@@ -172,7 +176,6 @@
                             <ul class="downloadStats">
                                 <li><a href="/comments/cons/opengov/retrieve/csv/@vm.consultation.id"><i class="fa fa-download"></i>@messages("reporter.downloadcsv.opengov")</a></li>
                                 <li><a href="/comments/cons/dit/retrieve/csv/@vm.consultation.id"><i class="fa fa-download"></i>@messages("reporter.downloadcsv.democracit")</a></li>
-                                -->
                             </ul>
                         </div>
                     </div>
@@ -290,7 +293,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" id="closeInnerModal" onclick="myFunction()">&times;</button>
+                                                                <button type="button" class="close" id="closeInnerModal" onclick="closeInnerModal()">&times;</button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="notLoggedinWrapper">
@@ -305,7 +308,7 @@
                                                     </div>
                                                 </div>
                                                 <script>
-                                                    myFunction = function(){
+                                                        closeInnerModal = function(){
                                                         $("#noRateModal").modal('hide')
                                                     }
                                                 </script>
