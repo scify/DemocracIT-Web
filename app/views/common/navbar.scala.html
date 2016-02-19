@@ -13,7 +13,7 @@
                 @if(play.Play.application().configuration().getString("application.state") == "development") {
                     <a href="/" class="navbar-brand"> <img id="logo" alt="Brand" src="@routes.Assets.at("images/logo.png")"/></a>
                 } else {
-                    <a href="http://democracit.org" class="navbar-brand"> <img id="logo" alt="Brand" src="http://democracit.org@routes.Assets.at("images/logo.png")"/> </a>
+                    <a href="http://www.democracit.org" class="navbar-brand"> <img id="logo" alt="Brand" src="http://democracit.org@routes.Assets.at("images/logo.png")"/> </a>
                 }
 
             </div>
@@ -22,7 +22,7 @@
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
                         <li><a href="/"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
                     } else {
-                        <li><a href="http://democracit.org"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
+                        <li><a href="http://www.democracit.org"><i class="fa fa-home"></i> ΑΡΧΙΚΗ</a></li>
                     }
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
                         <li><a href="@routes.ConsultationController.displayAll()"><i class="fa fa-list"></i> ΔΙΑΒΟΥΛΕΥΣΕΙΣ</a></li>
@@ -32,7 +32,7 @@
                     @if(play.Play.application().configuration().getString("application.state") == "development") {
                         <li><a href="/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
                     } else {
-                        <li><a href="http://democracit.org/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
+                        <li><a href="http://www.democracit.org/evaluation"><i class="fa fa-bar-chart"></i> ΑΝΑΦΟΡΕΣ</a></li>
                     }
                     <li><a href="http://about.democracit.org/blog/"><i class="fa fa-rss"></i> ΒLOG</a></li>
                     <li class="dropdown">
