@@ -29,6 +29,7 @@
                  @Html(vm.getGeneralMessages(messages)),
                  @Html(vm.getCommentBoxMessages(messages)),
                  @Html(vm.getCommentAnnotatorMessages(messages)),
+                 @Html(vm.getTutorialAnnotatorMessages(messages)),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.id}',
                  @Html(vm.ratingUsersToJson()),
                  '@if(vm.finalLaw.isDefined){@vm.finalLaw.get.user_id}',

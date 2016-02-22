@@ -3,6 +3,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,
                                                generalMessages,
                                                commentBoxMessages,
                                                commentAnnMessages,
+                                               tutorialAnnotatorMessages,
                                                finalLawId,
                                                ratingUsers,
                                                finalLawUserId,
@@ -34,6 +35,7 @@ scify.ConsultationIndexPageHandler = function( consultationid,
     this.messages = generalMessages;
     this.commentBoxMessages = commentBoxMessages;
     this.commentAnnMessages = commentAnnMessages;
+    this.tutorialAnnotatorMessages = tutorialAnnotatorMessages;
     this.relevantLaws = [];
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
@@ -578,7 +580,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         //tinymce.init({selector:'textarea'})
 
-        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
+        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath, this.tutorialAnnotatorMessages);
         this.tutorialAnnotator.init();
         createWordCloudChart(instance);
         createFinalLawUpload(instance);

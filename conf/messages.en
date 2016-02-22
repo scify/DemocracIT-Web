@@ -185,8 +185,8 @@ annotation.comment.text = Comment for the text:
 annotation.comment.tagtext = Which topic is the text referring to?
 annotation.comment.tagtexttip.article = help the lawmaker by providing annotation tags for the article
 annotation.comment.tagtexttip.text = help the lawmaker by providing annotation tags for the text
-annotation.comment.problem.texttip.article = Are you identifying any problem in the article?
-annotation.comment.problem.texttip.text = Are you identifying any problem?
+annotation.comment.problem.texttip.article = Are you identifying any problems in the article?
+annotation.comment.problem.texttip.text = Are you identifying any problems?
 annotation.comment.leavetext.prompt = Leave your comment:
 annotation.comment.leavetext.placeholder = I would like to say...
 annotation.comment.emotion.text = The text I am commenting on makes me feel:
@@ -333,6 +333,18 @@ COMMENTS_101_TO_200 = 101 to 200
 COMMENTS_201_TO_500 = 201 to 500
 COMMENTS_501_TO_800 = 501 to 800
 COMMENTS_MORE_THAN_800 = more than 801
+consultation.tutorial.commentPromptOnTextPart = Do you want to comment on a specific part of the text? Click on the pencil next to it.
+consultation.tutorial.commentPromptOnArticle = Do you want to comment on the whole article? Click on the pencil next to it''s title.
+consultation.tutorial.indexPrompt = Express yourself! See the consultation text, the comments and post your own comments.
+consultation.tutorial.relevantMaterialPrompt = Study the subject before you post a comment. See here the relevant material, e.g. the introductory report of the law.
+consultation.tutorial.seeConsultationTextPrompt = See the consultation text and the users'' comments.
+consultation.tutorial.relevantMaterialPrompt2 = See here the relevant material, e.g. the introductory report of the law.
+consultation.tutorial.seeOtherCommentsPrompt = Do you want to read what others have commented? See the comments here and express your opinion.
+consultation.tutorial.clickHereToCommentPrompt = click here to comment on the article.
+consultation.tutorial.nextLabel = Next
+consultation.tutorial.prevLabel = Previous
+consultation.tutorial.endLabel = Skip
+consultation.tutorial.okLabel = Finish
 
 
 

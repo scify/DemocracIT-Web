@@ -126,6 +126,24 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
     Json.toJson(messageList).toString()
   }
 
+  def getTutorialAnnotatorMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map(
+      "commentPromptOnTextPart" -> messages("consultation.tutorial.commentPromptOnTextPart"),
+      "commentPromptOnArticle" -> messages("consultation.tutorial.commentPromptOnArticle"),
+      "indexPrompt" -> messages("consultation.tutorial.indexPrompt"),
+      "relevantMaterialPrompt" -> messages("consultation.tutorial.relevantMaterialPrompt"),
+      "seeConsultationTextPrompt" -> messages("consultation.tutorial.seeConsultationTextPrompt"),
+      "relevantMaterialPrompt2" -> messages("consultation.tutorial.relevantMaterialPrompt2"),
+      "seeOtherCommentsPrompt" -> messages("consultation.tutorial.seeOtherCommentsPrompt"),
+      "clickHereToCommentPrompt" -> messages("consultation.tutorial.clickHereToCommentPrompt"),
+      "nextLabel" -> messages("consultation.tutorial.nextLabel"),
+      "prevLabel" -> messages("consultation.tutorial.prevLabel"),
+      "endLabel" -> messages("consultation.tutorial.endLabel"),
+      "okLabel" -> messages("consultation.tutorial.okLabel")
+    )
+    Json.toJson(messageList).toString()
+  }
+
   def groupLaws():Seq[(String, Seq[RelevantLaws])]  = {
 
     val results:Seq[(String, Seq[RelevantLaws])] = this.relevantLaws.groupBy( law => law.entity_law.replace(" ","").replace(".","")).toList

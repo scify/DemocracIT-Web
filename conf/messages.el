@@ -332,5 +332,15 @@ COMMENTS_101_TO_200 = 101 έως 200
 COMMENTS_201_TO_500 = 201 έως 500
 COMMENTS_501_TO_800 = 501 έως 800
 COMMENTS_MORE_THAN_800 = 801 και περισσότερα
-
-
+consultation.tutorial.commentPromptOnTextPart = Θέλετε να σχολιάσετε μία συγκεκριμένη φράση; Πατήστε το μολυβάκι δίπλα της.
+consultation.tutorial.commentPromptOnArticle = Θέλετε να σχολιάσετε ένα άρθρο συνολικά; Πατήστε το μολυβάκι δίπλα στον τίτλο του.
+consultation.tutorial.indexPrompt = Εδώ εκφράζεστε! Δείτε το κείμενο της διαβούλευσης, τα σχόλια άλλων πολιτών και υποβάλετε τα δικά σας.
+consultation.tutorial.relevantMaterialPrompt = Μάθετε καλύτερα το θέμα πριν εκφραστείτε. Βρείτε εδώ το απαραίτητο σχετικό υλικό π.χ. την αιτιολογική έκθεση του νομοσχεδίου.
+consultation.tutorial.seeConsultationTextPrompt = Δείτε το κείμενο της διαβούλευσης και τα σχόλια των πολιτών.
+consultation.tutorial.relevantMaterialPrompt2 = Βρείτε εδώ το απαραίτητο σχετικό υλικό π.χ. την αιτιολογική έκθεση του νομοσχεδίου.
+consultation.tutorial.seeOtherCommentsPrompt = Θέλετε να δείτε τα σχόλια άλλων πολιτών; Δείτε τα εδώ και εκφράστε τη γνώμη σας.
+consultation.tutorial.clickHereToCommentPrompt = κλικ εδώ για σχολιασμού όλου του άρθρου
+consultation.tutorial.nextLabel = Επόμενο
+consultation.tutorial.prevLabel = Πίοω
+consultation.tutorial.endLabel = Τέλος
+consultation.tutorial.okLabel = Εντάξει
