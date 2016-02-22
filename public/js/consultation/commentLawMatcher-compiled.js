@@ -14,8 +14,9 @@
                 showInnerModal: false,
                 innerModalMessage: "",
                 annotationDivBusy: false,
-                submitBtnText: "Καταχώρηση",
-                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn
+                submitBtnText: this.props.messages.submitbtn,
+                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn,
+                messages: this.props.messages
             };
         },
         componentDidMount: function componentDidMount() {
@@ -96,19 +97,19 @@
         //function to show appropriate modal for empty form submissions (no annotation areas selected)
         showNoAnnSelectedModal: function showNoAnnSelectedModal() {
             this.state.showInnerModal = true;
-            this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
+            this.state.innerModalMessage = this.state.messages.matchingNoAnn;
             this.setState(this.state);
         },
         //function to show appropriate modal for for not logged in user
         showNotLoggedInModal: function showNotLoggedInModal() {
             this.state.showInnerModal = true;
-            this.state.innerModalMessage = "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"/signIn?returnUrl=@request.uri\">συνδεδεμένοι</a>";
+            this.state.innerModalMessage = this.state.messages.notlogedintext;
             this.setState(this.state);
         },
         //function to update the text of submit button
         updateSubmitBtnText: function updateSubmitBtnText() {
             if (this.checkIfTheUserHasAnnotated()) {
-                this.state.submitBtnText = "Τροποποίηση Καταχώρησης";
+                this.state.submitBtnText = this.state.messages.editMatching;
                 this.setState(this.state);
             }
         },
@@ -210,7 +211,7 @@
         createAnnotationAreasForFinalLaw: function createAnnotationAreasForFinalLaw() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#commentLawMatcher .fl-ann").prepend("<div class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></div>");
+            $("#commentLawMatcher .fl-ann").prepend("<div class='fl-ann-icon' title='" + this.state.messages.matchingPrompt + "'><input type='checkbox'></div>");
             $("#commentLawMatcher .fl-ann").wrap("<div class=\"annotatableArea\"></div>>");
         },
         closeModal: function closeModal() {
@@ -232,11 +233,12 @@
                 finalLawHtml = React.createElement(
                     "div",
                     { id: "finalLawAnnDiv", className: "noFinalLawText" },
-                    "Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη. Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε ",
+                    this.state.messages.matchingNoLaw1,
+                    " ",
                     React.createElement(
                         "a",
                         { href: url },
-                        "εδώ"
+                        this.state.messages.here
                     )
                 );
             }
@@ -250,14 +252,16 @@
             } else {
                 if (this.state.annotators.length > 0) {
                     annotatorBox = React.createElement(AnnotationButtons, { annotators: this.state.annotators, commentId: this.state.comment.id,
-                        userId: this.props.userId });
+                        userId: this.props.userId,
+                        messages: this.state.messages });
                 } else {
                     annotatorBox = React.createElement(
                         "div",
                         { className: "noAnnotators" },
-                        "Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.",
+                        this.state.messages.commentNotMatched,
                         React.createElement("br", null),
-                        "Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες περιοχές αντιστοίχησης. ",
+                        this.state.messages.commentNotMatchedExpl,
+                        " ",
                         React.createElement("i", { className: "fa fa-arrow-right" })
                     );
                 }
@@ -297,7 +301,8 @@
                                 shouldDisplayTopics: true,
                                 commentClassNames: "comment",
                                 shouldDisplayFinalLawAnnBtn: false,
-                                shouldDisplayReportAction: false }),
+                                shouldDisplayReportAction: false,
+                                messages: this.state.messages }),
                             React.createElement(
                                 "div",
                                 { className: "annotatorBox" },
@@ -343,7 +348,7 @@
                                             React.createElement(
                                                 "button",
                                                 { className: "close btn red innerModalCloseBtn", type: "button", onClick: this.closeInnerModal },
-                                                "Κλείσιμο"
+                                                this.state.messages.closebtn
                                             )
                                         )
                                     )
@@ -372,8 +377,9 @@
                                 React.createElement(
                                     "h4",
                                     { className: "modal-title" },
-                                    "Αντιστοίχηση σχολίου με τον τελικό νόμο ",
-                                    React.createElement("i", { className: "fa fa-question-circle", title: "Επεξήγηση" })
+                                    this.state.messages.commentFLMatchingTitle,
+                                    " ",
+                                    React.createElement("i", { className: "fa fa-question-circle", title: this.state.messages.commentFLMatchingTitle })
                                 ),
                                 React.createElement(
                                     "button",
@@ -397,7 +403,7 @@
                                 React.createElement(
                                     "button",
                                     { type: "button", className: "btn btn-default", onClick: this.closeModal },
-                                    "Κλείσιμο"
+                                    this.state.messages.closebtn
                                 )
                             )
                         )
@@ -413,7 +419,8 @@
         getInitialState: function getInitialState() {
             return {
                 annotators: this.props.annotators,
-                commentId: this.props.commentId
+                commentId: this.props.commentId,
+                messages: this.props.messages
             };
         },
         //function to produce a random CSS color
@@ -474,7 +481,8 @@
                 React.createElement(
                     "div",
                     { className: "annotatorsAreaTitle" },
-                    "Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές:"
+                    this.state.messages.commentFLMatchingSeeUsersTitle,
+                    ":"
                 ),
                 annotatorBtns
             ) : "";

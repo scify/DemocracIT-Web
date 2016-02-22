@@ -10,8 +10,9 @@
                 showInnerModal: false,
                 innerModalMessage: "",
                 annotationDivBusy: false,
-                submitBtnText: "Καταχώρηση",
-                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn
+                submitBtnText: this.props.messages.submitbtn,
+                shouldDisplaySubmitBtn: this.props.shouldDisplaySubmitBtn,
+                messages: this.props.messages
             };
         },
         componentDidMount: function() {
@@ -92,19 +93,19 @@
         //function to show appropriate modal for empty form submissions (no annotation areas selected)
         showNoAnnSelectedModal: function() {
             this.state.showInnerModal = true;
-            this.state.innerModalMessage = "Παρακαλώ επιλέξτε τις περιοχές του τελικού νόμου στις οποίες ελήφθη υπ' όψη το σχόλιο.";
+            this.state.innerModalMessage = this.state.messages.matchingNoAnn;
             this.setState(this.state);
         },
         //function to show appropriate modal for for not logged in user
         showNotLoggedInModal: function() {
             this.state.showInnerModal = true;
-            this.state.innerModalMessage = 'Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a>';
+            this.state.innerModalMessage = this.state.messages.notlogedintext;
             this.setState(this.state);
         },
         //function to update the text of submit button
         updateSubmitBtnText: function() {
             if(this.checkIfTheUserHasAnnotated()) {
-                this.state.submitBtnText = "Τροποποίηση Καταχώρησης";
+                this.state.submitBtnText = this.state.messages.editMatching;
                 this.setState(this.state);
             }
         },
@@ -213,7 +214,7 @@
         createAnnotationAreasForFinalLaw: function() {
             var finalLawAnn = new scify.Annotator("#commentLawMatcher .article-body, #commentLawMatcher .article-title-text", "fl-ann");
             finalLawAnn.init();
-            $("#commentLawMatcher .fl-ann").prepend("<div class='fl-ann-icon' title='κλικ εδώ για δήλωση κειμένου που συμπεριελήφθη το σχόλιο'><input type='checkbox'></div>");
+            $("#commentLawMatcher .fl-ann").prepend("<div class='fl-ann-icon' title='" + this.state.messages.matchingPrompt + "'><input type='checkbox'></div>");
             $("#commentLawMatcher .fl-ann").wrap('<div class="annotatableArea"></div>>')
 
         },
@@ -234,8 +235,7 @@
             if(url.indexOf("?target=finalLaw") == -1)
                 url+= "?target=finalLaw";
             if(finalLawDiv == undefined) {
-                finalLawHtml = <div id="finalLawAnnDiv" className="noFinalLawText">Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει μεταφορτωθεί από κάποιον χρήστη.
-                    Αν θέλετε να βοηθήσετε το νομοθέτη ανεβάζοντάς τον, πατήστε <a href={url}>εδώ</a>
+                finalLawHtml = <div id="finalLawAnnDiv" className="noFinalLawText">{this.state.messages.matchingNoLaw1} <a href={url}>{this.state.messages.here}</a>
                 </div>;
             }
             var annotatorBox = <div></div>;
@@ -245,12 +245,12 @@
                 if (this.state.annotators.length > 0) {
                     annotatorBox =
                         <AnnotationButtons annotators={this.state.annotators} commentId={this.state.comment.id}
-                                           userId={this.props.userId}/>;
+                                           userId={this.props.userId}
+                                           messages={this.state.messages}/>;
                 } else {
                     annotatorBox =
-                        <div className="noAnnotators">Αυτό το σχόλιο δεν έχει αντιστοιχηθεί από κάποιο χρήστη.<br></br>
-                            Για να κάνετε αντιστοίχηση, περιηγηθείτε στα άρθρα του τελικού νόμου και επιλέξτε τις κατάλληλες
-                            περιοχές αντιστοίχησης. <i className="fa fa-arrow-right"></i></div>;
+                        <div className="noAnnotators">{this.state.messages.commentNotMatched}<br></br>
+                            {this.state.messages.commentNotMatchedExpl} <i className="fa fa-arrow-right"></i></div>;
                 }
             }
             var innerContent =  <scify.ReactLoader display={this.props.busy} />;
@@ -280,7 +280,8 @@
                                     shouldDisplayTopics={true}
                                     commentClassNames="comment"
                                     shouldDisplayFinalLawAnnBtn={false}
-                                    shouldDisplayReportAction={false}/>
+                                    shouldDisplayReportAction={false}
+                                    messages={this.state.messages}/>
                                 <div className="annotatorBox">
                                     {annotatorBox}
                                 </div>
@@ -300,7 +301,7 @@
                                             </div>
 
                                             <div className="modal-footer">
-                                                <button className="close btn red innerModalCloseBtn" type="button" onClick={this.closeInnerModal}>Κλείσιμο</button>
+                                                <button className="close btn red innerModalCloseBtn" type="button" onClick={this.closeInnerModal}>{this.state.messages.closebtn}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +317,7 @@
                         <div className="modal-dialog ">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h4 className="modal-title">Αντιστοίχηση σχολίου με τον τελικό νόμο <i className="fa fa-question-circle" title="Επεξήγηση"></i></h4>
+                                    <h4 className="modal-title">{this.state.messages.commentFLMatchingTitle} <i className="fa fa-question-circle" title={this.state.messages.commentFLMatchingTitle}></i></h4>
                                     <button type="button" className="close" onClick={this.closeModal}>&times;</button>
                                 </div>
                                 <div className="modal-body">
@@ -326,7 +327,7 @@
                                     {submitBtn}
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
+                                    <button type="button" className="btn btn-default" onClick={this.closeModal}>{this.state.messages.closebtn}</button>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +341,8 @@
         getInitialState: function() {
             return {
                 annotators: this.props.annotators,
-                commentId: this.props.commentId
+                commentId: this.props.commentId,
+                messages: this.props.messages
             };
         },
         //function to produce a random CSS color
@@ -396,7 +398,7 @@
             });
             var annotatorBtnContainer = this.state.annotators.length > 0 ?
                 <div id={"annotatorBtnContainer_" + this.state.commentId} className="annotatorBtnContainer">
-                    <div className="annotatorsAreaTitle">Πατήστε επάνω σε κάποιον χρήστη για να δείτε τις επισημειωμένες περιοχές:</div>
+                    <div className="annotatorsAreaTitle">{this.state.messages.commentFLMatchingSeeUsersTitle}:</div>
                     {annotatorBtns}
                 </div>:"";
             return (annotatorBtnContainer);

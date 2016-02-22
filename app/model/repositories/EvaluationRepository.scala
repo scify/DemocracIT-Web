@@ -89,31 +89,31 @@ class EvaluationRepository {
                                GroupedConsultations AS(
                                     SELECT CASE
                                             WHEN ConsultationPeriod<=5
-                                                 THEN '5 και λιγότερες'
+                                                 THEN 'LESS_THAN_5'
                                             WHEN (ConsultationPeriod>5 and ConsultationPeriod<=10)
-                                                 THEN '6 έως 10'
+                                                 THEN '6_TO_10'
                                             WHEN (ConsultationPeriod>10 and ConsultationPeriod<=15)
-                                                 THEN '11 έως 15'
+                                                 THEN '11_TO_15'
                                             WHEN (ConsultationPeriod>15 and ConsultationPeriod<=20)
-                                                 THEN '16 έως 20'
+                                                 THEN '16_TO_20'
                                             WHEN (ConsultationPeriod>20 and ConsultationPeriod<=30)
-                                                 THEN '21 έως 30'
+                                                 THEN '21_TO_30'
                           		  WHEN (ConsultationPeriod>30 and ConsultationPeriod<=50)
-                                                 THEN '31 έως 50'
+                                                 THEN '31_TO_50'
                           		  WHEN (ConsultationPeriod>50)
-                                                 THEN '50 και περισσότερες'
+                                                 THEN 'MORE_THAN_50'
                                             END AS Periods,
                                             organization_id, id
                                             FROM ConsultationTimes
                                ),
                                Periods as (
-              			select '5 και λιγότερες' as Periods ,1 as orderid union
-              			select '6 έως 10'  as Periods, 2 as orderid union
-              			select '11 έως 15' as Periods, 3 as orderid union
-              			select '16 έως 20' as Periods, 4 as orderid union
-              			select '21 έως 30'  as Periods, 5 as orderid union
-              			select '31 έως 50' as Periods, 6 as orderid union
-              			select '50 και περισσότερες' as Periods,7 as orderid
+              			select 'LESS_THAN_5' as Periods, 1 as orderid union
+              			select '6_TO_10'  as Periods, 2 as orderid union
+              			select '11_TO_15' as Periods, 3 as orderid union
+              			select '16_TO_20' as Periods, 4 as orderid union
+              			select '21_TO_30'  as Periods, 5 as orderid union
+              			select '31_TO_50' as Periods, 6 as orderid union
+              			select 'MORE_THAN_50' as Periods,7 as orderid
                                ),
                                Dimentions as (
                                select Periods.Periods,id, orderid, organization_lkp.title, organization_lkp.group_title
@@ -146,19 +146,19 @@ class EvaluationRepository {
                    GroupedConsultations AS(
                         SELECT CASE
                                 WHEN ConsultationPeriod<=5
-                                     THEN '5 και λιγότερες'
+                                     THEN 'LESS_THAN_5'
                                 WHEN (ConsultationPeriod>5 and ConsultationPeriod<=10)
-                                     THEN '6 έως 10'
+                                     THEN '6_TO_10'
                                 WHEN (ConsultationPeriod>10 and ConsultationPeriod<=15)
-                                     THEN '11 έως 15'
+                                     THEN '11_TO_15'
                                 WHEN (ConsultationPeriod>15 and ConsultationPeriod<=20)
-                                     THEN '16 έως 20'
+                                     THEN '16_TO_20'
                                 WHEN (ConsultationPeriod>20 and ConsultationPeriod<=30)
-                                     THEN '21 έως 30'
+                                     THEN '21_TO_30'
               		  WHEN (ConsultationPeriod>30 and ConsultationPeriod<=50)
-                                     THEN '31 έως 50'
+                                     THEN '31_TO_50'
               		  WHEN (ConsultationPeriod>50)
-                                     THEN '50 και περισσότερες'
+                                     THEN 'MORE_THAN_50'
                                 END AS Periods,
                                 *
                                 FROM ConsultationTimes
@@ -172,13 +172,13 @@ class EvaluationRepository {
                      GROUP BY
                               Periods
                      ORDER BY
-                              CASE Periods WHEN '5 και λιγότερες'     THEN 1
-                                           WHEN '6 έως 10'            THEN 2
-                                           WHEN '11 έως 15'           THEN 3
-                                           WHEN '16 έως 20'           THEN 4
-                                           WHEN '21 έως 30' 		THEN 5
-                                           WHEN '31 έως 50' 		THEN 6
-                                           WHEN '50 και περισσότερες' THEN 7
+                              CASE Periods WHEN 'LESS_THAN_5'  THEN 1
+                                           WHEN '6_TO_10'      THEN 2
+                                           WHEN '11_TO_15'     THEN 3
+                                           WHEN '16_TO_20'     THEN 4
+                                           WHEN '21_TO_30' 		 THEN 5
+                                           WHEN '31_TO_50' 		 THEN 6
+                                           WHEN 'MORE_THAN_50' THEN 7
                               END
             """).as(ConsDurationParser.Parse *)
       consDurationPerMonth
@@ -201,31 +201,31 @@ class EvaluationRepository {
                         GroupedConsultations AS(
                           SELECT CASE
                                   WHEN numberOfComments<=20
-                                       THEN '20 και λιγότερα'
+                                       THEN 'COMMENTS_LESS_THAN_20'
                                   WHEN (numberOfComments>20 and numberOfComments<=50)
-                                       THEN '21 έως 50'
+                                       THEN 'COMMENTS_21_TO_50'
                                   WHEN (numberOfComments>50 and numberOfComments<=100)
-                                       THEN '51 έως 100'
+                                       THEN 'COMMENTS_51_TO_100'
                                   WHEN (numberOfComments>100 and numberOfComments<=200)
-                                       THEN '101 έως 200'
+                                       THEN 'COMMENTS_101_TO_200'
                                   WHEN (numberOfComments>200 and numberOfComments<=500)
-                                       THEN '201 έως 500'
+                                       THEN 'COMMENTS_201_TO_500'
                                   WHEN (numberOfComments>500 and numberOfComments<=800)
-                                       THEN '501 έως 800'
+                                       THEN 'COMMENTS_501_TO_800'
                                   WHEN (numberOfComments>800)
-                                       THEN '801 και περισσότερα'
+                                       THEN 'COMMENTS_MORE_THAN_800'
                                   END AS CommentWindow,
                                   *
                                   FROM ConsultationComments
                         ),
                         CommentWindow as (
-                            select '20 και λιγότερα' as CommentWindow ,1 as orderid union
-                            select '21 έως 50'  as CommentWindow, 2 as orderid union
-                            select '51 έως 100' as CommentWindow, 3 as orderid union
-                            select '101 έως 200' as CommentWindow, 4 as orderid union
-                            select '201 έως 500'  as CommentWindow, 5 as orderid union
-                            select '501 έως 800' as CommentWindow, 6 as orderid union
-                            select '801 και περισσότερα' as CommentWindow,7 as orderid),
+                            select 'COMMENTS_LESS_THAN_20' as CommentWindow ,1 as orderid union
+                            select 'COMMENTS_21_TO_50'  as CommentWindow, 2 as orderid union
+                            select 'COMMENTS_51_TO_100' as CommentWindow, 3 as orderid union
+                            select 'COMMENTS_101_TO_200' as CommentWindow, 4 as orderid union
+                            select 'COMMENTS_201_TO_500'  as CommentWindow, 5 as orderid union
+                            select 'COMMENTS_501_TO_800' as CommentWindow, 6 as orderid union
+                            select 'COMMENTS_MORE_THAN_800' as CommentWindow,7 as orderid),
                                        Dimentions as (
                                        select CommentWindow.CommentWindow,id, orderid, organization_lkp.title, organization_lkp.group_title
                             from CommentWindow

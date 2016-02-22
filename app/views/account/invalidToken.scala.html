@@ -8,12 +8,12 @@
 }
 @layout("Ενεργοποίηση λογαριασμού",css,js,None) {
     <fieldset class="col-md-6 col-md-offset-3">
-        <legend>Αποτυχία επεξεργασίας</legend>
+        <legend>@messages("invalidtoken.title")</legend>
         <div class="user col-md-6 col-md-offset-3">
             <div class="row data">
                 <div class="col-md-12">
                     <div class="row">
-                        <p>Ο σύνδεσμος που επιλέξατε δεν είναι πλεόν ενεργός</p>
+                        <p>@messages("invalidtoken.message")</p>
                         <p>@msg</p>
                     </div>
                 </div>

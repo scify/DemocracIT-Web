@@ -1,7 +1,9 @@
-scify.CommentAnnotator = function(enableUserToAnnotateSubtext, onCommentSubmitHandler){
+scify.CommentAnnotator = function(enableUserToAnnotateSubtext, onCommentSubmitHandler, commentAnnMessages){
 
     this.enableUserToAnnotateSubtext = enableUserToAnnotateSubtext;
     this.onCommentSubmitHandler  =onCommentSubmitHandler;
+    this.messages = commentAnnMessages;
+    console.log(this.messages);
 }
 scify.CommentAnnotator.prototype = (function(){
     var getSelection = function() {
@@ -47,8 +49,7 @@ scify.CommentAnnotator.prototype = (function(){
                     selection.removeAllRanges();
             }
         },
-        attachAnnotationEvents = function(){
-            var instance = this;
+        attachAnnotationEvents = function(instance){
 
             if (instance.enableUserToAnnotateSubtext) {
                 $("body").on("mouseup",".ann",function(e){
@@ -65,10 +66,10 @@ scify.CommentAnnotator.prototype = (function(){
             $("body").on("click",".ann-icon",displayToolBar.bind(instance));
 
         },
-        attachAnnotationPrompts= function(){
-            $(".ann").append("<span class='ann-icon' title='κλικ εδώ για σχολιασμού όλου του κειμένου'><i class='fa fa-pencil-square-o'></i></span>");
+        attachAnnotationPrompts= function(instance){
+            $(".ann").append("<span class='ann-icon' title='" + instance.messages.annTextTitle + "'><i class='fa fa-pencil-square-o'></i></span>");
         },
-        fetchTopicTagsForUserSelection = function(selectedText){
+        fetchTopicTagsForUserSelection = function(selectedText, instance){
 
             if (selectedText.length>20 &&  $("#toolbar").hasClass("logged-in"))
             {
@@ -84,7 +85,7 @@ scify.CommentAnnotator.prototype = (function(){
                             select.append($("<option class='text-tag extracted-auto' value='-1'>"+tag+"</option>"));
                         });
                         destroyAnnotationTopicTagsSelect();
-                        initAnnotationTopicTagsSelect();
+                        initAnnotationTopicTagsSelect(instance);
                     }
                 });
             }
@@ -97,6 +98,8 @@ scify.CommentAnnotator.prototype = (function(){
             }
         },
         displayToolBar = function(e,selectedText){
+            var instance = this;
+
             e.stopPropagation();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -120,7 +123,7 @@ scify.CommentAnnotator.prototype = (function(){
             if (target.closest(".title").length>0)
             {
 
-                $("#myModalLabel").text("Παρατήρηση/Σχόλιο για όλοκληρο το άρθρο:");
+                $("#myModalLabel").text(instance.messages.forWholeArticle);
                 topicsLabel.text(topicsLabel.data("article"));
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("article"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("article"));
@@ -130,7 +133,7 @@ scify.CommentAnnotator.prototype = (function(){
 
             }
             else{
-                $("#myModalLabel").text("Παρατήρηση/Σχόλιο για το τμήμα κειμένου:");
+                $("#myModalLabel").text(instance.messages.forTextPart);
                 topicsLabel.text(topicsLabel.data("text"));
                 topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
                 topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
@@ -140,7 +143,7 @@ scify.CommentAnnotator.prototype = (function(){
             }
 
             $("#toolbar-modal").modal("show");
-            fetchTopicTagsForUserSelection(selectedText);
+            fetchTopicTagsForUserSelection(selectedText, instance);
 
             toolbar.find("input[name='annText']").val(selectedText);
             var parent = target.closest(".ann");
@@ -152,7 +155,9 @@ scify.CommentAnnotator.prototype = (function(){
 
         },
         displayToolbarForEdit = function(e, comment) {
+            var instance = this;
             console.log(comment);
+            console.log(this.messages);
             e.preventDefault();
             var target = $(e.target),
                 toolbar = $("#toolbar-modal");
@@ -163,7 +168,7 @@ scify.CommentAnnotator.prototype = (function(){
             var topicsTagTooltip =$("#tag-topics-label").find("i");
             var problemsLabel = $("#tag-problem-label").find("span");
 
-            $("#myModalLabel").text("Τροποποιήστε το σχόλιό σας:");
+            $("#myModalLabel").text(instance.messages.editCommentLabel);
             topicsLabel.text(topicsLabel.data("text"));
             topicsTagTooltip.attr("title",topicsTagTooltip.data("text"));
             topicsTagTooltip.attr("data-original-title",topicsTagTooltip.data("text"));
@@ -172,7 +177,7 @@ scify.CommentAnnotator.prototype = (function(){
             toolbar.find("blockquote").show();
 
             $("#toolbar-modal").modal("show");
-            fetchTopicTagsForUserSelection(selectedText);
+            fetchTopicTagsForUserSelection(selectedText, instance);
             toolbar.find("input[name='revision']").val(comment.revision);
             toolbar.find("input[name='annText']").val(selectedText);
             var articleid= comment.articleId;
@@ -245,11 +250,11 @@ scify.CommentAnnotator.prototype = (function(){
         destroyAnnotationTopicTagsSelect = function(){
             $("#annotationTagTopicId").select2("destroy");
         },
-        initAnnotationTopicTagsSelect = function(){
+        initAnnotationTopicTagsSelect = function(instance){
             var firstTag = $("#annotationTagTopicId").find("option").first()
             var placeHolderExample = firstTag && firstTag.length>0 ? "πχ '"+ firstTag.text()+"'" : "";
             $("#annotationTagTopicId").select2({
-                placeholder:  "κλικ εδώ για να θέσετε το θέμα "  + placeHolderExample,
+                placeholder:  instance.messages.topicPrompt + " " + placeHolderExample,
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
@@ -294,23 +299,24 @@ scify.CommentAnnotator.prototype = (function(){
             });
         },
         openForEdit = function(e, comment){
-            displayToolbarForEdit(e, comment);
+            var instance = this;
+            displayToolbarForEdit.call(instance, e, comment);
         },
         init = function(){
             var instance = this;
             var annotatorAreaCreator = new scify.Annotator("#consultation-body .article-body,#consultation-body .article-title-text","ann");
             annotatorAreaCreator.init();
             // createAnnotatableAreas();
-            attachAnnotationPrompts();
-            attachAnnotationEvents();
+            attachAnnotationPrompts(instance);
+            attachAnnotationEvents(instance);
 
             $("#annotationTagProblemId").select2({
-                placeholder: "πχ 'ασάφεια', 'μη κατανοητό κείμενο'",
+                placeholder: instance.messages.topicExample,
                 tags: true,
                 tokenSeparators: [',', ' ']
             });
 
-            initAnnotationTopicTagsSelect();
+            initAnnotationTopicTagsSelect(instance);
 
             $("body").on("mouseenter",".ann",displayAnnotationIcon);
 

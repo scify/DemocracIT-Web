@@ -65,7 +65,8 @@
                     " ",
                     this.props.user.last_name
                 ),
-                React.createElement(scify.InfoBox, { imagesPath: this.props.imagesPath, display: this.state.display, busy: this.state.busy, data: this.state.comments })
+                React.createElement(scify.InfoBox, { imagesPath: this.props.imagesPath, display: this.state.display, busy: this.state.busy, data: this.state.comments,
+                    messages: this.props.messages })
             );
         }
     });
@@ -113,7 +114,8 @@
                         shouldDisplayTopics: true,
                         shouldDisplayLikeDislike: true,
                         commentClassNames: "comment",
-                        shouldDisplayFinalLawAnnBtn: false });
+                        shouldDisplayFinalLawAnnBtn: false,
+                        messages: instance.props.messages });
                 });
                 return React.createElement(
                     "div",

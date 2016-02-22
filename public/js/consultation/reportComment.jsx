@@ -4,11 +4,13 @@
         getInitialState: function(){
             return {
                 comment : this.props.comment,
-                display: false
+                display: false,
+                messages: this.props.messages
             }
         },
         //function to display the whole React class
         display: function(data){
+            var instance = this;
             this.state.comment = data.comment;
             this.state.display = true;
             this.state.busy = true;
@@ -16,7 +18,7 @@
             //if the user is not logged in
             if(this.props.userId == undefined || this.props.userId == '') {
                 this.state.busy = false;
-                this.state.message = <div>Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></div>;
+                this.state.message = <div>{instance.state.messages.notlogedintext}</div>;
             }
             else {
                 //check if the logged in user has already reported this comment
@@ -39,11 +41,11 @@
                 success : function(data){
                     if(data == false) {
                         instance.state.shouldDisplaySubmitBtn = true;
-                        instance.state.message = 'Αν είστε σίγουροι ότι αυτό το σχόλιο είναι υβριστικό, πατήστε "Αναφορά":';
+                        instance.state.message = instance.state.messages.reportCommentPrompt;
                     }
                     else {
                         instance.state.shouldDisplaySubmitBtn = false;
-                        instance.state.message = 'Έχετε ήδη αναφέρει αυτό το σχόλιο ως υβριστικό';
+                        instance.state.message = instance.state.messages.reportCommentAlready;
                     }
                     instance.setState(instance.state);
                 },
@@ -67,7 +69,7 @@
                 },
                 success : function(data){
                     instance.state.shouldDisplaySubmitBtn = false;
-                    instance.state.message = 'Η αναφορά καταχωρήθηκε. Πατήστε "Κλείσιμο" για να επιστρέψετε στην προηγούμενη σελίδα.';
+                    instance.state.message = instance.state.messages.reportCommentDone;
                     instance.setState(instance.state);
                 },
                 complete: function(){
@@ -88,7 +90,7 @@
             if(this.state.busy)
                 innerContent =  <div className="reportCommentMsg"><scify.ReactLoader display={this.state.busy} /></div>;
             if(this.state.shouldDisplaySubmitBtn && this.props.userId != undefined)
-                var submitBtn = <button id="saveCommentReport" className="btn blue" onClick={this.reportComment}>Αναφορά</button>;
+                var submitBtn = <button id="saveCommentReport" className="btn blue" onClick={this.reportComment}>{this.state.messages.reportCommentBtn}</button>;
 
             return(
                 <div id="reportCommentModal" className={ classNames("modal","fade", showReportCommentModal)} role="dialog">
@@ -96,7 +98,8 @@
                     <div className="modal-dialog ">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Αναφορά σχολίου ως υβριστικό <i className="fa fa-question-circle" title="Αφορά σχόλια με υβριστικό περιεχόμενο"></i></h4>
+                                <h4 className="modal-title">{this.state.messages.reportCommentTitle} <i className="fa fa-question-circle"
+                                                                                                        title={this.state.messages.reportCommentExpl}></i></h4>
                                 <button type="button" className="close" onClick={this.closeModal}>&times;</button>
                             </div>
                             <div className="modal-body">
@@ -118,7 +121,8 @@
                                         shouldDisplayTopics={true}
                                         commentClassNames="comment"
                                         shouldDisplayFinalLawAnnBtn={false}
-                                        shouldDisplayReportAction={false}/>
+                                        shouldDisplayReportAction={false}
+                                        messages={this.state.messages}/>
                                 </div>
                                 {innerContent}
                             </div>
@@ -126,7 +130,7 @@
                                 {submitBtn}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default" onClick={this.closeModal}>Κλείσιμο</button>
+                                <button type="button" className="btn btn-default" onClick={this.closeModal}>{this.state.messages.closebtn}</button>
                             </div>
                         </div>
                     </div>
