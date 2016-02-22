@@ -51,7 +51,7 @@ $ SMTP_PASS=smtp password goes here
 
 Add the language settings (e.g. "en" for English or "el" for Greek)
 ```
-$democracit_lang = "en"
+$ democracit_lang = "en"
 ```
 ### Set up the Sass/SCSS transpiler (webstorm and intellij)
 
