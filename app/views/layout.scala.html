@@ -1,4 +1,4 @@
-@(title: String, css: Html, js: Html, user: Option[User] = None)(content: Html)
+@(title: String, css: Html, js: Html, user: Option[User] = None)(content: Html)(implicit messages :Messages)
 
 <!DOCTYPE html>
 
@@ -10,15 +10,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="DemocracIT />
-        <meta property="og:title" content="Διαδικτυακή πλατφόρμα Δημοσίων Διαβουλεύσεων"/>
+        <meta property="og:title" content='@messages("layout.twitter.title")'/>
         <meta property="og:url" content="@routes.Assets.at("images/democracit_logo_bg.jpg")" />
-        <meta property="og:description" content="Οι δημόσιες διαβουλεύσεις όπως θα έπρεπε να είναι.  " />
+        <meta property="og:description" content='@messages("layout.twitter.description")' />
         <meta property="og:locale" content="el_gr" />
         <meta property="og:image" content="@routes.Assets.at("images/democracit_logo_bg.jpg")" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@@democracit" />
-        <meta name="twitter:title" content=" Διαδικτυακή πλατφόρμα δημοσίων διαβουλεύσεων" />
-        <meta name="twitter:description" content="Οι δημόσιες διαβουλεύσεις όπως θα έπρεπε να είναι." />
+        <meta name="twitter:title" content='@messages("layout.twitter.title")' />
+        <meta name="twitter:description" content='@messages("layout.twitter.description")' />
         <meta name="twitter:image" content="@routes.Assets.at("images/democracit_logo_bg.jpg")" />
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/font-awesome.min.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">

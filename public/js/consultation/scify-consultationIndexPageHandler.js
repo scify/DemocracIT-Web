@@ -1,5 +1,14 @@
 
-scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingUsers,finalLawUserId,userId,fullName,
+scify.ConsultationIndexPageHandler = function( consultationid,
+                                               generalMessages,
+                                               commentBoxMessages,
+                                               commentAnnMessages,
+                                               tutorialAnnotatorMessages,
+                                               finalLawId,
+                                               ratingUsers,
+                                               finalLawUserId,
+                                               userId,
+                                               fullName,
                                                discussionThreads,
                                                relevantLaws,
                                                consultationIsActive,
@@ -23,7 +32,10 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     {
         this.discussionThreads[discussionThreads[i].clientId]= { id: discussionThreads[i].id, num:discussionThreads[i].numberOfComments }
     }
-
+    this.messages = generalMessages;
+    this.commentBoxMessages = commentBoxMessages;
+    this.commentAnnMessages = commentAnnMessages;
+    this.tutorialAnnotatorMessages = tutorialAnnotatorMessages;
     this.relevantLaws = [];
     for (var i=0; i<relevantLaws.length; i++) {
         this.relevantLaws[i] = {article_id: relevantLaws[i].article_id ,entity_text : relevantLaws[i].entity_text, pdf_url: relevantLaws[i].pdf_url}
@@ -34,7 +46,6 @@ scify.ConsultationIndexPageHandler = function( consultationid,finalLawId,ratingU
     this.tutorialAnnotator = null;
     this.imagesPath = imagesPath;
     this.commentWithLawMatcher = null; //represents a react component used to match a comment with the final law
-
 };
 scify.ConsultationIndexPageHandler.prototype = function(){
 
@@ -88,7 +99,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 shouldDisplayTopics:false,
                 shouldDisplayFinalLawAnnBtn:false,
                 shouldDisplayLikeDislike:false,
-                commentClassNames:"comment"
+                commentClassNames:"comment",
+                messages: instance.commentBoxMessages
             };
 
             //define function to use after the comment has loaded
@@ -220,10 +232,11 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         }
     },
     checkRatingUsers = function(array, user_id) {
-        for(var i=0; i<array.length; i++) {
-            if(array[i].userId == user_id)
-                return array[i];
-        }
+        if(array != undefined)
+            for(var i=0; i<array.length; i++) {
+                if(array[i].userId == user_id)
+                    return array[i];
+            }
         return false;
     },
     rateFinalLawFile = function(instance) {
@@ -248,7 +261,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
             else if(userId == instance.finalLawUserId) {
              $(".noRateBtn").trigger( "click" );
-             $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+             $("#noRateModal .notLoggedText").html(instance.messages.youCannotVoteFLMsg);
             }
             else {
                 if($( "#rateDisapprove").hasClass("liked")) {
@@ -293,7 +306,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             }
             else if(userId == instance.finalLawUserId) {
              $(".noRateBtn").trigger( "click" );
-             $("#noRateModal .notLoggedText").html("Δεν μπορείτε να ψηφίσετε το αρχείο που ανεβάσατε εσείς.");
+             $("#noRateModal .notLoggedText").html(instance.messages.youCannotVoteFLMsg);
             }
             else {
                 if($( "#rateApprove").hasClass("liked")) {
@@ -342,12 +355,12 @@ scify.ConsultationIndexPageHandler.prototype = function(){
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: "application/pdf,text/plain",
-            dictDefaultMessage: 'Σύρετε εδώ το αρχείο που θέλετε να ανεβάσετε, ή κάντε κλικ. (Αποδεκτοί τύποι αρχείων: .pdf, .txt) ',
-            dictInvalidFileType: "Μη αποδεκτός τύπος αρχείου. Αποδεκτοί τύποι: .pdf, .txt \nΞανακάντε κλικ στο πλαίσιο για να ανεβάσετε άλλο αρχείο",
+            dictDefaultMessage: instance.messages.uploadFLmsg,
+            dictInvalidFileType: instance.messages.uploadFLWrongFile,
             accept: function(file, done) {
                 console.log();
                 $("#finalLawDropZone").append('<div class="waiting-msg"> ' +
-                    'Περιμένετε. Η διαδικασία της μεταφόρτωσης μπορεί να διαρκέσει μερικά δευτερόλεπτα. ' +
+                    instance.messages.uploadFLLoadingMsg +
                     '<div class="loader">Loading...</div></div>');
                 if (file.name == "justinbieber.pdf"  || file.name == "justinbieber.txt"   ) {
                     done("Naha, you don't.");
@@ -406,7 +419,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     deleteFinalLawHandler = function(instance) {
 
         $( "#deleteFinalLaw" ).click(function() {
-            var answer = window.confirm("Είστε σίγουροι για τη διαγραφή;");
+            var answer = window.confirm(instance.messages.deleteFLPrompt);
             if (answer == true) {
                 console.log("You pressed OK!");
                 var finalLawId = instance.finalLawId;
@@ -533,7 +546,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 finalLawId: parseInt(this.finalLawId),
                 finalLawDiv: $("#finalLawDiv").html(),
                 userId: this.userId,
-                shouldDisplaySubmitBtn: !($("#finalLawDiv").html() == undefined)
+                shouldDisplaySubmitBtn: !($("#finalLawDiv").html() == undefined),
+                messages: this.commentBoxMessages
             }), document.getElementById("commentLawMatcher"));
         }
         this.commentWithLawMatcher.display(data);
@@ -545,7 +559,8 @@ scify.ConsultationIndexPageHandler.prototype = function(){
                 comment:data.comment,
                 imagesPath: this.imagesPath,
                 userId: this.userId,
-                shouldDisplaySubmitBtn: true
+                shouldDisplaySubmitBtn: true,
+                messages: this.commentBoxMessages
             }), document.getElementById("reportComment"));
         }
         this.reportCommentDiv.display(data);
@@ -553,8 +568,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
     init = function(){
         var instance= this;
         moment.locale('el');
-
-        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave);
+        this.commentAnnotator = new scify.CommentAnnotator(false, handleAnnotationSave, instance.commentAnnMessages);
         this.commentAnnotator.init();
 
         replaceRelevantLaws(this.relevantLaws);
@@ -566,7 +580,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         //tinymce.init({selector:'textarea'})
 
-        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath);
+        this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath, this.tutorialAnnotatorMessages);
         this.tutorialAnnotator.init();
         createWordCloudChart(instance);
         createFinalLawUpload(instance);

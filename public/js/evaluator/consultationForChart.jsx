@@ -8,7 +8,8 @@
                 busy: false,
                 display: false,
                 page:10,
-                shouldDisplayLoadMoreBtn: true
+                shouldDisplayLoadMoreBtn: true,
+                messages: this.props.evaluationMessages
             };
         },
         displayNextBatch: function(event){
@@ -68,7 +69,9 @@
                     instance.state.displayedConsultations.forEach(function(consultation) {
                         //console.log(consultation);
                         divToDisplay.push(<div className="consItem comment"><div className="consTitle"><a href={"/consultation/" + consultation.id}>{consultation.title}</a></div>
-                            <div>Ημερομηνία που ήταν ανοιχτή η διαβούλευση: <span className="consDate">{new Date(consultation.start_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span> έως <span className="consDate">{new Date(consultation.end_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span></div>
+                            <div>{instance.state.messages.dateWhenConsWasActive}:
+                                <span className="consDate"> {new Date(consultation.start_date).toLocaleDateString('el-EL', {hour: '2-digit'})}
+                                </span> {instance.state.messages.consTo} <span className="consDate">{new Date(consultation.end_date).toLocaleDateString('el-EL', {hour: '2-digit'})}</span></div>
                         </div>);
                     });
                     var loadMoreBtnClasses = classNames("loadMoreBtn",{ hide :!instance.state.shouldDisplayLoadMoreBtn});

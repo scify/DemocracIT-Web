@@ -5,7 +5,8 @@
           return {
               frequency_list: [],
               busy: false,
-              display: false
+              display: false,
+              messages: this.props.evaluationMessages
           };
         },
         getFrequencyPerOrganization : function(){
@@ -31,7 +32,10 @@
                         * it means that this organization has no consultations*/
                         var noConsultations = 1;
                         for(var j = index; j < index + 18; j++) {
-                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[j].date + '</h5>' + '<h5>Διαβουλέυσεις: ' + data[j].numberOfConsultations + '</h5></div>', data[j].numberOfConsultations.toString(), data[j].cons_ids]);
+                            dataForCurrentOrganization.push([data[j].date, data[j].numberOfConsultations,
+                                '<div style="padding-left: 10px"><h5 style="width:150px">' + data[j].date + '</h5>' +
+                                '<h5>' + instance.state.messages.consultations + ': ' + data[j].numberOfConsultations + '</h5></div>',
+                                data[j].numberOfConsultations.toString(), data[j].cons_ids]);
                             if(data[j].numberOfConsultations != 0) {
                                 noConsultations = 0;
                             }
@@ -40,11 +44,12 @@
                         if(noConsultations) {
                             $("#" + chartId).append('' +
                                     '<div class="organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation chartExpl">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις τους τελευταίους 18 μήνες.</div>');
+                                    '<div class="explanation chartExpl">' + instance.state.messages.organizationHasNoCons + '</div>');
                         } else {
                             $("#" + chartId).before('' +
                                 '<div class="organizationName">' + chartTitle + '</div>');
-                            instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Μήνες", 1, null);
+                            instance.createBarChart(dataForCurrentOrganization,
+                                chartId, instance.state.messages.numberOfCons, instance.state.messages.months, 1, null, instance);
                         }
                         /*Increase index*/
                         index+=18;
@@ -94,11 +99,13 @@
                             if(noConsultations) {
                                 $("#" + chartId).append('' +
                                     '<div class="organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation chartExpl">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>');
+                                    '<div class="explanation chartExpl">' + instance.state.messages.organizationHasNoCons + '</div>');
                             } else {
                                 $("#" + chartId).before('' +
                                     '<div class="organizationName">' + chartTitle + '</div>');
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization,
+                                    chartId, instance.state.messages.numberOfCons,
+                                    instance.state.messages.monthsConsActive, 1, 450, instance);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
@@ -112,11 +119,13 @@
                             if (noConsultations) {
                                 $("#" + chartId).append('' +
                                     '<div class="organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation chartExpl">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>');
+                                    '<div class="explanation chartExpl">' + instance.state.messages.organizationHasNoCons + '</div>');
                             } else {
                                 $("#" + chartId).before('' +
                                     '<div class="organizationName">' + chartTitle + '</div>');
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 1, 450);
+                                instance.createBarChart(dataForCurrentOrganization,
+                                    chartId, instance.state.messages.numberOfCons,
+                                    instance.state.messages.monthsConsActive, 1, 450, instance);
                             }
                         }
                     }
@@ -146,14 +155,19 @@
                 success : function(data){
                     var dataForDuration = [];
                     var chartId = "consDurationChartForAll";
-                    var chartTitle = "Κατανομή Διαβουλεύσεων";
+                    var chartTitle = instance.state.messages.consAllocation;
                     for(var i = 0; i < data.length; i++) {
-                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations, '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ημέρες</h5>' + '<h5>Διαβουλέυσεις: ' + data[i].numberOfConsultations + '</h5>' + '<h5>Ποσοστό: ' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)",data[i].cons_ids]);
+                        dataForDuration.push([data[i].periods, data[i].numberOfConsultations,
+                            '<div style="padding-left: 10px"><h5 style="width:150px">' + data[i].periods + ' ' + instance.state.messages.days + '</h5>' +
+                            '<h5>' + instance.state.messages.consultations + ': ' + data[i].numberOfConsultations + '</h5>' + '<h5>' + instance.state.messages.percentage + ': ' +
+                            '' + data[i].percentage + ' %</h5>' + '</div>', data[i].numberOfConsultations  + " (" + data[i].percentage  + "%)",data[i].cons_ids]);
                     }
                     $( "#consDurationInnerChart" ).append( '<div style="margin-top: 20px" class="organizationChart"><div id="' + chartId + '"></div></div>' );
                     $("#" + chartId).before('' +
                         '<div class="organizationName">' + chartTitle + '</div>');
-                    instance.createBarChart(dataForDuration, chartId, "Αριθμός Διαβουλεύσεων", "Ημέρες που οι διαβουλεύσεις ήταν ενεργές", 0, 450);
+                    instance.createBarChart(dataForDuration,
+                        chartId, instance.state.messages.numberOfCons,
+                        instance.state.messages.monthsConsActive, 0, 450, instance);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -196,11 +210,13 @@
                             if(noConsultations) {
                                 $("#" + chartId).append('' +
                                     '<div class="organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation chartExpl">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>');
+                                    '<div class="explanation chartExpl">' + instance.state.messages.organizationHasNoCons + '</div>');
                             } else {
                                 $("#" + chartId).before('' +
                                     '<div class="explanation organizationName">' + chartTitle + '</div>');
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Αριθμός σχολίων",1, 450);
+                                instance.createBarChart(dataForCurrentOrganization,
+                                    chartId, instance.state.messages.numberOfCons,
+                                    instance.state.messages.numberOfComments,1, 450, instance);
                             }
                             dataForCurrentOrganization = [];
                             curOrganization = data[i].organizationId;
@@ -214,11 +230,13 @@
                             if (noConsultations) {
                                 $("#" + chartId).append('' +
                                     '<div class="organizationName">' + chartTitle + '</div>' +
-                                    '<div class="explanation chartExpl">Αυτός ο φορέας δεν έχει αναρτήσει δημόσιες διαβουλεύσεις.</div>');
+                                    '<div class="explanation chartExpl">' + instance.state.messages.organizationHasNoCons + '</div>');
                             } else {
                                 $("#" + chartId).before('' +
                                     '<div class="organizationName">' + chartTitle + '</div>');
-                                instance.createBarChart(dataForCurrentOrganization, chartId, "Αριθμός Διαβουλεύσεων", "Αριθμός σχολίων",1, 450);
+                                instance.createBarChart(dataForCurrentOrganization,
+                                    chartId, instance.state.messages.numberOfCons,
+                                    instance.state.messages.numberOfComments,1, 450, instance);
                             }
                         }
                     }
@@ -251,14 +269,12 @@
                     $("#finalLawComparisonChart").append('<div id="finalLawComparisonInnerChart"></div>');
                     var statsData = [];
                     for(var i = 0; i < data.length; i++) {
-                        var statsType = "Διαβουλεύσεις με αρχείο τελικού νόμου";
+                        var statsType = instance.state.messages.consWithFL;
                         if(data[i].hasLaw == 0)
-                            statsType = "Διαβουλεύσεις χωρίς αρχείο τελικού νόμου";
+                            statsType = instance.state.messages.consWithoutFL;
                         statsData.push([statsType, data[i].numOfConsultations, data[i].cons_ids]);
                     }
-                    instance.createPieChart(statsData, chartId, "Διαβουλεύσεις στις οποίες οι χρήστες " +
-                        "έχουν μεταφορτώσει αρχείο τελικού νόμου (πατήστε επάνω στο γράφημα " +
-                        "για να δείτε τις διαβουλέυσεις)");
+                    instance.createPieChart(statsData, chartId, instance.state.messages.consWithFLTitle, instance);
                 },
                 complete: function(){
                     instance.state.busy=false;
@@ -282,7 +298,7 @@
          * @param gridLines: it contains the number of the lines we want our scale to have. For charts that are long scaled (eg 0-200), pass 1. Otherwise, pass 0
          * @param recommendedHeight: the recommendedHeight for the chart. If null passed, the height will be computed based on the max number of the chart
          */
-        createBarChart : function(dataForChart, chartId, yName, xName, gridLines, recommendedHeight) {
+        createBarChart : function(dataForChart, chartId, yName, xName, gridLines, recommendedHeight, instance) {
             /*We find the max element (value) of the dataSet, to define the scale*/
             var max = dataForChart.reduce(function(max, arr) {
                 return Math.max(max, arr[1]);
@@ -313,7 +329,9 @@
                 recommendedHeight = chartHeight;
             }
 
-
+            var consProperties = {
+                evaluationMessages: instance.state.messages
+            };
             var options = {
                 tooltip: {isHtml: true},
                 'displayAnnotations': true,
@@ -355,6 +373,7 @@
             chart = new google.visualization.ColumnChart(document.getElementById(chartId));
             chart.draw(data, options);
             google.visualization.events.addListener(chart, 'select', function() {
+                console.log(consProperties);
                 /*Remove current list*/
                 $("#consList").remove();
                 var selection = chart.getSelection();
@@ -362,18 +381,17 @@
                 /*Create new element for the list*/
                 $("#" + chartId).after('<div id="consList"></div>');
                 var domElementConsList = document.getElementById("consList");
-                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, consProperties), domElementConsList);
                 window.ConsListComponent.getConsultationsFromServer(cons_ids);
                 chart.setSelection();
             });
         },
-        createPieChart: function(dataForChart, chartId, chartTitle) {
+        createPieChart: function(dataForChart, chartId, chartTitle, instance) {
             var data = new google.visualization.DataTable();
             data.addColumn('string', "");
             data.addColumn('number', "");
             data.addColumn({type:'string', role:'scope'});
             data.addRows(dataForChart);
-            console.log(data);
             var options = {
                 title: chartTitle,
                 is3D: true,
@@ -381,7 +399,9 @@
                 width: 1100,
                 'chartArea': {width: '75%','height': 400,left:'0'},
             };
-            console.log($("#" + chartId).length);
+            var consProperties = {
+                evaluationMessages: instance.state.messages
+            };
             var chart = new google.visualization.PieChart(document.getElementById(chartId));
             chart.draw(data, options);
             google.visualization.events.addListener(chart, 'select', function() {
@@ -392,7 +412,7 @@
                 /*Create new element for the list*/
                 $("#" + chartId).after('<div id="consList"></div>');
                 var domElementConsList = document.getElementById("consList");
-                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, null), domElementConsList);
+                window.ConsListComponent = React.render(React.createElement(scify.consultationForChart, consProperties), domElementConsList);
                 window.ConsListComponent.getConsultationsFromServer(cons_ids);
                 chart.setSelection();
             });

@@ -27,17 +27,24 @@
    * @class IntroJs
    */
   function IntroJs(obj) {
+    console.log("here");
     this._targetElement = obj;
+    this.setBtnLabels = function(endLabel, prevLabel, nextLabel, okLabel) {
+      this._options.skipLabel = endLabel;
+      this._options.prevLabel += prevLabel;
+      this._options.nextLabel = nextLabel + this._options.nextLabel;
+      this._options.doneLabel = okLabel;
+    };
 
     this._options = {
       /* Next button label in tooltip box */
-      nextLabel: 'Επόμενο &rarr;',
+      nextLabel: ' &rarr;',
       /* Previous button label in tooltip box */
-      prevLabel: '&larr; Πίοω',
+      prevLabel: '&larr; ',
       /* Skip button label in tooltip box */
-      skipLabel: 'Τέλος',
+      skipLabel: '',
       /* Done button label in tooltip box */
-      doneLabel: 'Εντάξει',
+      doneLabel: '',
       /* Default tooltip box position */
       tooltipPosition: 'bottom',
       /* Next CSS class for tooltip boxes */
@@ -1176,6 +1183,9 @@
     } else {
       return new IntroJs(document.body);
     }
+
+
+
   };
 
   /**
@@ -1185,6 +1195,7 @@
    * @type String
    */
   introJs.version = VERSION;
+
 
   //Prototype
   introJs.fn = IntroJs.prototype = {

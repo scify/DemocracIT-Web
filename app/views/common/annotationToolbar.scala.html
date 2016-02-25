@@ -1,6 +1,6 @@
 @(user:Option[User], annotationsRelatedToProblems: Seq[model.dtos.AnnotationTags],
   annotationsRelatedToTopics: Seq[model.dtos.AnnotationTags],
-  consultationOpenGovUrl:String)(implicit request: play.api.mvc.Request[Any])
+  consultationOpenGovUrl:String)(implicit request: play.api.mvc.Request[Any], messages :Messages)
 
 <div class="modal fade" id="toolbar-modal" tabindex="-1" role="dialog" aria-labelledby="annotate-toolbar">
     <div class="modal-dialog" role="document">
@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel" >
-                        Παρατήρηση/Σχόλιο για το τμήμα κειμένου:
+                        @messages("annotation.comment.text")
                 </h4>
             </div>
             <form action="@routes.AnnotationController.annotatePost()" method="post">
@@ -22,12 +22,12 @@
                         <div class="padding">
                         @if(user.isDefined){
 
-                            <label id="tag-topics-label"><span data-article="Σε ποιό θέμα αναφέρεται το άρθρο;" data-text="Σε ποιό θέμα αναφέρεται το κείμενο;"></span>&nbsp;
+                            <label id="tag-topics-label"><span data-article='@messages("annotation.comment.tagtext")' data-text="@messages("annotation.comment.tagtext")"></span>&nbsp;
                                 <i class="fa fa-info-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                data-article="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο αρθρο"
-                                data-text="βοηθήστε το νομοθέτη θέτωντας tags για το συγκεκριμένο τμήμα κειμένου"
+                                data-article='@messages("annotation.comment.tagtexttip.article")'
+                                data-text='@messages("annotation.comment.tagtexttip.text")'
                                 title="sd"></i>
                             </label>
 
@@ -38,11 +38,11 @@
                             </select>
 
 
-                            <label id="tag-problem-label"><span data-article="Αναγνωρίζετε κάποιο πρόβλημα στο άρθρο;" data-text="Αναγνωρίζετε κάποιο πρόβλημα;"></span>&nbsp;
+                            <label id="tag-problem-label"><span data-article="@messages("annotation.comment.problem.texttip.article")" data-text="@messages("annotation.comment.problem.texttip.text")"></span>&nbsp;
                                 <i class="fa fa-info-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="βοηθήστε το νομοθέτη αναφέροντας προβλήματα"></i>
+                                title="@messages("comment.Annotator.problemIcon")"></i>
                             </label>
                             <select id="annotationTagProblemId" name="annotationTagProblemId" multiple>
                             @for(annotation <- annotationsRelatedToProblems){
@@ -53,8 +53,8 @@
 
 
                             <div id="comment-wrap">
-                                Αφήστε την παρατήρησή/σχόλιο σας:
-                                <textarea name="body" placeholder="θα ήθελα να δηλώσω..."></textarea>
+                                @messages("annotation.comment.leavetext.prompt")
+                                <textarea name="body" placeholder='@messages("annotation.comment.leavetext.placeholder")'></textarea>
                             </div>
 
                             <input type="hidden" name="articleid" value=""/>
@@ -65,19 +65,19 @@
                             <input type="hidden" name="commentId" value=""/>
                             <input type="hidden" name="revision" value=""/>
                             <!--Declare emotion-->
-                            <div class="emotionMsg">Το κείμενο που σχολιάζω με κάνει να νιώθω:</div>
+                            <div class="emotionMsg">@messages("annotation.comment.emotion.text")</div>
                             <div class="emotionContainer">
                                 <ul class="emotionList">
-                                    <li class="emotionItem" id="emotion1" title="Πολύ χαρούμενος" data-id="1"><img src="@routes.Assets.at("images/emoticons/emoticon-superhappy.png")"></li>
-                                    <li class="emotionItem" id="emotion2" title="Χαρούμενος" data-id="2"><img src="@routes.Assets.at("images/emoticons/emoticon-happy.png")"></li>
-                                    <li class="emotionItem" id="emotion3" title="Ανήσυχος" data-id="3"><img src="@routes.Assets.at("images/emoticons/emoticon-worried.png")"></li>
-                                    <li class="emotionItem" id="emotion4" title="Λυπημένος" data-id="4"><img src="@routes.Assets.at("images/emoticons/emoticon-sad.png")"></li>
-                                    <li class="emotionItem" id="emotion5" title="Νευριασμένος" data-id="5"><img src="@routes.Assets.at("images/emoticons/emoticon-angry.png")"></li>
+                                    <li class="emotionItem" id="emotion1" title='@messages("annotation.comment.emotion.veryhappy.text")' data-id="1"><img src="@routes.Assets.at("images/emoticons/emoticon-superhappy.png")"></li>
+                                    <li class="emotionItem" id="emotion2" title='@messages("annotation.comment.emotion.happy.text")' data-id="2"><img src="@routes.Assets.at("images/emoticons/emoticon-happy.png")"></li>
+                                    <li class="emotionItem" id="emotion3" title='@messages("annotation.comment.emotion.anxious.text")' data-id="3"><img src="@routes.Assets.at("images/emoticons/emoticon-worried.png")"></li>
+                                    <li class="emotionItem" id="emotion4" title='@messages("annotation.comment.emotion.sad.text")' data-id="4"><img src="@routes.Assets.at("images/emoticons/emoticon-sad.png")"></li>
+                                    <li class="emotionItem" id="emotion5" title='@messages("annotation.comment.emotion.angry.text")' data-id="5"><img src="@routes.Assets.at("images/emoticons/emoticon-angry.png")"></li>
                                 </ul>
                             </div>
                         } else {
                             <div class="notLoggedinWrapper">
-                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">Για αυτή την ενέργεια χρειάζεται να είστε <a href="/signIn?returnUrl=@request.uri">συνδεδεμένοι</a></p></div>
+                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">@Html(messages("notlogedintext","<a href=\"/signIn?returnUrl=@request.uri\">","</a>"))</p></div>
                             </div>
                         }
                         </div>
@@ -88,12 +88,14 @@
             <div class="modal-footer">
 
                 @if(user.isDefined) {
-                    <span class="warning"><i class="fa fa-warning"></i> μη ξεχνάτε ότι ο επίσημος φορέας της ανοικτής διαβούλευσης ειναι το OpenGov.
-                    <a href="@consultationOpenGovUrl" target="_blank">Κλικ εδώ</a> για να αφήσετε το σχόλιο σας και στη σελίδα της διαβούλευσης του OpenGov.
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-3">Μάθετε περισσότερα</a></span>
-                    <button id="save-annotation"c class="btn blue" type="submit">Καταχώρηση</button>
+                    <span class="warning"><i class="fa fa-warning"></i>
+                        @Html(messages("annotation.comment.remindertext",
+                            "<a href=\"@consultationOpenGovUrl\" target=\"_blank\">",
+                            "</a>",
+                            "<a href=\"http://about.democracit.org/frequently-asked-questions#question-3\">"))</span>
+                    <button id="save-annotation"c class="btn blue" type="submit">@messages("submitbtn")</button>
                 }
-            <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >Κλείσιμο</button>
+            <button class="close btn red" type="button" data-dismiss="modal"  class="btn red" >@messages("closebtn")</button>
             </div>
             </form>
         </div>
