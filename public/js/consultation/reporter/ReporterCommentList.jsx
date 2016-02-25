@@ -166,7 +166,8 @@
                         shouldDisplayTopics={this.props.shouldDisplayTopics}
                         commentClassNames={this.props.commentClassNames}
                         shouldDisplayFinalLawAnnBtn={this.props.shouldDisplayFinalLawAnnBtn}
-                        shouldDisplayReportAction={this.props.shouldDisplayReportAction}/>
+                        shouldDisplayReportAction={this.props.shouldDisplayReportAction}
+                        messages={this.props.messages}/>
                 );
             } else {
                 return (

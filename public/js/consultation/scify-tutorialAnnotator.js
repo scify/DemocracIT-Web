@@ -1,6 +1,7 @@
-scify.TutorialAnnotator = function(consultationIsActive, assetsUrl) {
+scify.TutorialAnnotator = function(consultationIsActive, assetsUrl, messages) {
     this.consultationIsActive = consultationIsActive;
     this.assetsUrl = assetsUrl;
+    this.messages = messages;
 }
 scify.TutorialAnnotator.prototype = (function(){
     this.stepsForTutorial = [];
@@ -24,7 +25,7 @@ scify.TutorialAnnotator.prototype = (function(){
                         $(elementToAddStep5).attr("id", "step5");
                     }
                 }
-                $(this).attr("title","κλικ εδώ για σχολιασμού όλου του άρθρου");
+                $(this).attr("title",instance.messages.clickHereToCommentPrompt);
             });
 
             $("[data-id='ann-1']").find(".ann-icon").attr( "id", "step3" );
@@ -69,38 +70,39 @@ scify.TutorialAnnotator.prototype = (function(){
             document.cookie = cname + "=" + cvalue + "; " + expires;
         },
         startIntro = function(shouldAddStep5) {
+            var instance = this;
             var intro = introJs();
-
+            intro.setBtnLabels(instance.messages.endLabel, instance.messages.prevLabel, instance.messages.nextLabel, instance.messages.okLabel);
             this.stepsForTutorial = [
                 {
                     element: '#step3',
-                    intro: '<div class="tutGif">Θέλετε να σχολιάσετε μία συγκεκριμένη φράση; Πατήστε το μολυβάκι δίπλα της. <img src="'+ this.assetsUrl + "/tutorialAnn.gif" +'" alt="Tutorial" height="300px" width="400px"></div>',
+                    intro: '<div class="tutGif">' + instance.messages.commentPromptOnTextPart + ' <img src="'+ this.assetsUrl + "/tutorialAnn.gif" +'" alt="Tutorial" height="300px" width="400px"></div>',
                     position: 'right'
                 },
                 {
                     element: '#step4',
-                    intro: "Θέλετε να σχολιάσετε ένα άρθρο συνολικά; Πατήστε το μολυβάκι δίπλα στον τίτλο του.",
+                    intro: instance.messages.commentPromptOnArticle,
                     position: 'right'
                 }
             ];
             if(this.consultationIsActive) {
                 this.stepsForTutorial.splice(0, 0,{
                     element: '#step1',
-                    intro: "Εδώ εκφράζεστε! Δείτε το κείμενο της διαβούλευσης, τα σχόλια άλλων πολιτών και υποβάλετε τα δικά σας."
+                    intro: instance.messages.indexPrompt
                 });
                 this.stepsForTutorial.splice(1,0,{
                     element: '#step2',
-                    intro: "Μάθετε καλύτερα το θέμα πριν εκφραστείτε. Βρείτε εδώ το απαραίτητο σχετικό υλικό π.χ. την αιτιολογική έκθεση του νομοσχεδίου.",
+                    intro: instance.messages.relevantMaterialPrompt,
                     position: 'bottom'
                 });
             } else {
                 this.stepsForTutorial.splice(0, 0,{
                     element: '#step1',
-                    intro: "Δείτε το κείμενο της διαβούλευσης και τα σχόλια των πολιτών."
+                    intro: instance.messages.seeConsultationTextPrompt
                 });
                 this.stepsForTutorial.splice(1,0,{
                     element: '#step2',
-                    intro: "Βρείτε εδώ το απαραίτητο σχετικό υλικό π.χ. την αιτιολογική έκθεση του νομοσχεδίου.",
+                    intro: instance.messages.relevantMaterialPrompt2,
                     position: 'bottom'
                 });
             }
@@ -108,7 +110,7 @@ scify.TutorialAnnotator.prototype = (function(){
                 this.stepsForTutorial.push(
                     {
                         element: '#step5',
-                        intro: 'Θέλετε να δείτε τα σχόλια άλλων πολιτών; Δείτε τα εδώ και εκφράστε τη γνώμη σας.',
+                        intro: instance.messages.seeOtherCommentsPrompt,
                         position: 'right'
                     }
                 );

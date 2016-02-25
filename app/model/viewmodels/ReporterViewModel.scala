@@ -2,6 +2,7 @@ package model.viewmodels
 
 import model.dtos._
 import org.apache.commons.lang3.StringUtils
+import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.ImplicitReadWrites._
 
@@ -30,6 +31,100 @@ case class ReporterViewModel(consultation:model.dtos.Consultation,
       "http://democracit.org/" + finalLaw.get.file_path.replaceAll("public", "assets")
     else
       "http://localhost:9000/" + finalLaw.get.file_path.replaceAll("public", "assets")
+  }
+
+  def getGeneralMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map("youCannotVoteFLMsg" -> messages("youCannotVoteFLMsg"),
+      "deleteFLPrompt" -> messages("deleteFLPrompt"),
+      "uploadFLmsg" -> messages("uploadFLmsg"),
+      "uploadFLWrongFile" -> messages("uploadFLWrongFile"),
+      "uploadFLLoadingMsg" ->messages("uploadFLLoadingMsg")
+    )
+    Json.toJson(messageList).toString()
+  }
+
+  def getCommentBoxMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map(
+      "commentsLabel" -> messages("commentBox.comments"),
+      "commentLabel" -> messages("commentBox.comment"),
+      "commentsForArticle" -> messages("commentBox.commentsForArticle"),
+      "commentsForText" -> messages("commentBox.commentsForText"),
+      "commentsFromOpengov" -> messages("commentBox.commentsFromOpengov"),
+      "mostPopularComments" -> messages("commentBox.mostPopularComments"),
+      "seeAllComments" -> messages("commentBox.seeAllComments"),
+      "seeLabel" -> messages("commentBox.seeLabel"),
+      "commentAfterConsEnd" -> messages("commentBox.commentAfterConsEnd"),
+      "topics" -> messages("commentBox.topics"),
+      "problems" -> messages("commentBox.problems"),
+      "category" -> messages("commentBox.category"),
+      "copyLink" -> messages("consultation.index.copylink"),
+      "userHasEdited" -> messages("commentBox.userHasEdited"),
+      "userEditPrompt" -> messages("commentBox.userEditPrompt"),
+      "link" -> messages("commentBox.commentLink"),
+      "commentLabelCapital" -> messages("commentBox.commentCapital"),
+      "textPart" -> messages("commentBox.textPart"),
+      "articleName" -> messages("commentBox.articleName"),
+      "userEmotionLabel" -> messages("commentBox.userEmotionLabel"),
+      "repliesLabel" -> messages("commentBox.repliesLabel"),
+      "reportLabel" -> messages("commentBox.reportLabel"),
+      "reply" -> messages("commentBox.reply"),
+      "commentFLMatching" -> messages("commentBox.commentFLMatching"),
+      "like" -> messages("commentBox.like"),
+      "dislike" -> messages("commentBox.dislike"),
+      "likeUsers" -> messages("commentBox.likeUsers"),
+      "dislikeUsers" -> messages("commentBox.dislikeUsers"),
+      "annPlaceholder" -> messages("annotation.comment.leavetext.placeholder"),
+      "submitbtn" -> messages("submitbtn"),
+      "signInTitle" -> messages("sign.in.title"),
+      "notlogedintext" ->messages("notlogedintext", "<a href=\"/signIn\">", "</a>"),
+      "reportCommentPrompt" ->messages("commentBox.reportCommentPrompt"),
+      "reportCommentAlready" ->messages("commentBox.reportCommentAlready"),
+      "reportCommentDone" ->messages("commentBox.reportCommentDone"),
+      "reportCommentTitle" ->messages("commentBox.reportCommentTitle"),
+      "reportCommentExpl" ->messages("commentBox.reportCommentExpl"),
+      "reportCommentBtn" ->messages("commentBox.reportCommentBtn"),
+      "closebtn" -> messages("closebtn"),
+      "matchingNoAnn" -> messages("commentBox.matchingNoAnn"),
+      "editMatching" -> messages("commentBox.editMatching"),
+      "matchingPrompt" -> messages("commentBox.matchingPrompt"),
+      "matchingNoLaw1" -> messages("commentBox.matching.noLaw1"),
+      "here" -> messages("here"),
+      "commentNotMatched" -> messages("commentBox.commentNotMatched"),
+      "commentNotMatchedExpl" -> messages("commentBox.commentNotMatchedExpl"),
+      "commentFLMatchingTitle" -> messages("commentBox.commentFLMatchingTitle"),
+      "commentFLMatchingSeeUsersTitle" -> messages("commentBox.commentFLMatchingSeeUsersTitle")
+    )
+    Json.toJson(messageList).toString()
+  }
+
+  def getCommentAnnotatorMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map(
+      "annTextTitle" -> messages("comment.Annotator.AnnTextTitle"),
+      "forWholeArticle" -> messages("comment.Annotator.forWholeArticle"),
+      "forTextPart" -> messages("comment.Annotator.forTextPart"),
+      "editCommentLabel" -> messages("comment.Annotator.editCommentLabel"),
+      "topicPrompt" -> messages("comment.Annotator.topicPrompt"),
+      "topicExample" -> messages("comment.Annotator.topicExample")
+    )
+    Json.toJson(messageList).toString()
+  }
+
+  def getReporterMessages(messages: Messages):String = {
+    val messageList:Map[String,String] = Map(
+      "topicSingular" -> messages("reporter.topicSingular"),
+      "commentsPlural" -> messages("reporter.commentsPlural"),
+      "clickOnName" -> messages("reporter.clickOnName"),
+      "commentsPerArticleTitle" -> messages("reporter.commentsPerArticleTitle"),
+      "topicsTitle" -> messages("reporter.topicsTitle"),
+      "problemsTitle" -> messages("reporter.problemsTitle"),
+      "topicsPerArticleTitle" -> messages("reporter.topicsPerArticleTitle"),
+      "problemsPerArticleTitle" -> messages("reporter.problemsPerArticleTitle"),
+      "commentsNumberTitle" -> messages("reporter.commentsNumberTitle"),
+      "articlesPlural" -> messages("reporter.articlesPlural"),
+      "problemsSingular" -> messages("reporter.problemsSingular"),
+      "articlesSingular" -> messages("reporter.articlesSingular")
+    )
+    Json.toJson(messageList).toString()
   }
 
   def totalComments:Int = {

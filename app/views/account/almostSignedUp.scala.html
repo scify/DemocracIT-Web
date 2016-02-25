@@ -8,14 +8,14 @@
 
 }
 
-@layout("H εγγραφή σας σχεδόν ολοκληρώθηκε",css,js,None) {
+@layout(messages("signup.confirmation.title"),css,js,None) {
     <div class="user col-md-6 col-md-offset-3">
         <legend>@messages("sign.up.account")</legend>
         <div class="row data">
             <div class="col-md-12">
                 <div class="row">
-                    <p>Καλώς ήρθατε στο democracit</p>
-                    <p>Σας έχει αποσταλεί ένα email στη διεύθυνση '@signUpData.email' για να ενεργοποιήσετε το λογαριασμό σας</p>
+                    <p@messages("signup.confirmation.welcome")></p>
+                    <p>@messages("signup.confirmation.emai",  "'" + signUpData.email + "'")</p>
                 </div>
             </div>
         </div>
