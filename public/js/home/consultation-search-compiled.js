@@ -50,7 +50,8 @@ scify.SearchContainer = React.createClass({
         return React.createElement(
             "div",
             null,
-            React.createElement(SearchBox, { asd: "ad;", onChange: this.loadConsultations, lang: this.props.lang }),
+            React.createElement(SearchBox, { onChange: this.loadConsultations, lang: this.props.lang }),
+            React.createElement(scify.ReactLoader, { display: "true" }),
             React.createElement(scify.ReactLoader, { display: this.state.isBusy }),
             React.createElement(SearchResultsList, { isSearching: this.state.isBusy,
                 searchQuery: this.state.searchQuery,

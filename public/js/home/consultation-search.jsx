@@ -50,7 +50,8 @@ scify.SearchContainer = React.createClass({
     render : function(){
         return (
             <div>
-                <SearchBox asd="ad;" onChange={this.loadConsultations} lang={this.props.lang} />
+                <SearchBox  onChange={this.loadConsultations} lang={this.props.lang} />
+                <scify.ReactLoader display="true"/>
                 <scify.ReactLoader  display={this.state.isBusy} />
                 <SearchResultsList isSearching={this.state.isBusy}
                                    searchQuery={this.state.searchQuery}
