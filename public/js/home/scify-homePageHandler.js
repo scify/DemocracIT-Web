@@ -1,8 +1,9 @@
-scify.HomePageHandler = function(searchUrl){
+scify.HomePageHandler = function(searchUrl, lang){
     this.searchUrl = searchUrl;
+    this.lang = lang;
 }
 
-scify.HomePageHandler .prototype = function(){
+scify.HomePageHandler.prototype = function(){
 
     var init = function(){
 
@@ -10,7 +11,7 @@ scify.HomePageHandler .prototype = function(){
             interval: 5000
         });
 
-        React.render(React.createElement(scify.SearchContainer, { url: this.searchUrl}),document.getElementById("search-wrapper") );
+        React.render(React.createElement(scify.SearchContainer, { url: this.searchUrl, lang:this.lang}),document.getElementById("search-wrapper") );
 
     }
 

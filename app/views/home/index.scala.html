@@ -3,7 +3,12 @@
     <script src="@routes.Assets.at("js/home/consultation-search-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/home/scify-homePageHandler.js")" ></script>
     <script>
-        var c = new scify.HomePageHandler('@routes.ConsultationController.search()');
+        var c = new scify.HomePageHandler('@routes.ConsultationController.search()' ,
+                    {
+                        searchPlaceHolder: '@Html(messages("index.search.placeholder"))',
+                        clickToDisplayAll:'@Html(messages("index.search.displayall"))'
+
+                    });
         c.init();
     </script>
 }

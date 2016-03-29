@@ -23,6 +23,7 @@ scify.SearchContainer = React.createClass({
         else if (query.length>2)
         {
 
+
             instance.searchRequest=  $.ajax({
                 method: "GET",
                 url: instance.props.url,
@@ -49,12 +50,14 @@ scify.SearchContainer = React.createClass({
     render : function(){
         return (
             <div>
-                <SearchBox onChange={this.loadConsultations} />
+                <SearchBox asd="ad;" onChange={this.loadConsultations} lang={this.props.lang} />
                 <scify.ReactLoader  display={this.state.isBusy} />
                 <SearchResultsList isSearching={this.state.isBusy}
                                    searchQuery={this.state.searchQuery}
                                    handeReset={this.handleReset}
-                                   data={this.state.consultations} />
+                                   data={this.state.consultations} test="1"
+                />
+
             </div>
         )
     }
@@ -72,11 +75,11 @@ var SearchBox = React.createClass({
                         <div className="form-group">
                             <div className="box">
                                 <span className="icon"><i className="fa fa-search"></i></span>
-                                <input ref="searchInput" type="search" id="search" name="query" placeholder="αναζητήστε στον τίτλο, πχ 'συντάξεις'" onKeyUp={this.handleKeyUp} />
+                                <input ref="searchInput" type="search" id="search" name="query" placeholder={this.props.lang.searchPlaceHolder} onKeyUp={this.handleKeyUp} />
                             </div>
                         </div>
                     </form>
-                    <a href="/consultation/display-all">κλικ εδώ για να δείτε όλες τις διαβουλεύσεις</a>
+                    <a href="/consultation/display-all">{ this.props.lang.clickToDisplayAll}</a>
                 </div>
             </div>
         )

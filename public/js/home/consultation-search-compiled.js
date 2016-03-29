@@ -50,12 +50,13 @@ scify.SearchContainer = React.createClass({
         return React.createElement(
             "div",
             null,
-            React.createElement(SearchBox, { onChange: this.loadConsultations }),
+            React.createElement(SearchBox, { asd: "ad;", onChange: this.loadConsultations, lang: this.props.lang }),
             React.createElement(scify.ReactLoader, { display: this.state.isBusy }),
             React.createElement(SearchResultsList, { isSearching: this.state.isBusy,
                 searchQuery: this.state.searchQuery,
                 handeReset: this.handleReset,
-                data: this.state.consultations })
+                data: this.state.consultations, test: "1"
+            })
         );
     }
 });
@@ -87,14 +88,14 @@ var SearchBox = React.createClass({
                                 { className: "icon" },
                                 React.createElement("i", { className: "fa fa-search" })
                             ),
-                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "αναζητήστε στον τίτλο, πχ 'συντάξεις'", onKeyUp: this.handleKeyUp })
+                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: this.props.lang.searchPlaceHolder, onKeyUp: this.handleKeyUp })
                         )
                     )
                 ),
                 React.createElement(
                     "a",
                     { href: "/consultation/display-all" },
-                    "κλικ εδώ για να δείτε όλες τις διαβουλεύσεις"
+                    this.props.lang.clickToDisplayAll
                 )
             )
         );
