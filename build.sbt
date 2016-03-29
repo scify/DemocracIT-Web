@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-mailer" % "3.0.1"
 )
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, PlayEbean)
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 

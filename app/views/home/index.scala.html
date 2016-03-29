@@ -21,32 +21,35 @@
             </div>
         </div>
     </div>
-    <div id="faq">
-        <div class="carousel slide">
-            <div class="carousel-inner">
-                <div class="item active">
-                    <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-1" target="_blank">@messages("index.faq.1")</a>
+    @if(play.Play.application().configuration().getBoolean("application.ui.menu.displaycms")) {
+        <div id="faq">
+            <div class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="carousel-caption">
+                            <a href="http://about.democracit.org/frequently-asked-questions#question-1" target="_blank">@messages("index.faq.1")</a>
+                        </div>
                     </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-2" target="_blank">@messages("index.faq.2")</a>
+                    <div class="item">
+                        <div class="carousel-caption">
+                            <a href="http://about.democracit.org/frequently-asked-questions#question-2" target="_blank">@messages("index.faq.2")</a>
+                        </div>
                     </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-3" target="_blank">@messages("index.faq.3")</a>
+                    <div class="item">
+                        <div class="carousel-caption">
+                            <a href="http://about.democracit.org/frequently-asked-questions#question-3" target="_blank">@messages("index.faq.3")</a>
+                        </div>
                     </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-caption">
-                        <a href="http://about.democracit.org/frequently-asked-questions#question-4" target="_blank">@messages("index.faq.4")</a>
+                    <div class="item">
+                        <div class="carousel-caption">
+                            <a href="http://about.democracit.org/frequently-asked-questions#question-4" target="_blank">@messages("index.faq.4")</a>
+                        </div>
                     </div>
                 </div>
             </div>
-         </div>
-    </div>
+        </div>
+    }
+
     <div id="platform-stats" class="container">
         <div class="row">
             <div class="total col-md-4">
