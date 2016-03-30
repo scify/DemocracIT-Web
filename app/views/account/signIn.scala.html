@@ -42,21 +42,24 @@
 
         @if(socialProviders.providers.nonEmpty) {
             <div class="social-providers">
-                <p>@messages("or.use.social")</p>
+                <p>Social login is <strong>not available </strong>for the purposes of this demo.
+                    You can still check how it works at <a href="http://www.democracit.org">democracit.org</a></p>
                 <div>
                 @for(p <- socialProviders.providers if p.id != "clef") {
                     @defining(  routes.SocialAuthController.authenticate(p.id) +
                                 (if (returnUrl.isDefined) "?returnUrl="+returnUrl.get else "")
                               ) { url=>
-                        <a href="@url" class="provider @p.id" title="@messages(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" width="64px" height="64px" alt="@messages(p.id)"></a>
+
+                        <button type="button" class="btn btn-default"
+                            data-container="body"
+                            data-toggle="popover"
+                            data-placement="top"
+                        data-content="Not available for the demo. Please sign in using the form above">
+                            <img src="@routes.Assets.at(s"images/providers/${p.id}.png")" width="64px" height="64px" alt="@messages(p.id)">
+                        </button>
                     }
                 }
                 </div>
-                @defining(socialProviders.get[ClefProvider]) { clef =>
-                    @if(clef.isDefined) {
-                        <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
-                    }
-                }
             </div>
         }
 
