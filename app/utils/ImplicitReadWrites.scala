@@ -6,6 +6,8 @@ import play.api.data.FormError
 import play.api.i18n.MessagesApi
 import play.api.i18n.Messages
 import play.api.libs.json._
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 object ImplicitReadWrites  {
 
@@ -26,17 +28,14 @@ object ImplicitReadWrites  {
 
 
   implicit object ConsultationWrites extends Writes[Consultation] {
-    implicit var messagesObj:Messages  = null
 
-    def apply(messagesObj:Messages): Unit = {
-      this.messagesObj = messagesObj
-    }
     override def writes(c:Consultation):JsValue = Json.obj(
+
         "id" -> Json.toJson(c.id),
         "title" -> Json.toJson(c.title),
         "isActive" -> Json.toJson(c.isActive),
-        "totalDurationFormatted" -> Json.toJson(c.totalDurationFormatted(this.messagesObj)),
-        "endDateFormatted" -> Json.toJson(c.endDateFormatted(this.messagesObj)),
+        "totalDurationFormatted" -> Json.toJson(c.totalDurationFormatted),
+        "endDateFormatted" -> Json.toJson(c.endDateFormatted),
         "articlesNum" -> Json.toJson(c.articlesNum)
     )
   }

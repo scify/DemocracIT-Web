@@ -51,12 +51,12 @@ scify.SearchContainer = React.createClass({
             "div",
             null,
             React.createElement(SearchBox, { onChange: this.loadConsultations, lang: this.props.lang }),
-            React.createElement(scify.ReactLoader, { display: "true" }),
             React.createElement(scify.ReactLoader, { display: this.state.isBusy }),
             React.createElement(SearchResultsList, { isSearching: this.state.isBusy,
                 searchQuery: this.state.searchQuery,
                 handeReset: this.handleReset,
-                data: this.state.consultations, test: "1"
+                data: this.state.consultations,
+                lang: this.props.lang
             })
         );
     }
@@ -119,9 +119,7 @@ var SearchResultsList = React.createClass({
                 React.createElement(
                     "h2",
                     null,
-                    "Βρέθηκαν ",
-                    this.props.data.length,
-                    " διαβουλεύσεις"
+                    this.props.lang.results.replace("{0}", this.props.data.length)
                 ),
                 React.createElement(
                     "div",
@@ -136,9 +134,8 @@ var SearchResultsList = React.createClass({
                 React.createElement(
                     "h2",
                     null,
-                    "Δε βρέθηκαν αποτελέσματα για '",
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.searchQuery } }),
-                    "' "
+                    this.props.lang.noresults,
+                    " "
                 )
             );
         } else {

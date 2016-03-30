@@ -6,7 +6,9 @@
         var c = new scify.HomePageHandler('@routes.ConsultationController.search()' ,
                     {
                         searchPlaceHolder: '@Html(messages("index.search.placeholder"))',
-                        clickToDisplayAll:'@Html(messages("index.search.displayall"))'
+                        clickToDisplayAll:'@Html(messages("index.search.displayall"))',
+                        results:'@Html(messages("index.search.results"))',
+                        noresults:'@Html(messages("index.search.noresults"))'
 
                     });
         c.init();

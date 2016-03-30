@@ -54,7 +54,6 @@ open = open
 explain = Explanation
 evaluation.dispersion = Dispersion
 evaluation.duration = Duration
-evaluation.participation = Participation
 evaluation.comments.users = User comments
 evaluation.total = Total
 evaluation.perorg = Per organization
@@ -73,6 +72,8 @@ index.days = days
 index.number = Number of consultations
 index.search.placeholder = search on the title, ex "association'"
 index.search.displayall = click here to display all consultations
+index.search.results = {0} consultation(s) found
+index.search.noresults = no consultations found
 index.active = active
 index.active.plural = active
 index.comments.avnumber = Number of comments in each consultation (average)
@@ -347,7 +348,3 @@ consultation.tutorial.nextLabel = Next
 consultation.tutorial.prevLabel = Previous
 consultation.tutorial.endLabel = Skip
 consultation.tutorial.okLabel = Finish
-
-
-
-

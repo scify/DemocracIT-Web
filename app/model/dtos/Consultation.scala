@@ -25,7 +25,7 @@ case class Consultation( id:Long,
   val isActive = endDate.after(DateTime.now().toDate)
   val totalDurationInDays =   TimeUnit.DAYS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)
 
-  def totalDurationFormatted(implicit messages:Messages) = {
+  def totalDurationFormatted()(implicit messages:Messages) = {
 
     if (totalDurationInDays==0)
       Pluralizer.get(TimeUnit.HOURS.convert(endDate.getTime - startDate.getTime, TimeUnit.MILLISECONDS)," " + messages("hour"), " " + messages("hours"))
@@ -43,7 +43,7 @@ case class Consultation( id:Long,
     val dateFormated = formatOutgoing.format(formatIncomming.parse(date.toString))
     dateFormated
   }
-  def endDateFormatted(implicit messages:Messages) = {
+  def endDateFormatted()(implicit messages:Messages) = {
        // val lang = play.api.Play.current.configuration.getString("application.langs").get
       //  val locale = new Locale("el");
       // val stats = ResourceBundle.getBundle("org.ocpsoft.prettytime.i18n.Resources", locale);

@@ -51,12 +51,12 @@ scify.SearchContainer = React.createClass({
         return (
             <div>
                 <SearchBox  onChange={this.loadConsultations} lang={this.props.lang} />
-                <scify.ReactLoader display="true"/>
                 <scify.ReactLoader  display={this.state.isBusy} />
                 <SearchResultsList isSearching={this.state.isBusy}
                                    searchQuery={this.state.searchQuery}
                                    handeReset={this.handleReset}
-                                   data={this.state.consultations} test="1"
+                                   data={this.state.consultations}
+                                   lang={this.props.lang}
                 />
 
             </div>
@@ -102,7 +102,7 @@ var SearchResultsList = React.createClass({
         else if ( this.props.data.length>0) {
             return (
                 <div className="consultation-list container">
-                    <h2>Βρέθηκαν {this.props.data.length} διαβουλεύσεις</h2>
+                    <h2>{this.props.lang.results.replace("{0}",this.props.data.length)}</h2>
                     <div className="results">
                         {resultNodes}
                     </div>
@@ -112,7 +112,7 @@ var SearchResultsList = React.createClass({
         else if (this.props.data.length == 0 && this.props.searchQuery.length>0 ) {
             return (
                 <div className="consultation-list container">
-                    <h2>Δε βρέθηκαν αποτελέσματα για '<span dangerouslySetInnerHTML={{__html:this.props.searchQuery}} ></span>' </h2>
+                    <h2>{this.props.lang.noresults} </h2>
                 </div>
             );
         }

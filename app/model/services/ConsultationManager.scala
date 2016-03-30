@@ -18,41 +18,44 @@ class ConsultationManager (gamificationEngine: GamificationEngineTrait){
 
   def search(searchRequest: ConsultationSearchRequest): List[Consultation] = {
 
-    if (searchRequest.query.length==0)
-    {
-      //todo: discuss with George how we can do a solr query with wildcards.
-       val repository = new ConsultationRepository()
-        repository.search(searchRequest)
-    }
-    else
-    {
-      val url = play.api.Play.current.configuration.getString("application.solrBaseUrl")
-      val q= new DitSorlQuery(url.get)
-      val ministryIds = new util.HashSet[java.lang.Long]()
+    val repository = new ConsultationRepository()
+    repository.search(searchRequest)
 
-      if (searchRequest.ministryId>0)
-        ministryIds.add(searchRequest.ministryId.asInstanceOf[Long])
-
-      val res = q.queryConsultations(searchRequest.query,false,ministryIds)
-      val i =res.iterator()
-      var consultations = List[Consultation]()
-      while(i.hasNext()) {
-        val c= i.next()
-        val organization = c.getOrganizationId()
-        consultations = Consultation(c.getId(),
-          c.getStartDate(),
-          c.getEndDate(),
-          c.getTitle(),c.getShortDescription,
-          Organization(organization.getId().toInt,organization.getTitle()),
-          1,
-          Some(c.getReportText()),
-          Some(c.getReportUrl()),
-          Some(c.getCompletedText()),
-          c.getNumOfArticles(),
-          c.getConsultationUrl()) :: consultations
-      }
-      consultations
-    }
+//    if (searchRequest.query.length==0)
+//    {
+//      //todo: discuss with George how we can do a solr query with wildcards.
+//       val repository = new ConsultationRepository()
+//        repository.search(searchRequest)
+//    }
+//    else
+//    {
+//      val url = play.api.Play.current.configuration.getString("application.solrBaseUrl")
+//      val q= new DitSorlQuery(url.get)
+//      val ministryIds = new util.HashSet[java.lang.Long]()
+//
+//      if (searchRequest.ministryId>0)
+//        ministryIds.add(searchRequest.ministryId.asInstanceOf[Long])
+//
+//      val res = q.queryConsultations(searchRequest.query,false,ministryIds)
+//      val i =res.iterator()
+//      var consultations = List[Consultation]()
+//      while(i.hasNext()) {
+//        val c= i.next()
+//        val organization = c.getOrganizationId()
+//        consultations = Consultation(c.getId(),
+//          c.getStartDate(),
+//          c.getEndDate(),
+//          c.getTitle(),c.getShortDescription,
+//          Organization(organization.getId().toInt,organization.getTitle()),
+//          1,
+//          Some(c.getReportText()),
+//          Some(c.getReportUrl()),
+//          Some(c.getCompletedText()),
+//          c.getNumOfArticles(),
+//          c.getConsultationUrl()) :: consultations
+//      }
+//      consultations
+    //}
 
 
   }
