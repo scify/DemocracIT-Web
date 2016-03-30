@@ -49,6 +49,17 @@ img, .btn, i, a {
 
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
+.navbar {
+  margin-bottom: 0; }
+
+#democracit-demo .mask {
+  background-color: #eeeeee;
+  color: black;
+  padding-top: 10px;
+  padding-bottom: 10px; }
+
+/*</editor-fold">*/
+/*<editor-fold desc="footer">*/
 #footer {
   background-color: #254254;
   border-color: #738f9d;
