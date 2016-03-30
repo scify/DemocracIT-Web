@@ -23,6 +23,7 @@ scify.SearchContainer = React.createClass({
         else if (query.length>2)
         {
 
+
             instance.searchRequest=  $.ajax({
                 method: "GET",
                 url: instance.props.url,
@@ -49,12 +50,15 @@ scify.SearchContainer = React.createClass({
     render : function(){
         return (
             <div>
-                <SearchBox onChange={this.loadConsultations} />
+                <SearchBox  onChange={this.loadConsultations} lang={this.props.lang} />
                 <scify.ReactLoader  display={this.state.isBusy} />
                 <SearchResultsList isSearching={this.state.isBusy}
                                    searchQuery={this.state.searchQuery}
                                    handeReset={this.handleReset}
-                                   data={this.state.consultations} />
+                                   data={this.state.consultations}
+                                   lang={this.props.lang}
+                />
+
             </div>
         )
     }
@@ -72,11 +76,11 @@ var SearchBox = React.createClass({
                         <div className="form-group">
                             <div className="box">
                                 <span className="icon"><i className="fa fa-search"></i></span>
-                                <input ref="searchInput" type="search" id="search" name="query" placeholder="αναζητήστε στον τίτλο, πχ 'συντάξεις'" onKeyUp={this.handleKeyUp} />
+                                <input ref="searchInput" type="search" id="search" name="query" placeholder={this.props.lang.searchPlaceHolder} onKeyUp={this.handleKeyUp} />
                             </div>
                         </div>
                     </form>
-                    <a href="/consultation/display-all">κλικ εδώ για να δείτε όλες τις διαβουλεύσεις</a>
+                    <a href="/consultation/display-all">{ this.props.lang.clickToDisplayAll}</a>
                 </div>
             </div>
         )
@@ -98,7 +102,7 @@ var SearchResultsList = React.createClass({
         else if ( this.props.data.length>0) {
             return (
                 <div className="consultation-list container">
-                    <h2>Βρέθηκαν {this.props.data.length} διαβουλεύσεις</h2>
+                    <h2>{this.props.lang.results.replace("{0}",this.props.data.length)}</h2>
                     <div className="results">
                         {resultNodes}
                     </div>
@@ -108,7 +112,7 @@ var SearchResultsList = React.createClass({
         else if (this.props.data.length == 0 && this.props.searchQuery.length>0 ) {
             return (
                 <div className="consultation-list container">
-                    <h2>Δε βρέθηκαν αποτελέσματα για '<span dangerouslySetInnerHTML={{__html:this.props.searchQuery}} ></span>' </h2>
+                    <h2>{this.props.lang.noresults} </h2>
                 </div>
             );
         }

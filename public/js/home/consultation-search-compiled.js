@@ -50,12 +50,14 @@ scify.SearchContainer = React.createClass({
         return React.createElement(
             "div",
             null,
-            React.createElement(SearchBox, { onChange: this.loadConsultations }),
+            React.createElement(SearchBox, { onChange: this.loadConsultations, lang: this.props.lang }),
             React.createElement(scify.ReactLoader, { display: this.state.isBusy }),
             React.createElement(SearchResultsList, { isSearching: this.state.isBusy,
                 searchQuery: this.state.searchQuery,
                 handeReset: this.handleReset,
-                data: this.state.consultations })
+                data: this.state.consultations,
+                lang: this.props.lang
+            })
         );
     }
 });
@@ -87,14 +89,14 @@ var SearchBox = React.createClass({
                                 { className: "icon" },
                                 React.createElement("i", { className: "fa fa-search" })
                             ),
-                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: "αναζητήστε στον τίτλο, πχ 'συντάξεις'", onKeyUp: this.handleKeyUp })
+                            React.createElement("input", { ref: "searchInput", type: "search", id: "search", name: "query", placeholder: this.props.lang.searchPlaceHolder, onKeyUp: this.handleKeyUp })
                         )
                     )
                 ),
                 React.createElement(
                     "a",
                     { href: "/consultation/display-all" },
-                    "κλικ εδώ για να δείτε όλες τις διαβουλεύσεις"
+                    this.props.lang.clickToDisplayAll
                 )
             )
         );
@@ -117,9 +119,7 @@ var SearchResultsList = React.createClass({
                 React.createElement(
                     "h2",
                     null,
-                    "Βρέθηκαν ",
-                    this.props.data.length,
-                    " διαβουλεύσεις"
+                    this.props.lang.results.replace("{0}", this.props.data.length)
                 ),
                 React.createElement(
                     "div",
@@ -134,9 +134,8 @@ var SearchResultsList = React.createClass({
                 React.createElement(
                     "h2",
                     null,
-                    "Δε βρέθηκαν αποτελέσματα για '",
-                    React.createElement("span", { dangerouslySetInnerHTML: { __html: this.props.searchQuery } }),
-                    "' "
+                    this.props.lang.noresults,
+                    " "
                 )
             );
         } else {

@@ -21,8 +21,6 @@ class ConsultationManager (gamificationEngine: GamificationEngineTrait){
        val repository = new ConsultationRepository()
         repository.search(searchRequest)
 
-
-
   }
 
   def get(consultationId: Long, user:Option[User]): ConsultationViewModel= {
