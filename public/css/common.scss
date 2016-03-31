@@ -82,10 +82,16 @@ img, .btn, i, a {
 //}
 #democracit-demo .mask
 {
-  background-color:#eeeeee;
-  color:black;
-  padding-top:10px;
-  padding-bottom:10px;
+  background-color: #ed6d46;
+  color: white;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+#democracit-demo .mask a
+{
+  color:white;
+  text-decoration: underline;
 }
 /*</editor-fold">*/
 
