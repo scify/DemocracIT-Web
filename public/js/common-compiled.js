@@ -43,8 +43,8 @@ scify.ReactLoader = React.createClass({
     },
         initToolTips = function initToolTips() {
         $("[data-toggle=\"tooltip\"]").tooltip();
-    };
-    initGoogleEvents = function () {
+    },
+        initGoogleEvents = function initGoogleEvents() {
 
         $("a[data-event='contact']").click(function () {
             ga("send", "event", "Contact", "contact", "clicked contact us");
