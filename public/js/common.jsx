@@ -43,9 +43,17 @@ var handleAjaxLoginErrors = function(event, request, settings){
     initToolTips = function(){
         $('[data-toggle="tooltip"]').tooltip()
     };
+    initGoogleEvents = function(){
+
+        $("a[data-event='contact']").click(function(){
+            ga('send', 'event', 'Contact', 'contact', 'clicked contact us');
+            return true;
+        });
+    }
 
     $(document).ajaxError(handleAjaxLoginErrors);
     $(function(){
         initToolTips();
+        initGoogleEvents();
     })
 })();
