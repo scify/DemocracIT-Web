@@ -21,7 +21,7 @@
     }
     <fieldset class="col-md-6 col-md-offset-3">
         <legend>@messages("sign.in.credentials")</legend>
-        <p>Login with username: demo @ scify.org, password: demo</p>
+        <p>Login with username: demo@@scify.org, password: demo</p>
         @helper.form(action = routes.CredentialsAuthController.authenticate()) {
             @helper.CSRF.formField
             @b3.email(signInForm("email"), '_hiddenLabel -> messages("email"),
