@@ -15,6 +15,9 @@ img, .btn, i, a {
   transition: all 0.3s ease-out 0s; }
 
 /*<editor-fold desc="header">*/
+.navbar {
+  margin-bottom: 0; }
+
 .navbar-default {
   background-color: #eeeeee;
   border: none; }
@@ -49,9 +52,6 @@ img, .btn, i, a {
 
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
-.navbar {
-  margin-bottom: 0; }
-
 .democracit-demo .mask {
   background-color: #ed6d46;
   color: white;

@@ -23,7 +23,10 @@ img, .btn, i, a {
 
 /*<editor-fold desc="header">*/
 
-
+.navbar
+{
+  margin-bottom:0;
+}
 .navbar-default
 {
   background-color: $gray-background;
@@ -32,6 +35,7 @@ img, .btn, i, a {
 #logo {
   height:55px;
 }
+
 .navbar-nav > li > a {
   padding-bottom: 30px;
   padding-top: 30px;
@@ -68,10 +72,8 @@ img, .btn, i, a {
 /*</editor-fold>*/
 /*<editor-fold desc="footer">*/
 
-.navbar
-{
-  margin-bottom:0;
-}
+
+
 //#democracit-demo {
 //  background-attachment: fixed;
 //  background-repeat: repeat;
