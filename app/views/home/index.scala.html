@@ -21,6 +21,82 @@
 @layout(messages("homepage"), css, js, viewmodel.user) {
 
 
+    <section class="promo">
+        <h1>A  consultation platform for your needs</h1>
+        <p><a href="https://github.com/scify/?query=democracit" target="_blank">Open source</a> | Free | Easily customized</p>
+        @*<a href="#">try the demo app below</a> and*@
+        @*<a href="#" class='request'>install it on your premises</a>*@
+    </section>
+
+    <section class="promo-section" id="key-features">
+        <div class="container">
+            <h2>Why DemocracIT stands out?</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>&#10004; Targeted comments</h3>
+                    <p>Users can <strong>comment</strong> on a <strong>specific</strong> sentence, <strong>annotate</strong> your consultation, <br><strong>indicate</strong> problems.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>&#10004; Powerful analytics</h3>
+                    <p><strong>Visualization</strong> and <strong>reports</strong> can help you <strong>understand</strong> what users are saying.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>&#10004; Scalable and open</h3>
+                    <p>
+                        Our technology stack can support <strong>million</strong> of comments. You can <strong>install it in your premises</strong> or we can <strong>host it for you</strong>. <a href="http://www.scify.gr/site/en/contact/" target="_blank">contact us</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="promo-section" id="more-info">
+        <div class="container">
+            <h2> Want to know more?</h2>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Try the demo!</h4>
+                    <p>Login, select a consultation and check how it works</p>
+                    <a class="login-btn" href="http://demo.democracit.org@routes.AccountController.signIn(None)">click here to login</a>
+                </div>
+                <div class="col-md-4">
+                    <h4>Request more info</h4>
+                    <p>
+                        DemocracIT is free to download and install.<br>
+                        Want to know more?
+                    </p>
+                    <a class="contact-btn" href="http://www.scify.gr/site/en/contact" target="_blank">contact us</a>
+                </div>
+                <div class="col-md-4">
+                    <h4>We can help you:</h4>
+                        <ul>
+                            <li>&#10004; integrate democracit into your <strong>premises</strong></li>
+                            <li>&#10004;<strong> host democracit for you</strong></li>
+                             <li>&#10004; implement new features to suit your needs</li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="mission" class="promo-section">
+        <div class="container">
+        <h2>About</h2>
+            <h4 class="moto">
+                We are on a mission to <strong>improve citizen participation</strong> in democratic processes.
+            </h4>
+           <div class="row">
+                <div class="col-md-2">
+                     <a href="http://www.scify.org/site/en"><img src="@routes.Assets.at("/images/demo/scify_logo.png")"/></a>
+                </div>
+                <div class="col-md-10 text-left">
+                    <p>SciFY is a not for profit organization that <br> develops cutting-edge information technology systems and freely offers them to everyone</p>
+                    <p>DemocracIT, like democracy it-self, started in Greece and <br> now we are ready to expand world-wide.</p>
+                    <a class="contact-btn blue" href="http://www.scify.gr/site/en/contact/" target="_blank">Be the first to apply for your country!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     @if(play.Play.application().configuration().getBoolean("application.ui.menu.displaycms")) {
         <div id="faq">
             <div class="carousel slide">
@@ -50,6 +126,15 @@
         </div>
     }
 
+    <div class="democracit-demo show">
+        <div class="mask">
+            <div class="container">
+                <i class="fa fa-info"></i>
+                Section below is a demo | Interested into integrating DemocracIT in your company? <strong><a href="http://www.scify.gr/site/en/contact" target="_blank">contact us</a></strong>
+            </div>
+        </div>
+    </div>
+
     <div id="platform-stats" class="container">
         <div class="row">
             <div class="total col-md-4">
@@ -74,6 +159,8 @@
                 </div>
             </div>
         </div>
+
+
 
         <div class="panel">
             <div id="consultation-distr" class="row collapse">

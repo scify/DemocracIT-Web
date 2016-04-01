@@ -16,15 +16,151 @@
 //  padding:0;
 //}
 
+h3 {
+  font-size:20px;
+}
 .navbar
 {
   margin-bottom:0;
 }
 
+#key-features h2{
+  text-align: center;
+}
 
-#democracit-demo
+.promo-section {
+  padding: 30px 0;
+  padding-bottom:60px;
+}
+
+.promo-section h2{
+  margin-bottom: 40px;
+}
+
+#mission.promo-section h2 {
+ margin:10px;
+}
+#mission .moto
+{
+  margin-bottom:40px;
+  margin-left:10px;
+}
+.promo {
+  background-image: radial-gradient(circle farthest-corner at center center , #04a3ed, #04639a);
+  color: #f2f6fa;
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 33px;
+  min-height: 280px;
+  position: relative;
+  text-align: center;
+}
+
+.promo h1 {
+  color: #f2f6fa;
+  font-size: 39px;
+  font-weight: 300;
+  line-height: 56px;
+  margin: 0 0 22px;
+  padding-top: 72px;
+}
+
+.promo a{
+  color:white;
+}
+.promo .request {
+  background: #ed6d46 none repeat scroll 0 0;
+  border-radius: 10px;
+  color: #f2f6fa;
+  font-size: 20px;
+  font-weight: 300;
+  padding: 10px;
+}
+#more-info {
+  background: #323a41 none repeat scroll 0 0;
+  color: #f2f6fa;
+  text-align: center;
+  padding-bottom:90px;
+}
+
+#more-info
+{
+  text-align:left;
+}
+#more-info p {
+  margin-bottom: 23px;
+}
+
+.promo-section ul
+{
+  list-style: none;
+  padding-left:0;
+}
+
+.promo-section li
+{
+  margin-bottom:3px;
+}
+.promo-section a:hover
+{
+  color:white;
+}
+
+
+#mission img
+{
+  height:160px;
+  margin-bottom:10px;
+}
+#mission .contact-btn
+{
+  display:inline-block;
+  margin-top:10px;
+}
+
+
+
+.login-btn, .contact-btn
+{
+  border-radius:5px;
+  color:white;
+  padding:10px;
+}
+
+.contact-btn.blue
+{
+ background-color:#4b6e98;
+}
+.login-btn
+{
+text-decoration: underline;
+  padding-left:0;
+}
+
+.contact-btn
+{
+  background-color:#ed6d46;
+}
+
+
+#more-info h2 {
+
+}
+.promo > p {
+  margin-bottom: 39px;
+}
+
+.promo .try
+{
+  display:block;
+}
+.democracit-demo
 {
   display:none;
+}
+.democracit-demo.show
+{
+  display:block;
 }
 
 #democracit h1

@@ -52,13 +52,14 @@ img, .btn, i, a {
 .navbar {
   margin-bottom: 0; }
 
-#democracit-demo .mask {
+.democracit-demo .mask {
   background-color: #ed6d46;
   color: white;
-  padding-bottom: 10px;
-  padding-top: 10px; }
+  font-size: 17px;
+  padding-bottom: 20px;
+  padding-top: 20px; }
 
-#democracit-demo .mask a {
+.democracit-demo .mask a {
   color: white;
   text-decoration: underline; }
 
