@@ -21,10 +21,13 @@
     }
     <fieldset class="col-md-6 col-md-offset-3">
         <legend>@messages("sign.in.credentials")</legend>
+        <p>Login with username: demo @ scify.org, password: demo</p>
         @helper.form(action = routes.CredentialsAuthController.authenticate()) {
             @helper.CSRF.formField
-            @b3.email(signInForm("email"), '_hiddenLabel -> messages("email"), 'placeholder -> messages("email"), 'class -> "form-control input-lg")
-            @b3.password(signInForm("password"), '_hiddenLabel -> messages("password"), 'placeholder -> messages("password"), 'class -> "form-control input-lg")
+            @b3.email(signInForm("email"), '_hiddenLabel -> messages("email"),
+                                            'value -> "demo@scify.org",
+                                            'placeholder -> messages("email"), 'class -> "form-control input-lg")
+            @b3.password(signInForm("password"),'value -> "demo", '_hiddenLabel -> messages("password"), 'placeholder -> messages("password"), 'class -> "form-control input-lg")
             <a href="@routes.PasswordChangeController.startResetPassword">@Messages("forgot.password")</a>
             @b3.checkbox(signInForm("rememberMe"), '_text -> messages("remember.me"), 'checked -> true)
             <input type="hidden" name="returnUrl" value="@returnUrl.getOrElse("")"/>
