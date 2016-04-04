@@ -27,7 +27,7 @@ h3 {
   font-size: 25px;
   font-weight: 300;
   line-height: 33px;
-  min-height: 280px;
+  min-height: 330px;
   position: relative;
   text-align: center; }
 
@@ -37,12 +37,12 @@ h3 {
   font-weight: 300;
   line-height: 56px;
   margin: 0;
-  padding-bottom: 16px;
   padding-top: 72px; }
 
 .promo h2 {
-  margin-bottom: 42px;
-  margin-top: 0; }
+  font-size: 34px;
+  margin-bottom: 32px;
+  margin-top: 20px; }
 
 .promo a {
   color: white; }
