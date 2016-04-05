@@ -50,7 +50,6 @@
                         </ul>
                     </li>
                     }.getOrElse {
-                        @if(play.Play.application().configuration().getString("application.state") == "development") {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sign-in"></i> @messages("header.login") <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
@@ -58,7 +57,6 @@
                                     <li id="login"><a href="@baseUrl@routes.AccountController.signIn(None)"><i class="fa fa-users"></i> @messages("header.haveaccount")</a></li>
                                 </ul>
                             </li>
-                        }
                     }
                 </ul>
             </div>
