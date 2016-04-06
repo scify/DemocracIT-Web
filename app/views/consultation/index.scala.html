@@ -76,6 +76,11 @@
                     <div class="sub-toolbar clearfix">
                         <div id="tutorial"><a>@messages("consultation.index.tutorial")</a></div>
                         <div id="consWordCloud"><button class="wordCloudBtn" type="button" data-toggle="modal" data-target="#consWordCloudModal">@messages("consultation.index.wordcloud")</button></div>
+                        <div id="rss">
+                            <a rel="alternate" target="_blank" type="application/rss+xml" href="@routes.ConsultationController.getCommentsRss(vm.consultation.id)">
+                                <img src="@routes.Assets.at("/images/feed-icon-14x14.png")" />
+                            </a>
+                        </div>
                     </div>
                         <!-- Modal -->
                     <div id="consWordCloudModal" class="modal fade" role="dialog">

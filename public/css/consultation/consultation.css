@@ -454,6 +454,10 @@ a.load {
   padding-bottom: 10px;
   padding-top: 10px; }
 
+#rss {
+  float: right;
+  padding-right: 10px; }
+
 .activeCons {
   color: #3c763d; }
 

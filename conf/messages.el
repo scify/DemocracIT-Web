@@ -1,3 +1,6 @@
+rss.description.lastcomments = Τελευταία {0} σχόλια
+rss.description.nocomments = Δε βρέθηκαν σχόλια
+rss.consultation = Διαβούλευση
 header.home = ΑΡΧΙΚΗ
 header.consultations = ΔΙΑΒΟΥΛΕΥΣΕΙΣ
 header.reports = ΑΝΑΦΟΡΕΣ
@@ -348,3 +351,4 @@ consultation.tutorial.nextLabel = Επόμενο
 consultation.tutorial.prevLabel = Πίοω
 consultation.tutorial.endLabel = Τέλος
 consultation.tutorial.okLabel = Εντάξει
+

@@ -5,13 +5,16 @@ import java.util.UUID
 import model.dtos._
 import model.repositories._
 import play.api.Play.current
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.JsArray
 import play.api.libs.ws.WS
 import utils.MailService
 
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Await
 
-class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailService: MailService){
+class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailService: MailService)(implicit messages:Messages){
 
   private val commentsPageSize = 50
   val commentsRepository = new CommentsRepository()
@@ -172,9 +175,9 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
                    source: String,
                    discussionthreadid:Option[Int],
                    discussionthreadclientid:String,
-                   user_id:Option[java.util.UUID]): List[Comment] = {
+                   user_id:Option[java.util.UUID],
+                  pageSize:Int = 10): List[Comment] = {
 
-    val pageSize=10;
     var comments:List[Comment] = Nil
 
     if (source=="opengov"){
@@ -202,6 +205,33 @@ class AnnotationManager (gamificationEngine: GamificationEngineTrait, mailServic
       }
     }
     comments
+  }
+
+
+  def getRssForDiscussion(consultationId:Long):scala.xml.Elem= {
+
+    val pageSize=50
+    val consultation_title = this.consultationRepository.get(consultationId).title
+    val comments = this.commentsRepository.getRssForConsulationComments(pageSize, consultationId)
+    val title = "Consultation:" + " \"" +  consultation_title + "\" "
+    val description = if (comments.isEmpty) "No comments found" else "Last " + pageSize + " comments"
+
+    val rss =
+            <rss version="2.0">
+              <channel>
+                <title> { title }</title>
+                <link> http://www.democracit.org/consultation/{ consultationId}</link>
+                <description>{ description} </description>
+                { comments.map { c =>
+                <item>
+                  <title>{ c.userName } | {c.comment_date.toLocaleString}</title>
+                  <link>{ c.consultationShareUrl }</link>
+                  <description>{ c.comment } </description>
+                </item>
+              }}
+              </channel>
+            </rss>
+    rss
   }
 
 

@@ -5,7 +5,7 @@ import java.util.UUID
 import _root_.anorm.SqlParser._
 import _root_.anorm.{SqlParser, _}
 import model.dtos._
-import model.repositories.anorm.{AnnotationTagWithCommentsParser, AnnotationTypesParser, ArticleParser, CommentsParser, DiscussionThreadWithCommentsCountParser, UserCommentsStatsParser}
+import model.repositories.anorm._
 import play.api.Play.current
 import play.api.db.DB
 
@@ -323,6 +323,34 @@ class CommentsRepository {
     }
   }
 
+  def getRssForConsulationComments(pageSize:Int,consultationId:Long):List[ConsultationRssData] = {
+    DB.withConnection { implicit c =>
+
+      SQL"""
+         	select  u.fullName,
+                  a.consultation_id,
+                  cons.title,
+                  a.title as article_name,
+                  a.id as article_id,
+                  t.tagid as discussion_thread_tag_id,
+                  t.typeid,
+                  c.id as comment_id,
+                  c.date_added,
+                  t.relatedText,
+                  c.comment
+                 from public.comments c
+                    inner join  public.discussion_thread t on c.discussion_thread_id =t.id
+                    inner join public.articles a on a.id = c.article_id
+                    inner join account.user u on u.id = c.user_id
+                    inner join public.consultation cons on a.consultation_id = cons.id
+ 		          where a.consultation_id = $consultationId
+                    and c.COMMENT is not null
+              order by c.date_added desc, c.id desc
+              limit $pageSize
+        """.as(ConsultationRssDataParser.Parse *)
+
+    }
+  }
   def saveCommentReply(replyText:String, parentId:Long, articleId:Long, discussionthreadclientid:Long, userId:UUID):Long = {
     DB.withConnection { implicit c =>
       val commentId:Option[Long] = SQL"""

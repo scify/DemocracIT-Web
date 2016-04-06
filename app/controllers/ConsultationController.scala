@@ -226,4 +226,11 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
                                               if (request.identity.isDefined) Some(request.identity.get.userID) else None)
     Ok(Json.toJson(comments))
   }
+
+  def getCommentsRss(consultationId:Long
+                 ) = Action {  implicit request =>
+
+    Ok(commentManager.getRssForDiscussion(consultationId))
+
+  }
 }

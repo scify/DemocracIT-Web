@@ -1,3 +1,6 @@
+rss.description.lastcomments = Last {0} comments
+rss.description.nocomments = No comments found
+rss.consultation =Consultation
 header.home = HOME
 header.consultations = CONSULTATIONS
 header.reports = REPORTS
