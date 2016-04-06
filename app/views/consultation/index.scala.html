@@ -39,7 +39,7 @@
                  @Html(vm.relevantLawsToJson()),
                  @Html(vm.consultation.isActive.toString),
                  '@routes.Assets.at("images")',
-                 '@play.Play.application().configuration().getString("application.state")',
+                 '@play.Play.application().configuration().getString("application.mode")',
                  Date.parse('@vm.consultation.endDate')
          );
         controller.init();
