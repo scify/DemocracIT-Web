@@ -105,7 +105,8 @@ consultation.index.reference = Αναφορά
 consultation.index.description = Περιγραφή
 consultation.index.nolaw = Αυτή ή διαβούλευση δεν περιέχει σχετικούς νόμους.
 consultation.index.nolaw.yet = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:
-consultation.index.uploadfinal = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a>
+consultation.index.uploadfinal = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας
+consultation.index.uploadfinal.here =εδώ
 consultation.index.uploaded.delete = Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw"> εδώ</a>
 consultation.index.compare = Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:
 consultation.index.hint = Αριστερά, βλέπετε το κείμενο της διαβούλευσης. Δεξιά, τον τελικό νόμο

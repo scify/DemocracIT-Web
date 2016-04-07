@@ -237,7 +237,7 @@
 
                         } else {
                             <div class="notLoggedIn info">
-                            @messages("consultation.index.uploadfinal")</div>
+                            @messages("consultation.index.uploadfinal") <a href='@routes.AccountController.signIn(None)'>@messages("consultation.index.uploadfinal.here")</a></div>
                         }
                     } else {
                         <div class="finalLaw">

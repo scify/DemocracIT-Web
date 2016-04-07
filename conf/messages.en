@@ -105,7 +105,8 @@ consultation.index.reference = Reference
 consultation.index.description = Description
 consultation.index.nolaw = This consultation has no related laws
 consultation.index.nolaw.yet = The final law for this consultation has not uploaded yet. If you want to upload the final law in text format (.pdf, .txt), click on the window below:
-consultation.index.uploadfinal = The final law for this consultation has not uploaded yet. If you want to upload the final law in text format (.pdf, .txt), log in <a href="/signIn">here</a>
+consultation.index.uploadfinal = The final law for this consultation has not uploaded yet. If you want to upload the final law in text format (.pdf, .txt), log in
+consultation.index.uploadfinal.here = here
 consultation.index.uploaded.delete = this final law has been uploaded from you. If you want to delete it, click <a id="deleteFinalLaw"> here</a>
 consultation.index.compare = Click here to compare the consultation with the final law:
 consultation.index.hint = Left, you see the consultation text. Right, the final law.
