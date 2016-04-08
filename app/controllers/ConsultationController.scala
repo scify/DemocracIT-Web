@@ -99,7 +99,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
     //for each line in the document
     for(line <- lines){
       if(line.length > 6) {
-        if (line.substring(0, 6).equals("Άρθρο ")) {
+        if (line.startsWith("Article ")) {
           if(isFirstArticle) {
             htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
               "<div class=\"col-md-12\"><div class=\"title\">" +
