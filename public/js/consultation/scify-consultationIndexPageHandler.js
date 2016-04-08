@@ -582,7 +582,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
 
         this.tutorialAnnotator = new scify.TutorialAnnotator(this.consultationIsActive, this.imagesPath, this.tutorialAnnotatorMessages);
         this.tutorialAnnotator.init();
-        createWordCloudChart(instance);
+       // createWordCloudChart(instance);
         createFinalLawUpload(instance);
         deleteFinalLawHandler(instance);
         rateFinalLawFile(instance);

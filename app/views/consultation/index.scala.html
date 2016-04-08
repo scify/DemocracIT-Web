@@ -9,6 +9,7 @@
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
     <script src="@routes.Assets.at("js/underscore-min.js")"></script>
     <script src="@routes.Assets.at("js/moment-with-locales.min.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/d3.layout.cloud.js")"></script>
@@ -19,10 +20,11 @@
     <script src="@routes.Assets.at("js/consultation/ReplyBox-compiled.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-tutorialAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-annotator.js")" ></script>
+
     <script src="@routes.Assets.at("js/consultation/scify-commentAnnotator.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/scify-consultationIndexPageHandler.js")" ></script>
     <script src="@routes.Assets.at("js/consultation/reporter/wordCloud-compiled.js")" ></script>
-    <script src="@routes.Assets.at("js/consultation/dropzone.js")"></script>
+
     <script>
      $(function(){
          var controller = new scify.ConsultationIndexPageHandler(@vm.consultation.id,
