@@ -130,7 +130,8 @@ h2 {
   float: left;
   width: 50%;
   font-size: 11px;
-  text-align: left; }
+  text-align: left;
+  visibility: hidden; }
 
 .highlight {
   color: red; }
