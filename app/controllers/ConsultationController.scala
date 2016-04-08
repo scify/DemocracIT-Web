@@ -97,7 +97,12 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
     var htmlContent = ""
     var articleNum = 1
     //for each line in the document
-    for(line <- lines){
+    for(linetmp <- lines){
+      var line = linetmp.trim()
+
+      if (line.startsWith("-"))
+        line = line.replace("-","<br>-")
+
       if(line.length > 6) {
         if (line.startsWith("Article")) {
           if(isFirstArticle) {
@@ -118,6 +123,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
           articleNum += 1
           fileContentFinal += htmlContent + line + htmlContentAfter
         } else{
+
             //check if line ends with "-"
             if(line.charAt(line.length-1) == 8722 || line.charAt(line.length-1) == 45 ) {
               fileContentFinal += line.substring(0, line.length-1)
