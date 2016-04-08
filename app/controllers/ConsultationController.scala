@@ -91,7 +91,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
   }
 
   def formatFileContent(fileContent:String):String = {
-    val lines:Array[String] = fileContent.split("\n")
+    val lines:Array[String] = fileContent.trim().split("\n")
     var fileContentFinal = ""
     var isFirstArticle = true
     var htmlContent = ""
@@ -99,7 +99,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
     //for each line in the document
     for(line <- lines){
       if(line.length > 6) {
-        if (line.startsWith("Article ")) {
+        if (line.startsWith("Article")) {
           if(isFirstArticle) {
             htmlContent = "<div class=\"finalLawUploadedContent\"><div data-id=" + articleNum + "  class=\"row article\">" +
               "<div class=\"col-md-12\"><div class=\"title\">" +
