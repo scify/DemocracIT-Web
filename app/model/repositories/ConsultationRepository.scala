@@ -30,10 +30,10 @@ class ConsultationRepository {
              ),
              CommentsPerConsultation as
                (
-                 select consultation_id,count(a.consultation_id) as NumberOfArticles, count(c.id) as NumberOfComments,
-            from public.articles a
-         	left outer join public.comments c on a.id = c.article_id
-                        group by a.consultation_id
+                 select consultation_id,count(a.consultation_id) as NumberOfArticles, count(c.id) as NumberOfComments
+                  from public.articles a
+                 	left outer join public.comments c on a.id = c.article_id
+                  group by a.consultation_id
              )
 
              select c.id,m.NumberOfArticles,m.NumberOfComments,  DATE_PART('day',c.end_date -c.start_date) as DaysActive,
