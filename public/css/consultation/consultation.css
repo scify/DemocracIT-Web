@@ -663,7 +663,8 @@ a.load {
 
 #finalLawDiv .stats {
   margin-bottom: 35px;
-  padding-right: 10px; }
+  padding-right: 10px;
+  display: none; }
 
 #finalLawExplanationModal .msg {
   padding: 15px; }

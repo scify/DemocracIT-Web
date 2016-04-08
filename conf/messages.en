@@ -109,7 +109,7 @@ consultation.index.uploadfinal = The final law for this consultation has not upl
 consultation.index.uploadfinal.here = here
 consultation.index.uploaded.delete = this final law has been uploaded from you. If you want to delete it, click <a id="deleteFinalLaw"> here</a>
 consultation.index.compare = Click here to compare the consultation with the final law:
-consultation.index.hint = Left, you see the consultation text. Right, the final law.
+consultation.index.hint = Compare: Left, you see the consultation text. Right, the final document.
 consultation.index.approve = I agree with the integrity of the article
 consultation.index.disapprove = I disagree with the integrity of the article
 consultation.explain.header = How does the compare with the final law work
