@@ -33,7 +33,7 @@
             <li role="presentation"><a href="#durationPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.duration")</a></li>
             <li role="presentation"><a href="#commPerConsPerOrganizationContent" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.participation")</a></li>
             <li role="presentation"><a href="#finalLawComparison" aria-controls="profile" role="tab" data-toggle="tab">@messages("reporter.connection.finallaw")</a></li>
-            @if(play.Play.application().configuration().getString("application.state") == "development") {
+            @if(play.Play.application().configuration().getString("application.mode") == "DEV") {
                 <li role="presentation"><a href="#annotatorContent" aria-controls="annotatorContent" role="tab" data-toggle="tab">
                     @messages("evaluation.comments.users")</a></li>
             }

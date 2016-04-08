@@ -77,7 +77,13 @@
                             </div>
                         } else {
                             <div class="notLoggedinWrapper">
-                                <div class="msg"><i class="fa fa-exclamation-triangle"></i><p class="notLoggedText">@Html(messages("notlogedintext","<a href=\"/signIn?returnUrl=@request.uri\">","</a>"))</p></div>
+                                <div class="msg"><i class="fa fa-exclamation-triangle"></i>
+                                    @defining("<a href=\"/signIn?returnUrl="+ request.uri +"\">") { url=>
+                                        <p class="notLoggedText">
+                                            @Html(messages("notlogedintext",url,"</a>"))
+                                        </p></div>
+                                    }
+
                             </div>
                         }
                         </div>

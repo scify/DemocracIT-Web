@@ -501,7 +501,7 @@ scify.ConsultationIndexPageHandler.prototype = function(){
         $(".shareBtn").click(function(){
             var articleId = $(this).attr('id').split('-')[1];
             var longUrl ="";
-            if(instance.appState == "development") {
+            if(instance.appState == "DEV") {
                 longUrl = "http://localhost:9000/consultation/";
             } else {
                 longUrl = "http://democracit.org/consultation/";

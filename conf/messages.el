@@ -1,3 +1,6 @@
+rss.description.lastcomments = Τελευταία {0} σχόλια
+rss.description.nocomments = Δε βρέθηκαν σχόλια
+rss.consultation = Διαβούλευση
 header.home = ΑΡΧΙΚΗ
 header.consultations = ΔΙΑΒΟΥΛΕΥΣΕΙΣ
 header.reports = ΑΝΑΦΟΡΕΣ
@@ -102,7 +105,8 @@ consultation.index.reference = Αναφορά
 consultation.index.description = Περιγραφή
 consultation.index.nolaw = Αυτή ή διαβούλευση δεν περιέχει σχετικούς νόμους.
 consultation.index.nolaw.yet = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), πατήστε στο πλαίσιο:
-consultation.index.uploadfinal = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας <a href="/signIn">εδώ</a>
+consultation.index.uploadfinal = Ο τελικός νόμος για αυτή τη διαβούλευση δεν έχει ανέβει ακόμα. Αν θέλετε να ανεβάσετε τον τελικό νόμο σε αρχείο (.pdf, .txt), συνδεθείτε στο σύστημα πατώντας
+consultation.index.uploadfinal.here =εδώ
 consultation.index.uploaded.delete = Αυτός ο τελικός νόμος έχει μεταφορτωθεί από εσάς. Άν θέλετε να τον διαγράψετε, πατήστε <a id="deleteFinalLaw"> εδώ</a>
 consultation.index.compare = Πατήστε εδώ για να συγκρίνετε το κείμενο της διαβούλευσης με τον τελικό νόμο:
 consultation.index.hint = Αριστερά, βλέπετε το κείμενο της διαβούλευσης. Δεξιά, τον τελικό νόμο
@@ -126,7 +130,7 @@ userprofile.points.plural = πόντοι
 userprofile.points.singular = πόντος
 userprofile.points.rule1expl = Αν ανεβάσετε τον τελικό νόμο για μια διαβούλευση:
 userprofile.points.rule2expl = Αν ψηφίσετε θετικά ή αρνητικά για έναν τελικό νόμο που έχει ανεβάσει κάποιος άλλος χρήστης (μόνο μια φορά για κάθε τελικό νόμο):
-userprofile.points.rule3expl = Αν κποιος τελικός νόμος που ανεβάσατε ψηφιστεί θετικά από κάποιον χρήστη:
+userprofile.points.rule3expl = Αν κάποιος τελικός νόμος που ανεβάσατε ψηφιστεί θετικά από κάποιον χρήστη:
 userprofile.points.rule4expl = Αν κάνετε like σε κάποιο σχόλιο (για μέχρι 10 likes ανα ημέρα):
 userprofile.points.rule5expl = Αν σχολιάσετε σε κάποιο άρθρο (για μέχρι 10 σχόλια ανα ημέρα):userprofile.points.rule5 = +1 πόντος
 userprofile.points.rule6expl = Αν σχολιάσετε σε τμήμα κειμένου κάποιου άρθρου (για μέχρι 10 σχόλια ανα ημέρα):
@@ -200,7 +204,7 @@ annotation.comment.emotion.sad.text = Λυπημένος
 annotation.comment.emotion.angry.text = Νευριασμένος
 annotation.comment.remindertext = μη ξεχνάτε ότι ο επίσημος φορέας της ανοικτής διαβούλευσης ειναι το OpenGov. {0} Κλικ εδώ {1} για να αφήσετε το σχόλιο σας και στη σελίδα της διαβούλευσης του OpenGov. {2} Μάθετε περισσότερα {1}
 submitbtn = Καταχώρηση
-reporter.dispersion = Διασπορά
+reporter.dispersion = Διαβουλεύσεις ανα μήνα
 reporter.duration = Διάρκεια
 reporter.participation = Συμμετοχή
 reporter.connection.finallaw = Σύνδεση με τελικό νόμο
@@ -348,3 +352,4 @@ consultation.tutorial.nextLabel = Επόμενο
 consultation.tutorial.prevLabel = Πίοω
 consultation.tutorial.endLabel = Τέλος
 consultation.tutorial.okLabel = Εντάξει
+

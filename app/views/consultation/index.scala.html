@@ -39,7 +39,7 @@
                  @Html(vm.relevantLawsToJson()),
                  @Html(vm.consultation.isActive.toString),
                  '@routes.Assets.at("images")',
-                 '@play.Play.application().configuration().getString("application.state")',
+                 '@play.Play.application().configuration().getString("application.mode")',
                  Date.parse('@vm.consultation.endDate')
          );
         controller.init();
@@ -76,6 +76,11 @@
                     <div class="sub-toolbar clearfix">
                         <div id="tutorial"><a>@messages("consultation.index.tutorial")</a></div>
                         <div id="consWordCloud"><button class="wordCloudBtn" type="button" data-toggle="modal" data-target="#consWordCloudModal">@messages("consultation.index.wordcloud")</button></div>
+                        <div id="rss">
+                            <a rel="alternate" target="_blank" type="application/rss+xml" href="@routes.ConsultationController.getCommentsRss(vm.consultation.id)">
+                                <img src="@routes.Assets.at("/images/feed-icon-14x14.png")" />
+                            </a>
+                        </div>
                     </div>
                         <!-- Modal -->
                     <div id="consWordCloudModal" class="modal fade" role="dialog">
@@ -155,7 +160,7 @@
 
                         } else {
                             <div class="notLoggedIn info">
-                                @messages("consultation.index.uploadfinal")</div>
+                                @messages("consultation.index.uploadfinal") <a href='@routes.AccountController.signIn(None)'>@messages("consultation.index.uploadfinal.here")</a></div>
                         }
                     } else {
                         <div class="finalLaw">

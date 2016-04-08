@@ -377,7 +377,7 @@
                 }
                 var longUrl = "";
                 $("#shareComment-" + commentId).prev().toggleClass("shareArticleHiddenComment");
-                if (instance.props.appState == "development") {
+                if (instance.props.appState == "DEV") {
                     longUrl = "http://localhost:9000/consultation/";
                 } else {
                     longUrl = "http://democracit.org/consultation/";
