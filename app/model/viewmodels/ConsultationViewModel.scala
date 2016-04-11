@@ -28,7 +28,7 @@ case class ConsultationViewModel(consultation:model.dtos.Consultation,
   //everything that is stored in there should begin with "assets". So if the final law file is stored in
   //  public/files/file we need to cast it into /assets/files/file
   def getFinalLawRelativePath():String = {
-    if(play.Play.application().configuration().getString("application.state") == "PROD")
+    if(play.Play.application().configuration().getString("application.mode") == "PROD")
       "http://democracit.org/" + finalLaw.get.file_path.replaceAll("public", "assets")
     else
       "http://localhost:9000/" + finalLaw.get.file_path.replaceAll("public", "assets")
