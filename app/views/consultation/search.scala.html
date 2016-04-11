@@ -1,5 +1,5 @@
 @import play.api.libs.json.JsValue
-@(query: String, consultationsJson: JsValue, totalConsultations:Int, messagesForConsultationsSearch:String)(implicit messages :Messages)
+@(query: String, consultationsJson: JsValue, totalConsultations:Int, messagesForConsultationsSearch:String,user: Option[model.dtos.User])(implicit messages :Messages)
 
 @js = {
     <script src="http://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>

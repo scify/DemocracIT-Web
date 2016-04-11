@@ -30,7 +30,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
   private val reporterManager = new ReporterManager()
 
   def displayAll() = //cached("displayall") {
-    Action { implicit request => {
+    UserAwareAction { implicit request => {
       val results: List[Consultation] = consultationManager.search(new ConsultationSearchRequest(-1, "", -1))
 
       implicit object Consultatites extends Writes[Consultation] {
@@ -40,7 +40,7 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
           c.articlesNum.toString + (if (c.articlesNum == 1) " " + messagesApi("article.singular") else " " + messagesApi("article.plural"))
         )
       }
-      Ok(views.html.consultation.search("", Json.toJson(results), results.length, getConsultationsSearchMessages()))
+      Ok(views.html.consultation.search("", Json.toJson(results), results.length, getConsultationsSearchMessages(),request.identity))
     }
     }
 
