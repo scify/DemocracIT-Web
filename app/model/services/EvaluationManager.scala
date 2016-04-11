@@ -3,9 +3,10 @@ package model.services
 import model.dtos.User
 import model.repositories.EvaluationRepository
 import model.viewmodels.EvaluationViewModel
-import play.api.i18n.Messages
+import play.api.i18n.{Messages}
 
-class EvaluationManager(implicit messages: Messages) {
+
+class EvaluationManager() {
 
     def get(user:Option[User]): EvaluationViewModel= {
       val evaluationRepository = new EvaluationRepository()
@@ -58,7 +59,7 @@ class EvaluationManager(implicit messages: Messages) {
     frequencies = evaluationRepository.getEvaluationPerOrganization(dateSet)
     frequencies
   }
-  def getConsDurationPerOrganization(): List[model.dtos.ConsDurationsPerOrganization] = {
+  def getConsDurationPerOrganization()(implicit messages: Messages): List[model.dtos.ConsDurationsPerOrganization] = {
     val evaluationRepository = new EvaluationRepository()
     var durations: List[model.dtos.ConsDurationsPerOrganization] = Nil
     durations = evaluationRepository.getConsDurationPerOrganization()
@@ -85,7 +86,7 @@ class EvaluationManager(implicit messages: Messages) {
     consFinalLawStats
   }
 
-  def getConsDuration(): List[model.dtos.ConsDurations] = {
+  def getConsDuration()(implicit messages: Messages): List[model.dtos.ConsDurations] = {
     val evaluationRepository = new EvaluationRepository()
     var durations: List[model.dtos.ConsDurations] = Nil
     durations = evaluationRepository.getConsDuration()
@@ -104,7 +105,7 @@ class EvaluationManager(implicit messages: Messages) {
     }
     durations
   }
-  def getConsCommPerOrganization(): List[model.dtos.CommPerConsPerOrganization] = {
+  def getConsCommPerOrganization()(implicit messages: Messages): List[model.dtos.CommPerConsPerOrganization] = {
     val evaluationRepository = new EvaluationRepository()
     var durations: List[model.dtos.CommPerConsPerOrganization] = Nil
     durations = evaluationRepository.getCommPerConsPerOrganization()

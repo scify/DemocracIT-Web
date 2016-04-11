@@ -12,7 +12,7 @@ import model.services._
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.util.PDFTextStripper
 import play.api.cache.Cached
-import play.api.i18n.MessagesApi
+import play.api.i18n.{MessagesApi,Messages}
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
 import utils.MailService
@@ -40,11 +40,11 @@ class ConsultationController  @Inject() (val cached: Cached, val messagesApi: Me
           c.articlesNum.toString + (if (c.articlesNum == 1) " " + messagesApi("article.singular") else " " + messagesApi("article.plural"))
         )
       }
-      Ok(views.html.consultation.search("", Json.toJson(results), results.length, getConsultationsSearchMessages(messagesApi)))
+      Ok(views.html.consultation.search("", Json.toJson(results), results.length, getConsultationsSearchMessages()))
     }
     }
 
-  def getConsultationsSearchMessages(messages: MessagesApi):String = {
+  def getConsultationsSearchMessages()(implicit messages:Messages):String = {
     val messageList:Map[String,String] = Map(
       "end" -> messages("end"),
       "title" -> messages("title"),
