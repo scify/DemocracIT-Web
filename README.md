@@ -1,8 +1,10 @@
-# Strengthening Participatory Democracy
+# Public consultation platform
 
+Democracit is a web application with the goal to improve the consultation process.
+Check the demo below
+http://demo.democracit.org <br/>
 
-Nowadays, in Greece, there is a vast amount of data which arise from the draft laws public consultation. This type of consultation allows citizens to express their views, suggestions, arguments, or disagreements which are associated with the ongoing legislation. However, the current consultation system and its infrastructure discourage citizens from participating and, moreover, it does not offer policy analysts and shapers the necessary tools to take full advantage of citizens’ participation. Furthermore, there is no direct way to determine the impact of the consultation on drafting the final law.
-
+And an instance of democracit targeted in the open consultation process in Greece
 http://www.democracit.org <br/>
 http://www.scify.gr/site/en/projects/in-progress/democraciten
 
