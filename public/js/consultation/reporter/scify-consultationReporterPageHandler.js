@@ -469,7 +469,7 @@ scify.ConsultationReporterPageHandler.prototype = function(){
             Dropzone.options.finalLawDropZone = {
                 paramName: "file", // The name that will be used to transfer the file
                 maxFilesize: 10, // MB
-                url: "/consultation/finalLawUpload/" + instance.consultationid + "/" + instance.userId,
+                url: "/consultation/finalLawUpload/" + instance.consultationId + "/" + instance.userId,
                 uploadMultiple: false,
                 maxFiles: 1,
                 acceptedFiles: "application/pdf,text/plain",
