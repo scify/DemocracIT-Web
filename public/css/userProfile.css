@@ -29,24 +29,20 @@
 
 .user-profile  .username {
     padding-top: 25px;
-    margin: auto;
-    margin-top: -4.40em;
-    margin-left: 5.80em;
     color: #254254;
     font-size: 1.53em;
     font-family: "Coda", sans-serif;
     font-weight: bold;
 }
-.user-profile  .bio {
+.user-profile .bio {
     margin: auto;
     display: inline-block;
-    margin-left: 2em;
     color: #254254;
     font-size: .87em;
     font-family: "varela round", sans-serif;
 }
 .user-profile > .description {
-    margin-left: 10.3em;
+    margin-left:8.3em;
     margin-top: 1.35em;
     width: 100%;
     color: #c0c5c5;
@@ -63,12 +59,12 @@
 }
 
 .user-profile ul.data {
-    margin: 2em auto;
     height: 3.70em;
     background: #7cb6f7;
     text-align: center;
     border-radius: 0 0 .3em .3em;
     padding-left: 0px;
+    margin-top:20px;
 }
 .user-profile li {
     margin: 0 auto;
