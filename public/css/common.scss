@@ -566,7 +566,7 @@ legend {
 }
 
 #finalLawCommentModal .modal-body {
-  height: 750px;
+  height: 650px;
 }
 
 #finalLawCommentModal .container {
@@ -596,7 +596,7 @@ legend {
 }
 
 #finalLawCommentModal #finalLawAnnDiv {
-  max-height: 750px;
+  max-height: 650px;
   overflow-y: scroll;
   font-family: Verdana, sans-serif;
   font-size: 14px;
@@ -630,10 +630,13 @@ legend {
   float: left;
 }
 
+#finalLawCommentModal .modal-footer {
+  float: right;
+}
+
 #finalLawCommentModal .modal-footer .btn {
   float: right;
   margin-top: -40px;
-  margin-top: 10px;
 }
 #finalLawCommentModal .saveBtnContainer {
   text-align: center;

@@ -759,7 +759,7 @@
             this.postRateCommentAndRefresh();
         },
         handleCommentInFinalLaw:function(){
-
+            console.log(this.props.comment);
             $("body").trigger("match-comment-with-law",{  finalLawBusy: this.state.finalLawBusy,
                                                         finalLawDiv: this.state.finalLawDiv,
                                                         comment: this.props.comment,

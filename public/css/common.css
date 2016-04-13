@@ -474,7 +474,7 @@ legend {
   padding-top: 10px; }
 
 #finalLawCommentModal .modal-body {
-  height: 750px; }
+  height: 650px; }
 
 #finalLawCommentModal .container {
   margin-left: 0px;
@@ -498,7 +498,7 @@ legend {
   display: none; }
 
 #finalLawCommentModal #finalLawAnnDiv {
-  max-height: 750px;
+  max-height: 650px;
   overflow-y: scroll;
   font-family: Verdana, sans-serif;
   font-size: 14px; }
@@ -525,10 +525,12 @@ legend {
 .optionsContainerDisabled .options span {
   float: left; }
 
+#finalLawCommentModal .modal-footer {
+  float: right; }
+
 #finalLawCommentModal .modal-footer .btn {
   float: right;
-  margin-top: -40px;
-  margin-top: 10px; }
+  margin-top: -40px; }
 
 #finalLawCommentModal .saveBtnContainer {
   text-align: center; }

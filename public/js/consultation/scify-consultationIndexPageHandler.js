@@ -537,7 +537,6 @@ scify.ConsultationIndexPageHandler.prototype = function(){
          this.commentAnnotator.openForEdit(e, comment);
     },
     handleMatchCommentWithLaw = function(e,data){
-
         if (!this.commentWithLawMatcher)
         {
             this.commentWithLawMatcher = React.render(React.createElement(scify.commentLawMatcher, {

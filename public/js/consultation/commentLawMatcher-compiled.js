@@ -224,7 +224,6 @@
         closeInnerModal: function closeInnerModal() {
             this.state.showInnerModal = false;
             this.setState(this.state);
-            console.log(this.state.showInnerModal);
         },
         render: function render() {
 
@@ -289,8 +288,8 @@
                             { className: "body commentBox" },
                             React.createElement(scify.Comment, {
                                 imagesPath: this.props.imagesPath,
-                                key: this.props.comment.id,
-                                data: this.props.comment,
+                                key: this.state.comment.id,
+                                data: this.state.comment,
                                 shouldDisplayCommenterName: true,
                                 shouldDisplayEditIcon: false,
                                 shouldDisplayCommentEdited: true,
