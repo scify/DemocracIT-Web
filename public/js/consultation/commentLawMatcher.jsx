@@ -224,6 +224,7 @@
             this.setState(this.state);
             this.clearAnnotationForm();
             $("body").removeClass("modal-open").attr("style","");
+
         },
         closeInnerModal: function() {
             this.state.showInnerModal = false;
