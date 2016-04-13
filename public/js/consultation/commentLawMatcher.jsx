@@ -226,7 +226,6 @@
         closeInnerModal: function() {
             this.state.showInnerModal = false;
             this.setState(this.state);
-            console.log(this.state.showInnerModal);
         },
         render: function() {
             var finalLawDiv = this.props.finalLawDiv;
@@ -265,8 +264,8 @@
                             <div className='body commentBox'>
                                 <scify.Comment
                                     imagesPath = {this.props.imagesPath}
-                                    key={this.props.comment.id}
-                                    data={this.props.comment}
+                                    key={this.state.comment.id}
+                                    data={this.state.comment}
                                     shouldDisplayCommenterName={true}
                                     shouldDisplayEditIcon={false}
                                     shouldDisplayCommentEdited={true}

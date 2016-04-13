@@ -630,10 +630,13 @@ legend {
   float: left;
 }
 
+#finalLawCommentModal .modal-footer {
+  float: right;
+}
+
 #finalLawCommentModal .modal-footer .btn {
   float: right;
   margin-top: -40px;
-  margin-top: 10px;
 }
 #finalLawCommentModal .saveBtnContainer {
   text-align: center;
