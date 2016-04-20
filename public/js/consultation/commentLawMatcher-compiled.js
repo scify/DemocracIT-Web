@@ -197,6 +197,7 @@
         display: function display(data) {
             this.state.comment = data.comment;
             this.state.display = "in show";
+            $("body").addClass("modal-open").attr("style", "padding-right:13px");
             this.setState(this.state);
             if (this.props.finalLawDiv != undefined) this.fetchAnnotationData();
         },
@@ -218,12 +219,14 @@
             this.state.display = "";
             this.setState(this.state);
             this.clearAnnotationForm();
+            $("body").removeClass("modal-open").attr("style", "");
         },
         closeInnerModal: function closeInnerModal() {
             this.state.showInnerModal = false;
             this.setState(this.state);
         },
         render: function render() {
+
             var finalLawDiv = this.props.finalLawDiv;
             var finalLawHtml = React.createElement("div", { id: "finalLawAnnDiv", dangerouslySetInnerHTML: { __html: this.props.finalLawDiv } });
             var url = window.location.href;
