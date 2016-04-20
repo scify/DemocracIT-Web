@@ -81,6 +81,7 @@
                                     @defining("<a href=\"/signIn?returnUrl="+ request.uri +"\">") { url=>
                                         <p class="notLoggedText">
                                             @Html(messages("notlogedintext",url,"</a>"))
+
                                         </p></div>
                                     }
 
@@ -96,7 +97,7 @@
                 @if(user.isDefined) {
                     <span class="warning"><i class="fa fa-warning"></i>
                         @Html(messages("annotation.comment.remindertext",
-                            "<a href=\"@consultationOpenGovUrl\" target=\"_blank\">",
+                            "<a href=\"" + {consultationOpenGovUrl} + "\" target=\"_blank\">",
                             "</a>",
                             "<a href=\"http://about.democracit.org/frequently-asked-questions#question-3\">"))</span>
                     <button id="save-annotation"c class="btn blue" type="submit">@messages("submitbtn")</button>
