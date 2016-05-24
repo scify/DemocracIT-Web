@@ -69,8 +69,8 @@
                         }, instance.state.messages.submitbtn));
                     } else {
                         swal({
-                            title: instance.state.signInTitle,
-                            text: instance.state.messages('notlogedintext'),
+                            title: instance.state.messages.signInTitle,
+                            text: instance.state.messages.notlogedintext,
                             html: true
                         });
                         return React.createElement('div', null);
