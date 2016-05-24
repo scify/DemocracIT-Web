@@ -35,9 +35,11 @@ scify.ReactLoader = React.createClass({
         }
     },
         displayNotLoggedIn = function displayNotLoggedIn(request) {
+        var nonLoggedInLabel = $("body").data("not-authorized").replace("{0}", "<a href=\"" + request.responseJSON + "\">").replace("{1}", "</a>");
+
         swal({
-            title: "Είσοδος",
-            text: "Για αυτή την ενέργεια χρειάζεται να είστε <a href=\"" + request.responseJSON + "\">συνδεδεμένοι</a>",
+            title: $("body").data("login-title"),
+            text: nonLoggedInLabel,
             html: true
         });
     },

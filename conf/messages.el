@@ -1,3 +1,5 @@
+not.authorized.message =Για αυτήν την ενέργεια πρέπει να είστε {0} συνδεδεμένοι{1}
+not.authorized.message.loginTitle = Είσοδος
 rss.description.lastcomments = Τελευταία {0} σχόλια
 rss.description.nocomments = Δε βρέθηκαν σχόλια
 rss.consultation = Διαβούλευση
