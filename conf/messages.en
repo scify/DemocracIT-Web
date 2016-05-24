@@ -1,3 +1,5 @@
+not.authorized.message = You need to {0} login {1} in order to complete this action
+not.authorized.message.loginTitle = Login
 rss.description.lastcomments = Last {0} comments
 rss.description.nocomments = No comments found
 rss.consultation =Consultation
