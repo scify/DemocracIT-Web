@@ -5,12 +5,10 @@ import javax.inject.Inject
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.mailer.Email
-import play.api.libs.mailer.MailerClient
-import play.api.libs.mailer._
+import play.api.libs.mailer.{Email, MailerClient}
 
-import scala.language.postfixOps
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 trait MailService {
   def sendEmailAsync(recipients: String*)(subject: String, bodyHtml: String, bodyText: String = ""): Unit
@@ -22,7 +20,9 @@ class MailServiceImpl @Inject() (mailerClient: MailerClient) extends MailService
   def from: String = current.configuration.getString("play.mailer.from").getOrElse("UNKNOWN")
 
   def sendEmailAsync (recipients: String*)(subject: String, bodyHtml: String, bodyText: String = ""): Unit = {
+
     Akka.system.scheduler.scheduleOnce(100 milliseconds) {
+      //send email with appropriate dependencies
       sendEmail(recipients: _*)(subject, bodyHtml, bodyText)
     }
   }
